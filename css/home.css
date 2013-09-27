@@ -9,8 +9,12 @@ BODY {
 }
 
 #mainArea {
-    border: 0px solid red;
-    margin: 50px;
+    margin: 20px;
+}
+
+#mainArea UL {
+    padding: 0;
+    margin: 0;
 }
 
 #mainArea LI {
@@ -39,7 +43,7 @@ BODY {
     -moz-transition: all 0.4s linear;
     -webkit-transition: all 0.4s linear;
     -o-transition: all 0.4s linear;
-    transition: border-bottom 0.4s linear;
+    -ms-transition: all 0.4s linear;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
@@ -55,10 +59,10 @@ BODY {
     opacity: 0;
     float: right;
     right: 0px;
-    transition: all 0.4s linear;
     -moz-transition: all .4s linear;
     -webkit-transition: all 0.4s linear;
     -o-transition: all 0.4s linear;
+    -ms-transition: all 0.4s linear;
     transition: all 0.4s linear;
 }
 
@@ -75,6 +79,7 @@ BODY {
     -moz-transition: all 1.2s ease-out;
     -webkit-transition: all 1.2s ease-out;
     -o-transition: all 1.2s ease-out;
+    -ms-transition: all 1.2s ease-out;
     transition: all 1.2s ease-out;
 }
 
