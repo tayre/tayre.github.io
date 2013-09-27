@@ -1,0 +1,211 @@
+HTML, BODY {
+    height: 100%;
+}
+
+BODY {
+    margin: 0;
+    padding: 0;
+    background: url('bg_texture.png');
+    overflow: hidden;
+    -webkit-user-select: none;
+}
+
+@font-face {
+    font-family: chunk;
+    src: url('chunk.otf');
+}
+
+.container {
+    margin: 0 auto;
+    width: 356px;
+    height: 460px;
+    -webkit-perspective: 3000px;
+    perspective: 3000px;
+}
+
+TABLE {
+    height: 100%;
+    width: 100%;
+}
+
+TD {
+    text-align: center;
+}
+
+#box {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+    -webkit-transition: -webkit-transform .3s;
+    -moz-transition: -moz-transform .3s;
+    transition: transform .3s;
+}
+
+#box FIGURE {
+    display: block;
+    position: absolute;
+    margin: 0;
+    line-height: 196px;
+    text-align: center;
+    font-family: chunk;
+    font-size: 4em;
+}
+
+#box.panels-backface-invisible FIGURE {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.content {
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+    color: #000;
+    position: relative;
+    top: 90px;
+    font-size: 150px;
+    min-width: 150px;
+    text-shadow: 1px 1px 5px #666;
+}
+
+.button {
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+    font-size: 2.5em;
+    text-shadow: 2px 2px #000;
+    color: #666;
+    font-family: chunk;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+
+     display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-pack: center;
+
+    display: box;
+    box-orient: vertical;
+    box-pack: center;
+}
+
+.button:active {
+    background: rgba(158, 192, 230, .3);
+    color: white;
+}
+
+.text {
+    display: block;
+}
+
+#forward .text {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#back .text {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+#box .front, #box .back {
+    width: 296px;
+    height: 400px;
+    margin-left: 0;
+    border-width: 30px;
+    border-style: inset;
+    border-image: url('border_texture.png') 30 repeat;
+}
+
+#box .right, #box .left {
+    width: 16px;
+    height: 400px;
+    left: 100px;
+}
+
+#box .top, #box .bottom {
+    width: 296px;
+    height: 16px;
+    top: 90px;
+    line-height: 96px;
+    display: none;
+}
+
+#box .front {
+    -webkit-transform: translateZ( 10px );
+    -moz-transform: translateZ( 10px );
+    transform: translateZ( 10px );
+}
+
+#box .back {
+    -webkit-transform: rotateY( -180deg ) translateZ(  10px );
+    -moz-transform: rotateY( -180deg ) translateZ(  10px );
+    transform: rotateY( -180deg ) translateZ(  10px );
+}
+
+#box .right {
+    -webkit-transform: rotateY(   90deg ) translateZ( 150px );
+    -moz-transform: rotateY(   90deg ) translateZ( 150px );
+    transform: rotateY(   90deg ) translateZ( 150px );
+}
+
+#box .left {
+    -webkit-transform: rotateY(  -90deg ) translateZ( 150px );
+    -moz-transform: rotateY(  -90deg ) translateZ( 150px );
+    transform: rotateY(  -90deg ) translateZ( 150px );
+}
+
+#box .top {
+    -webkit-transform: rotateX(   90deg ) translateZ( 100px );
+    -moz-transform: rotateX(   90deg ) translateZ( 100px );
+    transform: rotateX(   90deg ) translateZ( 100px );
+}
+
+#box .bottom {
+    -webkit-transform: rotateX(  -90deg ) translateZ( 100px );
+    -moz-transform: rotateX(  -90deg ) translateZ( 100px );
+    transform: rotateX(  -90deg ) translateZ( 100px );
+}
+
+#box.show-front {
+    -webkit-transform: translateZ(  -50px );
+    -moz-transform: translateZ(  -50px );
+    transform: translateZ(  -50px );
+}
+
+#box.show-back {
+    -webkit-transform: translateZ( -50px ) rotateY( -180deg );
+    -moz-transform: translateZ( -50px ) rotateY( -180deg );
+    transform: translateZ( -50px ) rotateY( -180deg );
+}
+
+#box.show-right {
+    -webkit-transform: translateZ( -150px ) rotateY(  -90deg );
+    -moz-transform: translateZ( -150px ) rotateY(  -90deg );
+    transform: translateZ( -150px ) rotateY(  -90deg );
+}
+
+#box.show-left {
+    -webkit-transform: translateZ( -150px ) rotateY(   90deg );
+    -moz-transform: translateZ( -150px ) rotateY(   90deg );
+    transform: translateZ( -150px ) rotateY(   90deg );
+}
+
+#box.show-top {
+    -webkit-transform: translateZ( -100px ) rotateX(  -90deg );
+    -moz-transform: translateZ( -100px ) rotateX(  -90deg );
+    transform: translateZ( -100px ) rotateX(  -90deg );
+}
+
+#box.show-bottom {
+    -webkit-transform: translateZ( -100px ) rotateX(   90deg );
+    -moz-transform: translateZ( -100px ) rotateX(   90deg );
+    transform: translateZ( -100px ) rotateX(   90deg );
+}
+
+#box .front, #box .back {
+    background: url('card_texture.png');
+}

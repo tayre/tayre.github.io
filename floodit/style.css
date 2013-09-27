@@ -1,0 +1,224 @@
+@font-face {
+    font-family: Obitron-medium;
+    src: url('orbitron-medium.otf');
+}
+
+BODY, HTML {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: url('bg.png');
+    color: white;
+}
+
+BODY {
+    font-family: Obitron-medium;
+    font-size: 32px;
+    letter-spacing: 8px;
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+}
+
+#container {
+    height: 100%;
+    display: none;
+}
+
+#table_container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 720px;
+    position: relative;
+    top: 75px;
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+}
+
+@media all and (max-height: 720px) {
+    #table_container {
+        top: 30px;
+    }
+}
+
+#output, #board_controls {
+    text-align: center;
+    min-height: 100px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+}
+
+#output {
+    height: 100px;
+    line-height: 40px;
+    padding: 5px;
+}
+
+#splash {
+    color: white;
+    font-size: 54px;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    line-height: 88px;
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-transition: all .1s ease-out;
+}
+
+#splash.mousedown {
+    background: #1ca732;
+}
+
+TABLE {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+TD {
+    -webkit-transition: background 0s linear 0s;
+    border: 5px solid black;
+    width: 32px;
+    height: 32px;
+}
+
+@media all and (max-height: 720px) {
+    TD {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+[data-val='1'] {
+    background: #A30D7E;
+}
+
+[data-val='2'] {
+    background: #F8F8F8;
+}
+
+[data-val='3'] {
+    background: #0098F0;
+}
+
+[data-val='4'] {
+    background: #00B800;
+}
+
+[data-val='5'] {
+    background: #E6B400;
+}
+
+[data-val='6'] {
+    background: #D60000;
+}
+
+#instructions {
+    font-size: 28px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 180px;
+    border: 0px solid red;
+    z-index: 2;
+    left: 0;
+    text-align: center;
+}
+
+#board_controls {/*colour pickers*/
+    height: 150px;
+    text-align: center;
+    white-space: nowrap;
+    position: fixed;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    border-top: 2px solid rgba(255,0,0,.8);
+    background: rgba(255,255,255, .1);
+}
+
+@media all and (max-height: 720px) {
+    #board_controls {
+        height: 100px;
+    }
+}
+
+#board_controls SPAN {
+    width: 80px;
+    height: 80px;
+    display: inline-block;
+    margin-right: 20px;
+    opacity: 1;
+    text-decoration: none;
+    -webkit-border-radius: 0px;
+    cursor: pointer;
+    border: 4px solid transparent;
+}
+
+
+@media all and (max-height: 720px) {
+    #board_controls SPAN {
+        width: 64px;
+        height: 64px;
+        margin-right: 10px;
+    }
+}
+
+#board_controls SPAN:HOVER {
+    -webkit-transition: all .1s ease-out;
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-transform: scale(.8);
+}
+
+#board_controls SPAN:last-child {
+    margin-right: 0;
+}
+
+#error {
+    display: none;
+}
+
+/* Landscape */
+@media screen and (orientation: landscape) {
+    #error {
+        display: block;
+        position: absolute;
+        top: 40%;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    #error:after {
+        content: "Landscape not yet supported."
+    }
+
+    #output {
+        display: none !important;
+    }
+
+    #table_container {
+        display: none !important;
+    }
+
+    #board_controls {
+        display: none !important;
+    }
+
+    #instructions {
+        display: none !important;
+    }
+}

@@ -1,0 +1,1 @@
+GLOBAL={key:"text"};$(document).ready(function(){var a=localStorage.getItem(GLOBAL.key);a!=null&&$("#textInput").val(a);$("#textInput").bind("keyup",autoSave);$("#textInput").focus()});function autoSave(){var a=$("#textInput").val();typeof a!=="undefined"&&localStorage.setItem(GLOBAL.key,a)};

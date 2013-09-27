@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>JavaScript: The Good Parts</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/onload.js">
+        </script>
+    </head>
+    <body>
+        <pre id="output">
+           
+        </pre>
+        <div id="container">
+        <H1>Arrays</H1>
+        <div>
+            <H2>Length</H2>
+            <div>
+                Every array has a <em>length</em>
+                property. The length property is the largest integer property of an array plus one.
+                The [] postfix subscript operator converts its expression to a string, using the expression"s <em>toString</em>
+                method if it has one. That string will be used as the property name.
+                If the string looks like a positive integer that is greater than or equal to the array"s current length and is less than Math.pow(2, 32) - 1 , then the length of the array is set to the new subscript plus one.
+            </div>
+            <pre>
+		   	
+			var array=[];
+			
+			array[1000]="foo";
+			
+			print (array.length) //1001
+			
+		   </pre>
+            <div>
+                The <em>length </em>
+                property can be set explicity. Making the length larger does not allocate more space for the array. Making the length smaller will cause all properties with a subscript that is greater than or equal to the new length to be deleted.
+            </div>
+            <pre>
+		   	var a=[1,2,3,4,5];
+			print(a); //1,2,3,4,5; 
+			a.length=2;
+			print(a); //1,2;
+		   </pre>
+            <h2>delete</h2>
+            <div>
+                The <em>delete</em>
+                operator can be used to remove elements from an array. This leaves a hole in the array.
+            </div>
+            <pre>
+		   	var a=[1,2,3,4,5];
+			delete a[3];
+			print(a); // 1,2,3,,5
+		   </pre>
+            <div>
+                The <em>splice</em>
+                method deletes some number of elements of an array, and replaces them with others. The first argument is the index into the array.
+                The second argument is the number of elements to delete. Any additional arguments get inserted into the array. If the second argument is 0, no elements are removed.
+            </div>
+            <pre>
+			var a=[1,2,3,4];
+			a.splice(2,1);
+			print(a); // 1,2,4
+			a.splice(2,0,3);
+			print(a); //1,2,3,4
+		   </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+@import url('fonts.css');
+
+HTML, BODY {
+    height: 100%;
+    margin: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+BODY {
+    font-family: monospace;
+}
+
+INPUT {
+    margin: 5px;
+    padding: 10px;
+}
+
+INPUT:focus {
+    outline: none;
+}
+
+INPUT[type = submit] {
+    border: 1px solid #CCC;
+    background: #CCC;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    opacity: .8;
+}
+
+INPUT[type = submit]:hover {
+    background: #666;
+    color: white;
+}
+
+INPUT[type = text], INPUT[type = number] {
+    font-size: 1.2em;
+    border: 1px solid #CCC;
+    min-width: 100px;
+    text-align: center;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+SUB {
+    font-size: small;
+    color: #CCC;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: center;
+    -moz-box-pack: center;
+    display: box;
+    box-orient: vertical;
+    box-pack: center;
+    box-align: center;
+}
+
+#output {
+    font-family: Dekar, monospace; 
+    padding: 5px;
+    min-height: 140px;
+    font-size: 1.8em;
+    margin: 30px;
+}
+
+#question {
+    font-size: 1.2em;
+    margin: 20px;
+}

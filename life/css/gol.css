@@ -1,0 +1,40 @@
+html, body {
+  margin: 0;
+  padding: 0;
+
+}
+
+canvas {
+    border: 0px solid red;
+    margin: 0;
+    cursor: crosshair;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#controls {
+    margin: 0px 0 0 0px;
+    z-index: 2;
+    position: absolute;
+}
+
+#controls BUTTON {
+    background: white;
+    padding: 5px;
+    font-family: Verdana;
+    letter-spacing: 3px;
+    font-size: 1.3em;
+    margin-right: 5px;
+    border: none;
+    border-bottom: 5px solid #FFF;
+}
+
+#controls BUTTON:HOVER {
+    border-bottom: 5px solid #CCC;
+    cursor: pointer;
+}
+
+#controls BUTTON.clicked {
+    border-bottom: 5px solid #000;
+}

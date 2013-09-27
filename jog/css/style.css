@@ -1,0 +1,74 @@
+
+body {
+background: black;
+color: white;
+font-size: large;
+font-family: Obitron-medium;
+text-align: center;
+
+
+ 
+}
+
+DIV {
+	padding: 5px;
+	border: 0px solid #CCC;
+	max-width: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	
+}
+
+BUTTON {
+	font-size: large;
+	padding: 30px;
+	min-width: 200px;
+	-webkit-border-radius: 8px;
+	margin-top: 40px;
+}
+
+#info {
+margin-top: 10px;
+font-size: small; 
+text-align: right;
+}
+
+#main_container {
+   margin-top: 30px;	
+}
+
+#timer{
+width: 150px;
+font-size: 48px;
+margin: 10px;
+margin-bottom: 40px;
+text-align: left;
+}
+
+
+
+
+#phase {
+	-webkit-border-radius: 8px;
+	padding: 30px;
+}
+
+.warmup, .cooldown {
+	background: #4AA0D9;
+	color: white;
+}
+
+.jog {
+	background: #22BD2F;
+	color: white;
+}
+
+.sprint {
+	background: #E80E5A;
+	color: white;
+}
+
+.done {
+	background: orange;
+	color: black;
+}

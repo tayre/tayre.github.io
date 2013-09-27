@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>JavaScript: The Good Parts</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../js/onload.js">
+        </script>
+    </head>
+    <body>
+        <pre id="output">
+           
+        </pre>
+        <div id="container">
+        <H1>Objects</H1>
+        <div>
+            The simple types of JavaScript are numbers, strings, booleans, null and undefined. All other values are objects. Numbers, strings, and booleans are immutable.
+            Objects in JavaScript are mutable keyed collections. Arrays are objects, functions are objects, regular expressions are objects, and objects are objects.
+            An object is a container of properties, where a property has a name and a value. A property name can be any string, including the empty string. A property value can be any JavaScript value except for undefined.
+            The quotes around a property name in an object literal are optoinal if the name would be a legal JavaScript name and not a reserved word.
+            <div>
+                <h2>References</h2>
+                Objects are passed by reference, they are never copied.
+            </div>
+            <pre>
+			var stooge={ "first-name": "Jerome",  "last-name": "Howard" }
+            	
+			var x=stooge;
+			x.nickname="Curly";
+			var nick=stooge.nickname; //nick is Curley
+			print(nick);
+			
+			var a={}, b={}
+			print (a===b)
+			a=b={};
+			print (a===b)
+			</pre>
+            <h2>Reflection</h2>
+            <pre>
+				var flight={
+				
+					airline: "Oceanic",
+					number: 815,
+					departure: {
+						IATA: "SYD",
+						time: "2004-09-22 14:55",
+						city: "Sydney"
+					},
+					
+					arrival: {
+						IATA: "LAX",
+						time: "2004-09-23 10:42",
+						city: "Los Angeles"
+					}
+				}
+				
+				print(typeof flight.airline); //string
+				print(typeof flight.number); //number
+				print(typeof flight.arrival); //object
+				print(flight.hasOwnProperty("constructor")); //false
+				print(flight.hasOwnProperty("departure")); //true
+				
+			</pre>
+            <h2>Enumeration</h2>
+            <pre>
+				
+				var myObj={ "first-name": "bruce", "last-name": "wayne", "profession": "detective" }
+				
+				for(var i in myObj) {
+					if(myObj.hasOwnProperty(i)) {
+						print(i + " : " + myObj[i]);
+					}
+				}
+				
+			</pre>
+            <h2>delete</h2>
+            Removing a property for an object may allow a property from the prototype linkage to shine through.<pre>
+			function Car() {
+    			this.name="car";
+			}
+
+			function Honda() {
+    			this.name="honda"
+			}
+			
+			Honda.prototype=new Car();
+
+			var c=new Honda();
+			delete c.name
+			print(c.name); //car
+			</pre>
+        </div>
+    </body>
+</html>

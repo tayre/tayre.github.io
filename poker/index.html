@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=no"/>
+        <link rel="stylesheet" href="css/style.css"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/main.js"></script>
+        <title>Planning Poker</title>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                <div class = 'button' id="back">
+                    <span class = 'text'>back</span>
+                </div></td>
+                <td>
+                <section class="container">
+                    <div id="box" class="show-front">
+                        <figure class="front">
+                            <span id = 'front_content' class = 'content'>0</span>
+                        </figure>
+                        <figure class="back">
+                            <span id = 'back_content' class = 'content'>0</span>
+                        </figure>
+                        <figure class="right"></figure>
+                        <figure class="left"></figure>
+                        <figure class="top"></figure>
+                        <figure class="bottom"></figure>
+                    </div>
+                </section></td>
+                <td>
+                <div class = 'button' id="forward">
+                    <span class = 'text'>next</span>
+                </div></td>
+            </tr>
+        </table>
+        <script type="text/javascript" src="../js/ga.js"></script>
+    </body>
+</html>

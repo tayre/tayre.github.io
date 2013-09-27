@@ -1,0 +1,13 @@
+BODY {
+	color: blue;
+	margin: 0px;
+	padding: 0px;
+	background: black;
+
+}
+
+#canvas {
+	cursor: crosshair;
+	margin: 0px;
+	
+}

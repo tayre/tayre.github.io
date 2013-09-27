@@ -1,0 +1,103 @@
+BODY {
+    font-family: Verdana;
+    font-size: .8em;
+    margin: 20px 40px;
+    max-width: 1024px;
+}
+
+P {
+    margin: 5px 0 0 0;
+    line-height: 1.5em;
+}
+
+A, A:visited, A:active {
+    text-decoration: none;
+    color: black;
+}
+
+DIV.section {
+    margin: 35px 0;
+}
+
+.qr {
+    float: right;
+    width: 60px;
+}
+
+.myName {
+    float: left;
+    margin-right: 15px;
+    letter-spacing: 3px;
+    font-size: 1.5em;
+    margin: 0 10px 10px 0;
+}
+
+.contactInfo {
+    float: left;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid #CCC;
+    padding: 0 5px;
+}
+
+.contactInfo UL {
+    margin: 0;
+    padding: 0;
+}
+
+.contactInfo LI {
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+H1 {
+    font-size: 1.25em;
+    margin: 0;
+}
+
+H2 {
+    font-size: 1em;
+    margin: 0;
+}
+
+H3 {
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.section UL {
+    list-style: square;
+    list-style-position: outside;
+    color: #CCC;
+    margin: 2px 0;
+    padding: 0 20px;
+}
+
+.section LI {
+    margin: 15px 0;
+    line-height: 1.5em;
+}
+
+.section SPAN {
+    color: #000;
+}
+
+.jobSection {
+    margin: 25px 0;
+}
+
+.jobSection UL {
+    border-top: 1px solid #CCC;
+}
+
+.jobDetails{
+    float: left;
+}
+
+.jobMeta, .jobLocation, .timeFrame {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
