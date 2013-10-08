@@ -70,7 +70,7 @@ BODY {
     opacity: .99;
 }
 
-#mainArea LI DIV.bottom_border {
+#mainArea LI DIV.separator {
     margin-top: 5px;
     opacity: 0;
     border-bottom: 1px solid #666666;
@@ -83,7 +83,7 @@ BODY {
     transition: all 1.2s ease-out;
 }
 
-#mainArea LI:hover DIV.bottom_border {
+#mainArea LI:hover DIV.separator {
     width: 100%;
     opacity: 1;
     border-color: #33AA1F;
