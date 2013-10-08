@@ -32,6 +32,13 @@ DIV.section {
     margin: 0 10px 10px 0;
 }
 
+@media (max-width: 350px) {
+    .myName, .qr { 
+        float: none; 
+    }
+}
+
+
 .contactInfo {
     float: left;
     margin: 0;
@@ -96,6 +103,12 @@ H3 {
 
 .jobMeta, .jobLocation, .timeFrame {
     float: right;
+}
+
+@media (max-width: 720px) {
+    .jobDetails, .jobMeta, .jobLocation, .timeFrame {
+        float: none;
+    }
 }
 
 .clear {
