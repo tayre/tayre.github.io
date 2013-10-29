@@ -113,3 +113,9 @@ H3 {
 .clear {
     clear: both;
 }
+
+@media print {
+    .pagebreak {
+        page-break-after: always; 
+    }
+}
