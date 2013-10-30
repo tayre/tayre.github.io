@@ -32,7 +32,7 @@ DIV.section {
     margin: 0 10px 10px 0;
 }
 
-@media not print and (max-width: 350px) {
+@media (max-width: 350px) {
     .myName, .qr { 
         float: none; 
     }
@@ -104,7 +104,7 @@ H3 {
     float: right;
 }
 
-@media not print and (max-width: 720px) {
+@media (max-width: 720px) {
     .jobDetails, .jobMeta, .jobLocation, .timeFrame {
         float: none;
     }
