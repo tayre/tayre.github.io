@@ -21,7 +21,7 @@ BODY {
 
 P {
     margin: 5px 0 0 0;
-    line-height: 1.5em;
+    line-height: 1.7em;
 }
 
 A, A:visited, A:active {
@@ -46,7 +46,7 @@ DIV.section {
     margin: 0 10px 10px 0;
 }
 
-@media (max-width: 350px) {
+@media screen and (max-width: 350px) {
     .myName, .qr { 
         float: none; 
     }
@@ -118,7 +118,7 @@ H3 {
     float: right;
 }
 
-@media (max-width: 720px) {
+@media screen and (max-width: 720px) {
     .jobDetails, .jobMeta, .jobLocation, .timeFrame {
         float: none;
     }
