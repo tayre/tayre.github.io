@@ -60,6 +60,7 @@ Responsible for LAN administration, hardware procurement, and on-site technical 
 
 Developed (J2SE) tools to collect usage data from proprietary logistics software.
 
+Received 'excellent' and 'outstanding' co-op work term evaluations.
 
 ========================
 Activities and Interests
@@ -77,4 +78,3 @@ Provided web development and technical support for Norfolk General Hospital in S
 
 Conversant in French (French Language Certificate Level I, University of Waterloo).
 
-Received 'excellent' and 'outstanding' co-op work term evaluations.
