@@ -22,7 +22,7 @@ Employment History
 ========================
 
 --------------------------------------------------------------------------------------------------------
-BlackBerry Limited | Software Tools Developer | November 2010 – present
+BlackBerry Limited | Software Tools Developer | November 2010 - present
 --------------------------------------------------------------------------------------------------------
 Responsible for the JavaScript, CSS, and HTML/JSP served externally via docs.blackberry.com and developer.blackberry.com.
 
@@ -35,7 +35,7 @@ Collaborated with technical writers on DITA content development while working wi
 Regular contributor to projects within internal "BlackBerry Labs" writing several popular HTML5/WebWorks applications.
 
 --------------------------------------------------------------------------------------------------------
-Primal Fusion Inc. | Web Developer | September 2007 – November 2010
+Primal Fusion Inc. | Web Developer | September 2007 - November 2010
 --------------------------------------------------------------------------------------------------------
 Member of the User Experience Group developing HTML5 applications for internal prototyping and investor demonstrations.
 
@@ -45,7 +45,7 @@ Acted as agile team Scrum Master responsible for running weekly demos, daily sta
 
 Responsible for administering internal Apache HTTP servers, GNU/Linux VMs, and source control repositories (SVN).
 
-Centre for Extended Learning, University of Waterloo | Web Developer (Co-op) | September 2004 – January 2007
+Centre for Extended Learning, University of Waterloo | Web Developer (Co-op) | September 2004 - January 2007
 
 Worked with faculty and instructional staff to create course content in Flash/ActionScript for undergraduate calculus, computer science, and biochemistry courses.
 
@@ -54,7 +54,7 @@ Implemented bash scripts to help automate deployment and course packaging activi
 Received 'excellent' and 'outstanding' co-op work term evaluations.
 
 --------------------------------------------------------------------------------------------------------
-Information Systems, Transfreight Inc. | Technical Support Analyst (Co-op) | September 2002 – April 2004
+Information Systems, Transfreight Inc. | Technical Support Analyst (Co-op) | September 2002 - April 2004
 --------------------------------------------------------------------------------------------------------
 Responsible for LAN administration, hardware procurement, and on-site technical support for satellite offices throughout the Midwestern United States.
 
@@ -65,13 +65,13 @@ Developed (J2SE) tools to collect usage data from proprietary logistics software
 Activities and Interests
 ========================
 
-Member of the Canadian Forces (Reserve) 31 Combat Engineer Regiment (2007 – present).
+Member of the Canadian Forces (Reserve) 31 Combat Engineer Regiment (2007 - present).
 
 Undergraduate Research Assistant to Dr. Michael Terry, UW Human Computer Interaction Group (2007).
 
-High school math tutor (2004 – 2007).
+High school math tutor (2004 - 2007).
 
-FIRST Robotics (Waterloo Regional) Volunteer (2005 – 2007).
+FIRST Robotics (Waterloo Regional) Volunteer (2005 - 2007).
 
 Provided web development and technical support for Norfolk General Hospital in Simcoe, Ontario (2004).
 
