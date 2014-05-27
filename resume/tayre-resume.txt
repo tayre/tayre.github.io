@@ -45,8 +45,9 @@ Acted as agile team Scrum Master responsible for running weekly demos, daily sta
 
 Responsible for administering internal Apache HTTP servers, GNU/Linux VMs, and source control repositories (SVN).
 
+--------------------------------------------------------------------------------------------------------
 Centre for Extended Learning, University of Waterloo | Web Developer (Co-op) | September 2004 - January 2007
-
+--------------------------------------------------------------------------------------------------------
 Worked with faculty and instructional staff to create course content in Flash/ActionScript for undergraduate calculus, computer science, and biochemistry courses.
 
 Implemented bash scripts to help automate deployment and course packaging activities.
