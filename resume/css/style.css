@@ -1,135 +1,42 @@
-@font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Ubuntu'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v5/_xyN3apAT_yRRDeqB3sPRg.woff) format('woff');
-}
+@font-face { font-family: 'Ubuntu'; font-style: normal; font-weight: 400; src: local("Ubuntu"), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v5/_xyN3apAT_yRRDeqB3sPRg.woff) format("woff"); }
+@font-face { font-family: 'Ubuntu'; font-style: normal; font-weight: 700; src: local("Ubuntu Bold"), local("Ubuntu-Bold"), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v5/0ihfXUL2emPh0ROJezvraD8E0i7KZn-EPnyo3HZu7kw.woff) format("woff"); }
+BODY { font-family: "Ubuntu", Helvetica, Verdana, sans-serif; font-size: 0.8em; margin: 20px 40px; max-width: 1024px; }
 
-@font-face {
-  font-family: 'Ubuntu';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Ubuntu Bold'), local('Ubuntu-Bold'), url(http://themes.googleusercontent.com/static/fonts/ubuntu/v5/0ihfXUL2emPh0ROJezvraD8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
-}
+P { margin: 5px 0 0 0; line-height: 1.7em; }
 
-BODY {
-    font-family: 'Ubuntu', Helvetica, Verdana, sans-serif;
-    font-size: .8em;
-    margin: 20px 40px;
-    max-width: 1024px;
-}
+A, A:visited, A:active { text-decoration: none; color: black; }
 
-P {
-    margin: 5px 0 0 0;
-    line-height: 1.7em;
-}
+H1 { font-size: 1.25em; margin: 0; }
 
-A, A:visited, A:active {
-    text-decoration: none;
-    color: black;
-}
+H2 { font-size: 1em; margin: 0; }
 
-DIV.section {
-    margin: 35px 0;
-}
+H3 { font-size: 1em; margin: 5px 0; }
 
-.qr {
-    float: right;
-    width: 60px;
-}
+DIV.section { margin: 35px 0; }
 
-.myName {
-    float: left;
-    margin-right: 15px;
-    letter-spacing: 3px;
-    font-size: 1.5em;
-    margin: 0 10px 10px 0;
-}
+.qr { float: right; width: 60px; }
 
-@media screen and (max-width: 350px) {
-    .myName, .qr { 
-        float: none; 
-    }
-}
+.myName { float: left; margin-right: 15px; letter-spacing: 3px; font-size: 1.5em; margin: 0 10px 10px 0; }
 
-.contactInfo {
-    float: left;
-    margin: 0;
-    padding: 0;
-    border-left: 1px solid #CCC;
-    padding: 0 5px;
-}
+@media screen and (max-width: 350px) { .myName, .qr { float: none; } }
+.contactInfo { float: left; margin: 0; padding: 0; border-left: 1px solid #CCC; padding: 0 5px; }
+.contactInfo UL { margin: 0; padding: 0; }
+.contactInfo LI { list-style: none; margin-bottom: 5px; }
 
-.contactInfo UL {
-    margin: 0;
-    padding: 0;
-}
+.section UL { list-style: square; list-style-position: outside; color: #CCC; margin: 2px 0; padding: 0 20px; }
+.section UL LI { margin: 15px 0; line-height: 1.5em; }
+.section UL SPAN { color: #000; }
 
-.contactInfo LI {
-    list-style: none;
-    margin-bottom: 5px;
-}
+.jobSection { margin: 25px 0; }
+.jobSection UL { border-top: 1px solid #CCC; }
 
-H1 {
-    font-size: 1.25em;
-    margin: 0;
-}
+.jobDetails { float: left; }
 
-H2 {
-    font-size: 1em;
-    margin: 0;
-}
+.jobMeta, .jobLocation, .timeFrame { float: right; }
 
-H3 {
-    font-size: 1em;
-    margin: 5px 0;
-}
+@media screen and (max-width: 720px) { .jobDetails, .jobMeta, .jobLocation, .timeFrame { float: none; } }
+.clear { clear: both; }
 
-.section UL {
-    list-style: square;
-    list-style-position: outside;
-    color: #CCC;
-    margin: 2px 0;
-    padding: 0 20px;
-}
+@media print { .pagebreak { page-break-after: always; } }
 
-.section LI {
-    margin: 15px 0;
-    line-height: 1.5em;
-}
-
-.section SPAN {
-    color: #000;
-}
-
-.jobSection {
-    margin: 25px 0;
-}
-
-.jobSection UL {
-    border-top: 1px solid #CCC;
-}
-
-.jobDetails{
-    float: left;
-}
-
-.jobMeta, .jobLocation, .timeFrame {
-    float: right;
-}
-
-@media screen and (max-width: 720px) {
-    .jobDetails, .jobMeta, .jobLocation, .timeFrame {
-        float: none;
-    }
-}
-
-.clear {
-    clear: both;
-}
-
-@media print {
-    .pagebreak {
-        page-break-after: always; 
-    }
-}
+/*# sourceMappingURL=style.css.map */
