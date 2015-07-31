@@ -1,0 +1,79 @@
+Thomas  Ayre 
+ayre.tom@gmail.com
+http://tayre.github.io
+519.729.8086
+
+
+========================
+Education
+========================
+Bachelor of Mathematics in Honours Computer Science. University of Waterloo (2007).
+
+========================
+Technical Skills
+========================
+JavaScript, CSS(3), HTML(5), AngularJS, jQuery, Sass, HTTP, JSP, XSLT, XPath, JSON, ZURB
+Foundation, Apache Ant, LaTex, Chrome DevTools, git, svn, DITA Open Toolkit, SDLC, Agile/Scrum,
+JIRA, BugZilla
+
+========================
+Employment History
+========================
+
+--------------------------------------------------------------------------------------------------------
+BlackBerry Limited | Software Tools Developer II | November 2010 - present
+--------------------------------------------------------------------------------------------------------
+Part of the development team responsible for Help and Tutorial applications deployed on BlackBerry devices (BB10 and BBOS).
+
+Implemented front end view for help.blackberry.com and developer.blackberry.com.
+
+Maintained legacy (Rackspace hosted) docs.blackberry.com documentation CMS.
+
+Developed XSL transformations used by BlackBerry technical writers; generating enterprise, developer, and consumer documentation.
+
+Regular contributor to projects within internal "BlackBerry Labs" writing several popular HTML5/WebWorks applications.
+
+--------------------------------------------------------------------------------------------------------
+Primal Fusion Inc. | Web Developer | September 2007 - November 2010
+--------------------------------------------------------------------------------------------------------
+Member of the User Experience Group developing HTML5 applications for internal prototyping and investor demonstrations.
+
+Tasked with implementation and testing of responsive layouts for mobile versions of www.primal.com
+
+Acted as agile team Scrum Master responsible for running weekly demos, daily stand-up meetings, and maintaining the requirements backlog.
+
+Responsible for administering internal Apache HTTP servers, GNU/Linux VMs, and source control repositories (SVN).
+
+--------------------------------------------------------------------------------------------------------
+Centre for Extended Learning, University of Waterloo | Web Developer (Co-op) | September 2004 - January 2007
+--------------------------------------------------------------------------------------------------------
+Worked with faculty and instructional staff to create course content in Flash/ActionScript for undergraduate calculus, computer science, and biochemistry courses.
+
+Implemented bash scripts to help automate deployment and course packaging activities.
+
+Received 'excellent' and 'outstanding' co-op work term evaluations.
+
+--------------------------------------------------------------------------------------------------------
+Information Systems, Transfreight Inc. | Technical Support Analyst (Co-op) | September 2002 - April 2004
+--------------------------------------------------------------------------------------------------------
+Responsible for LAN administration, hardware procurement, and on-site technical support for satellite offices throughout the Midwestern United States.
+
+Developed (J2SE) tools to collect usage data from proprietary logistics software.
+
+Received 'excellent' and 'outstanding' co-op work term evaluations.
+
+========================
+Activities and Interests
+========================
+
+Member of the Canadian Forces (Reserve) 31 Combat Engineer Regiment (2007 - present).
+
+Undergraduate Research Assistant to Dr. Michael Terry, UW Human Computer Interaction Group (2007).
+
+High school math tutor (2004 - 2007).
+
+FIRST Robotics (Waterloo Regional) Volunteer (2005 - 2007).
+
+Provided web development and technical support for Norfolk General Hospital in Simcoe, Ontario (2004).
+
+Conversant in French (French Language Certificate Level I, University of Waterloo).
