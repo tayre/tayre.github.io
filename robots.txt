@@ -1,3 +1,5 @@
 # go away
 User-agent: *
 Disallow: /
+
+Sitemap: https://secure.vidyard.dev/sitemaps/sitemap-oYqEUYKv3-a2gXt4cwqQiQ.xml
