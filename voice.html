@@ -1,0 +1,133 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <style>
+        body { font-family: monospace; }
+        #text {
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form action="" method="get">
+        <textarea id="text" class="log" autofocus></textarea>
+        <div class="field-wrapper">
+            <label for="voice">Voice:</label>
+            <select id="voice"></select>
+        </div>
+        <div class="field-wrapper">
+            <label for="rate">Rate (0.1 - 10):</label>
+            <input type="number" id="rate" min="0.1" max="10" value="0.85" step="any" />
+        </div>
+        <div class="field-wrapper">
+            <label for="pitch">Pitch (0.1 - 2):</label>
+            <input type="number" id="pitch" min="0.1" max="2" value="1" step="any" />
+        </div>
+        <div class="buttons-wrapper">
+            <button type="button" id="button-stop" class="button">Stop</button>
+            <button type="button" id="button-pause" class="button">Pause</button>
+            <button type="button" id="button-resume" class="button">Resume</button>
+        </div>
+    </form>
+
+    <div id="log" class="log"></div>
+
+    <script>
+        var isCtrl = false;
+
+        function injectVoices(voicesElement, voices) {
+            voicesElement.innerHTML = voices
+                .map(function(voice) {
+                    var option = document.createElement('option');
+
+                    option.value = voice.lang;
+                    option.textContent = voice.name + (voice.default ? ' (default)' : '');
+                    option.setAttribute('data-voice-uri', voice.voiceURI);
+
+                    return option;
+                })
+                .map(function(option) {
+                    return option.outerHTML;
+                })
+                .join('');
+        }
+
+        function logEvent(string) {
+            console.log(string)
+        }
+
+        if (!('SpeechSynthesisUtterance' in window)) {
+            document.querySelector('.js-api-support').removeAttribute('hidden');
+            [].forEach.call(document.querySelectorAll('form button'), function(button) {
+                button.setAttribute('disabled', '');
+            });
+        } else {
+            var text = document.getElementById('text');
+            var voices = document.getElementById('voice');
+            var rate = document.getElementById('rate');
+            var pitch = document.getElementById('pitch');
+
+            injectVoices(voices, speechSynthesis.getVoices());
+
+            speechSynthesis.addEventListener('voiceschanged', function onVoiceChanged() {
+                speechSynthesis.removeEventListener('voiceschanged', onVoiceChanged);
+
+                injectVoices(voices, speechSynthesis.getVoices());
+            });
+
+            $('#text').keydown(function(e) {
+
+                if (e.ctrlKey && e.keyCode == 13) {
+                    logEvent("control+enter");
+
+                    var selectedOption = voices.options[voices.selectedIndex];
+                    var selectedVoice = speechSynthesis
+                        .getVoices()
+                        .filter(function(voice) {
+                            return voice.voiceURI === selectedOption.getAttribute('data-voice-uri');
+                        })
+                        .pop();
+
+                    // Create the utterance object setting the chosen parameters
+                    var utterance = new SpeechSynthesisUtterance();
+                    utterance.text = text.value;
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice.lang;
+                    utterance.rate = rate.value;
+                    utterance.pitch = pitch.value;
+
+                    utterance.addEventListener('start', function() {
+                        logEvent('Speaker started');
+                    });
+                    utterance.addEventListener('end', function() {
+                        logEvent('Speaker finished');
+                    });
+
+                    speechSynthesis.speak(utterance);
+                    $("#text").val("")
+                }
+            });
+
+            document.getElementById('button-stop').addEventListener('click', function() {
+                speechSynthesis.cancel();
+                logEvent('Speaker stopped');
+            });
+
+            document.getElementById('button-pause').addEventListener('click', function() {
+                speechSynthesis.pause();
+                logEvent('Speaker paused');
+            });
+
+            document.getElementById('button-resume').addEventListener('click', function() {
+                speechSynthesis.resume();
+                logEvent('Speaker resumed');
+            });
+
+        }
+    </script>
+</body>
+<html>
