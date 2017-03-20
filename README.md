@@ -1,2 +1,1 @@
-
-Most of the source in this repo is driving the GH pages at http://tayre.github.io
+Most of the source in this repo is driving the GH pages at https://tayre.github.io
