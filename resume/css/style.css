@@ -24,7 +24,7 @@ DIV.section { margin: 35px 0; }
 .contactInfo LI { list-style: none; margin-bottom: 5px; }
 
 .section UL { list-style: square; list-style-position: outside; color: #CCC; margin: 2px 0; padding: 0 20px; }
-.section UL LI { margin: 15px 0; line-height: 1.5em; }
+.section UL LI { margin: 10px 0; line-height: 1.5em; }
 .section UL SPAN { color: #000; }
 
 .jobSection { margin: 25px 0; }
