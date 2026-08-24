@@ -5,7 +5,7 @@ MAX_MOVES = 25;
 
 $(document).ready(function() {
 
-    $("#board_controls span").live('click', board_controls_click_handler);
+    $("#board_controls").on('click', 'span', board_controls_click_handler);
 
     new_game(true, 0);
 
@@ -161,17 +161,17 @@ Splash = {
 
                 Splash.pauseMessage('Touch to Play Again');
 
-                $('#splash').live('mousedown touchstart', function() {
+                $(document).on('mousedown touchstart', '#splash', function() {
                     $("#splash").addClass('mousedown');
                 });
 
-                $('#splash').live('mouseup touchmove', function() {
+                $(document).on('mouseup touchmove', '#splash', function() {
                     
                     if (typeof navigator.vibrate !== 'undefined') { //vibrate
                         navigator.vibrate(25);
                     }
                     
-                    $('#splash').die('mousedown touchstart mouseup touchmove')
+                    $(document).off('mousedown touchstart mouseup touchmove', '#splash')
                     
                     $("#splash").delay(500).fadeOut(function() {
                         new_game(false, Level.curr_level);
