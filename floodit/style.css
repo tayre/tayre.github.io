@@ -191,8 +191,8 @@ TD {
     display: none;
 }
 
-/* Landscape */
-@media screen and (orientation: landscape) {
+/* Landscape phones only - desktop windows are landscape too and play fine */
+@media screen and (orientation: landscape) and (max-height: 500px) {
     #error {
         display: block;
         position: absolute;

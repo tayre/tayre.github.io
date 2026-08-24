@@ -24,22 +24,21 @@ function intToRoman(num) {
 
     const lookup = {
         1000: 'M',
+        900: 'CM',
         500: 'D',
+        400: 'CD',
         100: 'C',
+        90: 'XC',
         50: 'L',
+        40: 'XL',
         10: 'X',
         9: 'IX',
-        8: 'VIII',
-        7: 'VII',
-        6: 'VI',
         5: 'V',
         4: 'IV',
-        3: 'III',
-        2: 'II',
         1: 'I'
     };
 
-    const lookupOrder = [1000, 500, 100, 50, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const lookupOrder = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
     const buffer = [];
 
     for (const val of lookupOrder) {
