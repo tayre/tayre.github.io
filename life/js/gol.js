@@ -1,35 +1,32 @@
-var dim_x = 50;
-var dim_y = 50;
+const dim_x = 50;
+const dim_y = 50;
 
-$(document).ready(function(){
+document.addEventListener('DOMContentLoaded', () => {
 
     //create a new game
-    var g = new GameOfLife(dim_x, dim_y);
+    const g = new GameOfLife(dim_x, dim_y);
 
     //add it to the DOM
-    g.drawCanvas('body');
-    
-    if (g.context) {
+    g.drawCanvas(document.body);
 
-        //bind the controls to the game
-        var ctrls = new Controls(g);
+    //bind the controls to the game
+    new Controls(g);
 
-        //an acorn @see http://en.wikipedia.org/wiki/File:Game_of_life_acorn.svg
-        g.toggleCell(8, 21);
-        g.toggleCell(9, 23);
-        g.toggleCell(10, 20);
-        g.toggleCell(10, 21);
-        g.toggleCell(10, 24);
-        g.toggleCell(10, 25);
-        g.toggleCell(10, 26);
+    //an acorn @see https://en.wikipedia.org/wiki/File:Game_of_life_acorn.svg
+    g.toggleCell(8, 21);
+    g.toggleCell(9, 23);
+    g.toggleCell(10, 20);
+    g.toggleCell(10, 21);
+    g.toggleCell(10, 24);
+    g.toggleCell(10, 25);
+    g.toggleCell(10, 26);
 
-        //a glider @see http://upload.wikimedia.org/wikipedia/en/f/f2/Game_of_life_animated_glider.gif
-        g.toggleCell(40, 36);
-        g.toggleCell(40, 37);
-        g.toggleCell(40, 38);
-        g.toggleCell(39, 38);
-        g.toggleCell(38, 37);
-    }
+    //a glider @see https://en.wikipedia.org/wiki/Glider_(Conway%27s_Game_of_Life)
+    g.toggleCell(40, 36);
+    g.toggleCell(40, 37);
+    g.toggleCell(40, 38);
+    g.toggleCell(39, 38);
+    g.toggleCell(38, 37);
 });
 
 /**
@@ -37,11 +34,11 @@ $(document).ready(function(){
  * @param {number} rows specifies the height of our Game of Life "grid"
  * @param {number} cols specifies the width of our Game of Life "grid"
  */
-function GameOfLife(rows, cols){
+function GameOfLife(rows, cols) {
     this.rows = rows;
     this.cols = cols;
     this.context = null;
-    this.canvasID = "gameCanvas"
+    this.canvasID = "gameCanvas";
 
     //setup our 2D arrays
     this.currentGeneration = [];
@@ -49,38 +46,38 @@ function GameOfLife(rows, cols){
 
     this.resetCurrentGeneration();
     this.resetNextGeneration();
-
 }
 
 GameOfLife.prototype = {
     /**
      * Creates a canvas element, saves the context, inserts the element into the DOM, and binds any required event handlers
-     * @param {string} divID is the element id of where the canvas element will be inserted
+     * @param {Element} parent is the element the canvas will be appended to
      */
-    drawCanvas: function(divID){
-        $(divID).append('<canvas id="' + this.canvasID + '" width="' + window.innerWidth + '" height="' + window.innerHeight + '"></canvas>');
-        var canvas = document.getElementById(this.canvasID);
-        if (canvas.getContext) {
-            this.context = canvas.getContext('2d'); //save the context
-            this.context.globalAlpha = 0.5;
-            this.context.fillStyle = "#999";
-            this.context.lineWidth = 1;
-            $("#" + this.canvasID).live('mousedown', this, this.mouseDownHandler);
-        }
+    drawCanvas: function (parent) {
+        const canvas = document.createElement('canvas');
+        canvas.id = this.canvasID;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        parent.appendChild(canvas);
+
+        this.context = canvas.getContext('2d'); //save the context
+        this.context.globalAlpha = 0.5;
+        this.context.fillStyle = "#999";
+        this.context.lineWidth = 1;
+        canvas.addEventListener('mousedown', (event) => this.mouseDownHandler(event, canvas));
     },
 
     /**
      * Handle the mouse down event in the canvas
      */
-    mouseDownHandler: function(event){
-        var self = event.data;
-        var x = event.pageX - this.offsetLeft;
-        var y = event.pageY - this.offsetTop;
-        var scale_x = window.innerWidth/dim_x;
-        var scale_y = window.innerWidth/dim_y;
-        var col = Math.floor(x / scale_x);
-        var row = Math.floor(y / scale_y);
-        self.toggleCell(row, col);
+    mouseDownHandler: function (event, canvas) {
+        const x = event.pageX - canvas.offsetLeft;
+        const y = event.pageY - canvas.offsetTop;
+        const scale_x = window.innerWidth / dim_x;
+        const scale_y = window.innerWidth / dim_y;
+        const col = Math.floor(x / scale_x);
+        const row = Math.floor(y / scale_y);
+        this.toggleCell(row, col);
     },
 
     /**
@@ -88,9 +85,9 @@ GameOfLife.prototype = {
      * @param {number} row specifies the ith row
      * @param {number} col specifies th jth column
      */
-    paintCell: function(row, col){
-        var scale_x = window.innerWidth/dim_x;
-        var scale_y = window.innerWidth/dim_y;
+    paintCell: function (row, col) {
+        const scale_x = window.innerWidth / dim_x;
+        const scale_y = window.innerWidth / dim_y;
 
         if (this.currentGeneration[row][col]) {
             this.context.fillRect(col * scale_x, row * scale_y, scale_x, scale_y);
@@ -105,7 +102,7 @@ GameOfLife.prototype = {
      * @param {number} row specifies the ith row
      * @param {number} col specifies th jth column
      */
-    toggleCell: function(row, col){
+    toggleCell: function (row, col) {
         this.currentGeneration[row][col] = !this.currentGeneration[row][col]; //flip the bit
         this.paintCell(row, col);
     },
@@ -113,9 +110,9 @@ GameOfLife.prototype = {
     /**
      * Iterates over the grid and paints each cell
      */
-    paintGrid: function(){
-        for (var i = 0; i < this.rows; i++) {
-            for (var j = 0; j < this.cols; j++) {
+    paintGrid: function () {
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
                 this.paintCell(i, j);
             }
         }
@@ -124,14 +121,14 @@ GameOfLife.prototype = {
     /**
      * @return the number of neighbours of element (row, col) which are 'alive'
      */
-    numNeighbours: function(row, col){
-        var count = 0;
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
+    numNeighbours: function (row, col) {
+        let count = 0;
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 if (i === 0 && j === 0) {
                     continue; //don't count the element (row, col)
                 }
-                if (this.currentGeneration[(row + i).mod(this.rows)][(col + j).mod(this.cols)]) {
+                if (this.currentGeneration[mod(row + i, this.rows)][mod(col + j, this.cols)]) {
                     count++;
                 }
             }
@@ -147,19 +144,19 @@ GameOfLife.prototype = {
      * 3. Any live cell with two or three live neighbours lives on to the next generation.
      * 4. Any dead cell with exactly three live neighbours becomes a live cell.
      *
-     * @see http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
+     * @see https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
      */
-    step: function(){
-        for (var i = 0; i < this.rows; i++) {
-            for (var j = 0; j < this.cols; j++) {
-            
-                var count = this.numNeighbours(i, j);
-                var living = this.currentGeneration[i][j];
-                
+    step: function () {
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+
+                const count = this.numNeighbours(i, j);
+                const living = this.currentGeneration[i][j];
+
                 if (living && count < 2 || living && count > 3) {
                     this.nextGeneration[i][j] = false;
                 }
-                
+
                 else if (living && count == 2 || living && count == 3 || !living && count == 3) {
                     this.nextGeneration[i][j] = true;
                 }
@@ -173,7 +170,7 @@ GameOfLife.prototype = {
     /**
      * Resets the game board
      */
-    clear: function(){
+    clear: function () {
         this.resetCurrentGeneration();
         this.resetNextGeneration();
         this.paintGrid();
@@ -182,10 +179,10 @@ GameOfLife.prototype = {
     /**
      * Set all elements of the currentGeneration array to false
      */
-    resetCurrentGeneration: function(){
-        for (var i = 0; i < this.rows; i++) {
+    resetCurrentGeneration: function () {
+        for (let i = 0; i < this.rows; i++) {
             this.currentGeneration[i] = [];
-            for (var j = 0; j < this.cols; j++) {
+            for (let j = 0; j < this.cols; j++) {
                 this.currentGeneration[i][j] = false;
             }
         }
@@ -194,21 +191,21 @@ GameOfLife.prototype = {
     /**
      * Set all elements of the nextGeneration array to false
      */
-    resetNextGeneration: function(){
-        for (var i = 0; i < this.rows; i++) {
+    resetNextGeneration: function () {
+        for (let i = 0; i < this.rows; i++) {
             this.nextGeneration[i] = [];
-            for (var j = 0; j < this.cols; j++) {
+            for (let j = 0; j < this.cols; j++) {
                 this.nextGeneration[i][j] = false;
             }
         }
     }
-}
+};
 
 /**
  * The Controls object is the controller for the various DOM buttons
  * @param {object} game is an instance of a GameOfLife object
  */
-function Controls(game){
+function Controls(game) {
     this.playButtonID = 'play';
     this.stepButtonID = 'step';
     this.clearButtonID = 'clear';
@@ -225,52 +222,51 @@ Controls.prototype = {
     /**
      * Binds our various event handlers
      */
-    attachEventHandlers: function(){
-        $('#' + this.playButtonID).bind('click', this, this.playButtonHandler);
-        $('#' + this.stepButtonID).bind('click', this, this.stepButtonHandler);
-        $('#' + this.clearButtonID).bind('click', this, this.clearButtonHandler);
+    attachEventHandlers: function () {
+        document.getElementById(this.playButtonID).addEventListener('click', (event) => this.playButtonHandler(event));
+        document.getElementById(this.stepButtonID).addEventListener('click', (event) => this.stepButtonHandler(event));
+        document.getElementById(this.clearButtonID).addEventListener('click', (event) => this.clearButtonHandler(event));
     },
 
     /**
      * Our general click handler
      */
-    buttonHandler: function(button){
+    buttonHandler: function (button) {
         clearInterval(this.interval); //stop the game
-        $(button).siblings().removeClass('clicked');
-        $(button).addClass('clicked');
+        for (const sibling of button.parentElement.children) {
+            sibling.classList.remove('clicked');
+        }
+        button.classList.add('clicked');
     },
 
     /**
      * Handle the play button click event
      */
-    playButtonHandler: function(event){
-        var self = event.data;
-        self.buttonHandler(this);
-        self.interval = setInterval(function(){
-            self.game.step();
-        }, self.WAIT_TIME)
+    playButtonHandler: function (event) {
+        this.buttonHandler(event.currentTarget);
+        this.interval = setInterval(() => {
+            this.game.step();
+        }, this.WAIT_TIME);
     },
 
     /**
      * Handle the step button click event
      */
-    stepButtonHandler: function(event){
-        var self = event.data;
-        self.buttonHandler(this);
-        self.game.step();
+    stepButtonHandler: function (event) {
+        this.buttonHandler(event.currentTarget);
+        this.game.step();
     },
 
     /**
-     * Handle the pause button click event
+     * Handle the clear button click event
      */
-    clearButtonHandler: function(event){
-        var self = event.data;
-        self.buttonHandler(this);
-        self.game.clear();
+    clearButtonHandler: function (event) {
+        this.buttonHandler(event.currentTarget);
+        this.game.clear();
     }
-}
+};
 
-//A modulo function which allows for negative values of x
-Number.prototype.mod = function(x){
-    return ((this % x) + x) % x;
+//A modulo function which allows for negative values of n
+function mod(n, m) {
+    return ((n % m) + m) % m;
 }

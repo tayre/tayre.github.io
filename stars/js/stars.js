@@ -1,27 +1,28 @@
-$(document).ready(function(){
-    // set the canvas dimensions to be the window dimensions
-    $('#canvas').attr('width', $(window).width());
-    $('#canvas').attr('height', $(window).height());
-    var simulator = new Simulator();
-    simulator.start();
-});
-
-GLOBAL = {
+const GLOBAL = {
     NUM_POINTS: 128,
     X_FOV: 45 * Math.PI / 180, // horizontal field of view
     Y_FOV: 90 * Math.PI / 180, // vertical field of view
     MAX_DISTANCE: 5000, // distance to the horizon
     SPEED: 20,
     REFRESH_RATE: 25
-}
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // set the canvas dimensions to be the window dimensions
+    const canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const simulator = new Simulator(canvas);
+    simulator.start();
+});
 
 /*
  * Constructor function for the main simluation driver
  */
-function Simulator(){
+function Simulator(canvas) {
     this.points = [];
-    this.screenWidth = $('#canvas').width();
-    this.screenHeight = $('#canvas').height();
+    this.screenWidth = canvas.width;
+    this.screenHeight = canvas.height;
 
     /**
      * p1p2 is the window width or window height
@@ -43,52 +44,41 @@ function Simulator(){
     this.hViewDistance = (this.screenWidth / 2) / Math.tan(GLOBAL.X_FOV / 2); // horizontal viewing distance
     this.vViewDistance = (this.screenHeight / 2) / Math.tan(GLOBAL.Y_FOV / 2); // vertical viewing distance
     // initialize the points array
-    for (var i = 0; i < GLOBAL.NUM_POINTS; i++) {
-        var x = (Math.random() * this.screenWidth) - (this.screenWidth / 2); //we need to shift this x value to the left 1/2 screenWidth, since our origin is at the centre of the window
-        var y = (Math.random() * this.screenHeight) - (this.screenHeight / 2); //we need to shift this y value up 1/2 screenHeight for the same reason
-        var z = Math.random() * GLOBAL.MAX_DISTANCE;
-        var star = new Point(x, y, z);
-        this.points.push(star);
+    for (let i = 0; i < GLOBAL.NUM_POINTS; i++) {
+        const x = (Math.random() * this.screenWidth) - (this.screenWidth / 2); //we need to shift this x value to the left 1/2 screenWidth, since our origin is at the centre of the window
+        const y = (Math.random() * this.screenHeight) - (this.screenHeight / 2); //we need to shift this y value up 1/2 screenHeight for the same reason
+        const z = Math.random() * GLOBAL.MAX_DISTANCE;
+        this.points.push(new Point(x, y, z));
     }
-    
-    this.context = null;
-    var canvas = document.getElementById('canvas');
-    if (canvas.getContext) {
-        this.context = canvas.getContext("2d");
-        this.context.fillStyle = "rgba(255,255, 255, .75)"
-    }
-}
 
+    this.context = canvas.getContext('2d');
+    this.context.fillStyle = "rgba(255, 255, 255, .75)";
+}
 
 Simulator.prototype = {
 
     //start main event loop
-    start: function(){
-        var that = this;
-        if (this.context !== null) {
-            setInterval(function(){
-                that.updatePositions();
-            }, GLOBAL.REFRESH_RATE)
-        }
-        //otherwise no canvas support
+    start: function () {
+        setInterval(() => {
+            this.updatePositions();
+        }, GLOBAL.REFRESH_RATE);
     },
 
-    // determine new x, y, z pos and draw the point    
-    updatePositions: function(){
+    // determine new x, y, z pos and draw the point
+    updatePositions: function () {
 
-        var ctx = this.context;
+        const ctx = this.context;
         ctx.clearRect(0, 0, this.screenWidth, this.screenHeight);
 
         ctx.save();
 
         //translate to centre of the window
-        this.context.translate(this.screenWidth / 2, this.screenHeight / 2);
+        ctx.translate(this.screenWidth / 2, this.screenHeight / 2);
 
-        for (var i = 0, arr_length = this.points.length; i < arr_length; i++) {
+        for (const star of this.points) {
 
-            var star = this.points[i];
             star.z -= GLOBAL.SPEED;
-            if(star.z <= 0) { star.z = GLOBAL.MAX_DISTANCE };
+            if (star.z <= 0) { star.z = GLOBAL.MAX_DISTANCE; }
 
             // determine projections
             star.projectedX = (star.x * this.hViewDistance) / star.z;
@@ -107,11 +97,11 @@ Simulator.prototype = {
 /**
  * Constructor function for a Point object
  */
-function Point(x, y, z){
+function Point(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.projectedX;
-    this.projectedY;
-    this.projectedSize;
+    this.projectedX = 0;
+    this.projectedY = 0;
+    this.projectedSize = 0;
 }

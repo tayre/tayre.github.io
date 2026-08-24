@@ -1,44 +1,28 @@
-var MAX = 9999;
-$(document).ready(function(){
-    $('#submit').bind('submit', function(event){
+const MAX = 9999;
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('submit').addEventListener('submit', function (event) {
         event.preventDefault();
-        var input = $(this).find('input:first').val();
-        var number = parseInt(input);
+        const output = document.getElementById('output');
+        const number = parseInt(this.querySelector('input').value, 10);
         if (isNaN(number)) {
             alert('Input a number please.');
         }
-        else if (parseInt(number) > MAX) {
-            alert('Less than ' + MAX + ' please.')
+        else if (number > MAX) {
+            alert('Less than ' + MAX + ' please.');
         }
-        else if(parseInt(number) === 0) {
-            $('#output').html('<a href = "http://en.wikipedia.org/wiki/Roman_numerals#Zero">In general, there is no roman numeral for zero.</a>');
+        else if (number === 0) {
+            output.innerHTML = '<a href="https://en.wikipedia.org/wiki/Roman_numerals#Zero">In general, there is no roman numeral for zero.</a>';
         }
         else {
-            $('#output').html(intToRoman(number));
+            output.textContent = intToRoman(number);
         }
     });
-    
 });
 
-function isSquare(n) {
+function intToRoman(num) {
 
-    var i = 2;
-
-        while (i <= n) { 
-            i *= i;
-        }
-
-    if(i == n) {
-        return true;
-    }
-
-    return false;
-
-}
-
-function intToRoman(num){
-
-    var lookup = {
+    const lookup = {
         1000: 'M',
         500: 'D',
         100: 'C',
@@ -51,22 +35,19 @@ function intToRoman(num){
         5: 'V',
         4: 'IV',
         3: 'III',
-        2: "II",
-        1: "I"
-    }
+        2: 'II',
+        1: 'I'
+    };
 
-    var lookupOrder = [1000, 500, 100, 50, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-    var buffer = [], val = 0;
-    
-    for (var i = 0; i < lookupOrder.length; i++) {
-        val = lookupOrder[i];
+    const lookupOrder = [1000, 500, 100, 50, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const buffer = [];
+
+    for (const val of lookupOrder) {
         while (num - val >= 0) {
             buffer.push(lookup[val]);
             num -= val;
         }
-        
     }
 
-    return (buffer.join(''));
-
+    return buffer.join('');
 }

@@ -1,31 +1,25 @@
-
-$(document).ready(function(){
-    $('#container form').submit(submitHandler);
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#container form').addEventListener('submit', submitHandler);
 });
 
-function submitHandler(event){
+function submitHandler(event) {
     event.preventDefault();
-    var input = $(this).find('input').val();
+    const input = this.querySelector('input').value;
 
-        var charArray = input.split("");
-        
-        for(var i = 0; i<charArray.length; i++) {
-            charArray[i] += "<sub>" + i + "</sub>"
-        }
+    const charArray = input.split('').map((c, i) => c + '<sub>' + i + '</sub>');
 
-        var results = [];
-        permute(charArray, 0, results);
-        print(results);
-
+    const results = [];
+    permute(charArray, 0, results);
+    print(results);
 }
 
-function permute(array, d, results){
-    if (d == array.length) {
-        results.push("<li>" + array.join('') + "</li>");
+function permute(array, d, results) {
+    if (d === array.length) {
+        results.push('<li>' + array.join('') + '</li>');
     }
 
     else {
-        for (var i = d; i < array.length; i++) {
+        for (let i = d; i < array.length; i++) {
             swap(array, d, i);
             permute(array, d + 1, results);
             swap(array, i, d);
@@ -33,12 +27,12 @@ function permute(array, d, results){
     }
 }
 
-function swap(array, i, j){
-    var temp = array[i];
+function swap(array, i, j) {
+    const temp = array[i];
     array[i] = array[j];
     array[j] = temp;
 }
 
-function print(array){
-    $("#output").html(array.join(''));
+function print(array) {
+    document.getElementById('output').innerHTML = array.join('');
 }

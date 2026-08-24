@@ -24,73 +24,59 @@
  *
  */
 
-GLOBAL = {
-    width:  40,
+const GLOBAL = {
+    width: 40,
     height: 40,
     darkColour: "rgba(0, 200, 0, 0.8)",
     lightColour: "rgba(0, 200, 0, 0.2)"
-}
-$(document).ready(function(){
+};
 
-    var canvas = document.getElementById('canvas');
-    if(canvas.getContext) {
-        var ctx = canvas.getContext('2d');
-        setInterval(function(){
-            draw(ctx);
-        }, 1000);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    setInterval(() => {
+        draw(ctx);
+    }, 1000);
 });
 
-function draw(ctx){
+function draw(ctx) {
     drawUnit(ctx, getHours(), 0);
     drawUnit(ctx, getMinutes(), 210);
     drawUnit(ctx, getSeconds(), 420);
 }
 
-function getHours(){
-    return getTimeUnit((new Date()).getHours());
+function getHours() {
+    return getTimeUnit(new Date().getHours());
 }
 
-function getMinutes(){
-    return getTimeUnit((new Date()).getMinutes());
+function getMinutes() {
+    return getTimeUnit(new Date().getMinutes());
 }
 
-function getSeconds(){
-    return getTimeUnit((new Date()).getSeconds());
+function getSeconds() {
+    return getTimeUnit(new Date().getSeconds());
 }
 
-function drawUnit(ctx, unit, xPos){
-    var y_offset = 45;
-    var x_offset = 45;
-    for (var i = 0; i < unit.length; i++) {
-        var currDigit = unit[i];
-        for (var j = 0; j < currDigit.length; j++) {
-            ctx.clearRect((x_offset  * j) + (xPos), y_offset  * i, GLOBAL.width, GLOBAL.height);
+function drawUnit(ctx, unit, xPos) {
+    const y_offset = 45;
+    const x_offset = 45;
+    for (let i = 0; i < unit.length; i++) {
+        const currDigit = unit[i];
+        for (let j = 0; j < currDigit.length; j++) {
+            ctx.clearRect((x_offset * j) + xPos, y_offset * i, GLOBAL.width, GLOBAL.height);
             if (currDigit[j] === '1') {
                 ctx.fillStyle = GLOBAL.darkColour;
-                ctx.fillRect((x_offset  * j) + (xPos), y_offset  * i, GLOBAL.width, GLOBAL.height);
+                ctx.fillRect((x_offset * j) + xPos, y_offset * i, GLOBAL.width, GLOBAL.height);
             }
             else if (currDigit[j] === '0') {
                 ctx.fillStyle = GLOBAL.lightColour;
-                ctx.fillRect((x_offset  * j) + (xPos), y_offset  * i, GLOBAL.width, GLOBAL.height);
+                ctx.fillRect((x_offset * j) + xPos, y_offset * i, GLOBAL.width, GLOBAL.height);
             }
         }
     }
 }
 
-function getTimeUnit(unit){
-    unit = (unit < 10) ? "0" + unit : "" + unit;
-    unit = unit.split("");
-    var unitString = ""
-    var unitResult = [];
-    for (var i = 0; i < unit.length; i++) {
-        var digit = parseInt(unit[i]).toString('2');
-        var numBits = digit.length;
-        for (var j = numBits; j <= 3; j++) {
-            digit = "0" + digit;
-        }
-        unitString += (digit + "  ");
-        unitResult.push(digit);
-    }
-    return unitResult;
+function getTimeUnit(unit) {
+    const digits = String(unit).padStart(2, '0').split('');
+    return digits.map(d => parseInt(d, 10).toString(2).padStart(4, '0'));
 }

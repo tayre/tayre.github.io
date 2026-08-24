@@ -8,6 +8,7 @@ BODY {
     background: url('bg_texture.png');
     overflow: hidden;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 @font-face {
@@ -77,17 +78,9 @@ TD {
     color: #666;
     font-family: chunk;
 
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-box-pack: center;
-
-     display: -moz-box;
-    -moz-box-orient: vertical;
-    -moz-box-pack: center;
-
-    display: box;
-    box-orient: vertical;
-    box-pack: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .button:active {
