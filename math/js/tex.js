@@ -1,25 +1,17 @@
-var baseAPI = "http://chart.apis.google.com/chart"
-var queryString = "?&cht=tx&chl="
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
 
-$(document).ready(function(){
-    $("#input").keyup(updateImage);
-    showExample("\\sum_{i=1}^n i = \\frac{n(n+1)}{2}");
+    const render = () => {
+        katex.render(input.value, output, {
+            displayMode: true,
+            throwOnError: false
+        });
+    };
+
+    input.addEventListener('input', render);
+
+    //show an example
+    input.value = '\\sum_{i=1}^n i = \\frac{n(n+1)}{2}';
+    render();
 });
-
-function showExample(example){
-    $('#input').val(example);
-    updateImage();
-}
-
-function updateImage(){
-    $('img').show();
-    var inputValue = encodeURIComponent($('#input').val());
-    if (inputValue !== "") {
-        var url = baseAPI + queryString + inputValue;
-        $('img').attr('src', url);
-    }
-    else {
-        $('img').hide();
-    }
-}
-

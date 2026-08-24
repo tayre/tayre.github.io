@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script type="text/javascript" src="js/tex.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"/>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+        <script defer src="js/tex.js"></script>
         <title>Text to TeX</title>
     </head>
     <body>
         <div id="container">
             <textarea id="input" autofocus></textarea>
             <br/>
-            <div id="output">
-                <img id="outputImg" alt="bad syntax"/>
-            </div>
+            <div id="output"></div>
         </div>
     </body>
 </html>
