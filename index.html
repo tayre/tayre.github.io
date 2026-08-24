@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="utf-8"/> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-        <link href="css/reset.css" rel="stylesheet" type="text/css"/>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script type="text/javascript" src="js/three.js"></script>
-        <script type="text/javascript" src="js/cube.js"></script>
-        <script type="text/javascript" src="js/onload.js"></script>
+        <script type="importmap">
+            { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+        </script>
+        <script type="module" src="js/cube.js"></script>
+        <script defer src="js/onload.js"></script>
         <title>~</title>
     </head>
     <body>
@@ -27,7 +27,7 @@
                 <li>
                     <a href="https://tayre.github.io/motion/">Motion Detection</a>
                     <div class="separator"></div>
-                    <span>WebKit &lt;video/&gt;</span>
+                    <span>getUserMedia + &lt;canvas/&gt;</span>
                 </li>
                 <li>
                     <a href="https://tayre.github.io/life/">Conway's Game of Life</a>
@@ -47,7 +47,7 @@
                 <li>
                     <a href="https://tayre.github.io/math/">Text to TeX</a>
                     <div class="separator"></div>
-                    <span>Google Charts FTW</span>
+                    <span>KaTeX FTW</span>
                 </li>
                 <li>
                     <a href="https://tayre.github.io/roman/">SPQR</a>
@@ -72,7 +72,7 @@
                 <li>
                     <a href="https://tayre.github.io/webpad/">Webpad</a>
                     <div class="separator"></div>
-                    <span>A DOM Storage example</span>
+                    <span>A localStorage example</span>
                 </li>
                 <li>
                     <a href="https://www.linkedin.com/in/tomayre">LinkedIn</a>

@@ -1,3 +1,3 @@
-$(document).ready(function(){
-	$('#mailto').attr('href', 'mailto:ayre.tom@gmail.com');
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('mailto').href = 'mailto:ayre.tom@gmail.com';
 });
