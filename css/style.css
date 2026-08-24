@@ -55,18 +55,10 @@ SUB {
     width: 100%;
     height: 100%;
     text-align: center;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-box-pack: center;
-    -webkit-box-align: center;
-    display: -moz-box;
-    -moz-box-orient: vertical;
-    -moz-box-align: center;
-    -moz-box-pack: center;
-    display: box;
-    box-orient: vertical;
-    box-pack: center;
-    box-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #output {
