@@ -27,17 +27,19 @@ body {
 button, select { font: inherit; }
 button { color: inherit; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.app-shell { width: calc(100% - 40px); max-width: 1200px; margin: 0 auto; }
+.app-shell { width: calc(100% - 24px); max-width: 1480px; margin: 0 auto; }
 
 .nav { display: flex; align-items: center; justify-content: space-between; min-height: 82px; border-bottom: 1px solid var(--line); }
+.brand { display: flex; gap: 13px; align-items: baseline; }
 .wordmark { color: var(--ink); font: 600 26px/1 "Playfair Display", serif; text-decoration: none; letter-spacing: -1px; }
 .wordmark span { color: var(--orange); }
+.tagline { color: #667168; font: 400 8px/1 "DM Mono", monospace; letter-spacing: .06em; }
 .input-control { display: flex; align-items: center; max-width: 250px; min-width: 0; padding: 0 10px 0 13px; border: 1px solid var(--line); border-radius: 999px; background: #0a0e0b; }
 .live-dot { flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
 select { min-width: 0; width: 100%; padding: 9px 24px 9px 10px; border: 0; outline: 0; color: var(--muted); background: transparent; font: 400 10px "DM Mono", monospace; }
 
-.tuner-stage { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(320px, .5fr); min-height: 610px; margin-top: 34px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: #101511d9; box-shadow: 0 35px 100px #0009; }
-.spectrum-view { position: relative; min-height: 610px; overflow: hidden; border-right: 1px solid var(--line); background: radial-gradient(circle at 50% 55%, #243027, #101511 68%); }
+.tuner-stage { --stage-height: clamp(610px, calc(100svh - 260px), 820px); display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(320px, .5fr); min-height: var(--stage-height); margin-top: 24px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: #101511d9; box-shadow: 0 35px 100px #0009; }
+.spectrum-view { position: relative; min-height: var(--stage-height); overflow: hidden; border-right: 1px solid var(--line); background: radial-gradient(circle at 50% 55%, #243027, #101511 68%); }
 #spectrum-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 .spectrum-labels { position: absolute; inset: 0; pointer-events: none; }
 .spectrum-labels span { position: absolute; left: 12px; display: flex; gap: 7px; align-items: baseline; padding: 3px 8px; border-radius: 7px; background: #0c100dcc; color: #69736a; transform: translateY(-1px); transition: color .25s; }
@@ -49,7 +51,7 @@ select { min-width: 0; width: 100%; padding: 9px 24px 9px 10px; border: 0; outli
 .canvas-label, .listen-state, .meter-labels, .readout, .permission-note, .strings span { font: 500 9px/1 "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
 .canvas-label { position: absolute; right: 22px; bottom: 19px; color: #667168; }
 
-.tuner-view { --level: 0%; display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 34px 30px 26px; text-align: center; }
+.tuner-view { --level: 0; display: flex; flex-direction: column; align-items: center; min-width: 0; padding: 34px 30px 26px; text-align: center; }
 .listen-state { color: var(--green); }
 .note-row { display: flex; align-items: flex-start; justify-content: center; min-height: 140px; margin: 8px 0 -6px; }
 .note-row strong { font: 600 clamp(96px, 9.5vw, 134px)/1 "Playfair Display", serif; letter-spacing: -.08em; }
@@ -59,7 +61,7 @@ h1 { min-height: 1.1em; margin: 0; font: 500 clamp(20px, 2.1vw, 28px)/1 "DM Mono
 .tuner-view.too-low h1 { color: var(--blue); }
 .tuner-view.too-high h1 { color: var(--orange); }
 .tuner-view.in-tune h1 { color: var(--green); text-shadow: 0 0 28px #b5f26c48; }
-.tuner-view.locked h1 { color: var(--green); text-shadow: 0 0 34px #b5f26c70; }
+.tuner-view.locked h1 { display: grid; place-items: center; width: 40px; min-height: 40px; border: 1px solid var(--green); border-radius: 50%; background: #b5f26c16; color: var(--green); font: 600 21px/1 system-ui, sans-serif; letter-spacing: 0; box-shadow: 0 0 28px #b5f26c42, inset 0 0 16px #b5f26c12; }
 .tuner-view.locked .note-row strong { text-shadow: 0 0 46px #b5f26c40; }
 
 .meter { width: 100%; }
@@ -71,7 +73,7 @@ h1 { min-height: 1.1em; margin: 0; font: 500 clamp(20px, 2.1vw, 28px)/1 "DM Mono
 .in-tune .meter-line i, .locked .meter-line i { background: var(--green); box-shadow: 0 0 16px var(--green); }
 .readout { display: grid; grid-template-columns: auto minmax(70px, 1fr); gap: 15px; align-items: center; width: 100%; color: var(--muted); text-align: left; }
 .signal { height: 2px; background: #39443b; }
-.signal i { display: block; width: var(--level); height: 100%; background: var(--blue); box-shadow: 0 0 9px var(--blue); transition: width 80ms linear; }
+.signal i { display: block; width: 100%; height: 100%; background: var(--blue); box-shadow: 0 0 9px var(--blue); transform: scaleX(var(--level)); transform-origin: left; transition: transform 80ms linear; }
 .start-button { width: 100%; margin-top: auto; padding: 14px 20px; border: 0; border-radius: 12px; background: var(--green); color: #14200e; font: 500 11px "DM Mono", monospace; cursor: pointer; transition: transform .2s, filter .2s; }
 .start-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
 .button-dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: var(--orange); }
@@ -95,6 +97,7 @@ h1 { min-height: 1.1em; margin: 0; font: 500 clamp(20px, 2.1vw, 28px)/1 "DM Mono
 
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px #14200e18; } }
 @media (max-width: 780px) {
+  .app-shell { width: calc(100% - 32px); }
   .tuner-stage { grid-template-columns: 1fr; }
   .spectrum-view { min-height: 330px; border-right: 0; border-bottom: 1px solid var(--line); }
   .tuner-view { padding: 30px 26px 26px; }
@@ -107,6 +110,8 @@ h1 { min-height: 1.1em; margin: 0; font: 500 clamp(20px, 2.1vw, 28px)/1 "DM Mono
 @media (max-width: 500px) {
   .app-shell { width: calc(100% - 24px); }
   .nav { min-height: 68px; }
+  .brand { flex-direction: column; gap: 4px; align-items: flex-start; }
+  .wordmark { font-size: 23px; }
   .input-control { max-width: 190px; }
   .tuner-stage { margin-top: 18px; border-radius: 21px; }
   .spectrum-view { min-height: 285px; }

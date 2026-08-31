@@ -58,10 +58,11 @@ function median(values) {
   return sorted[Math.floor(sorted.length / 2)];
 }
 
-function setDirection(state, title, detail) {
+function setDirection(state, title, detail, accessibleTitle = title) {
   tunerView.classList.remove('too-low', 'too-high', 'in-tune', 'locked');
   if (state) tunerView.classList.add(state);
   directionElement.textContent = title;
+  directionElement.setAttribute('aria-label', accessibleTitle);
   centsElement.textContent = detail;
 }
 
@@ -126,7 +127,7 @@ function setWaiting(message = stream ? 'Play one clear note' : 'Start the microp
     octaveElement.textContent = '';
     frequencyElement.textContent = '— Hz';
     meter.style.setProperty('--needle-left', '50%');
-    tunerView.style.setProperty('--level', `${(level * 100).toFixed(1)}%`);
+    tunerView.style.setProperty('--level', level.toFixed(3));
     setDirection('', 'STRUM A CHORD', stream ? 'Every sounding pitch class lights up' : 'Start the microphone to begin');
     stringButtons.forEach(button => button.classList.remove('detected'));
     chroma.fill(0);
@@ -137,7 +138,7 @@ function setWaiting(message = stream ? 'Play one clear note' : 'Start the microp
   octaveElement.textContent = selectedTarget?.octave ?? '';
   frequencyElement.textContent = '— Hz';
   meter.style.setProperty('--needle-left', '50%');
-  tunerView.style.setProperty('--level', `${(level * 100).toFixed(1)}%`);
+  tunerView.style.setProperty('--level', level.toFixed(3));
   setDirection('', 'PLAY A STRING', message);
   stringButtons.forEach(button => button.classList.remove('detected'));
   window.tunerVisualizer?.setState({
@@ -152,12 +153,12 @@ function setWaiting(message = stream ? 'Play one clear note' : 'Start the microp
 
 function updateReadout(result) {
   const level = Math.min(1, result.rms * 12);
-  tunerView.style.setProperty('--level', `${(level * 100).toFixed(1)}%`);
+  tunerView.style.setProperty('--level', level.toFixed(3));
 
   if (!result.frequency || result.confidence < 0.72) {
     if (lockedNote) {
       stateElement.textContent = 'HOLDING';
-      setDirection('locked', 'LOCKED IN', `${lockedNote.name}${lockedNote.octave} held · play the next string`);
+      setDirection('locked', '✓', `${lockedNote.name}${lockedNote.octave} held · play the next string`, 'Locked in');
       window.tunerVisualizer?.setState({ level, cursorFrequency: 0, tune: 0, activeString: lockedNote.stringIndex, listening: true, locked: true });
       return;
     }
@@ -205,7 +206,7 @@ function updateReadout(result) {
   stateElement.textContent = selectedTarget ? `${target.name}${target.octave} SELECTED` : 'AUTO';
 
   if (lockedNote) {
-    setDirection('locked', 'LOCKED IN', `${Math.abs(cents).toFixed(1)}¢ from pitch`);
+    setDirection('locked', '✓', `${Math.abs(cents).toFixed(1)}¢ from pitch`, 'Locked in');
   } else if (inTune) {
     setDirection('in-tune', 'IN TUNE', `${Math.abs(cents).toFixed(1)}¢ from pitch`);
   } else if (cents < 0) {
@@ -231,7 +232,7 @@ function updateChordReadout() {
   for (let i = 0; i < analysisBuffer.length; i += 1) sum += analysisBuffer[i] * analysisBuffer[i];
   const rms = Math.sqrt(sum / analysisBuffer.length);
   const level = Math.min(1, rms * 12);
-  tunerView.style.setProperty('--level', `${(level * 100).toFixed(1)}%`);
+  tunerView.style.setProperty('--level', level.toFixed(3));
 
   analyser.getByteFrequencyData(spectrumBytes);
   chromaRaw.fill(0);

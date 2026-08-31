@@ -23,6 +23,8 @@
   const frequencyToUnit = frequency => (Math.log2(frequency / 440) - LOG_MIN) / LOG_RANGE;
   const stringUnits = STRINGS.map(string => frequencyToUnit(string.frequency));
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FRAME_INTERVAL = reducedMotion ? 100 : 1000 / 30;
+  const blendForFrame = (amount, scale) => 1 - ((1 - amount) ** scale);
 
   const labelHost = document.querySelector('.spectrum-labels');
   const labels = STRINGS.map((string, index) => {
@@ -161,9 +163,9 @@
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, new Uint8Array(width));
     return texture;
   }
-  createDataTexture(gl.TEXTURE0, 1, gl.LINEAR);
+  const spectrumTexture = createDataTexture(gl.TEXTURE0, 1, gl.LINEAR);
   // NEAREST so one class's brightness never bleeds into its neighbours
-  createDataTexture(gl.TEXTURE1, 12, gl.NEAREST);
+  const chromaTexture = createDataTexture(gl.TEXTURE1, 12, gl.NEAREST);
   gl.activeTexture(gl.TEXTURE0);
 
   const state = { level: 0, cursorFrequency: 0, tune: 0, activeString: null, listening: false, locked: false, chordMode: false };
@@ -174,6 +176,7 @@
   let chordAmount = 0;
   let analyserSource = null;
   let spectrumBins = null;
+  let spectrumUpload = null;
   let binCount = 1;
   let smoothLevel = 0;
   let cursorY = 0.5;
@@ -185,6 +188,8 @@
   let pixelWidth = 0;
   let pixelHeight = 0;
   let frameHandle = null;
+  let lastLabelActive = null;
+  let lastLabelLocked = false;
 
   function shouldAnimate() {
     return Boolean(analyserSource)
@@ -198,6 +203,8 @@
 
   function render(time) {
     const delta = Math.min(50, time - lastTime);
+    const frameScale = delta / (1000 / 60);
+    const chromaBlend = blendForFrame(0.25, frameScale);
     lastTime = time;
     if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
       canvas.width = pixelWidth;
@@ -208,42 +215,48 @@
     if (analyserSource) {
       analyserSource.getByteFrequencyData(spectrumBins);
       gl.activeTexture(gl.TEXTURE0);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, binCount, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, spectrumBins.subarray(0, binCount));
+      gl.bindTexture(gl.TEXTURE_2D, spectrumTexture);
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, binCount, 1, gl.LUMINANCE, gl.UNSIGNED_BYTE, spectrumUpload);
     }
 
     chromaMoving = false;
     for (let i = 0; i < 12; i += 1) {
       const difference = chromaTarget[i] - chromaCurrent[i];
       if (Math.abs(difference) > 0.004) chromaMoving = true;
-      chromaCurrent[i] += difference * 0.25;
+      chromaCurrent[i] += difference * chromaBlend;
       chromaBytes[i] = chromaCurrent[i] * 255;
     }
     if (chromaMoving || chordAmount > 0.002) {
       gl.activeTexture(gl.TEXTURE1);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 12, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, chromaBytes);
+      gl.bindTexture(gl.TEXTURE_2D, chromaTexture);
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 12, 1, gl.LUMINANCE, gl.UNSIGNED_BYTE, chromaBytes);
       gl.activeTexture(gl.TEXTURE0);
     }
-    chordAmount += ((state.chordMode ? 1 : 0) - chordAmount) * 0.12;
+    chordAmount += ((state.chordMode ? 1 : 0) - chordAmount) * blendForFrame(0.12, frameScale);
 
-    smoothLevel += (state.level - smoothLevel) * 0.15;
+    smoothLevel += (state.level - smoothLevel) * blendForFrame(0.15, frameScale);
     const active = state.activeString;
     const activeY = active === null ? -1 : stringUnits[active];
     const cursorTarget = state.locked && active !== null
       ? activeY
       : (state.cursorFrequency > 0 ? Math.max(0, Math.min(1, frequencyToUnit(state.cursorFrequency))) : cursorY);
     const aliveTarget = state.cursorFrequency > 0 || state.locked ? 1 : 0;
-    cursorAlive += (aliveTarget - cursorAlive) * (aliveTarget ? 0.3 : 0.05);
-    cursorY = cursorAlive < 0.03 ? cursorTarget : cursorY + (cursorTarget - cursorY) * 0.22;
+    cursorAlive += (aliveTarget - cursorAlive) * blendForFrame(aliveTarget ? 0.3 : 0.05, frameScale);
+    cursorY = cursorAlive < 0.03 ? cursorTarget : cursorY + (cursorTarget - cursorY) * blendForFrame(0.22, frameScale);
 
     if (state.locked && !wasLocked && !reducedMotion) pulse = 0;
     wasLocked = state.locked;
     pulse = Math.min(1, pulse + delta / 900);
-    lockAmount += ((state.locked ? 1 : 0) - lockAmount) * 0.1;
+    lockAmount += ((state.locked ? 1 : 0) - lockAmount) * blendForFrame(0.1, frameScale);
 
-    labels.forEach((label, index) => {
-      label.classList.toggle('active', index === active);
-      label.classList.toggle('locked', index === active && state.locked);
-    });
+    if (active !== lastLabelActive || state.locked !== lastLabelLocked) {
+      labels.forEach((label, index) => {
+        label.classList.toggle('active', index === active);
+        label.classList.toggle('locked', index === active && state.locked);
+      });
+      lastLabelActive = active;
+      lastLabelLocked = state.locked;
+    }
 
     gl.uniform1f(uniforms.uActiveIndex, active === null ? -1 : active);
     gl.uniform1f(uniforms.uActiveY, activeY);
@@ -261,9 +274,12 @@
   }
 
   function loop(time) {
-    frameHandle = null;
+    if (time - lastTime < FRAME_INTERVAL) {
+      frameHandle = requestAnimationFrame(loop);
+      return;
+    }
     render(time);
-    if (shouldAnimate()) frameHandle = requestAnimationFrame(loop);
+    frameHandle = shouldAnimate() ? requestAnimationFrame(loop) : null;
   }
 
   // the loop parks itself when nothing moves; every input kicks it awake
@@ -289,6 +305,7 @@
       analyserSource = analyser || null;
       if (!analyserSource) {
         gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, spectrumTexture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, new Uint8Array([0]));
         gl.uniform1f(uniforms.uFreqSpan, 1);
         chromaTarget.fill(0);
@@ -298,6 +315,10 @@
       const binWidth = rate / (analyserSource.frequencyBinCount * 2);
       binCount = Math.min(analyserSource.frequencyBinCount, Math.ceil((MAX_FREQUENCY * 1.05) / binWidth));
       spectrumBins = new Uint8Array(analyserSource.frequencyBinCount);
+      spectrumUpload = spectrumBins.subarray(0, binCount);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, spectrumTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, binCount, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
       gl.uniform1f(uniforms.uFreqSpan, binCount * binWidth);
       kick();
     },

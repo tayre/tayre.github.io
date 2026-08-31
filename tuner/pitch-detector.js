@@ -4,6 +4,15 @@
   root.PitchTools = tools;
 })(typeof globalThis !== 'undefined' ? globalThis : window, function createPitchTools() {
   const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+  let downsampled = new Float32Array(0);
+  let difference = new Float32Array(0);
+  let cumulative = new Float32Array(0);
+
+  function ensureScratchSpace(sampleCount, tauCount) {
+    if (downsampled.length < sampleCount) downsampled = new Float32Array(sampleCount);
+    if (difference.length < tauCount) difference = new Float32Array(tauCount);
+    if (cumulative.length < tauCount) cumulative = new Float32Array(tauCount);
+  }
 
   function frequencyToMidi(value) {
     return 69 + (12 * Math.log2(value / 440));
@@ -34,30 +43,48 @@
     const maxFrequency = options.maxFrequency || 500;
     const threshold = options.threshold || 0.12;
     const minimumRms = options.minimumRms || 0.008;
-    const size = samples.length;
+    // Guitar fundamentals top out well below the Nyquist frequency. Reducing the
+    // working sample rate preserves the same time window while cutting YIN's
+    // O(samples × candidate periods) comparison count by roughly four.
+    const downsampleFactor = Math.max(1, Math.floor(options.downsampleFactor ?? 2));
+    const size = Math.floor(samples.length / downsampleFactor);
+    const workingSampleRate = sampleRate / downsampleFactor;
+    // Keep one candidate outside each requested edge so interpolation remains
+    // accurate for notes close to the configured minimum and maximum.
+    const minTau = Math.max(2, Math.floor(workingSampleRate / maxFrequency) - 1);
+    const maxTau = Math.min(Math.ceil(workingSampleRate / minFrequency) + 1, Math.floor(size / 2));
+    ensureScratchSpace(size, maxTau + 1);
+
+    let workingSamples = samples;
+    if (downsampleFactor > 1) {
+      const scale = 1 / downsampleFactor;
+      for (let i = 0; i < size; i += 1) {
+        let sum = 0;
+        const offset = i * downsampleFactor;
+        for (let j = 0; j < downsampleFactor; j += 1) sum += samples[offset + j];
+        downsampled[i] = sum * scale;
+      }
+      workingSamples = downsampled;
+    }
 
     let mean = 0;
-    for (let i = 0; i < size; i += 1) mean += samples[i];
+    for (let i = 0; i < size; i += 1) mean += workingSamples[i];
     mean /= size;
 
     let energy = 0;
     for (let i = 0; i < size; i += 1) {
-      const centered = samples[i] - mean;
+      const centered = workingSamples[i] - mean;
       energy += centered * centered;
     }
     const rms = Math.sqrt(energy / size);
     if (rms < minimumRms) return { frequency: null, confidence: 0, rms };
 
-    const minTau = Math.max(2, Math.floor(sampleRate / maxFrequency));
-    const maxTau = Math.min(Math.floor(sampleRate / minFrequency), Math.floor(size / 2));
     const windowSize = size - maxTau;
-    const difference = new Float64Array(maxTau + 1);
-    const cumulative = new Float64Array(maxTau + 1);
 
     for (let tau = 1; tau <= maxTau; tau += 1) {
       let sum = 0;
       for (let i = 0; i < windowSize; i += 1) {
-        const delta = samples[i] - samples[i + tau];
+        const delta = workingSamples[i] - workingSamples[i + tau];
         sum += delta * delta;
       }
       difference[tau] = sum;
@@ -90,17 +117,21 @@
       if (tauEstimate < 0 || bestValue > 0.28) return { frequency: null, confidence: 0, rms };
     }
 
-    const left = Math.max(minTau, tauEstimate - 1);
-    const right = Math.min(maxTau, tauEstimate + 1);
-    const y0 = cumulative[left];
     const y1 = cumulative[tauEstimate];
-    const y2 = cumulative[right];
-    const denominator = y0 - (2 * y1) + y2;
-    const adjustment = denominator === 0 ? 0 : 0.5 * (y0 - y2) / denominator;
+    let adjustment = 0;
+    // Parabolic interpolation needs a real sample on both sides. Reusing the
+    // boundary sample biases pitches that sit exactly at the configured limits.
+    if (tauEstimate > minTau && tauEstimate < maxTau) {
+      const y0 = cumulative[tauEstimate - 1];
+      const y2 = cumulative[tauEstimate + 1];
+      const denominator = y0 - (2 * y1) + y2;
+      adjustment = denominator === 0 ? 0 : 0.5 * (y0 - y2) / denominator;
+    }
     const refinedTau = tauEstimate + Math.max(-1, Math.min(1, adjustment));
     const confidence = Math.max(0, Math.min(1, 1 - y1));
 
-    return { frequency: sampleRate / refinedTau, confidence, rms };
+    const frequency = Math.max(minFrequency, Math.min(maxFrequency, workingSampleRate / refinedTau));
+    return { frequency, confidence, rms };
   }
 
   return { NOTE_NAMES, frequencyToMidi, midiToFrequency, describeFrequency, centsFromTarget, detectPitch };
