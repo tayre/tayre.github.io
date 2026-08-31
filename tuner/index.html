@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A precise, private browser-based guitar tuner." />
+    <meta name="theme-color" content="#0c100d" />
+    <title>String — Guitar Tuner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;family=Playfair+Display:ital,wght@0,600&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <nav class="nav">
+        <a class="wordmark" href="/">string<span>·</span></a>
+        <div class="input-control">
+          <label class="sr-only" for="audio-input">Audio input</label>
+          <span class="live-dot" aria-hidden="true"></span>
+          <select id="audio-input" disabled>
+            <option value="">Default microphone</option>
+          </select>
+        </div>
+      </nav>
+
+      <section class="tuner-stage" aria-labelledby="direction">
+        <div class="spectrum-view">
+          <canvas id="spectrum-canvas" aria-label="Live frequency spectrum on a logarithmic scale, showing where the detected note and its harmonics fall against the six string pitches"></canvas>
+          <div class="spectrum-labels" aria-hidden="true"></div>
+          <span class="canvas-label">WebGL · live spectrum</span>
+        </div>
+
+        <div class="tuner-view">
+          <span class="listen-state" id="listen-state">READY</span>
+
+          <div class="note-row" aria-live="polite" aria-atomic="true">
+            <strong id="note">·</strong><sup id="octave"></sup>
+          </div>
+
+          <h1 id="direction">PLAY A STRING</h1>
+          <p class="correction" id="cents">Start the microphone to tune</p>
+
+          <div class="meter" id="meter" style="--needle-left: 50%">
+            <div class="meter-labels"><span>LOW</span><span>IN TUNE</span><span>HIGH</span></div>
+            <div class="meter-line"><i></i></div>
+          </div>
+
+          <div class="readout">
+            <span id="frequency">— Hz</span>
+            <span class="signal"><i></i></span>
+          </div>
+
+          <button class="start-button" id="start-button" type="button">
+            <span class="button-dot"></span>
+            <span id="start-label">START TUNING</span>
+          </button>
+          <p class="permission-note" id="permission-note">Audio stays on this device.</p>
+        </div>
+      </section>
+
+      <section class="strings" aria-label="Listening mode">
+        <button class="auto-button active" id="auto-button" type="button" aria-pressed="true"><span>AUTO</span><strong>✦</strong></button>
+        <!-- chord mode hidden for now; restore by uncommenting (app.js wiring is null-safe)
+        <button class="chord-button" id="chord-button" type="button" aria-pressed="false"><span>CHORD</span><strong>♬</strong></button>
+        -->
+
+        <button class="string-note" data-note="E" data-octave="2" data-frequency="82.4069" type="button"><span>6</span><strong>E<sub>2</sub></strong></button>
+        <button class="string-note" data-note="A" data-octave="2" data-frequency="110" type="button"><span>5</span><strong>A<sub>2</sub></strong></button>
+        <button class="string-note" data-note="D" data-octave="3" data-frequency="146.8324" type="button"><span>4</span><strong>D<sub>3</sub></strong></button>
+        <button class="string-note" data-note="G" data-octave="3" data-frequency="195.9977" type="button"><span>3</span><strong>G<sub>3</sub></strong></button>
+        <button class="string-note" data-note="B" data-octave="3" data-frequency="246.9417" type="button"><span>2</span><strong>B<sub>3</sub></strong></button>
+        <button class="string-note" data-note="E" data-octave="4" data-frequency="329.6276" type="button"><span>1</span><strong>E<sub>4</sub></strong></button>
+      </section>
+    </main>
+
+    <script src="pitch-detector.js"></script>
+    <script src="spectrum-visualizer.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
