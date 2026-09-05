@@ -1,0 +1,8 @@
+{
+  "name": "jays",
+  "private": true,
+  "description": "Toronto Blue Jays scoreboard and AL Wild Card tracker. Static site, no build step.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

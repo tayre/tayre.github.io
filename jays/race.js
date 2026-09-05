@@ -27,8 +27,7 @@
         }).format(new Date(game.gameDate));
       }
     } else {
-      const outcome = state === 'Final' && us.score != null && them.score != null
-        ? `${us.score > them.score ? 'W' : us.score < them.score ? 'L' : 'T'} ` : '';
+      const outcome = window.JaysLogic.gameOutcome(us.score, them.score, state);
       result.append(node('span', '', `${outcome}${us.score ?? '–'}–${them.score ?? '–'} ${opponent}`));
       if (state === 'Final') status = 'Final';
       if (state === 'Live' && status === 'In Progress' && game.linescore?.currentInning) {
@@ -64,6 +63,8 @@
       logo.alt = '';
       logo.width = 22;
       logo.height = 22;
+      logo.loading = 'lazy';
+      logo.decoding = 'async';
       logo.addEventListener('error', () => { logo.hidden = true; }, { once: true });
       const name = node('abbr', '', record.team.abbreviation || record.team.name);
       name.title = record.team.name;
@@ -88,29 +89,11 @@
     if (!data) {
       content.append(node('p', 'race-note error', 'Standings unavailable. Retrying on the next refresh.'));
     } else {
-      const all = data.records.flatMap(record => record.teamRecords || []);
-      const records = all.filter(record => !record.divisionLeader && Number(record.divisionRank) !== 1 && Number(record.wildCardRank) > 0)
-        .sort((a, b) => Number(a.wildCardRank) - Number(b.wildCardRank));
-      const jays = all.find(record => record.team.id === 141);
-      const rank = Number(jays?.wildCardRank);
-      let summary = 'No Wild Card standings available for this date.';
-      if (jays?.divisionLeader || Number(jays?.divisionRank) === 1) summary = 'Toronto leads the division.';
-      else if (jays && rank > 0) {
-        if (jays.wildCardEliminationNumber === 'E') summary = 'Toronto is eliminated from the Wild Card race.';
-        else if (rank <= 3) summary = `Toronto holds Wild Card spot ${rank}.`;
-        else {
-          const gap = jays.wildCardGamesBack;
-          const tied = gap === '-' || Number(gap) === 0;
-          summary = tied ? `Toronto is tied at the cutoff · MLB rank ${rank}.`
-            : `Toronto is ${gap ?? '–'} games back of the final spot.`;
-          const cutoff = records.find(record => Number(record.wildCardRank) === 3);
-          if (cutoff) summary += ` Chasing ${cutoff.team.teamName || cutoff.team.name}.`;
-        }
-      }
-      content.append(node('p', 'race-summary', summary));
+      const { records, jays, rank } = window.JaysLogic.parseWildCardStandings(data);
+      content.append(node('p', 'race-summary', window.JaysLogic.wildCardSummary({ jays, records })));
       if (records.length) {
         // Keep every team Toronto is chasing visible, plus nearby challengers.
-        const count = Math.max(6, Number.isFinite(rank) ? rank + 1 : 6);
+        const count = window.JaysLogic.contenderCount(rank);
         content.append(table(records.slice(0, count), games, 'AL Wild Card contenders and selected-day scores'));
         if (records.length > count) {
           const more = node('details', 'rest-of-race');

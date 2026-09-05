@@ -11,13 +11,16 @@
   let loading = false;
   let displayedDate;
   let lastUpdated;
+  let pollTimer;
+  let lastTier = 'settled';
+  let consecutiveFailures = 0;
+  // Past days where every game finished are immutable: cache them so
+  // scrubbing through dates (or leaving the tab open) costs no network.
+  const dateCache = new Map();
+  const boxscoreCache = new Map();
 
   function today() {
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit'
-    }).formatToParts(new Date());
-    const part = type => parts.find(item => item.type === type).value;
-    return `${part('year')}-${part('month')}-${part('day')}`;
+    return JaysLogic.todayInZone(timezone);
   }
 
   function element(tag, className, text) {
@@ -59,15 +62,7 @@
     const card = element('article', 'game', '');
     const line = game.linescore || {};
     const live = game.status.abstractGameState === 'Live';
-    const state = game.status.detailedState;
-    let status = state;
-    if (live && state === 'In Progress' && line.currentInning) {
-      status = `${line.inningState} ${line.currentInningOrdinal}`;
-    } else if (state === 'Scheduled' || state === 'Pre-Game') {
-      status = game.status.startTimeTBD ? 'Time TBD' : new Intl.DateTimeFormat('en-CA', {
-        timeZone: timezone, hour: 'numeric', minute: '2-digit'
-      }).format(new Date(game.gameDate));
-    }
+    const status = JaysLogic.gameStatusLabel(game, timezone);
     const top = element('div', 'game-top', '');
     top.append(element('span', `status${live ? ' live' : ''}`, status));
     if (game.doubleHeader && game.doubleHeader !== 'N') {
@@ -84,6 +79,7 @@
       logo.alt = '';
       logo.width = 36;
       logo.height = 36;
+      logo.decoding = 'async';
       logo.addEventListener('error', () => { badge.textContent = entry.team.abbreviation || entry.team.name; }, { once: true });
       badge.append(logo);
       row.append(badge);
@@ -163,31 +159,48 @@
     }).format(new Date(`${date}T12:00:00Z`));
     const timeout = setTimeout(() => request.abort(), 12000);
     try {
-      const params = new URLSearchParams({ sportId: '1', date, hydrate: 'linescore,team,probablePitcher' });
       const standingsDate = date < today() ? date : today();
-      const standingsParams = new URLSearchParams({ leagueId: '103', season: standingsDate.slice(0, 4), date: standingsDate, standingsTypes: 'regularSeason', hydrate: 'team' });
-      async function getData(path, key) {
-        const response = await fetch(`https://statsapi.mlb.com/api/v1/${path}`, { signal: request.signal });
-        if (!response.ok) throw new Error(`MLB returned ${response.status}`);
-        const data = await response.json();
-        if (!Array.isArray(data[key])) throw new Error('Invalid MLB response');
-        return data;
+      let allGames, standings;
+      const cached = dateCache.get(date);
+      if (cached) {
+        ({ allGames, standings } = cached);
+      } else {
+        const params = new URLSearchParams({ sportId: '1', date, hydrate: 'linescore,team,probablePitcher' });
+        const standingsParams = new URLSearchParams({ leagueId: '103', season: standingsDate.slice(0, 4), date: standingsDate, standingsTypes: 'regularSeason', hydrate: 'team' });
+        async function getData(path, key) {
+          const response = await fetch(`https://statsapi.mlb.com/api/v1/${path}`, { signal: request.signal });
+          if (!response.ok) throw new Error(`MLB returned ${response.status}`);
+          const data = await response.json();
+          if (!Array.isArray(data[key])) throw new Error('Invalid MLB response');
+          return data;
+        }
+        const [schedule, standingsResult] = await Promise.allSettled([
+          getData(`schedule?${params}`, 'dates'),
+          getData(`standings?${standingsParams}`, 'records')
+        ]);
+        if (controller !== request) return;
+        allGames = schedule.status === 'fulfilled'
+          ? schedule.value.dates.flatMap(day => day.games || []).sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate)) : null;
+        standings = standingsResult.status === 'fulfilled' ? standingsResult.value : null;
+        // A past day where every game finished will never change again.
+        if (allGames && standings && date < today() && JaysLogic.isImmutable(allGames)) {
+          dateCache.set(date, { allGames, standings });
+        }
       }
-      const [schedule, standings] = await Promise.allSettled([
-        getData(`schedule?${params}`, 'dates'),
-        getData(`standings?${standingsParams}`, 'records')
-      ]);
-      if (controller !== request) return;
-      const allGames = schedule.status === 'fulfilled'
-        ? schedule.value.dates.flatMap(day => day.games || []).sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate)) : null;
-      window.JaysRace.render(standings.status === 'fulfilled' ? standings.value : null, allGames, standingsDate);
+      window.JaysRace.render(standings, allGames, standingsDate);
       if (!allGames) throw new Error('Scores unavailable');
       const games = allGames.filter(game => game.teams.away.team.id === 141 || game.teams.home.team.id === 141);
       const boxes = await Promise.all(games.map(async game => {
         if (!game.linescore?.innings?.length) return null;
+        const cachedBox = boxscoreCache.get(game.gamePk);
+        if (cachedBox) return cachedBox;
         try {
           const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore`, { signal: request.signal });
-          return response.ok ? await response.json() : null;
+          if (!response.ok) return null;
+          const box = await response.json();
+          // A finished game's box score is permanent; skip refetching it.
+          if (game.status.abstractGameState === 'Final') boxscoreCache.set(game.gamePk, box);
+          return box;
         } catch {
           // A box score outage must not hide the main score.
           return null;
@@ -205,9 +218,12 @@
       lastUpdated = new Intl.DateTimeFormat('en-CA', {
         timeZone: timezone, hour: 'numeric', minute: '2-digit', second: '2-digit'
       }).format(new Date());
-      updateElement.textContent = `Scores updated ${lastUpdated}${standings.status === 'rejected' ? ' · Standings unavailable' : ''}`;
+      updateElement.textContent = `Scores updated ${lastUpdated}${!standings ? ' · Standings unavailable' : ''}`;
+      lastTier = JaysLogic.pollTier(games, allGames);
+      consecutiveFailures = 0;
     } catch (error) {
       if (controller !== request) return;
+      consecutiveFailures += 1;
       updateElement.className = 'error';
       updateElement.textContent = lastUpdated
         ? `Connection failed. Showing scores from ${lastUpdated}. Retrying automatically.`
@@ -222,11 +238,22 @@
     }
   }
 
+  // Runs one refresh, then schedules the next one at a cadence that matches
+  // how urgent fresh data actually is: fast while a game is live, slow once
+  // the day is settled or MLB is unreachable. Keeps us well clear of any
+  // rate limiting without ever falling behind a live game.
+  async function cycle() {
+    clearTimeout(pollTimer);
+    if (document.hidden) return;
+    await refresh();
+    pollTimer = setTimeout(cycle, JaysLogic.nextDelay({ tier: lastTier, consecutiveFailures }));
+  }
+
   function moveDate(offset) {
     const date = new Date(`${dateInput.value || today()}T12:00:00Z`);
     date.setUTCDate(date.getUTCDate() + offset);
     dateInput.value = date.toISOString().slice(0, 10);
-    refresh();
+    cycle();
   }
 
   async function showNextGame() {
@@ -253,7 +280,7 @@
       if (dateInput.value !== originalDate) return;
       if (next) {
         dateInput.value = next.officialDate;
-        await refresh();
+        await cycle();
       } else {
         updateElement.textContent = 'No upcoming game announced in the next year.';
       }
@@ -270,14 +297,15 @@
   }
 
   dateInput.value = today();
-  dateInput.addEventListener('change', refresh);
+  dateInput.addEventListener('change', cycle);
   document.querySelector('#previous').addEventListener('click', () => moveDate(-1));
   document.querySelector('#next').addEventListener('click', () => moveDate(1));
-  document.querySelector('#today').addEventListener('click', () => { dateInput.value = today(); refresh(); });
-  refreshButton.addEventListener('click', refresh);
+  document.querySelector('#today').addEventListener('click', () => { dateInput.value = today(); cycle(); });
+  refreshButton.addEventListener('click', cycle);
   nextGameButton.addEventListener('click', showNextGame);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
-  window.addEventListener('online', refresh);
-  setInterval(() => { if (!document.hidden && !loading) refresh(); }, 20000);
-  refresh();
+  // No fixed interval: cycle() reschedules itself at whatever cadence the
+  // game state calls for, and stops entirely while the tab is hidden.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) cycle(); });
+  window.addEventListener('online', cycle);
+  cycle();
 })();

@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="Toronto's Wild Card race: AL standings, rival scores, and Blue Jays game stats. Updated every 20 seconds.">
+    <meta name="description" content="Toronto's Wild Card race: AL standings, rival scores, and Blue Jays game stats. Updates automatically.">
     <title>Jays • Wild Card</title>
     <link rel="stylesheet" href="style.css">
+    <script src="logic.js" defer></script>
     <script src="race.js" defer></script>
     <script src="app.js" defer></script>
   </head>
@@ -44,7 +45,7 @@
           <p id="update" role="status">Getting scores…</p>
           <button id="refresh">Refresh</button>
         </div>
-        <p><a href="https://www.mlb.com/bluejays/scores">MLB</a> · Updates every 20s · Toronto time · Unofficial</p>
+        <p><a href="https://www.mlb.com/bluejays/scores">MLB</a> · Updates automatically · Toronto time · Unofficial</p>
       </footer>
       <noscript><p>Please enable JavaScript to load scores from MLB.</p></noscript>
     </main>
