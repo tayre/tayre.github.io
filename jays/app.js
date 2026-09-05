@@ -11,7 +11,6 @@
   let loading = false;
   let displayedDate;
   let lastUpdated;
-  const collapsedGames = new Set();
 
   function today() {
     const parts = new Intl.DateTimeFormat('en-US', {
@@ -119,16 +118,8 @@
       card.append(details);
     }
     if (line.innings?.length) {
-      const stats = element('details', 'game-stats', '');
-      stats.open = !collapsedGames.has(game.gamePk);
-      const summary = element('summary', '', 'Game stats');
-      summary.id = `stats-${game.gamePk}`;
-      stats.append(summary);
-      stats.addEventListener('toggle', () => {
-        if (!stats.isConnected) return;
-        if (stats.open) collapsedGames.delete(game.gamePk);
-        else collapsedGames.add(game.gamePk);
-      });
+      const stats = element('section', 'game-stats', '');
+      stats.append(element('h3', 'stats-heading', 'Game stats'));
       const sides = ['away', 'home'];
       const label = side => game.teams[side].team.abbreviation || game.teams[side].team.name;
       stats.append(statsTable('Runs by inning', line.innings.map(inning => inning.num),
@@ -142,7 +133,6 @@
           const pitching = boxscore.teams[side].teamStats.pitching || {};
           return [label(side), pitching.inningsPitched, pitching.earnedRuns, pitching.strikeOuts, pitching.numberOfPitches];
         })));
-        stats.append(element('p', 'stat-key', 'HR home runs · BB walks · SO strikeouts · LOB left on base · IP innings pitched · ER earned runs · K pitching strikeouts. Game totals only.'));
       } else {
         stats.append(element('p', 'stat-key', 'Batting and pitching stats unavailable. Retrying on the next refresh.'));
       }
@@ -209,9 +199,7 @@
       const content = document.createElement('div');
       content.append(...(cards.length ? cards : [element('p', 'empty', 'No Blue Jays game scheduled for this day. Check another date.')]));
       if (gamesElement.innerHTML !== content.innerHTML) {
-        const focusedSummary = document.activeElement?.matches('summary') ? document.activeElement.id : null;
         gamesElement.replaceChildren(...content.childNodes);
-        if (focusedSummary) document.getElementById(focusedSummary)?.focus({ preventScroll: true });
       }
       displayedDate = date;
       lastUpdated = new Intl.DateTimeFormat('en-CA', {

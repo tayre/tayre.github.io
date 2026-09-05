@@ -30,6 +30,7 @@ input { min-width: 0; flex: 1; }
 .details p { margin: 2px 0; }
 .probable-label { color: #707070; }
 .game-stats { border-top: 1px solid #ededed; margin-top: 20px; padding-top: 12px; font-size: 12px; }
+.stats-heading { font-size: 12px; font-weight: 500; margin: 0; padding: 4px 0; }
 summary { cursor: pointer; font-weight: 500; padding: 4px 0; }
 .table-scroll { max-width: 100%; overflow-x: auto; margin-top: 16px; }
 .stats-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
