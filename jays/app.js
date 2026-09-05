@@ -190,30 +190,20 @@
       window.JaysRace.render(standings, allGames, standingsDate);
       if (!allGames) throw new Error('Scores unavailable');
       const games = allGames.filter(game => game.teams.away.team.id === 141 || game.teams.home.team.id === 141);
-      const boxes = await Promise.all(games.map(async game => {
-        if (!game.linescore?.innings?.length) return null;
-        const cachedBox = boxscoreCache.get(game.gamePk);
-        if (cachedBox) return cachedBox;
-        try {
-          const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore`, { signal: request.signal });
-          if (!response.ok) return null;
-          const box = await response.json();
-          // A finished game's box score is permanent; skip refetching it.
-          if (game.status.abstractGameState === 'Final') boxscoreCache.set(game.gamePk, box);
-          return box;
-        } catch {
-          // A box score outage must not hide the main score.
-          return null;
+      function renderGames(boxes = []) {
+        const cards = games.map((game, index) => gameCard(game, boxes[index]));
+        // Avoid announcing unchanged scores to screen readers on every poll.
+        const content = document.createElement('div');
+        content.append(...(cards.length ? cards : [element('p', 'empty', 'No Blue Jays game scheduled for this day. Check another date.')]));
+        if (gamesElement.innerHTML !== content.innerHTML) {
+          gamesElement.replaceChildren(...content.childNodes);
         }
-      }));
-      if (controller !== request) return;
-      const cards = games.map((game, index) => gameCard(game, boxes[index]));
-      // Avoid announcing unchanged scores to screen readers on every poll.
-      const content = document.createElement('div');
-      content.append(...(cards.length ? cards : [element('p', 'empty', 'No Blue Jays game scheduled for this day. Check another date.')]));
-      if (gamesElement.innerHTML !== content.innerHTML) {
-        gamesElement.replaceChildren(...content.childNodes);
       }
+
+      // The schedule and standings are the page's primary information. Paint
+      // them immediately; detailed batting and pitching totals can arrive a
+      // moment later without delaying the first useful view.
+      renderGames();
       displayedDate = date;
       lastUpdated = new Intl.DateTimeFormat('en-CA', {
         timeZone: timezone, hour: 'numeric', minute: '2-digit', second: '2-digit'
@@ -221,6 +211,26 @@
       updateElement.textContent = `Scores updated ${lastUpdated}${!standings ? ' · Standings unavailable' : ''}`;
       lastTier = JaysLogic.pollTier(games, allGames);
       consecutiveFailures = 0;
+
+      void (async () => {
+        const boxes = await Promise.all(games.map(async game => {
+          if (!game.linescore?.innings?.length) return null;
+          const cachedBox = boxscoreCache.get(game.gamePk);
+          if (cachedBox) return cachedBox;
+          try {
+            const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore`, { signal: request.signal });
+            if (!response.ok) return null;
+            const box = await response.json();
+            // A finished game's box score is permanent; skip refetching it.
+            if (game.status.abstractGameState === 'Final') boxscoreCache.set(game.gamePk, box);
+            return box;
+          } catch {
+            // A box score outage must not hide the main score.
+            return null;
+          }
+        }));
+        if (controller === request && dateInput.value === date) renderGames(boxes);
+      })();
     } catch (error) {
       if (controller !== request) return;
       consecutiveFailures += 1;
