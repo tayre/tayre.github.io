@@ -18,6 +18,7 @@
   // scrubbing through dates (or leaving the tab open) costs no network.
   const dateCache = new Map();
   const boxscoreCache = new Map();
+  const recentBoxscores = new Map();
 
   function today() {
     return JaysLogic.todayInZone(timezone);
@@ -203,7 +204,7 @@
       // The schedule and standings are the page's primary information. Paint
       // them immediately; detailed batting and pitching totals can arrive a
       // moment later without delaying the first useful view.
-      renderGames();
+      renderGames(games.map(game => boxscoreCache.get(game.gamePk) || recentBoxscores.get(game.gamePk)));
       displayedDate = date;
       lastUpdated = new Intl.DateTimeFormat('en-CA', {
         timeZone: timezone, hour: 'numeric', minute: '2-digit', second: '2-digit'
@@ -221,6 +222,8 @@
             const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore`, { signal: request.signal });
             if (!response.ok) return null;
             const box = await response.json();
+            recentBoxscores.set(game.gamePk, box);
+            if (recentBoxscores.size > 20) recentBoxscores.delete(recentBoxscores.keys().next().value);
             // A finished game's box score is permanent; skip refetching it.
             if (game.status.abstractGameState === 'Final') boxscoreCache.set(game.gamePk, box);
             return box;
@@ -229,7 +232,9 @@
             return null;
           }
         }));
-        if (controller === request && dateInput.value === date) renderGames(boxes);
+        if (controller === request && dateInput.value === date) {
+          renderGames(boxes.map((box, index) => box || recentBoxscores.get(games[index].gamePk)));
+        }
       })();
     } catch (error) {
       if (controller !== request) return;

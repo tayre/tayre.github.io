@@ -8,10 +8,10 @@
     <title>Jays • Wild Card</title>
     <link rel="preconnect" href="https://statsapi.mlb.com" crossorigin>
     <link rel="dns-prefetch" href="https://statsapi.mlb.com">
-    <link rel="stylesheet" href="style.css?v=header-logo-2">
+    <link rel="stylesheet" href="style.css?v=readability-3">
     <script src="logic.js" defer></script>
     <script src="race.js?v=rest-of-al-1" defer></script>
-    <script src="app.js" defer></script>
+    <script src="app.js?v=stable-stats-2" defer></script>
   </head>
   <body>
     <main>
@@ -32,6 +32,10 @@
         <p id="day-label" class="day-label"></p>
         <button id="next-game">Next game</button>
       </div>
+      <div class="update-row">
+        <p id="update" role="status">Getting scores…</p>
+        <button id="refresh">Refresh</button>
+      </div>
       <div class="dashboard">
         <section id="race" aria-label="AL Wild Card race" tabindex="0">
           <p class="empty">Loading the Wild Card race…</p>
@@ -44,10 +48,6 @@
         </section>
       </div>
       <footer>
-        <div class="update-row">
-          <p id="update" role="status">Getting scores…</p>
-          <button id="refresh">Refresh</button>
-        </div>
         <p><a href="https://www.mlb.com/bluejays/scores">MLB</a> · Updates automatically · Toronto time · Unofficial</p>
       </footer>
       <noscript><p>Please enable JavaScript to load scores from MLB.</p></noscript>
