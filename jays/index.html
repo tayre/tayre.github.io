@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Toronto's Wild Card race: AL standings, rival scores, and Blue Jays game stats. Updated every 20 seconds.">
+    <title>Jays • Wild Card</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="race.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <div class="toolbar">
+        <header>
+          <h1>Blue Jays</h1>
+          <span class="header-note">Wild Card watch</span>
+        </header>
+        <nav aria-label="Game date">
+          <button id="previous" aria-label="Previous day">←</button>
+          <input id="date" type="date" aria-label="Game date (Toronto time)">
+          <button id="next" aria-label="Next day">→</button>
+          <button id="today">Today</button>
+        </nav>
+      </div>
+      <div class="date-row">
+        <p id="day-label" class="day-label"></p>
+        <button id="next-game">Next game</button>
+      </div>
+      <div class="dashboard">
+        <section id="race" aria-label="AL Wild Card race" tabindex="0">
+          <p class="empty">Loading the Wild Card race…</p>
+        </section>
+        <section class="game-panel" aria-label="Blue Jays game details" tabindex="0">
+          <h2 class="jays-heading">Jays game</h2>
+          <section id="games" aria-label="Blue Jays games" aria-live="polite" aria-atomic="true">
+            <p class="empty">Loading the scoreboard…</p>
+          </section>
+        </section>
+      </div>
+      <footer>
+        <div class="update-row">
+          <p id="update" role="status">Getting scores…</p>
+          <button id="refresh">Refresh</button>
+        </div>
+        <p><a href="https://www.mlb.com/bluejays/scores">MLB</a> · Updates every 20s · Toronto time · Unofficial</p>
+      </footer>
+      <noscript><p>Please enable JavaScript to load scores from MLB.</p></noscript>
+    </main>
+  </body>
+</html>
