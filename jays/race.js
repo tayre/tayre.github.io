@@ -1,7 +1,5 @@
 (() => {
   'use strict';
-  let expanded = false;
-
   function node(tag, className, text = '') {
     const result = document.createElement(tag);
     result.className = className;
@@ -92,25 +90,14 @@
       const { records, jays, rank } = window.JaysLogic.parseWildCardStandings(data);
       content.append(node('p', 'race-summary', window.JaysLogic.wildCardSummary({ jays, records })));
       if (records.length) {
-        // Keep every team Toronto is chasing visible, plus nearby challengers.
-        const count = window.JaysLogic.contenderCount(rank);
-        content.append(table(records.slice(0, count), games, 'AL Wild Card contenders and selected-day scores'));
-        if (records.length > count) {
-          const more = node('details', 'rest-of-race');
-          more.open = expanded;
-          const summary = node('summary', '', 'Rest of the AL');
-          summary.id = 'rest-of-race';
-          more.append(summary, table(records.slice(count), games, 'Remaining AL Wild Card teams'));
-          more.addEventListener('toggle', () => { if (more.isConnected) expanded = more.open; });
-          content.append(more);
-        }
+        // Keep the complete race visible. It is more useful as a single,
+        // glanceable standings view than behind an interactive disclosure.
+        content.append(table(records, games, 'AL Wild Card standings and selected-day scores'));
         content.append(node('p', 'race-note', `Standings as of ${standingsDate}. Scores follow the selected date. GB is relative to the final spot; + means ahead. Division leaders excluded. Rankings reflect completed games, not live projections.`));
       }
     }
     if (target.innerHTML !== content.innerHTML) {
-      const focused = document.activeElement?.id === 'rest-of-race';
       target.replaceChildren(...content.childNodes);
-      if (focused) document.getElementById('rest-of-race')?.focus({ preventScroll: true });
     }
   }
 

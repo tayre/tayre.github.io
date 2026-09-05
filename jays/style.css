@@ -1,7 +1,7 @@
 :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #202124; background: #fff; font-size: 14px; }
 * { box-sizing: border-box; }
 body { margin: 0; }
-main { max-width: 600px; margin: 0 auto; padding: 40px 20px 24px; }
+main { max-width: 720px; margin: 0 auto; padding: 40px 20px 28px; }
 header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 28px; }
 h1 { font-size: 22px; font-weight: 650; letter-spacing: -.04em; margin: 0; }
 .header-note { color: #707070; font-size: 12px; }
@@ -47,7 +47,7 @@ footer p { margin: 6px 0; }
 a { color: inherit; }
 .error { color: #a43629; }
 h2 { font-size: 14px; font-weight: 600; margin: 0; }
-#race { border-top: 1px solid #dedede; padding: 18px 0; }
+#race { border-top: 2px solid #134a8e; padding: 20px 0 24px; }
 .race-summary { font-size: 13px; line-height: 1.6; margin: 8px 0 18px; }
 .race-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
 .race-table th, .race-table td { padding: 9px 6px; text-align: right; border-bottom: 1px solid #f0f0f0; }
@@ -58,26 +58,27 @@ h2 { font-size: 14px; font-weight: 600; margin: 0; }
 .race-identity img { object-fit: contain; }
 .race-identity abbr { text-decoration: none; }
 .race-rank { width: 12px; color: #707070; font-size: 10px; font-weight: 400; }
-.toronto { background: #f3f7fb; }
+.toronto { background: #edf4fb; }
+.toronto th:first-child { box-shadow: inset 3px 0 #134a8e; }
 .cutoff th, .cutoff td { border-bottom: 1px dashed #999; }
 .race-result + .race-result { margin-top: 8px; }
 .race-game-status { display: block; font-size: 10px; color: #707070; margin-top: 2px; }
 .in-progress { color: #198054; }
 .rest-of-race { margin-top: 12px; font-size: 12px; }
 .race-note { color: #707070; font-size: 10px; line-height: 1.7; margin: 14px 0 0; }
-.jays-heading { padding: 12px 0; }
+.game-panel { border-top: 1px solid #dedede; }
+.jays-heading { padding: 24px 0 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (min-width: 740px) {
-  main { max-width: 1120px; height: 100dvh; min-height: 480px; padding: 24px 28px 12px; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; }
+  main { max-width: 720px; padding: 32px 28px 20px; }
   .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
   header { margin: 0; flex-shrink: 0; }
   nav { width: 340px; }
   .date-row { margin: 4px 0 8px; }
-  .dashboard { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px; min-height: 0; padding-bottom: 12px; }
-  #race, .game-panel { min-width: 0; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
-  #race { padding: 14px 0 0; }
-  .game-panel { border-top: 1px solid #dedede; padding-top: 14px; }
-  .jays-heading { padding: 0 0 12px; }
+  .dashboard { padding-bottom: 16px; }
+  #race, .game-panel { min-width: 0; }
+  #race { padding: 20px 0 24px; }
+  .jays-heading { padding: 24px 0 12px; }
   .game { padding: 12px 0; }
   .game:first-child { border-top: 0; padding-top: 0; }
   .game-top { margin-bottom: 12px; }
