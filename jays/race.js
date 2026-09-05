@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  let expanded = false;
   function node(tag, className, text = '') {
     const result = document.createElement(tag);
     result.className = className;
@@ -55,7 +56,7 @@
       const team = node('th', 'race-team');
       team.scope = 'row';
       const identity = node('span', 'race-identity');
-      identity.append(node('span', 'race-rank', rank));
+      identity.append(node('span', 'race-rank', record.divisionLeader || Number(record.divisionRank) === 1 || !(rank > 0) ? '–' : rank));
       const logo = document.createElement('img');
       logo.src = `logos/${record.team.id}.svg`;
       logo.alt = '';
@@ -87,17 +88,31 @@
     if (!data) {
       content.append(node('p', 'race-note error', 'Standings unavailable. Retrying on the next refresh.'));
     } else {
-      const { records, jays, rank } = window.JaysLogic.parseWildCardStandings(data);
+      const { records, jays } = window.JaysLogic.parseWildCardStandings(data);
       content.append(node('p', 'race-summary', window.JaysLogic.wildCardSummary({ jays, records })));
       if (records.length) {
-        // Keep the complete race visible. It is more useful as a single,
-        // glanceable standings view than behind an interactive disclosure.
-        content.append(table(records, games, 'AL Wild Card standings and selected-day scores'));
+        const torontoIndex = records.findIndex(record => record.team.id === 141);
+        const visible = torontoIndex >= 0 ? records.slice(0, torontoIndex + 1) : jays ? [jays] : records;
+        const remaining = torontoIndex >= 0 ? records.slice(torontoIndex + 1) : jays ? records : [];
+        content.append(table(visible, games, 'Toronto and teams ahead in the AL Wild Card race'));
+        if (remaining.length) {
+          const more = node('details', 'rest-of-race');
+          more.open = expanded;
+          const summary = node('summary', '', 'Rest of the AL');
+          summary.id = 'rest-of-race-toggle';
+          more.append(summary, table(remaining, games, 'Remaining AL Wild Card teams'));
+          more.addEventListener('toggle', () => {
+            if (more.isConnected) expanded = more.open;
+          });
+          content.append(more);
+        }
         content.append(node('p', 'race-note', `Standings as of ${standingsDate}. Scores follow the selected date. GB is relative to the final spot; + means ahead. Division leaders excluded. Rankings reflect completed games, not live projections.`));
       }
     }
     if (target.innerHTML !== content.innerHTML) {
+      const restoreFocus = document.activeElement?.id === 'rest-of-race-toggle';
       target.replaceChildren(...content.childNodes);
+      if (restoreFocus) document.getElementById('rest-of-race-toggle')?.focus({ preventScroll: true });
     }
   }
 
