@@ -66,6 +66,19 @@ h2 { font-size: 14px; font-weight: 600; margin: 0; }
 .race-result + .race-result { margin-top: 8px; }
 .race-game-status { display: block; font-size: 12px; color: #707070; margin-top: 3px; }
 .in-progress { color: #198054; }
+.has-scorebug { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.race-result-text, .live-detail-text { min-width: 0; }
+.scorebug { display: inline-flex; flex: 0 0 36px; flex-direction: column; align-items: center; gap: 3px; color: #134a8e; line-height: 1; }
+.scorebug-diamond { position: relative; display: block; width: 32px; height: 24px; }
+.scorebug-base { position: absolute; width: 10px; height: 10px; border: 1.5px solid #8793a0; transform: rotate(45deg); background: #fff; }
+.scorebug-base.second { top: 2px; left: 11px; }
+.scorebug-base.third { top: 13px; left: 0; }
+.scorebug-base.first { top: 13px; right: 0; }
+.scorebug-base.occupied { background: #134a8e; border-color: #134a8e; }
+.scorebug-count { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.scorebug-outs { display: flex; gap: 4px; }
+.scorebug-out { width: 6px; height: 6px; border: 1px solid #8793a0; border-radius: 50%; }
+.scorebug-out.recorded { background: #134a8e; border-color: #134a8e; }
 .rest-of-race { margin-top: 12px; font-size: 12px; }
 .race-note { color: #707070; font-size: 12px; line-height: 1.7; margin: 14px 0 0; }
 .rest-of-race summary { min-height: 44px; padding: 14px 0; }

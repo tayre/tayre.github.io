@@ -112,6 +112,13 @@
       details.append(element('p', '', occupied.length ? `Runners on ${occupied.join(' & ')}` : 'Bases empty'));
       if (line.offense?.batter) details.append(element('p', '', `Batting: ${line.offense.batter.fullName}`));
       if (line.defense?.pitcher) details.append(element('p', '', `Pitching: ${line.defense.pitcher.fullName}`));
+      const bug = window.JaysScorebug(game);
+      if (bug) {
+        const text = element('div', 'live-detail-text', '');
+        text.append(...details.childNodes);
+        details.classList.add('has-scorebug');
+        details.append(text, bug);
+      }
       card.append(details);
     }
     if (line.innings?.length) {

@@ -35,6 +35,13 @@
     }
     const gameNumber = game.doubleHeader && game.doubleHeader !== 'N' ? `G${game.gameNumber} · ` : '';
     result.append(node('span', `race-game-status${state === 'Live' ? ' in-progress' : ''}`, `${gameNumber}${status}`));
+    const bug = window.JaysScorebug(game);
+    if (bug) {
+      const text = node('div', 'race-result-text');
+      text.append(...result.childNodes);
+      result.classList.add('has-scorebug');
+      result.append(text, bug);
+    }
     return result;
   }
 
