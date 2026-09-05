@@ -296,7 +296,11 @@
     }
   }
 
-  dateInput.value = today();
+  function showTodayOnLoad() {
+    dateInput.value = today();
+  }
+
+  showTodayOnLoad();
   dateInput.addEventListener('change', cycle);
   document.querySelector('#previous').addEventListener('click', () => moveDate(-1));
   document.querySelector('#next').addEventListener('click', () => moveDate(1));
@@ -306,6 +310,15 @@
   // No fixed interval: cycle() reschedules itself at whatever cadence the
   // game state calls for, and stops entirely while the tab is hidden.
   document.addEventListener('visibilitychange', () => { if (!document.hidden) cycle(); });
+  // A browser may restore this page from its back-forward cache without
+  // running the script again. Treat that return like a fresh visit so the
+  // dashboard never opens on a previously selected day.
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+      showTodayOnLoad();
+      cycle();
+    }
+  });
   window.addEventListener('online', cycle);
   cycle();
 })();
