@@ -88,7 +88,7 @@
     return result;
   }
 
-  function render(data, games, standingsDate) {
+  function render(data, games) {
     const target = document.querySelector('#race');
     const content = node('div', '');
     content.append(node('h2', '', 'AL Wild Card'));
@@ -113,7 +113,6 @@
           });
           content.append(more);
         }
-        content.append(node('p', 'race-note', `Standings as of ${standingsDate}. Scores follow the selected date. GB is relative to the final spot; + means ahead. Division leaders excluded. Rankings reflect completed games, not live projections.`));
       }
     }
     if (target.innerHTML !== content.innerHTML) {

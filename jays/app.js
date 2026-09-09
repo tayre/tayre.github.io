@@ -7,6 +7,7 @@
   const updateElement = document.querySelector('#update');
   const refreshButton = document.querySelector('#refresh');
   const nextGameButton = document.querySelector('#next-game');
+  const celebration = window.JaysCelebration?.();
   let controller;
   let loading = false;
   let displayedDate;
@@ -31,16 +32,16 @@
     return node;
   }
 
-  function statsTable(caption, headers, rows) {
+  function statsTable(caption, headers, rows, { firstHeader = 'Team', className = '' } = {}) {
     const wrap = element('div', 'table-scroll', '');
     wrap.tabIndex = 0;
     wrap.setAttribute('role', 'region');
     wrap.setAttribute('aria-label', caption);
-    const table = element('table', 'stats-table', '');
+    const table = element('table', `stats-table ${className}`.trim(), '');
     table.append(element('caption', '', caption));
     const head = element('thead', '', '');
     const header = element('tr', '', '');
-    for (const label of ['Team', ...headers]) {
+    for (const label of [firstHeader, ...headers]) {
       const cell = element('th', '', label);
       cell.scope = 'col';
       header.append(cell);
@@ -59,6 +60,49 @@
     return wrap;
   }
 
+  function matchupPlayer(role, reference, boxscore, order) {
+    const player = JaysLogic.boxscorePlayer(boxscore, reference.id);
+    const group = element('div', 'matchup-player', '');
+    const name = element('p', 'matchup-name', '');
+    name.append(element('span', 'matchup-label', `${role}: `), element('strong', '', reference.fullName));
+    const batting = role === 'Batting';
+    const slot = Number.isInteger(order) && order >= 1 && order <= 9 ? order : JaysLogic.battingSlot(player);
+    const meta = batting
+      ? [slot && `#${slot} in order`, player?.position?.abbreviation].filter(Boolean).join(' · ')
+      : JaysLogic.pitcherHand(player);
+    if (meta) name.append(element('span', 'matchup-meta', ` · ${meta}`));
+    group.append(name);
+    const summary = JaysLogic.playerGameSummary(player, batting ? 'batting' : 'pitching');
+    if (summary) group.append(element('p', 'player-game-summary', `This game: ${summary}`));
+    return group;
+  }
+
+  function playerStats(team, name) {
+    const section = element('section', 'player-stats', '');
+    section.setAttribute('aria-label', `${name} player stats`);
+    section.append(element('h4', 'player-team-heading', name));
+    const columns = {
+      batting: [['AB', 'R', 'H', 'RBI', 'HR', 'BB', 'K'], ['atBats', 'runs', 'hits', 'rbi', 'homeRuns', 'baseOnBalls', 'strikeOuts']],
+      pitching: [['IP', 'H', 'R', 'ER', 'BB', 'K', 'Pitches'], ['inningsPitched', 'hits', 'runs', 'earnedRuns', 'baseOnBalls', 'strikeOuts', 'numberOfPitches']]
+    };
+    for (const kind of ['batting', 'pitching']) {
+      const players = JaysLogic.gamePlayers(team, kind);
+      if (!players.length) continue;
+      const [headers, keys] = columns[kind];
+      const rows = players.map(player => {
+        const slot = JaysLogic.battingSlot(player);
+        const meta = kind === 'batting' ? player.position?.abbreviation : JaysLogic.pitcherHand(player);
+        const label = `${kind === 'batting' && slot ? `${slot}. ` : ''}${player.person.fullName}${meta ? ` · ${meta}` : ''}`;
+        return [label, ...keys.map(key => player.stats?.[kind]?.[key])];
+      });
+      const caption = kind === 'batting' ? 'Batting' : 'Pitching';
+      const table = statsTable(caption, headers, rows, { firstHeader: 'Player', className: 'player-table' });
+      table.setAttribute('aria-label', `${name} ${caption.toLowerCase()} stats`);
+      section.append(table);
+    }
+    return section.childElementCount > 1 ? section : null;
+  }
+
   function gameCard(game, boxscore) {
     const card = element('article', 'game', '');
     const line = game.linescore || {};
@@ -66,6 +110,7 @@
     const status = JaysLogic.gameStatusLabel(game, timezone);
     const top = element('div', 'game-top', '');
     top.append(element('span', `status${live ? ' live' : ''}`, status));
+    if (JaysLogic.isJaysWin(game)) top.append(element('span', 'win-label', 'Jays win!'));
     if (game.doubleHeader && game.doubleHeader !== 'N') {
       top.append(element('span', 'game-number', `Game ${game.gameNumber}`));
     }
@@ -107,11 +152,8 @@
 
     if (live && line.currentInning) {
       const details = element('div', 'details', '');
-      details.append(element('p', '', `${line.balls ?? 0} balls · ${line.strikes ?? 0} strikes · ${line.outs ?? 0} outs`));
-      const occupied = ['first', 'second', 'third'].filter(base => line.offense?.[base]);
-      details.append(element('p', '', occupied.length ? `Runners on ${occupied.join(' & ')}` : 'Bases empty'));
-      if (line.offense?.batter) details.append(element('p', '', `Batting: ${line.offense.batter.fullName}`));
-      if (line.defense?.pitcher) details.append(element('p', '', `Pitching: ${line.defense.pitcher.fullName}`));
+      if (line.offense?.batter) details.append(matchupPlayer('Batting', line.offense.batter, boxscore, line.offense.battingOrder));
+      if (line.defense?.pitcher) details.append(matchupPlayer('Pitching', line.defense.pitcher, boxscore));
       const bug = window.JaysScorebug(game);
       if (bug) {
         const text = element('div', 'live-detail-text', '');
@@ -121,25 +163,18 @@
       }
       card.append(details);
     }
-    if (line.innings?.length) {
+    if (line.innings?.length || live || game.status.abstractGameState === 'Final') {
       const stats = element('section', 'game-stats', '');
       stats.append(element('h3', 'stats-heading', 'Game stats'));
       const sides = ['away', 'home'];
-      const label = side => game.teams[side].team.abbreviation || game.teams[side].team.name;
-      stats.append(statsTable('Runs by inning', line.innings.map(inning => inning.num),
-        sides.map(side => [label(side), ...line.innings.map(inning => inning[side]?.runs)])));
-      if (boxscore?.teams?.away?.teamStats && boxscore?.teams?.home?.teamStats) {
-        stats.append(statsTable('Batting', ['HR', 'BB', 'SO', 'LOB'], sides.map(side => {
-          const batting = boxscore.teams[side].teamStats.batting || {};
-          return [label(side), batting.homeRuns, batting.baseOnBalls, batting.strikeOuts, line.teams?.[side]?.leftOnBase];
-        })));
-        stats.append(statsTable('Pitching', ['IP', 'ER', 'K', 'Pitches'], sides.map(side => {
-          const pitching = boxscore.teams[side].teamStats.pitching || {};
-          return [label(side), pitching.inningsPitched, pitching.earnedRuns, pitching.strikeOuts, pitching.numberOfPitches];
-        })));
-      } else {
-        stats.append(element('p', 'stat-key', 'Batting and pitching stats unavailable. Retrying on the next refresh.'));
+      const scorecard = JaysLogic.inningScorecard(game);
+      stats.append(statsTable('Inning by inning', scorecard.headers, scorecard.rows, { className: 'inning-table' }));
+      let hasPlayers = false;
+      for (const side of sides) {
+        const players = playerStats(boxscore?.teams?.[side], game.teams[side].team.name);
+        if (players) { stats.append(players); hasPlayers = true; }
       }
+      if (!hasPlayers) stats.append(element('p', 'stat-key', 'Player stats will appear when available.'));
       card.append(stats);
     }
     card.append(element('p', 'venue', game.venue?.name || ''));
@@ -157,6 +192,7 @@
     updateElement.className = '';
     updateElement.textContent = 'Updating…';
     if (displayedDate !== date) {
+      celebration?.stop();
       gamesElement.replaceChildren(element('p', 'empty', 'Loading the scoreboard…'));
       document.querySelector('#race').replaceChildren(element('p', 'empty', 'Loading the Wild Card race…'));
       displayedDate = undefined;
@@ -195,7 +231,7 @@
           dateCache.set(date, { allGames, standings });
         }
       }
-      window.JaysRace.render(standings, allGames, standingsDate);
+      window.JaysRace.render(standings, allGames);
       if (!allGames) throw new Error('Scores unavailable');
       const games = allGames.filter(game => game.teams.away.team.id === 141 || game.teams.home.team.id === 141);
       function renderGames(boxes = []) {
@@ -212,6 +248,7 @@
       // them immediately; detailed batting and pitching totals can arrive a
       // moment later without delaying the first useful view.
       renderGames(games.map(game => boxscoreCache.get(game.gamePk) || recentBoxscores.get(game.gamePk)));
+      celebration?.show(games);
       displayedDate = date;
       lastUpdated = new Intl.DateTimeFormat('en-CA', {
         timeZone: timezone, hour: 'numeric', minute: '2-digit', second: '2-digit'
@@ -222,11 +259,14 @@
 
       void (async () => {
         const boxes = await Promise.all(games.map(async game => {
-          if (!game.linescore?.innings?.length) return null;
+          if (!game.linescore?.innings?.length && !['Live', 'Final'].includes(game.status.abstractGameState)) return null;
           const cachedBox = boxscoreCache.get(game.gamePk);
           if (cachedBox) return cachedBox;
           try {
-            const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore`, { signal: request.signal });
+            // Hydrate handedness in the same request; omit unused biography
+            // and stat fields to keep this secondary payload small.
+            const params = new URLSearchParams({ hydrate: 'person', fields: 'teams,away,home,players,person,id,fullName,pitchHand,code,description,position,abbreviation,battingOrder,pitchers,stats,batting,pitching,atBats,runs,hits,rbi,homeRuns,baseOnBalls,strikeOuts,plateAppearances,inningsPitched,earnedRuns,numberOfPitches' });
+            const response = await fetch(`https://statsapi.mlb.com/api/v1/game/${game.gamePk}/boxscore?${params}`, { signal: request.signal });
             if (!response.ok) return null;
             const box = await response.json();
             recentBoxscores.set(game.gamePk, box);

@@ -19,6 +19,9 @@ input { min-width: 0; flex: 1; }
 .game, .empty { border-top: 1px solid #dedede; padding: 20px 0; margin: 0; }
 .game-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 20px; font-size: 12px; }
 .status { font-weight: 600; }
+.win-label { color: #134a8e; font-weight: 650; }
+.win-fireworks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .win-fireworks { display: none; } }
 .status.live::before { content: ""; display: inline-block; width: 6px; height: 6px; background: #198054; border-radius: 50%; margin-right: 7px; }
 .game-number, .venue { color: #707070; }
 .team { display: flex; align-items: center; gap: 12px; margin: 18px 0; }
@@ -29,6 +32,10 @@ input { min-width: 0; flex: 1; }
 .score { margin-left: auto; font-size: 36px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
 .details { margin-top: 20px; font-size: 12px; line-height: 1.7; }
 .details p { margin: 2px 0; }
+.matchup-player + .matchup-player { margin-top: 10px; }
+.matchup-name strong { font-weight: 600; }
+.matchup-label, .matchup-meta, .player-game-summary { color: #646b73; }
+.player-game-summary { font-size: 11px; font-variant-numeric: tabular-nums; }
 .probable-label { color: #707070; }
 .game-stats { border-top: 1px solid #ededed; margin-top: 20px; padding-top: 12px; font-size: 12px; }
 .stats-heading { font-size: 12px; font-weight: 500; margin: 0; padding: 4px 0; }
@@ -39,6 +46,15 @@ summary { cursor: pointer; font-weight: 500; padding: 4px 0; }
 .stats-table th, .stats-table td { padding: 6px 8px; text-align: right; white-space: nowrap; border-bottom: 1px solid #f0f0f0; }
 .stats-table th:first-child { text-align: left; }
 .stats-table thead { color: #707070; font-size: 11px; }
+.inning-table caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.inning-table th, .inning-table td { padding: 8px 4px; }
+.inning-table th:nth-last-child(3), .inning-table td:nth-last-child(3) { border-left: 1px solid #dedede; font-weight: 650; }
+.inning-table tbody th { font-weight: 500; }
+.player-stats { margin-top: 24px; }
+.player-team-heading { margin: 0; font-size: 13px; font-weight: 600; }
+.player-table tbody th { font-weight: 400; }
+.player-table th:first-child { position: sticky; left: 0; background: #fff; box-shadow: 1px 0 #ededed; white-space: normal; min-width: 154px; max-width: 230px; }
+.player-table th, .player-table td { padding: 8px 6px; }
 .stat-key { color: #707070; font-size: 11px; line-height: 1.7; margin: 12px 0 0; }
 .venue { font-size: 11px; margin: 16px 0 0; }
 .empty { color: #707070; line-height: 1.6; }
