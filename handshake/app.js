@@ -17,11 +17,18 @@ const ui = {
   mute: $("mute-button"),
   canvas: $("waveform"),
   counter: $("hit-counter"),
+  download: $("slow-image"),
+  downloadFrame: $("download-frame"),
+  downloadStatus: $("download-status"),
+  downloadPercent: $("download-percent"),
+  downloadProgress: $("download-progress"),
 };
 
 const RECORDING_URL = "assets/dialup.mp3";
 const SYNTH_DURATION = 27;
 const LOOP_PAUSE = 6;
+const IMAGE_REVEAL_SECONDS = 4;
+const IMAGE_BACKFILL_DELAY = 0.8;
 const ISP = "Handshake Internet Services";
 const PAGE_TITLE = document.title;
 
@@ -34,6 +41,8 @@ let source;
 let state = "idle";
 let startedAt = 0;
 let connectedAt = 0;
+let imageStartedAt = 0;
+let imageAvailable = true;
 let muted = false;
 let runToken = 0;
 let stateTimer;
@@ -194,6 +203,12 @@ function setupAudio() {
 function setState(nextState) {
   state = nextState;
   ui.dun.dataset.state = state;
+  if (state === "connected") {
+    imageStartedAt = audioContext.currentTime;
+    updateDownload(0);
+  } else {
+    resetDownload();
+  }
   if (state === "idle") {
     ui.status.textContent = "Disconnected.";
     ui.footer.textContent = "Disconnected";
@@ -224,11 +239,43 @@ function formatTime(seconds) {
   return `${pad(Math.floor(total / 3600))}:${pad(Math.floor(total / 60) % 60)}:${pad(total % 60)}`;
 }
 
+// A whole-image coarse preview appears first. Finer passes fill in from the
+// top, then deliberately stop halfway, leaving the bottom pixelated.
+function updateDownload(elapsed) {
+  if (!imageAvailable) return;
+  const pass = (seconds) => Math.min(50, Math.max(0, Math.floor(seconds / IMAGE_REVEAL_SECONDS * 20) * 2.5));
+  const reveal = reducedMotion.matches ? 50 : pass(elapsed);
+  const backfill = reducedMotion.matches ? 50 : pass(elapsed - IMAGE_BACKFILL_DELAY);
+  const nextState = backfill === 50 ? "stalled" : "loading";
+  ui.download.style.setProperty("--reveal", `${reveal}%`);
+  ui.download.style.setProperty("--backfill", `${backfill}%`);
+  ui.downloadPercent.textContent = `${Math.floor(reveal)}%`;
+  ui.downloadProgress.setAttribute("aria-valuenow", String(reveal));
+  if (ui.download.dataset.state !== nextState) {
+    ui.download.dataset.state = nextState;
+    ui.downloadStatus.textContent = nextState === "stalled" ? "Still loading…" : "Loading vacation.jpg…";
+    ui.downloadFrame.setAttribute("aria-label", nextState === "stalled"
+      ? "A beach sunset photo with a sharp top half and a pixelated bottom half; the download has stalled at 50 percent."
+      : "A blocky beach sunset photo gradually filling in with sharper detail.");
+  }
+}
+
+function resetDownload() {
+  ui.download.dataset.state = "waiting";
+  ui.download.style.setProperty("--reveal", "0%");
+  ui.download.style.setProperty("--backfill", "0%");
+  ui.downloadPercent.textContent = "0%";
+  ui.downloadProgress.setAttribute("aria-valuenow", "0");
+  ui.downloadStatus.textContent = imageAvailable ? "Waiting for connection…" : "Image unavailable.";
+  ui.downloadFrame.setAttribute("aria-label", imageAvailable ? "A vacation photo waiting to download" : "Vacation photo unavailable");
+}
+
 function updateConnection() {
   if (state === "idle" || !audioContext) return;
   const elapsed = audioContext.currentTime - startedAt;
   ui.elapsed.textContent = formatTime(elapsed);
   if (state === "connected") {
+    updateDownload(audioContext.currentTime - imageStartedAt);
     if (ui.loop.checked) {
       const remaining = Math.max(
         0,
@@ -330,7 +377,7 @@ function bumpCounter() {
       visits = Math.min(previous + 1, 9999999);
     localStorage.setItem("handshake-visits", String(visits));
   } catch {
-    $("counter-note").textContent = "This visit only — your browser isn’t saving the counter.";
+    $("counter-note").textContent = "This visit only. Your browser isn’t saving the counter.";
   }
   const digits = String(visits).padStart(7, "0");
   ui.counter.setAttribute("aria-label", `${visits} ${visits === 1 ? "visit" : "visits"} from this browser`);
@@ -424,6 +471,27 @@ ui.loop.addEventListener("change", () => {
   }
 });
 
+const vacationImage = $("vacation-image");
+function drawDownloadPreviews() {
+  const cropHeight = vacationImage.naturalWidth * 9 / 16;
+  const cropTop = vacationImage.naturalHeight - cropHeight;
+  for (const id of ["download-coarse", "download-rough"]) {
+    const canvas = $(id);
+    const context = canvas.getContext("2d");
+    context.drawImage(vacationImage, 0, cropTop, vacationImage.naturalWidth, cropHeight, 0, 0, canvas.width, canvas.height);
+  }
+}
+function imageUnavailable() {
+  imageAvailable = false;
+  resetDownload();
+}
+vacationImage.addEventListener("error", imageUnavailable);
+vacationImage.addEventListener("load", drawDownloadPreviews);
+if (vacationImage.complete) {
+  if (vacationImage.naturalWidth > 0) drawDownloadPreviews();
+  else imageUnavailable();
+}
+
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) cancelAnimationFrame(animationFrame);
   else {
@@ -433,7 +501,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 window.addEventListener("pagehide", disconnect);
-reducedMotion.addEventListener("change", animate);
+reducedMotion.addEventListener("change", () => { animate(); updateConnection(); });
 new ResizeObserver(sizeCanvas).observe(ui.canvas);
 sizeCanvas();
 animate();

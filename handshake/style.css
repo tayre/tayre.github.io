@@ -1,7 +1,22 @@
+@font-face {
+  font-family: "Win95 Sans";
+  src: url("assets/fonts/ms-sans-serif.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Win95 Sans";
+  src: url("assets/fonts/ms-sans-serif-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
 :root {
   color-scheme: dark;
   --comic: "Comic Sans MS", "Comic Sans", "Comic Neue", "Chalkboard SE", cursive;
   --win: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  --dialog-font: "Win95 Sans", Tahoma, Arial, sans-serif;
   --mono: "Courier New", Courier, monospace;
 }
 * {
@@ -217,28 +232,30 @@ h2 {
 /* Windows 95 dialog */
 .win95 {
   color-scheme: light;
-  width: 484px;
+  width: 464px;
   max-width: 100%;
   margin: 18px auto 0;
   padding: 3px;
   text-align: left;
   background: #c0c0c0;
   color: #000;
-  font: 12px/1.35 var(--win);
-  border: 1px solid;
-  border-color: #c0c0c0 #000 #000 #c0c0c0;
+  font: 11px/1.5 var(--dialog-font);
+  -webkit-font-smoothing: none;
+  border: 0;
   box-shadow:
-    inset 1px 1px #fff,
-    inset -1px -1px #808080,
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #dfdfdf,
+    inset -2px -2px #808080,
+    inset 2px 2px #fff,
     6px 6px 0 #00000080;
 }
 .win95-titlebar {
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 23px;
+  height: 21px;
   padding: 0 3px 0 4px;
-  background: linear-gradient(90deg, #000080 30%, #1084d0);
+  background: #000080;
   color: #fff;
   font-weight: bold;
   white-space: nowrap;
@@ -266,19 +283,25 @@ h2 {
   place-items: center;
   background: #c0c0c0;
   color: #000;
-  font: bold 12px/1 var(--win);
+  font: bold 11px/1 var(--dialog-font);
   border: 1px solid;
   border-color: #fff #000 #000 #fff;
   box-shadow: inset -1px -1px #808080;
 }
+.win95-caption svg {
+  width: 10px;
+  height: 10px;
+  fill: #000;
+  shape-rendering: crispEdges;
+}
 .win95-body {
-  padding: 16px 15px 12px;
+  padding: 14px 14px 10px;
 }
 .dun-header {
   display: flex;
   gap: 14px;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .dun-icon {
   width: 48px;
@@ -292,7 +315,7 @@ h2 {
   min-width: 0;
 }
 .dun-identity strong {
-  font-size: 13px;
+  font-size: 11px;
 }
 .dun-identity span {
   color: #404040;
@@ -324,7 +347,7 @@ h2 {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 7px 12px;
   align-items: center;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   flex: 1;
   min-width: 0;
 }
@@ -337,10 +360,9 @@ h2 {
 }
 .win95-field {
   background: #fff;
-  padding: 4px 6px;
-  border: 1px solid;
-  border-color: #808080 #fff #fff #808080;
-  box-shadow: inset 1px 1px #000;
+  padding: 3px 6px;
+  border: 0;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #000;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -354,32 +376,38 @@ h2 {
 }
 .win95-group {
   min-width: 0;
-  margin: 0 0 14px;
-  padding: 8px 10px 11px;
-  border: 1px solid #808080;
-  box-shadow:
-    1px 1px #fff,
-    inset 1px 1px #fff;
+  margin: 0 0 12px;
+  padding: 10px 10px 12px;
+  border: 2px groove #fff;
+  box-shadow: none;
+  overflow: visible;
 }
 .win95-group legend {
   padding: 0 5px;
+  background: #c0c0c0;
+  font: 11px/18px var(--dialog-font);
+  max-width: 100%;
 }
 .dun-status {
-  margin: 0 0 9px;
-  min-height: 17px;
+  margin: 0;
+  min-width: 0;
 }
-.dun-meta {
+.dun-statusline {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 6px;
-  font: 11px/1.4 var(--mono);
-  color: #000080;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+#elapsed {
+  flex-shrink: 0;
+  font: 11px/1.5 var(--mono);
+  color: #404040;
 }
 #waveform {
   display: block;
   width: 100%;
-  height: 64px;
+  height: 56px;
   background: #000;
 }
 .win95-progress {
@@ -396,8 +424,8 @@ h2 {
 .dun-options {
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 .win95-check {
   display: flex;
@@ -421,9 +449,11 @@ h2 {
   cursor: pointer;
 }
 .win95-check input:checked::after {
-  content: "\2713";
-  font: bold 11px/1 var(--win);
-  color: #000;
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: #000;
+  clip-path: polygon(0 28%, 28% 57%, 100% 0, 100% 42%, 28% 100%, 0 71%);
 }
 .dun-volume {
   display: flex;
@@ -467,42 +497,51 @@ h2 {
   text-align: right;
 }
 .win95-button {
-  font: 12px/1.2 var(--win);
+  font: 11px/1.4 var(--dialog-font);
   color: #000;
   background: #c0c0c0;
-  padding: 6px 16px;
-  min-width: 88px;
-  border: 1px solid;
-  border-color: #fff #000 #000 #fff;
+  padding: 3px 12px;
+  min-width: 75px;
+  min-height: 23px;
+  border: 0;
   box-shadow:
-    inset -1px -1px #808080,
-    inset 1px 1px #dfdfdf;
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #fff,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
   border-radius: 0;
 }
 .win95-button:active,
 .win95-button[aria-pressed="true"] {
-  border-color: #000 #fff #fff #000;
-  box-shadow: inset 1px 1px #808080;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
 }
 .win95-button[aria-pressed="true"] {
   background: repeating-conic-gradient(#fff 0 25%, #c0c0c0 0 50%) 0 0 / 2px 2px;
 }
 .win95-button.default {
   box-shadow:
-    0 0 0 1px #000,
-    inset -1px -1px #808080,
-    inset 1px 1px #dfdfdf;
+    inset -2px -2px #0a0a0a,
+    inset 1px 1px #0a0a0a,
+    inset 2px 2px #fff,
+    inset -3px -3px #808080,
+    inset 3px 3px #dfdfdf;
+}
+.win95-button.default:active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #000, inset -2px -2px #808080, inset 2px 2px #808080;
 }
 .win95-button.small {
   min-width: 0;
-  padding: 3px 9px;
+  padding: 3px 8px;
   font-size: 11px;
 }
 .win95-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-  padding-top: 2px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #808080;
+  box-shadow: 0 -1px #fff;
 }
 .win95-button.default:focus-visible {
   outline: none;
@@ -519,7 +558,7 @@ h2 {
 }
 .win95-statusbar span {
   flex: 1;
-  padding: 3px 6px;
+  padding: 2px 5px;
   border: 1px solid;
   border-color: #808080 #fff #fff #808080;
   white-space: nowrap;
@@ -542,6 +581,73 @@ h2 {
   color: #ff9999;
   font-size: 14px;
   animation: blink 2s steps(1) infinite;
+}
+
+/* A deliberately unfinished, old-browser image download. */
+.slow-image {
+  --reveal: 0%;
+  --backfill: 0%;
+  width: 340px;
+  max-width: 100%;
+  margin: 22px auto 0;
+}
+.slow-image figcaption {
+  margin-bottom: 8px;
+  color: #ff99ff;
+  font-size: 13px;
+}
+.download-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #c0c0c0;
+  border: 2px inset #d0d0d0;
+  text-align: left;
+}
+.download-placeholder {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #000;
+  font: 11px var(--dialog-font);
+}
+.slow-image:not([data-state="waiting"]) .download-placeholder { visibility: hidden; }
+.download-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+.download-rough {
+  image-rendering: pixelated;
+  clip-path: inset(0 0 calc(100% - var(--reveal)) 0);
+}
+.download-coarse { image-rendering: pixelated; }
+.slow-image[data-state="waiting"] .download-coarse { visibility: hidden; }
+.download-sharp { clip-path: inset(0 0 calc(100% - var(--backfill)) 0); }
+.download-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 6px 0 5px;
+  color: #ccc;
+  font: 10px/1.4 var(--mono);
+}
+.download-progress {
+  height: 6px;
+  background: #000;
+  border: 1px inset #808080;
+}
+.download-progress span {
+  display: block;
+  width: var(--reveal);
+  height: 100%;
+  background: #00bfbf;
 }
 
 /* Visitors */
@@ -713,7 +819,7 @@ h2 {
     gap: 10px;
   }
   .win95-body { padding: 13px 10px 10px; }
-  .dun-identity strong { font-size: 12px; }
+  .dun-identity strong { font-size: 11px; }
   .dun-fields { gap: 7px 8px; font-size: 11px; }
   .dun-fields {
     width: 100%;

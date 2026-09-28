@@ -6,9 +6,10 @@ A 1990s home page that dials up the Internet. Open `index.html` in a browser, or
 - **Cancel** or **Disconnect** stops the audio and resets the connection immediately.
 - **Redial automatically** dials again six seconds after connecting. It can be changed during playback or after connecting.
 - Speaker volume and mute work throughout the connection. Audio only starts after a click.
+- Once connected, a vacation photo appears at low resolution, then progressively fills in with detail. It deliberately stalls at 50%, leaving the top half sharp and the bottom half pixelated. Disconnecting or redialing resets it; reduced motion shows the half-loaded result immediately.
 - The period decoration includes a raised WordArt-style title, animated globe GIFs, Comic Sans, tiled backgrounds, a marquee, rainbow dividers, and a row of 88x31 badges. Reduced-motion preferences disable the animations and show a still globe.
 - The seven-digit counter counts page loads in the current browser, starting at one, using localStorage. It is not a global visitor total. If storage is blocked, the page explains that the count is for the current visit only.
-- The Web Ring links to other projects on `tayre.github.io`. **Random** picks from the visible **Cool Links** directory; **List Sites** jumps to that directory. It is a curated set of links, not an external webring service.
+- The Web Ring visits the classic sites in **Cool Links**: AOL, MapQuest, Yahoo!, Lycos, and Pets.com. **Random** picks from that directory; **List Sites** jumps to it. It is a curated set of links, not an external webring service.
 
 ## The sound
 
@@ -27,3 +28,7 @@ python3 -m http.server 8000
 Then open `http://localhost:8000`. The site also works as a static GitHub Pages subdirectory. All assets are local; the network icon and badges are inline SVG.
 
 The globe is the public-domain [Globe rotating.gif](https://commons.wikimedia.org/wiki/File:Globe_rotating.gif) from Wikimedia Commons, bundled unchanged (40 × 40 pixels, 36 frames). The PNG is its first frame for reduced-motion preferences.
+
+The vacation photo is [Ocean beach sunset](https://commons.wikimedia.org/wiki/File:Ocean_beach_sunset.jpg) by Jon Sullivan, released into the public domain. The slow download is a local visual effect; it does not throttle or interrupt the actual image request.
+
+The dialog uses [MS Sans Serif](https://fontstruct.com/fontstructions/show/1384746) and [MS Sans Serif Bold](https://fontstruct.com/fontstructions/show/1384862) by **lou**, licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). The WOFF2 conversions are bundled unchanged from [98.css](https://github.com/jdan/98.css/tree/main/fonts/converted); font license notices are in `assets/fonts/`.

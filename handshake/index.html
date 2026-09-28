@@ -80,7 +80,10 @@
             <rect x="5" y="13" width="6" height="2" fill="#808080" />
           </svg>
           <span id="dun-title">Connect To</span>
-          <span class="win95-caption" aria-hidden="true"><b>_</b><b>&times;</b></span>
+          <span class="win95-caption" aria-hidden="true">
+            <b><svg viewBox="0 0 10 10"><path d="M1 7h7v2H1z" /></svg></b>
+            <b><svg viewBox="0 0 10 10"><path d="M1 1h2v1h1v1h2V2h1V1h2v2H8v1H7v2h1v1h1v2H7V8H6V7H4v1H3v1H1V7h1V6h1V4H2V3H1z" /></svg></b>
+          </span>
         </div>
         <div class="win95-body">
           <div class="dun-header">
@@ -116,15 +119,15 @@
 
           <fieldset class="win95-group">
             <legend>Status</legend>
-            <p
-              class="dun-status"
-              id="connection-status"
-              role="status"
-              aria-live="polite"
-            >
-              Disconnected.
-            </p>
-            <div class="dun-meta">
+            <div class="dun-statusline">
+              <p
+                class="dun-status"
+                id="connection-status"
+                role="status"
+                aria-live="polite"
+              >
+                Disconnected.
+              </p>
               <span id="elapsed" aria-label="Duration">00:00:00</span>
             </div>
             <canvas
@@ -178,6 +181,29 @@
       </section>
       <p class="reminder">&#9786; Please don't pick up the phone.</p>
 
+      <figure class="slow-image" id="slow-image" data-state="waiting">
+        <figcaption>My vacation photo :-)</figcaption>
+        <div class="download-frame" role="img" aria-label="A vacation photo waiting to download" id="download-frame">
+          <div class="download-placeholder" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" shape-rendering="crispEdges">
+              <path d="M3 2h13l5 5v15H3z" fill="#fff" stroke="#808080" />
+              <path d="M16 2v6h5" fill="#c0c0c0" stroke="#808080" />
+              <path d="M6 17l4-5 3 3 2-2 4 6H6z" fill="#008080" />
+              <path d="M6 7h3v3H6z" fill="#000080" />
+            </svg>
+            <span>vacation.jpg</span>
+          </div>
+          <canvas class="download-image download-coarse" id="download-coarse" width="32" height="18" aria-hidden="true"></canvas>
+          <canvas class="download-image download-rough" id="download-rough" width="96" height="54" aria-hidden="true"></canvas>
+          <img class="download-image download-sharp" id="vacation-image" src="assets/vacation.jpg" width="1280" height="960" alt="" aria-hidden="true" />
+        </div>
+        <div class="download-caption">
+          <span id="download-status" role="status">Waiting for connection…</span>
+          <span id="download-percent">0%</span>
+        </div>
+        <div class="download-progress" id="download-progress" role="progressbar" aria-label="Vacation image download" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+      </figure>
+
       <hr class="rainbow" />
 
       <section class="visitors" id="visitors">
@@ -205,19 +231,19 @@
             This <b>Dial-Up Nostalgia Web Ring</b> site is owned by <b>Tom</b>.
           </p>
           <p class="webring-small">
-            A little ring of experiments from the same webmaster.
+            A few favorite stops on the Information Superhighway.
           </p>
           <p class="webring-nav">
             [
             <a
-              href="https://tayre.github.io/life/"
+              href="https://www.pets.com/"
               target="_blank"
               rel="noopener noreferrer"
               >&lt;&lt; Prev</a
             >
             |
             <a
-              href="https://tayre.github.io/stars/"
+              href="https://www.yahoo.com/"
               id="random-site"
               target="_blank"
               rel="noopener noreferrer"
@@ -225,7 +251,7 @@
             >
             |
             <a
-              href="https://tayre.github.io/floodit/"
+              href="https://www.aol.com/"
               target="_blank"
               rel="noopener noreferrer"
               >Next &gt;&gt;</a
@@ -242,12 +268,13 @@
 
       <section class="cool-links" id="cool-links" aria-label="Web ring sites">
         <h2><span class="hot-badge" aria-hidden="true">HOT!</span> Cool Links <span class="hot-badge" aria-hidden="true">HOT!</span></h2>
-        <p>Other stops on this little Web Ring. Happy surfing!</p>
-        <ul>
-          <li><a data-ring-site href="https://tayre.github.io/life/" target="_blank" rel="noopener noreferrer">Conway’s Game of Life</a> — a whole world in a few pixels.</li>
-          <li><a data-ring-site href="https://tayre.github.io/floodit/" target="_blank" rel="noopener noreferrer">Flood It!</a> — just one more game. Promise.</li>
-          <li><a data-ring-site href="https://tayre.github.io/stars/" target="_blank" rel="noopener noreferrer">It’s full of stars</a> — take the scenic route through space.</li>
-          <li><a data-ring-site href="https://tayre.github.io/time/" target="_blank" rel="noopener noreferrer">What Time Is It?</a> — time flies when you’re online.</li>
+        <p>Bookmarks from the Information Superhighway. Happy surfing!</p>
+        <ul class="classic-links">
+          <li><a data-ring-site href="https://www.aol.com/" target="_blank" rel="noopener noreferrer">AOL</a>: you've got mail!</li>
+          <li><a data-ring-site href="https://www.mapquest.com/" target="_blank" rel="noopener noreferrer">MapQuest</a>: print your directions before you leave.</li>
+          <li><a data-ring-site href="https://www.yahoo.com/" target="_blank" rel="noopener noreferrer">Yahoo!</a>: do you Yahoo!?</li>
+          <li><a data-ring-site href="https://www.lycos.com/" target="_blank" rel="noopener noreferrer">Lycos</a>: Your personal Internet guide.</li>
+          <li><a data-ring-site href="https://www.pets.com/" target="_blank" rel="noopener noreferrer">Pets.com</a>: remember the sock puppet?</li>
         </ul>
       </section>
 
