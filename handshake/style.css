@@ -107,6 +107,7 @@ input:focus-visible {
   text-shadow: 1px 1px #fff, 2px 2px #800080, 3px 3px #800080, 4px 4px #440044;
   transform: rotate(-3deg);
 }
+.rainbow-text span { white-space: nowrap; }
 @supports (-webkit-background-clip: text) or (background-clip: text) {
   .rainbow-text {
     background: linear-gradient(
