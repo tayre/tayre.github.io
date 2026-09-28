@@ -6,10 +6,10 @@ A 1990s home page that dials up the Internet. Open `index.html` in a browser, or
 - **Cancel** or **Disconnect** stops the audio and resets the connection immediately.
 - **Redial automatically** dials again six seconds after connecting. It can be changed during playback or after connecting.
 - Speaker volume and mute work throughout the connection. Audio only starts after a click.
-- Once connected, a vacation photo appears at low resolution, then progressively fills in with detail. It deliberately stalls at 50%, leaving the top half sharp and the bottom half pixelated. Disconnecting or redialing resets it; reduced motion shows the half-loaded result immediately.
+- A vacation photo loads automatically with the page at low resolution, then progressively fills in with detail. It deliberately stalls halfway, leaving the top half sharp and the bottom half pixelated. It runs independently of the modem; reduced motion shows the half-loaded result immediately.
 - The period decoration includes a raised WordArt-style title, animated globe GIFs, Comic Sans, tiled backgrounds, a marquee, rainbow dividers, and a row of 88x31 badges. Reduced-motion preferences disable the animations and show a still globe.
 - The seven-digit counter counts page loads in the current browser, starting at one, using localStorage. It is not a global visitor total. If storage is blocked, the page explains that the count is for the current visit only.
-- The Web Ring visits the classic sites in **Cool Links**: AOL, MapQuest, Yahoo!, Lycos, and Pets.com. **Random** picks from that directory; **List Sites** jumps to it. It is a curated set of links, not an external webring service.
+- The Web Ring visits the classic sites in **Cool Links**: AOL, MapQuest, Yahoo!, Lycos, and GeoCities. **Random** picks from that directory; **List Sites** jumps to it. It is a curated set of links, not an external webring service.
 
 ## The sound
 

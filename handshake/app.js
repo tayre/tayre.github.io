@@ -19,9 +19,6 @@ const ui = {
   counter: $("hit-counter"),
   download: $("slow-image"),
   downloadFrame: $("download-frame"),
-  downloadStatus: $("download-status"),
-  downloadPercent: $("download-percent"),
-  downloadProgress: $("download-progress"),
 };
 
 const RECORDING_URL = "assets/dialup.mp3";
@@ -41,8 +38,8 @@ let source;
 let state = "idle";
 let startedAt = 0;
 let connectedAt = 0;
-let imageStartedAt = 0;
-let imageAvailable = true;
+let imageStartedAt = null;
+let imageTimer;
 let muted = false;
 let runToken = 0;
 let stateTimer;
@@ -203,12 +200,6 @@ function setupAudio() {
 function setState(nextState) {
   state = nextState;
   ui.dun.dataset.state = state;
-  if (state === "connected") {
-    imageStartedAt = audioContext.currentTime;
-    updateDownload(0);
-  } else {
-    resetDownload();
-  }
   if (state === "idle") {
     ui.status.textContent = "Disconnected.";
     ui.footer.textContent = "Disconnected";
@@ -242,32 +233,20 @@ function formatTime(seconds) {
 // A whole-image coarse preview appears first. Finer passes fill in from the
 // top, then deliberately stop halfway, leaving the bottom pixelated.
 function updateDownload(elapsed) {
-  if (!imageAvailable) return;
+  if (imageStartedAt === null) return;
   const pass = (seconds) => Math.min(50, Math.max(0, Math.floor(seconds / IMAGE_REVEAL_SECONDS * 20) * 2.5));
   const reveal = reducedMotion.matches ? 50 : pass(elapsed);
   const backfill = reducedMotion.matches ? 50 : pass(elapsed - IMAGE_BACKFILL_DELAY);
   const nextState = backfill === 50 ? "stalled" : "loading";
   ui.download.style.setProperty("--reveal", `${reveal}%`);
   ui.download.style.setProperty("--backfill", `${backfill}%`);
-  ui.downloadPercent.textContent = `${Math.floor(reveal)}%`;
-  ui.downloadProgress.setAttribute("aria-valuenow", String(reveal));
+  if (nextState === "stalled") clearInterval(imageTimer);
   if (ui.download.dataset.state !== nextState) {
     ui.download.dataset.state = nextState;
-    ui.downloadStatus.textContent = nextState === "stalled" ? "Still loading…" : "Loading vacation.jpg…";
     ui.downloadFrame.setAttribute("aria-label", nextState === "stalled"
       ? "A beach sunset photo with a sharp top half and a pixelated bottom half; the download has stalled at 50 percent."
       : "A blocky beach sunset photo gradually filling in with sharper detail.");
   }
-}
-
-function resetDownload() {
-  ui.download.dataset.state = "waiting";
-  ui.download.style.setProperty("--reveal", "0%");
-  ui.download.style.setProperty("--backfill", "0%");
-  ui.downloadPercent.textContent = "0%";
-  ui.downloadProgress.setAttribute("aria-valuenow", "0");
-  ui.downloadStatus.textContent = imageAvailable ? "Waiting for connection…" : "Image unavailable.";
-  ui.downloadFrame.setAttribute("aria-label", imageAvailable ? "A vacation photo waiting to download" : "Vacation photo unavailable");
 }
 
 function updateConnection() {
@@ -275,7 +254,6 @@ function updateConnection() {
   const elapsed = audioContext.currentTime - startedAt;
   ui.elapsed.textContent = formatTime(elapsed);
   if (state === "connected") {
-    updateDownload(audioContext.currentTime - imageStartedAt);
     if (ui.loop.checked) {
       const remaining = Math.max(
         0,
@@ -472,7 +450,7 @@ ui.loop.addEventListener("change", () => {
 });
 
 const vacationImage = $("vacation-image");
-function drawDownloadPreviews() {
+function startDownload() {
   const cropHeight = vacationImage.naturalWidth * 9 / 16;
   const cropTop = vacationImage.naturalHeight - cropHeight;
   for (const id of ["download-coarse", "download-rough"]) {
@@ -480,15 +458,21 @@ function drawDownloadPreviews() {
     const context = canvas.getContext("2d");
     context.drawImage(vacationImage, 0, cropTop, vacationImage.naturalWidth, cropHeight, 0, 0, canvas.width, canvas.height);
   }
+  // The photo loads with the page, independently of the modem and audio clock.
+  clearInterval(imageTimer);
+  imageStartedAt = performance.now();
+  imageTimer = setInterval(() => updateDownload((performance.now() - imageStartedAt) / 1000), 100);
+  updateDownload(0);
 }
 function imageUnavailable() {
-  imageAvailable = false;
-  resetDownload();
+  clearInterval(imageTimer);
+  imageStartedAt = null;
+  ui.downloadFrame.setAttribute("aria-label", "Vacation photo unavailable");
 }
 vacationImage.addEventListener("error", imageUnavailable);
-vacationImage.addEventListener("load", drawDownloadPreviews);
+vacationImage.addEventListener("load", startDownload);
 if (vacationImage.complete) {
-  if (vacationImage.naturalWidth > 0) drawDownloadPreviews();
+  if (vacationImage.naturalWidth > 0) startDownload();
   else imageUnavailable();
 }
 
@@ -501,7 +485,11 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 window.addEventListener("pagehide", disconnect);
-reducedMotion.addEventListener("change", () => { animate(); updateConnection(); });
+reducedMotion.addEventListener("change", () => {
+  animate();
+  updateConnection();
+  updateDownload((performance.now() - imageStartedAt) / 1000);
+});
 new ResizeObserver(sizeCanvas).observe(ui.canvas);
 sizeCanvas();
 animate();

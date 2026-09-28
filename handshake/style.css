@@ -630,25 +630,6 @@ h2 {
 .download-coarse { image-rendering: pixelated; }
 .slow-image[data-state="waiting"] .download-coarse { visibility: hidden; }
 .download-sharp { clip-path: inset(0 0 calc(100% - var(--backfill)) 0); }
-.download-caption {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 6px 0 5px;
-  color: #ccc;
-  font: 10px/1.4 var(--mono);
-}
-.download-progress {
-  height: 6px;
-  background: #000;
-  border: 1px inset #808080;
-}
-.download-progress span {
-  display: block;
-  width: var(--reveal);
-  height: 100%;
-  background: #00bfbf;
-}
 
 /* Visitors */
 .visitors p {
