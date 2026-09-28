@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <radialGradient id="ocean" cx="32%" cy="28%" r="75%">
+      <stop stop-color="#66ffff"/>
+      <stop offset=".4" stop-color="#0066ff"/>
+      <stop offset="1" stop-color="#000066"/>
+    </radialGradient>
+    <radialGradient id="shade" cx="30%" cy="25%" r="75%">
+      <stop offset=".4" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".65"/>
+    </radialGradient>
+    <clipPath id="sphere"><circle cx="24" cy="22" r="19"/></clipPath>
+    <pattern id="dither" width="2" height="2" patternUnits="userSpaceOnUse">
+      <rect width="1" height="1" fill="#fff" opacity=".12"/>
+    </pattern>
+    <g id="land" fill="#66ff33" shape-rendering="crispEdges">
+      <path d="M2 8h13v3h5v6h-5v4h-4v5H7v-7H2zm11 20h8v3h4v7h-4v5h-4v-8h-4zM29 4h10v4h5v6h-7v3h-6v-5h-5V8h3zm1 16h11v4h4v8h-4v6h-6v-9h-5zm14 17h4v4h-4z"/>
+      <path d="M5 10h7v3H5zm27 12h6v3h-6z" fill="#ccff66"/>
+    </g>
+  </defs>
+  <style>
+    .continents { animation: spin 4s steps(16, end) infinite; }
+    @keyframes spin { to { transform: translateX(-48px); } }
+    @media (prefers-reduced-motion: reduce) { .continents { animation: none; } }
+  </style>
+  <ellipse cx="24" cy="45" rx="16" ry="2" fill="#000" opacity=".6"/>
+  <circle cx="24" cy="22" r="20" fill="#000"/>
+  <circle cx="24" cy="22" r="19" fill="url(#ocean)"/>
+  <g clip-path="url(#sphere)">
+    <g class="continents"><use href="#land"/><use href="#land" x="48"/></g>
+    <path d="M5 22h38M8 12h32M8 32h32M24 3v38" fill="none" stroke="#99ccff" stroke-width=".5" opacity=".35"/>
+    <circle cx="24" cy="22" r="19" fill="url(#shade)"/>
+    <circle cx="24" cy="22" r="19" fill="url(#dither)"/>
+  </g>
+  <path d="M12 8h5v2h-5zm-3 3h3v4H9z" fill="#ccffff" opacity=".8"/>
+</svg>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Tom's dial-up home page. Click Connect to hear a real 56K modem handshake, just like 1998."
+    />
+    <title>~*~ Handshake ~*~ Tom's Dial-Up Home Page</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body id="top">
+    <div class="homepage">
+      <header class="masthead">
+        <p class="topline">
+          <span class="new-badge">NEW!</span>
+          <span class="blink">*** WELCOME TO MY HOME PAGE!!! ***</span>
+          <span class="new-badge">NEW!</span>
+        </p>
+        <div class="logo-row">
+          <img class="spinning-globe" src="assets/spinning-globe.svg" width="56" height="56" alt="" />
+          <h1 class="rainbow-text">Handshake</h1>
+          <img class="spinning-globe" src="assets/spinning-globe.svg" width="56" height="56" alt="" />
+        </div>
+        <p class="tagline">Tom's little corner of the Information Superhighway</p>
+        <div class="marquee" aria-hidden="true">
+          <span
+            >*** Welcome to my home page!!! *** Click CONNECT to get online ***
+            Best viewed in Netscape Navigator 4.0 at 800x600 *** Please don't
+            pick up the phone while I'm online!!! *** Surf's up, cyber-friends!!!
+            *** Thanks for visiting!!! ***</span
+          >
+        </div>
+      </header>
+
+      <nav class="page-nav" aria-label="Homepage navigation">
+        [ <a href="#dial-in">Dial in</a> |
+        <a href="#visitors">Visitors</a> |
+        <a href="#webring">Web Ring</a> |
+        <a href="#cool-links">Cool Links</a> ]
+      </nav>
+
+      <div class="construction" role="note">
+        <span class="construction-sign">
+          <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges">
+            <path d="M7 1h2v3h1v4h1v4h1v2h2v1H2v-1h2v-2h1V8h1V4h1z" fill="#ff8800" />
+            <path d="M6 6h4v2H6zM5 10h6v2H5z" fill="#fff" />
+          </svg>
+          UNDER CONSTRUCTION
+          <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges">
+            <path d="M7 1h2v3h1v4h1v4h1v2h2v1H2v-1h2v-2h1V8h1V4h1z" fill="#ff8800" />
+            <path d="M6 6h4v2H6zM5 10h6v2H5z" fill="#fff" />
+          </svg>
+        </span>
+      </div>
+
+      <hr class="rainbow" />
+
+      <section
+        class="win95 dun"
+        id="dial-in"
+        aria-label="Dial-Up Networking"
+        data-state="idle"
+      >
+        <div class="win95-titlebar">
+          <svg class="win95-titleicon" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges">
+            <rect x="1" y="2" width="14" height="10" fill="#c0c0c0" />
+            <rect x="3" y="4" width="10" height="6" fill="#000080" />
+            <rect x="5" y="13" width="6" height="2" fill="#808080" />
+          </svg>
+          <span id="dun-title">Connect To</span>
+          <span class="win95-caption" aria-hidden="true"><b>_</b><b>&times;</b></span>
+        </div>
+        <div class="win95-body">
+          <div class="dun-header">
+            <svg class="dun-icon" viewBox="0 0 48 32" aria-hidden="true" shape-rendering="crispEdges">
+              <rect x="1" y="3" width="16" height="14" fill="#000" />
+              <rect x="2" y="4" width="14" height="12" fill="#c0c0c0" />
+              <rect class="dun-screen" x="4" y="6" width="10" height="8" fill="#000080" />
+              <rect x="7" y="17" width="4" height="2" fill="#808080" />
+              <rect x="4" y="19" width="10" height="2" fill="#000" />
+              <rect x="31" y="3" width="16" height="14" fill="#000" />
+              <rect x="32" y="4" width="14" height="12" fill="#c0c0c0" />
+              <rect class="dun-screen" x="34" y="6" width="10" height="8" fill="#000080" />
+              <rect x="37" y="17" width="4" height="2" fill="#808080" />
+              <rect x="34" y="19" width="10" height="2" fill="#000" />
+              <rect x="9" y="21" width="1" height="3" fill="#000" />
+              <rect x="9" y="23" width="31" height="1" fill="#000" />
+              <rect x="39" y="21" width="1" height="3" fill="#000" />
+              <rect x="19" y="25" width="10" height="2" fill="#000" />
+              <rect x="20" y="27" width="8" height="4" fill="#000" />
+              <rect x="22" y="28" width="4" height="2" fill="#c0c0c0" />
+              <rect class="dun-blip blip-one" x="13" y="22" width="3" height="3" fill="#ffff00" />
+              <rect class="dun-blip blip-two" x="33" y="22" width="3" height="3" fill="#ffff00" />
+            </svg>
+            <dl class="dun-fields">
+              <dt>Connect to:</dt>
+              <dd class="win95-field">Handshake Internet Services</dd>
+              <dt>Phone number:</dt>
+              <dd class="win95-field">1-800-556-1998</dd>
+              <dt>Using:</dt>
+              <dd class="win95-field">Standard 56000 bps V.90 Modem</dd>
+            </dl>
+          </div>
+
+          <fieldset class="win95-group">
+            <legend>Status</legend>
+            <p
+              class="dun-status"
+              id="connection-status"
+              role="status"
+              aria-live="polite"
+            >
+              Ready to dial.
+            </p>
+            <div class="dun-meta">
+              <span id="signal-label">NO CARRIER</span>
+              <span id="elapsed" aria-label="Duration">00:00:00</span>
+            </div>
+            <canvas
+              id="waveform"
+              class="win95-sunken"
+              aria-label="Modem line monitor"
+            ></canvas>
+            <div
+              class="win95-progress win95-sunken"
+              id="progress"
+              role="progressbar"
+              aria-label="Connection progress"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="progress-fill"></div>
+            </div>
+          </fieldset>
+
+          <div class="dun-options">
+            <label class="win95-check">
+              <input type="checkbox" id="loop" />
+              <span>Redial automatically (do it all again)</span>
+            </label>
+            <div class="dun-volume">
+              <label for="volume">Speaker volume:</label>
+              <input type="range" id="volume" min="0" max="100" value="70" />
+              <span id="volume-value" aria-hidden="true">70%</span>
+              <button
+                type="button"
+                class="win95-button small"
+                id="mute-button"
+                aria-pressed="false"
+              >
+                Mute
+              </button>
+            </div>
+          </div>
+
+          <div class="win95-buttons">
+            <button type="button" class="win95-button default" id="connect-button">
+              <span id="button-label">Connect</span>
+            </button>
+          </div>
+        </div>
+        <div class="win95-statusbar">
+          <span id="footer-status">Disconnected</span><span>56,000 bps</span>
+        </div>
+      </section>
+      <p class="reminder">&#9786; Please don't pick up the phone.</p>
+
+      <hr class="rainbow" />
+
+      <section class="visitors" id="visitors">
+        <p>You have surfed by this many times:</p>
+        <div class="counter" id="hit-counter" role="img" aria-label="Visit counter loading">
+          <span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span>
+        </div>
+        <p class="small" id="counter-note">
+          Your visits in this browser. Thanks for stopping by!!
+        </p>
+        <noscript><p class="small">JavaScript is needed for the counter and modem.</p></noscript>
+      </section>
+
+      <hr class="rainbow" />
+
+      <section class="webring" id="webring" aria-label="Web ring">
+        <svg class="webring-logo" viewBox="0 0 72 72" aria-hidden="true">
+          <circle cx="36" cy="36" r="30" fill="none" stroke="#000080" stroke-width="7" />
+          <circle cx="36" cy="36" r="30" fill="none" stroke="#ff0000" stroke-width="7" stroke-dasharray="22 12" />
+          <text x="36" y="33" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#000080">WEB</text>
+          <text x="36" y="46" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#000080">RING</text>
+        </svg>
+        <div class="webring-body">
+          <p>
+            This <b>Dial-Up Nostalgia Web Ring</b> site is owned by <b>Tom</b>.
+          </p>
+          <p class="webring-small">
+            A little ring of experiments from the same webmaster.
+          </p>
+          <p class="webring-nav">
+            [
+            <a
+              href="https://tayre.github.io/life/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >&lt;&lt; Prev</a
+            >
+            |
+            <a
+              href="https://tayre.github.io/stars/"
+              id="random-site"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Random</a
+            >
+            |
+            <a
+              href="https://tayre.github.io/floodit/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Next &gt;&gt;</a
+            >
+            |
+            <a
+              href="#cool-links"
+              >List Sites</a
+            >
+            ]
+          </p>
+        </div>
+      </section>
+
+      <section class="cool-links" id="cool-links" aria-label="Web ring sites">
+        <h2><span class="hot-badge" aria-hidden="true">HOT!</span> Cool Links <span class="hot-badge" aria-hidden="true">HOT!</span></h2>
+        <p>Other stops on this little Web Ring. Happy surfing!</p>
+        <ul>
+          <li><a data-ring-site href="https://tayre.github.io/life/" target="_blank" rel="noopener noreferrer">Conway’s Game of Life</a> — a whole world in a few pixels.</li>
+          <li><a data-ring-site href="https://tayre.github.io/floodit/" target="_blank" rel="noopener noreferrer">Flood It!</a> — just one more game. Promise.</li>
+          <li><a data-ring-site href="https://tayre.github.io/stars/" target="_blank" rel="noopener noreferrer">It’s full of stars</a> — take the scenic route through space.</li>
+          <li><a data-ring-site href="https://tayre.github.io/time/" target="_blank" rel="noopener noreferrer">What Time Is It?</a> — time flies when you’re online.</li>
+        </ul>
+      </section>
+
+      <hr class="rainbow" />
+
+      <div class="badges" aria-label="Web badges">
+        <svg viewBox="0 0 88 31" role="img" aria-label="Netscape Now!">
+          <rect width="88" height="31" fill="#000066" />
+          <rect x="1.5" y="1.5" width="85" height="28" fill="none" stroke="#6666ff" />
+          <text x="44" y="14" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">Netscape</text>
+          <text x="44" y="26" fill="#00ff00" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">NOW!</text>
+        </svg>
+        <svg viewBox="0 0 88 31" role="img" aria-label="Made with Notepad">
+          <rect width="88" height="31" fill="#c0c0c0" />
+          <rect x="5" y="6" width="14" height="19" fill="#ffffff" stroke="#000000" />
+          <path d="M8 11h8M8 15h8M8 19h6" stroke="#000080" />
+          <text x="53" y="14" fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="9" text-anchor="middle">Made with</text>
+          <text x="53" y="25" fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">NOTEPAD</text>
+        </svg>
+        <svg viewBox="0 0 88 31" role="img" aria-label="Best viewed at 800 by 600">
+          <rect width="88" height="31" fill="#000000" />
+          <text x="44" y="13" fill="#ffff00" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="bold" text-anchor="middle">BEST VIEWED</text>
+          <text x="44" y="25" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="10" text-anchor="middle">800 x 600</text>
+        </svg>
+        <svg viewBox="0 0 88 31" role="img" aria-label="56K powered">
+          <rect width="88" height="31" fill="#cc0000" />
+          <text x="26" y="23" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">56K</text>
+          <text x="64" y="14" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="8" text-anchor="middle">MODEM</text>
+          <text x="64" y="24" fill="#ffff00" font-family="Arial, Helvetica, sans-serif" font-size="8" font-weight="bold" text-anchor="middle">POWERED</text>
+        </svg>
+        <svg viewBox="0 0 88 31" role="img" aria-label="Y2K ready">
+          <rect width="88" height="31" fill="#00aa00" />
+          <text x="44" y="14" fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Y2K</text>
+          <text x="44" y="26" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="bold" text-anchor="middle">READY!!</text>
+        </svg>
+        <svg viewBox="0 0 88 31" role="img" aria-label="HTML 3.2 checked">
+          <rect width="88" height="31" fill="#ffffff" />
+          <rect x="1.5" y="1.5" width="85" height="28" fill="none" stroke="#0000cc" stroke-width="2" />
+          <text x="40" y="14" fill="#0000cc" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">HTML 3.2</text>
+          <text x="40" y="25" fill="#000000" font-family="Arial, Helvetica, sans-serif" font-size="8" text-anchor="middle">checked!</text>
+          <path d="M70 15l4 5 8-11" fill="none" stroke="#00aa00" stroke-width="3" />
+        </svg>
+      </div>
+
+      <footer class="colophon">
+        <p><a href="#top">[ Back to top ↑ ]</a></p>
+        <p>
+          <span class="blink">Best viewed</span> with Netscape Navigator 4.0
+          or Internet Explorer 4.0 at 800x600 in 256 colors.
+        </p>
+        <p>
+          &#9835; Now playing: nothing. The background MIDI was removed at the
+          request of everyone.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
