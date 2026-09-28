@@ -101,6 +101,7 @@ input:focus-visible {
 .rainbow-text {
   font: italic 900 44px/1.1 "Times New Roman", Times, serif;
   margin: 4px 0 8px;
+  text-wrap: balance;
   letter-spacing: 1px;
   color: #ffff00;
   text-shadow: 1px 1px #fff, 2px 2px #800080, 3px 3px #800080, 4px 4px #440044;
