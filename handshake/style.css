@@ -1,7 +1,7 @@
 :root {
   color-scheme: dark;
   --comic: "Comic Sans MS", "Comic Sans", "Comic Neue", "Chalkboard SE", cursive;
-  --win: Arial, Helvetica, "MS Sans Serif", sans-serif;
+  --win: Tahoma, "MS Sans Serif", Arial, sans-serif;
   --mono: "Courier New", Courier, monospace;
 }
 * {
@@ -121,6 +121,10 @@ input:focus-visible {
   flex-shrink: 0;
   image-rendering: pixelated;
 }
+.globe-picture {
+  display: flex;
+  flex-shrink: 0;
+}
 .tagline {
   margin: 0 0 10px;
   color: #ff99ff;
@@ -212,7 +216,8 @@ h2 {
 
 /* Windows 95 dialog */
 .win95 {
-  width: 440px;
+  color-scheme: light;
+  width: 484px;
   max-width: 100%;
   margin: 18px auto 0;
   padding: 3px;
@@ -221,19 +226,19 @@ h2 {
   color: #000;
   font: 12px/1.35 var(--win);
   border: 1px solid;
-  border-color: #dfdfdf #000 #000 #dfdfdf;
+  border-color: #c0c0c0 #000 #000 #c0c0c0;
   box-shadow:
     inset 1px 1px #fff,
     inset -1px -1px #808080,
-    4px 4px 0 #00000099;
+    6px 6px 0 #00000080;
 }
 .win95-titlebar {
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 18px;
-  padding: 0 2px 0 3px;
-  background: #000080;
+  gap: 6px;
+  height: 23px;
+  padding: 0 3px 0 4px;
+  background: linear-gradient(90deg, #000080 30%, #1084d0);
   color: #fff;
   font-weight: bold;
   white-space: nowrap;
@@ -255,30 +260,43 @@ h2 {
   flex-shrink: 0;
 }
 .win95-caption b {
-  width: 16px;
-  height: 14px;
+  width: 17px;
+  height: 16px;
   display: grid;
   place-items: center;
   background: #c0c0c0;
   color: #000;
-  font: bold 10px/1 var(--win);
+  font: bold 12px/1 var(--win);
   border: 1px solid;
   border-color: #fff #000 #000 #fff;
   box-shadow: inset -1px -1px #808080;
 }
 .win95-body {
-  padding: 10px 10px 8px;
+  padding: 16px 15px 12px;
 }
 .dun-header {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 10px;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 16px;
 }
 .dun-icon {
-  width: 72px;
+  width: 48px;
   height: 48px;
   flex-shrink: 0;
+}
+.dun-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.dun-identity strong {
+  font-size: 13px;
+}
+.dun-identity span {
+  color: #404040;
+  font-size: 11px;
 }
 .dun-blip {
   opacity: 0;
@@ -304,9 +322,9 @@ h2 {
 .dun-fields {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 4px 8px;
+  gap: 7px 12px;
   align-items: center;
-  margin: 0;
+  margin: 0 0 16px;
   flex: 1;
   min-width: 0;
 }
@@ -319,7 +337,7 @@ h2 {
 }
 .win95-field {
   background: #fff;
-  padding: 2px 4px;
+  padding: 4px 6px;
   border: 1px solid;
   border-color: #808080 #fff #fff #808080;
   box-shadow: inset 1px 1px #000;
@@ -335,50 +353,51 @@ h2 {
     inset -1px -1px #dfdfdf;
 }
 .win95-group {
-  margin: 0 0 10px;
-  padding: 4px 8px 8px;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 8px 10px 11px;
   border: 1px solid #808080;
   box-shadow:
     1px 1px #fff,
     inset 1px 1px #fff;
 }
 .win95-group legend {
-  padding: 0 3px;
+  padding: 0 5px;
 }
 .dun-status {
-  margin: 0 0 4px;
-  min-height: 16px;
+  margin: 0 0 9px;
+  min-height: 17px;
 }
 .dun-meta {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font: 11px/1.4 var(--mono);
   color: #000080;
 }
 #waveform {
   display: block;
   width: 100%;
-  height: 56px;
+  height: 64px;
   background: #000;
 }
 .win95-progress {
-  height: 14px;
-  margin-top: 6px;
-  padding: 1px;
-  background: #fff;
+  height: 16px;
+  margin-top: 8px;
+  padding: 2px;
+  background: #c0c0c0;
 }
 #progress-fill {
   height: 100%;
   width: 0;
-  background: repeating-linear-gradient(90deg, #000080 0 8px, #fff 8px 10px);
+  background: repeating-linear-gradient(90deg, #000080 0 8px, transparent 8px 10px);
 }
 .dun-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 13px;
+  margin-bottom: 15px;
 }
 .win95-check {
   display: flex;
@@ -415,7 +434,7 @@ h2 {
 .dun-volume input[type="range"] {
   appearance: none;
   flex: 1;
-  min-width: 80px;
+  min-width: 55px;
   height: 4px;
   margin: 0 4px;
   background: #808080;
@@ -451,8 +470,8 @@ h2 {
   font: 12px/1.2 var(--win);
   color: #000;
   background: #c0c0c0;
-  padding: 5px 12px;
-  min-width: 75px;
+  padding: 6px 16px;
+  min-width: 88px;
   border: 1px solid;
   border-color: #fff #000 #000 #fff;
   box-shadow:
@@ -476,13 +495,21 @@ h2 {
 }
 .win95-button.small {
   min-width: 0;
-  padding: 2px 8px;
+  padding: 3px 9px;
   font-size: 11px;
 }
 .win95-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
+  padding-top: 2px;
+}
+.win95-button.default:focus-visible {
+  outline: none;
+}
+.win95-button.default:focus-visible span {
+  outline: 1px dotted #000;
+  outline-offset: 3px;
 }
 .win95-statusbar {
   display: flex;
@@ -492,7 +519,7 @@ h2 {
 }
 .win95-statusbar span {
   flex: 1;
-  padding: 1px 4px;
+  padding: 3px 6px;
   border: 1px solid;
   border-color: #808080 #fff #fff #808080;
   white-space: nowrap;
@@ -501,6 +528,14 @@ h2 {
 }
 .win95-statusbar span:last-child {
   flex: 0 0 auto;
+}
+.win95-statusbar::after {
+  content: "";
+  flex: 0 0 12px;
+  align-self: end;
+  height: 12px;
+  background: repeating-linear-gradient(135deg, transparent 0 2px, #808080 2px 3px, #fff 3px 4px);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 .reminder {
   margin: 12px 0 0;
@@ -675,9 +710,11 @@ h2 {
     padding: 3px 8px;
   }
   .dun-header {
-    flex-direction: column;
-    align-items: center;
+    gap: 10px;
   }
+  .win95-body { padding: 13px 10px 10px; }
+  .dun-identity strong { font-size: 12px; }
+  .dun-fields { gap: 7px 8px; font-size: 11px; }
   .dun-fields {
     width: 100%;
   }

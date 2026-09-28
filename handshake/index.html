@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- Made with Macromedia Dreamweaver 4.0. Best viewed in Netscape Navigator. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -22,9 +23,15 @@
           <span class="new-badge">NEW!</span>
         </p>
         <div class="logo-row">
-          <img class="spinning-globe" src="assets/spinning-globe.svg" width="56" height="56" alt="" />
+          <picture class="globe-picture">
+            <source media="(prefers-reduced-motion: reduce)" srcset="assets/spinning-globe-still.png" />
+            <img class="spinning-globe" src="assets/spinning-globe.gif" width="56" height="56" alt="" />
+          </picture>
           <h1 class="rainbow-text">Handshake</h1>
-          <img class="spinning-globe" src="assets/spinning-globe.svg" width="56" height="56" alt="" />
+          <picture class="globe-picture">
+            <source media="(prefers-reduced-motion: reduce)" srcset="assets/spinning-globe-still.png" />
+            <img class="spinning-globe" src="assets/spinning-globe.gif" width="56" height="56" alt="" />
+          </picture>
         </div>
         <p class="tagline">Tom's little corner of the Information Superhighway</p>
         <div class="marquee" aria-hidden="true">
@@ -77,35 +84,35 @@
         </div>
         <div class="win95-body">
           <div class="dun-header">
-            <svg class="dun-icon" viewBox="0 0 48 32" aria-hidden="true" shape-rendering="crispEdges">
-              <rect x="1" y="3" width="16" height="14" fill="#000" />
-              <rect x="2" y="4" width="14" height="12" fill="#c0c0c0" />
-              <rect class="dun-screen" x="4" y="6" width="10" height="8" fill="#000080" />
-              <rect x="7" y="17" width="4" height="2" fill="#808080" />
-              <rect x="4" y="19" width="10" height="2" fill="#000" />
-              <rect x="31" y="3" width="16" height="14" fill="#000" />
-              <rect x="32" y="4" width="14" height="12" fill="#c0c0c0" />
-              <rect class="dun-screen" x="34" y="6" width="10" height="8" fill="#000080" />
-              <rect x="37" y="17" width="4" height="2" fill="#808080" />
-              <rect x="34" y="19" width="10" height="2" fill="#000" />
-              <rect x="9" y="21" width="1" height="3" fill="#000" />
-              <rect x="9" y="23" width="31" height="1" fill="#000" />
-              <rect x="39" y="21" width="1" height="3" fill="#000" />
-              <rect x="19" y="25" width="10" height="2" fill="#000" />
-              <rect x="20" y="27" width="8" height="4" fill="#000" />
-              <rect x="22" y="28" width="4" height="2" fill="#c0c0c0" />
-              <rect class="dun-blip blip-one" x="13" y="22" width="3" height="3" fill="#ffff00" />
-              <rect class="dun-blip blip-two" x="33" y="22" width="3" height="3" fill="#ffff00" />
+            <svg class="dun-icon" viewBox="0 0 48 48" aria-hidden="true" shape-rendering="crispEdges">
+              <path d="M22 3h23v19H22zM28 22h10v4H28zM24 26h19v3H24z" fill="#000" />
+              <path d="M23 4h21v17H23z" fill="#808080" />
+              <path d="M23 4h20v2H25v14h-2zM29 22h8v2h-8zM25 26h17v1H25z" fill="#fff" />
+              <path d="M26 7h15v11H26z" fill="#000" />
+              <path class="dun-screen" d="M27 8h13v9H27z" fill="#000080" />
+              <path d="M28 9h11v2H30v5h-2z" fill="#0080ff" />
+              <path d="M2 18h24v19H2zM9 37h10v4H9zM4 41h22v4H4z" fill="#000" />
+              <path d="M3 19h22v17H3zM10 37h8v3h-8zM5 42h16v2H5z" fill="#808080" />
+              <path d="M3 19h21v2H5v14H3zM10 37h8v1h-8zM5 42h16v1H5z" fill="#fff" />
+              <path d="M6 22h16v11H6z" fill="#000" />
+              <path class="dun-screen" d="M7 23h14v9H7z" fill="#000080" />
+              <path d="M8 24h12v2H10v5H8z" fill="#0080ff" />
+              <path d="M34 30v10H25v2h11V30z" fill="#000" />
+              <path d="M35 30v11H25" fill="none" stroke="#fff" />
+              <path class="dun-blip blip-one" d="M34 31h3v3h-3z" fill="#ffff00" />
+              <path class="dun-blip blip-two" d="M28 39h3v3h-3z" fill="#ffff00" />
             </svg>
-            <dl class="dun-fields">
-              <dt>Connect to:</dt>
-              <dd class="win95-field">Handshake Internet Services</dd>
-              <dt>Phone number:</dt>
-              <dd class="win95-field">1-800-556-1998</dd>
-              <dt>Using:</dt>
-              <dd class="win95-field">Standard 56000 bps V.90 Modem</dd>
-            </dl>
+            <div class="dun-identity">
+              <strong>Handshake Internet Services</strong>
+              <span>Dial-Up Networking</span>
+            </div>
           </div>
+          <dl class="dun-fields">
+            <dt>Phone number:</dt>
+            <dd class="win95-field">1-800-556-1998</dd>
+            <dt>Connect using:</dt>
+            <dd class="win95-field">U.S. Robotics Sportster 56K</dd>
+          </dl>
 
           <fieldset class="win95-group">
             <legend>Status</legend>
@@ -115,10 +122,9 @@
               role="status"
               aria-live="polite"
             >
-              Ready to dial.
+              Disconnected.
             </p>
             <div class="dun-meta">
-              <span id="signal-label">NO CARRIER</span>
               <span id="elapsed" aria-label="Duration">00:00:00</span>
             </div>
             <canvas
@@ -139,7 +145,8 @@
             </div>
           </fieldset>
 
-          <div class="dun-options">
+          <fieldset class="win95-group dun-options">
+            <legend>Options</legend>
             <label class="win95-check">
               <input type="checkbox" id="loop" />
               <span>Redial automatically (do it all again)</span>
@@ -157,7 +164,7 @@
                 Mute
               </button>
             </div>
-          </div>
+          </fieldset>
 
           <div class="win95-buttons">
             <button type="button" class="win95-button default" id="connect-button">

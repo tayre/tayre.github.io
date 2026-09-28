@@ -10,7 +10,6 @@ const ui = {
   elapsed: $("elapsed"),
   progress: $("progress"),
   progressFill: $("progress-fill"),
-  signalLabel: $("signal-label"),
   footer: $("footer-status"),
   loop: $("loop"),
   volume: $("volume"),
@@ -26,22 +25,6 @@ const LOOP_PAUSE = 6;
 const ISP = "Handshake Internet Services";
 const PAGE_TITLE = document.title;
 
-// Status messages timed to the bundled recording (seconds from playback start).
-const phases = [
-  { at: 0, state: "dialing", message: "Picking up the phone…", label: "OFF HOOK" },
-  { at: 0.6, state: "dialing", message: "Dial tone detected.", label: "DIAL TONE" },
-  { at: 1.4, state: "dialing", message: "Dialing…", label: "DIALING" },
-  { at: 3.6, state: "dialing", message: "Waiting for the other modem to pick up…", label: "WAITING" },
-  { at: 5.7, state: "handshake", message: "Somebody answered! Saying hello (V.8bis)…", label: "HANDSHAKE" },
-  { at: 9.5, state: "handshake", message: "Answer tone. Turning off the echo suppressors…", label: "ANSWER TONE" },
-  { at: 10.7, state: "handshake", message: "Comparing notes on which languages we both speak…", label: "V.8 MENU" },
-  { at: 12.9, state: "negotiating", message: "Probing the line with test tones…", label: "LINE PROBE" },
-  { at: 14.4, state: "negotiating", message: "Training. Yes, it is supposed to sound like that…", label: "TRAINING" },
-  { at: 16.9, state: "negotiating", message: "Training the other way. Nearly there…", label: "TRAINING" },
-  { at: 21.1, state: "negotiating", message: "Fine-tuning the equalizers…", label: "EQUALIZING" },
-  { at: 23.6, state: "negotiating", message: "Verifying user name and password…", label: "LOGGING ON" },
-];
-
 let audioContext;
 let masterGain;
 let analyser;
@@ -49,7 +32,6 @@ let waveData;
 let dialupBuffer;
 let source;
 let state = "idle";
-let phaseIndex = -1;
 let startedAt = 0;
 let connectedAt = 0;
 let muted = false;
@@ -213,14 +195,17 @@ function setState(nextState) {
   state = nextState;
   ui.dun.dataset.state = state;
   if (state === "idle") {
+    ui.status.textContent = "Disconnected.";
     ui.footer.textContent = "Disconnected";
     ui.dunTitle.textContent = "Connect To";
     ui.buttonLabel.textContent = "Connect";
   } else if (state === "connected") {
+    ui.status.textContent = "Connected.";
     ui.footer.textContent = "Connected at 56,000 bps";
     ui.dunTitle.textContent = `Connected to ${ISP}`;
     ui.buttonLabel.textContent = "Disconnect";
   } else {
+    ui.status.textContent = "Connecting…";
     ui.footer.textContent = "Connecting…";
     ui.dunTitle.textContent = `Connecting to ${ISP}…`;
     ui.buttonLabel.textContent = "Cancel";
@@ -249,7 +234,7 @@ function updateConnection() {
         0,
         Math.ceil(LOOP_PAUSE - (audioContext.currentTime - connectedAt)),
       );
-      const message = `Connected at 56,000 bps. Redialing in ${remaining}s…`;
+      const message = `Connected. Redialing in ${remaining}s…`;
       if (ui.status.textContent !== message) ui.status.textContent = message;
       if (remaining === 0) {
         clearInterval(stateTimer);
@@ -259,14 +244,6 @@ function updateConnection() {
     return;
   }
   setProgress((elapsed / dialupBuffer.duration) * 100);
-  const currentPhase = phases.findLastIndex((phase) => elapsed >= phase.at);
-  if (currentPhase !== phaseIndex && currentPhase >= 0) {
-    phaseIndex = currentPhase;
-    const phase = phases[currentPhase];
-    setState(phase.state);
-    ui.status.textContent = phase.message;
-    ui.signalLabel.textContent = phase.label;
-  }
 }
 
 async function connect() {
@@ -293,13 +270,10 @@ async function connect() {
       connectedAt = audioContext.currentTime;
       setState("connected");
       setProgress(100);
-      ui.status.textContent = "Connected at 56,000 bps. Welcome to the Internet!";
-      ui.signalLabel.textContent = "CARRIER OK";
       document.title = `You're online! ${PAGE_TITLE}`;
       updateConnection();
       animate();
     };
-    phaseIndex = -1;
     startedAt = audioContext.currentTime;
     setState("dialing");
     source.start();
@@ -328,8 +302,6 @@ function disconnect() {
   }
   setState("idle");
   setProgress(0);
-  ui.status.textContent = "Ready to dial.";
-  ui.signalLabel.textContent = "NO CARRIER";
   ui.elapsed.textContent = "00:00:00";
   document.title = PAGE_TITLE;
   animate();
@@ -447,7 +419,7 @@ ui.mute.addEventListener("click", () => {
 ui.loop.addEventListener("change", () => {
   if (state === "connected") {
     connectedAt = audioContext.currentTime;
-    ui.status.textContent = "Connected at 56,000 bps. Welcome to the Internet!";
+    ui.status.textContent = "Connected.";
     updateConnection();
   }
 });
