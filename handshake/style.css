@@ -99,7 +99,7 @@ input:focus-visible {
   transform: rotate(8deg);
 }
 .rainbow-text {
-  font: italic 900 62px/1.1 "Times New Roman", Times, serif;
+  font: italic 900 44px/1.1 "Times New Roman", Times, serif;
   margin: 4px 0 8px;
   letter-spacing: 1px;
   color: #ffff00;
