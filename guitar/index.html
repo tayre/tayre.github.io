@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ed">
+  <meta name="description" content="Learn 17 essential guitar chords. Explore finger positions, hear each string, and see the simple theory behind every shape.">
+  <title>Chordbook — A little guitar theory</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="chords.js" defer></script>
+  <script src="audio.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#explorer">Skip to chord explorer</a>
+  <div class="page">
+    <header class="site-header">
+      <a class="wordmark" href="./" aria-label="Chordbook home">chordbook<span>.</span></a>
+      <nav aria-label="Site"><a href="../tuner/">Guitar tuner <span aria-hidden="true">↗</span></a><a href="../">All tools <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">A FIELD GUIDE FOR YOUR FRETBOARD</p><h1 id="page-title">A little shape.<br>A lot of <em>music.</em></h1></div>
+        <div class="intro-copy"><p>Learn where your fingers go.<br>Understand why the notes belong together.</p><span class="tuning"><i aria-hidden="true"></i> Standard tuning · E A D G B E</span></div>
+      </section>
+
+      <section class="library" aria-label="Choose a chord">
+        <div class="library-heading"><h2 class="eyebrow">01 / PICK A CHORD</h2><span class="small-label">17 essential shapes</span></div>
+        <div id="families" class="families" role="group" aria-label="Chord family"></div>
+        <div id="chord-list" class="chord-list" role="group" aria-label="Chords"></div>
+      </section>
+
+      <section id="explorer" class="explorer" aria-label="Selected chord" tabindex="-1">
+        <div class="shape-panel">
+          <div class="shape-heading"><div><p id="shape-kind" class="eyebrow"></p><h2 id="chord-symbol"></h2></div><span id="shape-tag" class="shape-tag"></span></div>
+          <div id="diagram" class="diagram"></div>
+          <div class="string-buttons" id="string-buttons" role="group" aria-label="Hear individual strings, low E to high E"></div>
+          <p class="diagram-caption">Low E <span aria-hidden="true">←</span> strings <span aria-hidden="true">→</span> high E · Tap a note to hear it</p>
+          <div class="diagram-key"><span><b>○</b> Open string</span><span><b>×</b> Don’t play</span><span><b class="finger-key">1</b> Finger number</span></div>
+          <p class="finger-guide">1 index · 2 middle · 3 ring · 4 pinky</p>
+          <div class="play-actions"><button id="strum" type="button" class="primary-button"><span aria-hidden="true">▶</span> Hear chord</button><button id="pick" type="button" class="secondary-button">One string at a time</button></div>
+          <p id="shape-tip" class="shape-tip"></p>
+        </div>
+
+        <div class="theory-panel">
+          <p class="eyebrow">02 / LOOK INSIDE THE SOUND</p>
+          <h2 id="theory-heading"></h2>
+          <p id="theory-description" class="theory-description"></p>
+          <div class="formula-heading"><h3>The ingredients</h3><span>Tap a note to hear its role</span></div>
+          <div id="ingredients" class="ingredients" role="group" aria-label="Chord tones"></div>
+          <div class="distance-heading"><h3>Count the frets from the root</h3><span class="small-label">SEMITONES</span></div>
+          <div id="interval-rail" class="interval-rail" aria-label="Semitones from the root"></div>
+          <p class="rail-caption">One fret is one semitone. At 12, you’re back to the same note, an octave higher.</p>
+          <div class="theory-note"><span class="note-mark" aria-hidden="true">↳</span><p id="theory-note"></p></div>
+          <div class="voicing"><h3>Why so many strings?</h3><p id="voicing-copy"></p><div id="voicing-notes" class="voicing-notes" aria-label="Notes in this guitar shape"></div></div>
+        </div>
+      </section>
+      <p id="selection-status" class="sr-only" role="status"></p>
+      <p id="audio-status" class="audio-status" role="status">Sound is synthesized on your device. Nothing plays until you ask.</p>
+
+      <section class="practice" aria-labelledby="practice-title">
+        <div><p class="eyebrow">03 / PUT IT TOGETHER</p><h2 id="practice-title">Four chords. A good place to start.</h2><p>Try these in the key of C. Strum each one four times, then move on.</p></div>
+        <div class="progression" role="group" aria-label="Practice progression in C major">
+          <button type="button" data-chord="C"><span>I</span><strong>C</strong></button><span class="progression-arrow" aria-hidden="true">→</span>
+          <button type="button" data-chord="G"><span>V</span><strong>G</strong></button><span class="progression-arrow" aria-hidden="true">→</span>
+          <button type="button" data-chord="Am"><span>vi</span><strong>Am</strong></button><span class="progression-arrow" aria-hidden="true">→</span>
+          <button type="button" data-chord="F"><span>IV</span><strong>F</strong></button>
+        </div>
+        <p class="practice-note">The Roman numerals show each chord’s place in the key. Lowercase <strong>vi</strong> means minor. Select a chord above to explore its shape.</p>
+      </section>
+      <section class="basics" aria-label="Guitar theory basics">
+        <article><span class="basic-number">01</span><h2>The root names the chord.</h2><p>C is the root of C major and C minor. It’s the note the chord is built around, not necessarily the highest note you hear.</p></article>
+        <article><span class="basic-number">02</span><h2>The third changes the character.</h2><p>A major third sits four semitones above the root. Lower it one semitone for a minor third. Keep the root and fifth the same.</p></article>
+        <article><span class="basic-number">03</span><h2>A shape is one way to play it.</h2><p>The same chord can appear all over the neck. Its notes may change order or octave; the ingredients still give it its identity.</p></article>
+      </section>
+    </main>
+    <footer><span>A small tool for making sense of six strings.</span><div><a href="https://www.fender.com/articles/chords/how-to-read-a-chord-chart">Reading diagrams ↗</a><a href="https://www.musictheory.net/lessons/40">More theory ↗</a></div></footer>
+    <noscript><p class="noscript">Turn on JavaScript to explore the chord diagrams and audio. The theory basics above are still available.</p></noscript>
+  </div>
+</body>
+</html>

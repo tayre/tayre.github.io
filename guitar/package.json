@@ -1,0 +1,6 @@
+{
+  "name": "chordbook",
+  "private": true,
+  "description": "Static guitar chord diagrams, sound and basic theory. No dependencies or build step.",
+  "scripts": { "test": "node --test tests/*.test.cjs" }
+}
