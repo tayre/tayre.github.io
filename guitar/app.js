@@ -5,6 +5,14 @@
   let selected;
   let audioRequest = 0;
   let playTimer;
+  const idleAudioText = 'Use the play buttons to hear the notes. The sound is a reference tone, rather than a guitar recording.';
+  let pentatonicBox = 'first';
+  const pentatonicPositions = {
+    first: [[5, 8], [5, 7], [5, 7], [5, 7], [5, 8], [5, 8]],
+    next: [[8, 10], [7, 10], [7, 10], [7, 9], [8, 10], [8, 10]]
+  };
+  const pentatonicPitches = { 9: 'A', 0: 'C', 2: 'D', 4: 'E', 7: 'G' };
+  const scaleNote = (string, fret) => ({ string, fret, midi: Chordbook.TUNING[string] + fret, name: pentatonicPitches[(Chordbook.TUNING[string] + fret) % 12] });
   const node = (tag, className, text = '') => {
     const result = document.createElement(tag);
     result.className = className;
@@ -118,8 +126,22 @@
     $('chord-symbol').textContent = selected.id;
     $('shape-tag').textContent = selected.id === 'F' ? 'SMALL BARRE' : selected.barre ? 'BARRE CHORD' : 'OPEN POSITION';
     $('shape-tip').textContent = selected.tip;
-    $('theory-heading').textContent = chordTones.length === 3 ? 'Three notes. One chord.' : 'One more note. A new colour.';
+    $('theory-heading').textContent = `${selected.id} uses ${chordTones.map(tone => tone.name).join(', ')}`;
     $('theory-description').textContent = quality.description;
+    const scale = majorScale(selected.root);
+    $('scale-heading').textContent = `Start with the ${selected.root} major scale`;
+    $('scale-notes').replaceChildren(...scale.map((name, index) => {
+      const tone = chordTones.find(item => Number(item.degree) === index + 1);
+      const tag = node('span', `scale-note${tone ? ` tone-${tone.index} in-chord` : ''}`);
+      tag.append(node('small', '', index + 1), node('strong', '', name));
+      if (tone) tag.dataset.toneIndex = tone.index;
+      return tag;
+    }));
+    $('scale-caption').textContent = selected.quality === 'major' ? `Choose notes 1, 3 and 5. The coloured notes become ${selected.id}.`
+      : selected.quality === 'minor' ? `Choose 1, 3 and 5, then lower note 3: ${scale[2]} → ${chordTones[1].name}.`
+      : selected.quality === 'dominant7' ? `Choose 1, 3, 5 and 7, then lower note 7: ${scale[6]} → ${chordTones[3].name}.`
+      : selected.quality === 'major7' ? `Choose notes 1, 3, 5 and 7. All four come straight from this scale.`
+      : `Choose 1, ${selected.quality === 'sus2' ? '2' : '4'} and 5. Leave out note 3 (${scale[2]}).`;
     $('ingredients').classList.toggle('four-tones', chordTones.length === 4);
     $('ingredients').style.setProperty('--tone-count', chordTones.length);
     $('ingredients').replaceChildren(...chordTones.map(tone => {
@@ -134,27 +156,33 @@
       });
       return button;
     }));
+    $('distance-title').textContent = `Count the frets above ${selected.root}`;
+    $('distance-copy').textContent = `Imagine starting on ${selected.root} on any string. Each box is one fret higher. The coloured boxes are the notes in ${selected.id}; 0 is your starting note.`;
     $('interval-rail').replaceChildren(...Array.from({ length: 13 }, (_, step) => {
       const tone = chordTones.find(item => item.semitones === step);
-      const tick = node('span', `interval-tick${tone ? ` tone-${tone.index} in-chord` : ''}`, step);
+      const pitch = (NATURAL[selected.root] + step) % 12;
+      const name = tone?.name || (step === 12 ? selected.root : ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'][pitch]);
+      const tick = node('span', `interval-tick${tone ? ` tone-${tone.index} in-chord` : ''}`);
+      tick.append(node('small', '', step), node('strong', '', name));
+      tick.setAttribute('aria-label', `${step} frets above ${selected.root}: ${name}${step === 12 ? ', octave' : ''}`);
       if (tone) { tick.dataset.toneIndex = tone.index; tick.setAttribute('aria-label', `${step} semitones: ${tone.name}, ${tone.role}`); }
       return tick;
     }));
-    const scale = majorScale(selected.root);
     const note = selected.quality === 'major'
-      ? `The ${selected.root} major scale is ${scale.join(' · ')}. Take notes 1, 3 and 5: ${chordTones.map(tone => tone.name).join(', ')}. That’s your chord.`
+      ? `“Third” and “fifth” mean the third and fifth notes of the scale, counted from ${selected.root}. The numbers count scale notes, while the fret diagram counts semitones. Those are two different ways to measure the distance.`
       : selected.quality === 'minor'
         ? `The third of ${selected.root} major is ${scale[2]}. Lower it one fret to ${chordTones[1].name}. The ♭3 in the formula means “lower the third,” even when the note’s name has no flat sign.`
         : selected.quality === 'dominant7'
           ? `The major-scale seventh is ${scale[6]}. Lower it one semitone to ${chordTones[3].name} for ♭7. A plain “7” chord means dominant seventh, not major seventh.`
           : selected.quality === 'major7'
             ? `${chordTones[3].name} is 11 semitones above ${selected.root}, just one below the octave. A major seventh (1 · 3 · 5 · 7) is different from a dominant seventh (1 · 3 · 5 · ♭7).`
-            : `“Sus” means suspended: the ${selected.quality === 'sus2' ? 'second' : 'fourth'} replaces the third, ${scale[2]}. Put ${scale[2]} back to turn this into ${selected.root} major.`;
+            : `“Sus” is short for suspended. Use ${chordTones[1].name} in place of the third (${scale[2]}). Change it back to ${scale[2]} to hear ${selected.root} major.`;
     $('theory-note').textContent = note;
     const played = strings(selected).filter(string => string.tone);
-    $('voicing-copy').textContent = `This shape plays ${played.length} strings, but only ${chordTones.length} different note names. The repeated notes, often in different octaves, make the chord fuller.`;
+    $('voicing-copy').textContent = `You play ${played.length} strings, but there are only ${chordTones.length} note names. Some strings play the same note at different pitches. Match the colours to the chord notes above.`;
     $('voicing-notes').replaceChildren(...played.map(string => {
-      const tag = node('span', `voicing-note tone-${string.tone.index}`, string.tone.name);
+      const tag = node('span', `voicing-note tone-${string.tone.index}`);
+      tag.append(node('small', '', `string ${string.number}`), node('strong', '', string.tone.name));
       tag.dataset.toneIndex = string.tone.index;
       return tag;
     }));
@@ -163,12 +191,84 @@
   function selectChord(id, updateURL = true) {
     selected = CHORDS.find(chord => chord.id === id) || CHORDS[0];
     clearPlayback();
-    $('audio-status').textContent = 'Sound is synthesized on your device. Nothing plays until you ask.';
+    $('audio-status').textContent = idleAudioText;
     renderChoices(); renderDiagram(); renderTheory();
     if (updateURL) {
       try { history.replaceState(null, '', `#${selected.id}`); } catch { /* Sandboxed/file previews can still function. */ }
     }
   }
+  function pentatonicNotes() {
+    return pentatonicPositions.first.flatMap((frets, string) => {
+      const positions = pentatonicBox === 'connected' ? [...new Set([...frets, ...pentatonicPositions.next[string]])] : frets;
+      return positions.map(fret => scaleNote(string, fret));
+    });
+  }
+  function phraseNotes() {
+    return (pentatonicBox === 'first' ? [[3, 5], [3, 7], [4, 5], [3, 7], [3, 5], [2, 7]] : [[3, 5], [3, 7], [3, 9], [4, 8], [4, 10]])
+      .map(([string, fret]) => scaleNote(string, fret));
+  }
+  function renderPentatonic() {
+    const connected = pentatonicBox === 'connected';
+    document.querySelectorAll('[data-box]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.box === pentatonicBox)));
+    $('next-box-key').hidden = !connected;
+    const board = $('pentatonic-fretboard');
+    board.classList.toggle('connected', connected);
+    const cells = [node('span', 'fretboard-label', 'fret')];
+    for (let fret = 5; fret <= 10; fret++) cells.push(node('span', 'fretboard-fret', fret));
+    for (let string = 5; string >= 0; string--) {
+      cells.push(node('span', 'fretboard-string', `${Chordbook.STRINGS[string]} · ${6 - string}`));
+      for (let fret = 5; fret <= 10; fret++) {
+        const first = pentatonicPositions.first[string].includes(fret);
+        const next = pentatonicPositions.next[string].includes(fret);
+        const cell = node('span', `fretboard-cell${fret <= 8 ? ' first-position' : ''}${connected && fret >= 7 ? ' next-position' : ''}`);
+        if (first || (connected && next)) {
+          const note = scaleNote(string, fret);
+          const button = node('button', `fretboard-note${note.name === 'A' ? ' is-root' : ''}${!first ? ' added-note' : ''}`, note.name);
+          button.type = 'button';
+          button.dataset.string = 6 - string; button.dataset.fret = fret;
+          button.setAttribute('aria-label', `String ${6 - string} (${Chordbook.STRINGS[string]}), fret ${fret}: ${note.name}${note.name === 'A' ? ', root' : ''}${connected && first && next ? ', shared by both boxes' : !first ? ', in the next box' : ''}`);
+          button.addEventListener('click', () => playNotes([note.midi], 0, `${note.name} on string ${6 - string}, fret ${fret}${note.name === 'A' ? ': the root of A minor.' : '.'}`, button));
+          cell.append(button);
+        }
+        cells.push(cell);
+      }
+    }
+    board.replaceChildren(...cells);
+    $('box-title').textContent = connected ? 'Use the notes the boxes share' : 'Start at the fifth fret';
+    $('box-copy').textContent = connected
+      ? 'The next box covers frets 7–10. It uses the same five note names, with some higher pitches. The outlined notes are new places to play; the overlap gives you a way to move between positions.'
+      : 'This pattern covers frets 5–8. Each string has two notes. Guitarists call a pattern like this a “box” because it fits into a small stretch of the neck.';
+    const steps = connected ? [
+      'Play C at fret 5 on the G string, then D at fret 7. That D belongs to both boxes.',
+      'Slide from D at fret 7 to E at fret 9 on the same string. Move your hand with the slide.',
+      'Play G at fret 8 on the B string, then A at fret 10. You’ve reached a root in the next position.'
+    ] : [
+      'Start with A at fret 5 on the low E string. Play fret 5, then fret 8.',
+      'Work upwards through the strings, playing the lower fret first. Come back down in reverse.',
+      'Use your index for fret 5, ring finger for fret 7 and pinky for fret 8. Notice where the A notes repeat.'
+    ];
+    $('box-steps').replaceChildren(...steps.map(text => node('li', '', text)));
+    $('pentatonic-phrase').replaceChildren(...phraseNotes().map(note => {
+      const tag = node('span', `phrase-note${note.name === 'A' ? ' root-note' : ''}`);
+      tag.append(node('strong', '', note.name), node('small', '', `${Chordbook.STRINGS[note.string]}${note.string === 5 ? ' (high)' : note.string === 0 ? ' (low)' : ''} · ${note.fret}`));
+      return tag;
+    }));
+    $('phrase-copy').textContent = connected ? 'Each label gives the string and fret. Slide between D and E; finish on A. The playback plays separate reference tones, so try the slide on your guitar.' : 'Each label gives the string and fret. Go up three notes, come back down, then finish on A. Leave a pause before you repeat it.';
+    $('play-pentatonic').textContent = connected ? 'Hear both positions, low to high' : 'Hear the first box, low to high';
+  }
+  document.querySelectorAll('[data-box]').forEach(button => button.addEventListener('click', () => {
+    clearPlayback(); pentatonicBox = button.dataset.box; renderPentatonic();
+    $('audio-status').textContent = idleAudioText;
+  }));
+  $('play-pentatonic').addEventListener('click', event => {
+    const notes = [...new Set(pentatonicNotes().map(note => note.midi))].sort((a, b) => a - b);
+    playNotes(notes, 0.3, 'Playing A minor pentatonic from low to high.', event.currentTarget);
+  });
+  $('play-phrase').addEventListener('click', event => playNotes(phraseNotes().map(note => note.midi), 0.45, 'Playing the A minor pentatonic phrase.', event.currentTarget));
+  document.querySelectorAll('[data-compare]').forEach(button => button.addEventListener('click', () => {
+    const minor = button.dataset.compare === 'minor';
+    playNotes([48, minor ? 51 : 52, 55], 0.045, `Playing C ${minor ? 'minor: C, E♭, G.' : 'major: C, E, G.'}`, button);
+  }));
   $('strum').addEventListener('click', event => {
     highlightTone(-1);
     playNotes(strings(selected).filter(string => string.midi !== null).map(string => string.midi), 0.045, `Playing ${selected.id}, from the lowest sounding string to the highest.`, event.currentTarget);
@@ -185,4 +285,5 @@
   window.addEventListener('hashchange', () => selectChord(location.hash.slice(1), false));
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearPlayback(); });
   selectChord(location.hash.slice(1) || 'C', false);
+  renderPentatonic();
 })();

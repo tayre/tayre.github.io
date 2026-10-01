@@ -55,6 +55,9 @@ fs.mkdirSync(output, { recursive: true });
       assert.equal(await page.locator('#chord-list [aria-pressed="true"]').count(), 1);
       assert.equal(await page.locator('#families [aria-pressed="true"]').count(), 1);
       assert.match(await page.locator('#diagram-description').textContent(), /String 6/);
+      assert.equal(await page.locator('.scale-note').count(), 7);
+      assert.equal(await page.locator('.interval-tick').count(), 13);
+      assert.deepEqual(await page.locator('.interval-tick.in-chord strong').allTextContents(), tones(chord).map(tone => tone.name));
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     }
     await select(page, 'C');
@@ -81,6 +84,30 @@ fs.mkdirSync(output, { recursive: true });
     assert.equal(await page.locator('#chord-symbol').textContent(), 'F');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'explorer');
     await select(page, 'C');
+    assert.equal(await page.locator('.fretboard-note').count(), 12);
+    assert.equal(await page.locator('.fretboard-note.is-root').count(), 3);
+    await page.locator('[data-box="connected"]').click();
+    assert.equal(await page.locator('.fretboard-note').count(), 18);
+    assert.equal(await page.locator('.fretboard-note.added-note').count(), 6);
+    const scaleButtons = await page.locator('.fretboard-note').evaluateAll(buttons => buttons.map(button => ({ string: Number(button.dataset.string), fret: Number(button.dataset.fret), name: button.textContent })));
+    for (const button of scaleButtons) {
+      const pitch = ([40, 45, 50, 55, 59, 64][6 - button.string] + button.fret) % 12;
+      assert.equal(button.name, { 9: 'A', 0: 'C', 2: 'D', 4: 'E', 7: 'G' }[pitch], 'every pentatonic marker must match its sounding pitch');
+    }
+    assert.deepEqual(await page.locator('.phrase-note strong').allTextContents(), ['C', 'D', 'E', 'G', 'A']);
+    const startsBeforePhrase = await page.evaluate(() => window.audioStarts.length);
+    await page.locator('#play-phrase').click();
+    await page.waitForFunction(count => window.audioStarts.length === count + 15, startsBeforePhrase);
+    assert.deepEqual(await page.evaluate(count => window.audioStarts.slice(count).filter((_, i) => i % 3 === 0).map(item => Math.round(item.frequency)), startsBeforePhrase), [262, 294, 330, 392, 440]);
+    await page.locator('[data-compare="minor"]').click();
+    assert.match(await page.locator('#audio-status').textContent(), /C minor/);
+    await page.locator('#pentatonic-title').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(output, 'pentatonic-connected.png'), fullPage: false });
+    await page.locator('[data-box="first"]').click();
+    const startsBeforeScale = await page.evaluate(() => window.audioStarts.length);
+    await page.locator('#play-pentatonic').click();
+    await page.waitForFunction(count => window.audioStarts.length === count + 36, startsBeforeScale);
+    assert.equal(await page.locator('.fretboard-note').count(), 12);
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: path.join(output, 'desktop.png'), fullPage: true });
     await desktop.context.close();
@@ -95,6 +122,12 @@ fs.mkdirSync(output, { recursive: true });
         assert.ok(ingredientBounds.every(item => item.scroll <= item.width + 1), 'no clipped theory cards');
       }
       if (width === 390) {
+        await mobile.page.locator('[data-box="connected"]').click();
+        assert.equal(await mobile.page.locator('.fretboard-note').count(), 18);
+        assert.equal(await mobile.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'connected fretboard stays within mobile page');
+        await mobile.page.locator('.fretboard-scroll').evaluate(el => { el.scrollLeft = el.scrollWidth; });
+        await mobile.page.locator('.fretboard-note[data-string="1"][data-fret="10"]').click();
+        assert.match(await mobile.page.locator('#audio-status').textContent(), /D on string 1, fret 10/);
         await mobile.page.evaluate(() => scrollTo(0, 0));
         await mobile.page.screenshot({ path: path.join(output, 'phone.png'), fullPage: true });
       }
@@ -110,7 +143,7 @@ fs.mkdirSync(output, { recursive: true });
     assert.deepEqual(errors, []);
     assert.deepEqual(failures, []);
     assert.deepEqual(external, [], 'no external asset or API requests');
-    console.log('PASS: all 17 chords, correct notes, barres, muted strings, real audio scheduling, no autoplay, keyboard focus, links, 320/390/768/1440 layouts, no audio fallback, no external requests.');
+    console.log('PASS: all 17 chords, numbered scales, fret distances, both pentatonic boxes and pitches, scale/phrase playback, major/minor comparison, real audio scheduling, no autoplay, keyboard focus, links, 320/390/768/1440 layouts, no audio fallback, no external requests.');
     console.log('Screenshots:', output);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

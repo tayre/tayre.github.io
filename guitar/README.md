@@ -6,6 +6,10 @@ A small, dependency-free guitar chord explorer at `/guitar/`.
 - Standard tuning (E A D G B E), low string on the left, frets 1–5.
 - Finger numbers, muted/open strings, mini-barre F and barre B minor.
 - Notes and chord formulas, semitone distances, and basic explanations.
+- Numbered major scales and note-labelled fret distances for each chord.
+- Playable A minor pentatonic positions at frets 5–8 and 7–10, with a slide
+  exercise connecting them, phrase playback, and advice on changing keys.
+- An audible C major / C minor comparison showing the lowered third.
 - Synthesized chord, arpeggio and individual-note playback with Web Audio.
 - A C–G–Am–F practice progression and shareable chord links such as `#Am`.
 
@@ -33,6 +37,8 @@ Set `CHROME_PATH` to a local Chrome executable if Playwright's Chromium is not
 installed. Set `ARTIFACTS_DIR` to keep screenshots in a chosen directory.
 
 The diagrams are generated from the fret data; theory note names and audio
-frequencies are derived from the same chord definitions. This keeps the three
-views consistent. The page links to Fender's guide to reading chord diagrams
+frequencies are derived from the same chord definitions. Pentatonic notes are
+derived from the displayed string and fret. Browser QA checks both positions
+and the connecting phrase's audio, in addition to the chord explorer. The page
+links to Fender's guide to reading chord diagrams
 and musictheory.net's introduction to triads for further learning.
