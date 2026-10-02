@@ -1,14 +1,18 @@
 # Chordbook
 
-A small, dependency-free guitar chord explorer at `/guitar/`.
+A small, dependency-free guitar chord and scale explorer at `/guitar/`.
 
 - 17 common major, minor, seventh and suspended chord shapes.
 - Standard tuning (E A D G B E), low string on the left, frets 1–5.
 - Finger numbers, muted/open strings, mini-barre F and barre B minor.
 - Notes and chord formulas, semitone distances, and basic explanations.
 - Numbered major scales and note-labelled fret distances for each chord.
-- Playable A minor pentatonic positions at frets 5–8 and 7–10, with a slide
-  exercise connecting them, phrase playback, and advice on changing keys.
+- Separate Chords and Minor pentatonic lesson tabs, with keyboard navigation.
+- All five A minor pentatonic shapes, from frets 5–17, plus shape 1 repeating
+  at frets 17–20. All shapes share one continuous, playable fretboard with numbered shape spans.
+- Shape highlighting keeps the whole neck visible and shows shared notes,
+  neighbouring positions and a connecting phrase for every pair. A B-string route follows the scale along the neck.
+- Root-finding, phrasing and transposition explanations for beginners.
 - An audible C major / C minor comparison showing the lowered third.
 - Synthesized chord, arpeggio and individual-note playback with Web Audio.
 - A C–G–Am–F practice progression and shareable chord links such as `#Am`.
@@ -38,7 +42,12 @@ installed. Set `ARTIFACTS_DIR` to keep screenshots in a chosen directory.
 
 The diagrams are generated from the fret data; theory note names and audio
 frequencies are derived from the same chord definitions. Pentatonic notes are
-derived from the displayed string and fret. Browser QA checks both positions
-and the connecting phrase's audio, in addition to the chord explorer. The page
-links to Fender's guide to reading chord diagrams
-and musictheory.net's introduction to triads for further learning.
+derived from the displayed string and fret. Unit tests check all five shapes,
+their coverage of the scale, neighbouring overlaps and the connecting phrases.
+Browser QA checks chord and scale playback, tabs, keyboard navigation, small
+screens and audio fallback. The page links to Fender's guide to reading chord
+diagrams and musictheory.net's introduction to triads for further learning.
+
+Chord links use hashes such as `#Am`. Scale links use `#pentatonic-3` or
+`#pentatonic-3-connect` to restore the lesson and highlights.
+`#pentatonic-all` shows all shapes equally on the continuous fretboard.

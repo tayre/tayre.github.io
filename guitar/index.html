@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="style.css">
   <script src="chords.js" defer></script>
   <script src="audio.js" defer></script>
+  <script src="scales.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#explorer">Skip to chord explorer</a>
+  <a class="skip-link" href="#lessons">Skip to lessons</a>
   <div class="page">
     <header class="site-header">
       <a class="wordmark" href="./" aria-label="Chordbook home">chordbook<span>.</span></a>
@@ -24,6 +25,11 @@
         <div class="intro-copy"><p>Pick a chord to see how to play it and hear its notes. Then try a scale and follow it up the neck. You don’t need to know any theory to start.</p><span class="tuning"><i aria-hidden="true"></i> Standard tuning · E A D G B E</span></div>
       </section>
 
+      <div id="lessons" class="lesson-tabs" role="tablist" aria-label="Guitar lessons">
+        <button id="chords-tab" type="button" role="tab" aria-selected="true" aria-controls="chords-panel" tabindex="0">Chords</button>
+        <button id="pentatonic-tab" type="button" role="tab" aria-selected="false" aria-controls="pentatonic-panel" tabindex="-1">Minor pentatonic <span>5 shapes</span></button>
+      </div>
+      <div id="chords-panel" role="tabpanel" aria-labelledby="chords-tab" tabindex="0">
       <section class="library" aria-label="Choose a chord">
         <div class="library-heading"><h2 class="eyebrow">01 / PICK A CHORD</h2><span class="small-label">17 common chords</span></div>
         <div id="families" class="families" role="group" aria-label="Chord family"></div>
@@ -62,27 +68,8 @@
       <p id="selection-status" class="sr-only" role="status"></p>
       <p id="audio-status" class="audio-status" role="status">Use the play buttons to hear the notes. The sound is a reference tone, rather than a guitar recording.</p>
 
-      <section class="pentatonic" aria-labelledby="pentatonic-title">
-        <div class="lesson-heading"><div><p class="eyebrow">03 / TRY A SCALE</p><h2 id="pentatonic-title">A minor pentatonic</h2></div><span class="small-label">Standard tuning · frets 5–10</span></div>
-        <p class="lesson-intro">A chord plays several notes together. A scale gives you notes to play one at a time, for a melody or a solo. This one has just five: A, C, D, E and G. Try it over an A minor chord.</p>
-        <div class="pentatonic-tones" aria-label="A minor pentatonic notes and scale degrees"><span class="root-note"><small>1 · root</small><strong>A</strong></span><span><small>♭3</small><strong>C</strong></span><span><small>4</small><strong>D</strong></span><span><small>5</small><strong>E</strong></span><span><small>♭7</small><strong>G</strong></span></div>
-        <p class="lesson-detail">“Pentatonic” means five notes. Start with A natural minor (A, B, C, D, E, F, G) and leave out B and F. The numbers above describe each note’s place relative to the A major scale, just like the chord formulas.</p>
-        <div class="pentatonic-layout">
-          <div class="fretboard-panel">
-            <div class="box-controls" role="group" aria-label="Pentatonic positions"><button type="button" data-box="first" aria-pressed="true">1. Learn the first box</button><button type="button" data-box="connected" aria-pressed="false">2. Connect the next box</button></div>
-            <p class="fretboard-orientation">High E at the top, low E at the bottom. Fret numbers run left to right.</p>
-            <div class="fretboard-scroll"><div id="pentatonic-fretboard" class="pentatonic-fretboard" role="group" aria-label="Playable A minor pentatonic fretboard"></div></div>
-            <div class="fretboard-key"><span><i class="root-dot"></i>A · root</span><span><i></i>First box</span><span id="next-box-key" hidden><i class="next-dot"></i>Added in the next box</span></div>
-            <p class="fretboard-caption">Tap a note to hear it. On a small screen, swipe across the diagram to see all six frets.</p>
-            <button id="play-pentatonic" type="button" class="secondary-button">Hear the scale, low to high</button>
-          </div>
-          <div class="box-lesson" aria-live="polite"><h3 id="box-title"></h3><p id="box-copy"></p><ol id="box-steps"></ol><div class="phrase-example"><h4>A phrase to try</h4><div id="pentatonic-phrase" class="phrase-notes"></div><p id="phrase-copy"></p><button id="play-phrase" type="button" class="secondary-button">Hear this phrase</button></div></div>
-        </div>
-        <div class="beyond-box"><h3>Make a phrase, then take it somewhere else</h3><p>Use three or four notes to make a short phrase. Repeat it, change the last note, then leave a pause. Try ending on A to hear a clear stopping point. Once that feels comfortable, cross into the next position in the middle of a phrase. The boxes help you find notes; you can move between them whenever you like.</p><p>For another step, try ending on a note from the chord being played. Over Am, try A, C or E. Over Dm, try D or A. Listen to how the same scale feels different when the chord changes.</p><p>You can also move the whole pattern to a new key. Move every note two frets lower and the root on the low E string goes from A at fret 5 to G at fret 3: now you’re playing G minor pentatonic. Connecting the boxes above keeps you in A minor; shifting the entire pattern changes the key.</p></div>
-      </section>
-
       <section class="practice" aria-labelledby="practice-title">
-        <div><p class="eyebrow">04 / PRACTISE CHANGING CHORDS</p><h2 id="practice-title">Try C → G → Am → F</h2><p>Strum each chord four times, then change to the next one. Go slowly enough to place your fingers before you strum.</p></div>
+        <div><p class="eyebrow">03 / PRACTISE CHANGING CHORDS</p><h2 id="practice-title">Try C → G → Am → F</h2><p>Strum each chord four times, then change to the next one. Go slowly enough to place your fingers before you strum.</p></div>
         <div class="progression" role="group" aria-label="Practice progression in C major">
           <button type="button" data-chord="C"><span>I</span><strong>C</strong></button><span class="progression-arrow" aria-hidden="true">→</span>
           <button type="button" data-chord="G"><span>V</span><strong>G</strong></button><span class="progression-arrow" aria-hidden="true">→</span>
@@ -96,6 +83,35 @@
         <article><span class="basic-number">01</span><h2>What does “root” mean?</h2><div class="mini-chord" aria-label="C major: root C, third E, fifth G"><span class="tone-0"><small>root</small>C</span><span class="tone-1"><small>third</small>E</span><span class="tone-2"><small>fifth</small>G</span></div><p>The root names the chord. C major and C minor both start with C as their root. You can repeat these notes at different pitches and still have the same chord.</p></article>
         <article><span class="basic-number">02</span><h2>What changes in a minor chord?</h2><div class="chord-comparison"><button type="button" data-compare="major" aria-label="Hear C major, C E G"><small>C major ▶</small><span>C <b>E</b> G</span></button><span aria-hidden="true">↓</span><button type="button" data-compare="minor" aria-label="Hear C minor, C E flat G"><small>C minor ▶</small><span>C <b>E♭</b> G</span></button></div><p>E moves down one fret to E♭. C and G stay the same. That change in the third is what makes the chord minor. Play both to hear the difference.</p></article>
         <article><span class="basic-number">03</span><h2>Why learn more than one shape?</h2><div class="octave-example" aria-label="A at fret 5 and A one octave higher at fret 17 on the low E string"><span><small>fret 5</small>A</span><span class="octave-line">+12 frets</span><span><small>fret 17</small>A</span></div><p>Notes repeat along the neck. On the low E string, fret 5 is A and fret 17 is a higher A. New chord and scale shapes let you reach those other pitches without a big jump.</p></article>
+      </section>
+      </div>
+      <section id="pentatonic-panel" class="pentatonic" role="tabpanel" aria-labelledby="pentatonic-tab" tabindex="0" hidden>
+        <div class="lesson-heading"><div><p class="eyebrow">MINOR PENTATONIC · FIVE SHAPES</p><h2 id="pentatonic-title">Follow A minor up the neck</h2></div><span class="small-label">Standard tuning · frets 5–20</span></div>
+        <p class="lesson-intro">The minor pentatonic scale has five notes: A, C, D, E and G in the key of A minor. All five shapes are shown together on the fretboard below. Follow the notes along a string, or highlight a shape to see where it overlaps its neighbours.</p>
+        <div class="pentatonic-tones" aria-label="A minor pentatonic notes and scale degrees"><span class="root-note"><small>1 · root</small><strong>A</strong></span><span><small>♭3</small><strong>C</strong></span><span><small>4</small><strong>D</strong></span><span><small>5</small><strong>E</strong></span><span><small>♭7</small><strong>G</strong></span></div>
+        <p class="lesson-detail">“Pentatonic” means five notes. Start with A natural minor (A, B, C, D, E, F, G) and leave out B and F. The numbers above compare these notes with the A major scale: ♭3 and ♭7 mean its third and seventh notes are lowered by one fret.</p>
+        <div class="shape-picker-heading"><h3>Highlight a shape on the full fretboard</h3><span class="small-label">All the notes stay visible.</span></div>
+        <div id="scale-shapes" class="scale-shapes" role="group" aria-label="Five minor pentatonic shapes"></div>
+        <p class="shape-map-caption">The coloured bars mark each shape’s span. The small numbers below a note show which shapes use it. “1↑” is shape 1 again, an octave higher.</p>
+        <div class="pentatonic-layout">
+          <div class="fretboard-panel">
+            <div class="scale-board-heading"><h3 id="scale-board-title"></h3><label class="connect-control"><input id="connect-shapes" type="checkbox"> <span id="connect-label">Highlight its neighbour too</span></label></div>
+            <p class="fretboard-orientation">High E at the top, low E at the bottom. Fret numbers run left to right.</p>
+            <div class="fretboard-scroll"><div id="pentatonic-fretboard" class="pentatonic-fretboard" role="group" aria-label="Playable A minor pentatonic fretboard"></div></div>
+            <div class="fretboard-key"><span><i class="root-dot"></i>A · root</span><span><i></i>Scale note</span><span id="next-box-key" hidden><i class="next-dot"></i>Neighbouring shape</span><span id="shared-key"><i class="shared-dot"></i>Shared note · a place to change shapes</span></div>
+            <p class="fretboard-caption">Tap any note to hear it. On a small screen, swipe along the neck; the string labels stay on the left.</p>
+            <button id="play-pentatonic" type="button" class="secondary-button">Hear this shape, low to high</button>
+            <p id="scale-audio-status" class="audio-status" role="status">The buttons play reference tones so you can check the notes on your guitar.</p>
+          </div>
+          <div class="box-lesson" aria-live="polite"><div class="box-guidance"><h3 id="box-title"></h3><p id="box-copy"></p><ol id="box-steps"></ol></div><div class="phrase-example"><h4 id="phrase-title">A phrase to try</h4><div id="pentatonic-phrase" class="phrase-notes"></div><p id="phrase-copy"></p><button id="play-phrase" type="button" class="secondary-button">Hear this phrase</button></div></div>
+        </div>
+        <section class="string-walk" aria-labelledby="string-walk-title"><div><p class="eyebrow">MOVE ALONG A STRING</p><h3 id="string-walk-title">Take the B string through all five shapes</h3><p>Play E, G, A, C, D, E at the frets below. Let your hand move with the notes. This is one way to hear the scale as a line along the neck, instead of five separate patterns.</p></div><div id="string-walk-notes" class="string-walk-notes" role="group" aria-label="Pentatonic route along the B string"></div><button id="play-walk" type="button" class="secondary-button">Hear this route</button></section>
+        <div class="scale-exercises" aria-label="Practice ideas">
+          <article><span class="basic-number">01 / LEARN THE NOTES</span><h3>Find A before you run the pattern</h3><p>Play each red A, then choose one and add two nearby notes. All five shapes belong to A minor, even when their lowest note is C, D, E or G. Finding the root keeps you oriented.</p></article>
+          <article><span class="basic-number">02 / JOIN TWO SHAPES</span><h3>Use the overlap</h3><p>Highlight a shape and its neighbour. The ringed notes belong to both patterns. Start a phrase in one shape, move through a shared note, then reach a new note in the next shape. Try the example below the fretboard.</p></article>
+          <article><span class="basic-number">03 / MAKE SOME MUSIC</span><h3>Repeat a rhythm, change a note</h3><p>Play a short phrase, leave a pause, then answer it higher up the neck. Try ending on A, C or E over an Am chord. You can make a lot of music with a few notes and some space between them.</p></article>
+        </div>
+        <div class="beyond-box"><h3>Use the shapes in another key</h3><p>Move every note in every shape by the same number of frets. For G minor, move the A minor patterns two frets lower: shape 1 starts at fret 3 instead of 5, and the root becomes G. For B minor, move them two frets higher. The spacing between notes stays the same.</p><p>Learn the shapes in small pieces. Spend time connecting 1 and 2 before adding 3, then keep going. Shape 5 also fits at frets 2–5, so you can connect it to shape 1 near the bottom of the neck.</p></div>
       </section>
     </main>
     <footer><span>Chordbook · Guitar chords and scales in standard tuning</span><div><a href="https://www.fender.com/articles/chords/how-to-read-a-chord-chart">Reading diagrams ↗</a><a href="https://www.musictheory.net/lessons/40">More theory ↗</a></div></footer>

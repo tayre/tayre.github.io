@@ -6,13 +6,10 @@
   let audioRequest = 0;
   let playTimer;
   const idleAudioText = 'Use the play buttons to hear the notes. The sound is a reference tone, rather than a guitar recording.';
-  let pentatonicBox = 'first';
-  const pentatonicPositions = {
-    first: [[5, 8], [5, 7], [5, 7], [5, 7], [5, 8], [5, 8]],
-    next: [[8, 10], [7, 10], [7, 10], [7, 9], [8, 10], [8, 10]]
-  };
-  const pentatonicPitches = { 9: 'A', 0: 'C', 2: 'D', 4: 'E', 7: 'G' };
-  const scaleNote = (string, fret) => ({ string, fret, midi: Chordbook.TUNING[string] + fret, name: pentatonicPitches[(Chordbook.TUNING[string] + fret) % 12] });
+  const { SHAPES, nextShape, note: scaleNote, notes: scaleNotes, phrase: scalePhrase, WALK, NECK_SHAPES, neckNotes, NECK_PHRASE } = ChordbookScales;
+  let scaleShape = null;
+  let connectShapes = false;
+  let activeLesson = 'chords';
   const node = (tag, className, text = '') => {
     const result = document.createElement(tag);
     result.className = className;
@@ -37,11 +34,11 @@
     try {
       const playing = await ChordbookAudio.play(notes, spacing);
       if (!playing || request !== audioRequest) return;
-      $('audio-status').textContent = label;
+      $(activeLesson === 'pentatonic' ? 'scale-audio-status' : 'audio-status').textContent = label;
       trigger?.classList.add('is-playing');
       playTimer = setTimeout(() => trigger?.classList.remove('is-playing'), ((notes.length - 1) * spacing + 1.75) * 1000);
     } catch (error) {
-      if (request === audioRequest) $('audio-status').textContent = error.message || 'Sound is unavailable. You can still explore every chord.';
+      if (request === audioRequest) $(activeLesson === 'pentatonic' ? 'scale-audio-status' : 'audio-status').textContent = error.message || 'Sound is unavailable. You can still explore every chord.';
     }
   }
   function highlightTone(index) {
@@ -197,74 +194,158 @@
       try { history.replaceState(null, '', `#${selected.id}`); } catch { /* Sandboxed/file previews can still function. */ }
     }
   }
-  function pentatonicNotes() {
-    return pentatonicPositions.first.flatMap((frets, string) => {
-      const positions = pentatonicBox === 'connected' ? [...new Set([...frets, ...pentatonicPositions.next[string]])] : frets;
-      return positions.map(fret => scaleNote(string, fret));
+  function setHash(hash) {
+    try { history.replaceState(null, '', `#${hash}`); } catch { /* File previews still work. */ }
+  }
+  function scaleHash() { return `pentatonic-${scaleShape === null ? 'all' : scaleShape + 1}${connectShapes && scaleShape !== null ? '-connect' : ''}`; }
+  function showLesson(lesson, updateURL = true) {
+    clearPlayback();
+    activeLesson = lesson;
+    $('audio-status').textContent = idleAudioText;
+    $('scale-audio-status').textContent = 'The buttons play reference tones so you can check the notes on your guitar.';
+    document.querySelectorAll('.lesson-tabs [role="tab"]').forEach(tab => {
+      const active = tab.id === `${lesson}-tab`;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      $(tab.getAttribute('aria-controls')).hidden = !active;
     });
+    if (updateURL) setHash(lesson === 'pentatonic' ? scaleHash() : selected.id);
   }
-  function phraseNotes() {
-    return (pentatonicBox === 'first' ? [[3, 5], [3, 7], [4, 5], [3, 7], [3, 5], [2, 7]] : [[3, 5], [3, 7], [3, 9], [4, 8], [4, 10]])
-      .map(([string, fret]) => scaleNote(string, fret));
+  document.querySelectorAll('.lesson-tabs [role="tab"]').forEach(tab => {
+    tab.addEventListener('click', () => showLesson(tab.id === 'pentatonic-tab' ? 'pentatonic' : 'chords'));
+    tab.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const lesson = event.key === 'Home' ? 'chords' : event.key === 'End' ? 'pentatonic' : activeLesson === 'chords' ? 'pentatonic' : 'chords';
+      showLesson(lesson);
+      $(`${lesson}-tab`).focus();
+    });
+  });
+  function selectScaleShape(index) {
+    clearPlayback(); scaleShape = index; renderPentatonic(); setHash(scaleHash());
+    const scroll = $('pentatonic-fretboard').parentElement;
+    const target = index === null ? 0 : (SHAPES[index].min - 5) * 55;
+    scroll.scrollLeft = target;
   }
+  function renderShapeChoices() {
+    const focused = document.activeElement?.dataset.scaleShape;
+    const choices = [{ number: 'all', min: 5, max: 20 }, ...SHAPES];
+    $('scale-shapes').replaceChildren(...choices.map(shape => {
+      const index = shape.number === 'all' ? null : shape.number - 1;
+      const button = node('button', 'scale-shape-button');
+      button.type = 'button'; button.dataset.scaleShape = shape.number;
+      button.setAttribute('aria-pressed', String(index === scaleShape));
+      button.setAttribute('aria-label', index === null ? 'Show all shapes equally' : `Highlight shape ${shape.number}, frets ${shape.min} to ${shape.max}`);
+      button.append(node('strong', '', index === null ? 'All shapes' : `Shape ${shape.number}`), node('small', '', `frets ${shape.min}–${shape.max}`));
+      button.addEventListener('click', () => selectScaleShape(index));
+      return button;
+    }));
+    if (focused) document.querySelector(`[data-scale-shape="${focused}"]`)?.focus({ preventScroll: true });
+  }
+  function currentScalePhrase() { return scaleShape === null ? NECK_PHRASE : scalePhrase(scaleShape, connectShapes); }
   function renderPentatonic() {
-    const connected = pentatonicBox === 'connected';
-    document.querySelectorAll('[data-box]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.box === pentatonicBox)));
-    $('next-box-key').hidden = !connected;
+    renderShapeChoices();
+    const all = scaleShape === null;
+    const shape = all ? null : SHAPES[scaleShape];
+    const next = all ? null : nextShape(scaleShape);
+    const min = 5, max = 20;
+    $('connect-shapes').checked = connectShapes && !all;
+    $('connect-shapes').disabled = all;
+    $('connect-label').textContent = all ? 'Choose a shape to highlight its neighbour' : `Highlight shape ${next.number}${scaleShape === 4 ? ' again' : ''} too`;
+    $('next-box-key').hidden = all || !connectShapes;
+    $('scale-board-title').textContent = 'All five shapes · one fretboard · frets 5–20';
     const board = $('pentatonic-fretboard');
-    board.classList.toggle('connected', connected);
-    const cells = [node('span', 'fretboard-label', 'fret')];
-    for (let fret = 5; fret <= 10; fret++) cells.push(node('span', 'fretboard-fret', fret));
+    const scroll = board.parentElement.scrollLeft;
+    board.style.setProperty('--fret-count', max - min + 1);
+    board.setAttribute('aria-label', 'All five A minor pentatonic shapes and the octave repeat, frets 5 to 20. Highlighting a shape keeps every note visible.');
+    const cells = [];
+    const place = (element, row, column) => {
+      element.style.gridRow = row; element.style.gridColumn = column;
+      cells.push(element); return element;
+    };
+    place(node('span', 'fretboard-label sticky-string-label', 'fret'), 1, 1);
+    for (let fret = min; fret <= max; fret++) place(node('span', 'fretboard-fret', fret), 1, fret - min + 2);
+    NECK_SHAPES.forEach((region, index) => {
+      const active = all || index === scaleShape || (connectShapes && index === scaleShape + 1);
+      place(node('span', 'neck-band-label sticky-string-label', index === 5 ? '1↑' : index + 1), index + 2, 1);
+      const band = node('button', `neck-shape-band neck-shape-${index % 5}${active ? ' is-highlighted' : ''}${index === 5 ? ' octave-band' : ''}`, index === 5 ? 'Shape 1 ↑' : `Shape ${index + 1}`);
+      band.type = 'button';
+      band.setAttribute('aria-label', `Highlight shape ${region.number}${index === 5 ? ', octave repeat' : ''}, frets ${region.min} to ${region.max}`);
+      // Clicking the octave repeat focuses the connection that reaches it.
+      band.addEventListener('click', () => { if (index === 5) connectShapes = true; selectScaleShape(index === 5 ? 4 : index); });
+      place(band, index + 2, `${region.min - min + 2} / span ${region.max - region.min + 1}`);
+    });
+    const positions = new Map(neckNotes().map(note => [`${note.string}:${note.fret}`, note]));
     for (let string = 5; string >= 0; string--) {
-      cells.push(node('span', 'fretboard-string', `${Chordbook.STRINGS[string]} · ${6 - string}`));
-      for (let fret = 5; fret <= 10; fret++) {
-        const first = pentatonicPositions.first[string].includes(fret);
-        const next = pentatonicPositions.next[string].includes(fret);
-        const cell = node('span', `fretboard-cell${fret <= 8 ? ' first-position' : ''}${connected && fret >= 7 ? ' next-position' : ''}`);
-        if (first || (connected && next)) {
-          const note = scaleNote(string, fret);
-          const button = node('button', `fretboard-note${note.name === 'A' ? ' is-root' : ''}${!first ? ' added-note' : ''}`, note.name);
-          button.type = 'button';
-          button.dataset.string = 6 - string; button.dataset.fret = fret;
-          button.setAttribute('aria-label', `String ${6 - string} (${Chordbook.STRINGS[string]}), fret ${fret}: ${note.name}${note.name === 'A' ? ', root' : ''}${connected && first && next ? ', shared by both boxes' : !first ? ', in the next box' : ''}`);
-          button.addEventListener('click', () => playNotes([note.midi], 0, `${note.name} on string ${6 - string}, fret ${fret}${note.name === 'A' ? ': the root of A minor.' : '.'}`, button));
-          cell.append(button);
+      const row = 8 + 5 - string;
+      place(node('span', 'fretboard-string sticky-string-label', `${Chordbook.STRINGS[string]} · ${6 - string}`), row, 1);
+      for (let fret = min; fret <= max; fret++) {
+        const note = positions.get(`${string}:${fret}`);
+        const current = !all && note?.shapes.includes(scaleShape);
+        const inNext = !all && connectShapes && note?.shapes.includes(scaleShape + 1);
+        const shared = note && (all ? note.shapes.length > 1 : current && (connectShapes ? inNext : note.shapes.length > 1));
+        const cell = node('span', `fretboard-cell${current ? ' first-position' : ''}${inNext ? ' next-position' : ''}`);
+        if (note) {
+          const memberNames = note.shapes.map(index => index === 5 ? '1↑' : index + 1);
+          const button = node('button', `fretboard-note${note.name === 'A' ? ' is-root' : ''}${!all && !current && !inNext ? ' context-note' : ''}${inNext && !current ? ' added-note' : ''}${shared ? ' shared-note' : ''}`, note.name);
+          button.type = 'button'; button.dataset.note = note.name;
+          button.dataset.string = note.number; button.dataset.fret = fret;
+          button.dataset.shapes = memberNames.join(',');
+          button.setAttribute('aria-label', `String ${note.number} (${note.tuning}), fret ${fret}: ${note.name}${note.name === 'A' ? ', root' : ''}. Shapes ${memberNames.join(' and ')}${note.shapes.length > 1 ? ', shared note' : ''}.`);
+          button.addEventListener('click', () => playNotes([note.midi], 0, `${note.name} on string ${note.number}, fret ${fret}${note.name === 'A' ? ': the root of A minor.' : '.'}`, button));
+          cell.append(button, node('small', `note-membership${!all && !current && !inNext ? ' context-note' : ''}`, memberNames.join(' · ')));
         }
-        cells.push(cell);
+        place(cell, row, fret - min + 2);
       }
     }
     board.replaceChildren(...cells);
-    $('box-title').textContent = connected ? 'Use the notes the boxes share' : 'Start at the fifth fret';
-    $('box-copy').textContent = connected
-      ? 'The next box covers frets 7–10. It uses the same five note names, with some higher pitches. The outlined notes are new places to play; the overlap gives you a way to move between positions.'
-      : 'This pattern covers frets 5–8. Each string has two notes. Guitarists call a pattern like this a “box” because it fits into a small stretch of the neck.';
-    const steps = connected ? [
-      'Play C at fret 5 on the G string, then D at fret 7. That D belongs to both boxes.',
-      'Slide from D at fret 7 to E at fret 9 on the same string. Move your hand with the slide.',
-      'Play G at fret 8 on the B string, then A at fret 10. You’ve reached a root in the next position.'
+    board.parentElement.scrollLeft = scroll;
+    $('box-title').textContent = all ? 'Trace a line through the shapes' : connectShapes ? `Connect shape ${shape.number} to ${next.number}` : `Get to know shape ${shape.number}`;
+    $('box-copy').textContent = all ? 'Every scale note stays on the same fretboard. Ringed notes belong to two shapes: use them to move between positions. Start by following the B string from fret 5 upwards. The phrase below carries that line to a high A.' : connectShapes ? (scaleShape === 4
+      ? 'Shape 1 comes back at frets 17–20. It is the same pattern you learned at fret 5, moved up 12 frets. Use the shared G on the D string at fret 17 to reach A at fret 19.'
+      : 'The ringed notes belong to both highlighted shapes. Outlined notes are in the next shape. The other notes remain visible so you can keep following the scale along the neck.') : shape.tip;
+    const phrase = currentScalePhrase();
+    const steps = all ? [
+      'Find A on each string. The red notes give you places to pause as you move up the neck.',
+      'Follow the B string: E at 5, G at 8, A at 10, C at 13, D at 15, E at 17, G at 20. Finish on high-E fret 17 for A.',
+      'Highlight a shape and its neighbour to practise one connection. Choose All shapes to see the whole map again.'
+    ] : connectShapes ? [
+      'Find one ringed note on each string. Notice the two shape numbers below it.',
+      `Play the phrase below: ${phrase.map(note => note.name).join(' → ')}. Move your hand when you reach a note outside the selected shape.`,
+      `Finish on A and leave a pause. Then try a short answer starting in shape ${next.number}.`
     ] : [
-      'Start with A at fret 5 on the low E string. Play fret 5, then fret 8.',
-      'Work upwards through the strings, playing the lower fret first. Come back down in reverse.',
-      'Use your index for fret 5, ring finger for fret 7 and pinky for fret 8. Notice where the A notes repeat.'
+      'Find and play each red A in the highlighted shape.',
+      'Play its two notes on each string, from low E to high E. Come back down in reverse.',
+      'Try the short phrase below, then highlight the neighbouring shape to keep moving up the neck.'
     ];
     $('box-steps').replaceChildren(...steps.map(text => node('li', '', text)));
-    $('pentatonic-phrase').replaceChildren(...phraseNotes().map(note => {
+    $('phrase-title').textContent = all ? 'A phrase along the neck' : connectShapes ? 'A phrase across the two shapes' : 'A phrase within this shape';
+    $('pentatonic-phrase').replaceChildren(...phrase.map(note => {
       const tag = node('span', `phrase-note${note.name === 'A' ? ' root-note' : ''}`);
-      tag.append(node('strong', '', note.name), node('small', '', `${Chordbook.STRINGS[note.string]}${note.string === 5 ? ' (high)' : note.string === 0 ? ' (low)' : ''} · ${note.fret}`));
+      tag.append(node('strong', '', note.name), node('small', '', `${note.tuning}${note.string === 5 ? ' (high)' : note.string === 0 ? ' (low)' : ''} · ${note.fret}`));
       return tag;
     }));
-    $('phrase-copy').textContent = connected ? 'Each label gives the string and fret. Slide between D and E; finish on A. The playback plays separate reference tones, so try the slide on your guitar.' : 'Each label gives the string and fret. Go up three notes, come back down, then finish on A. Leave a pause before you repeat it.';
-    $('play-pentatonic').textContent = connected ? 'Hear both positions, low to high' : 'Hear the first box, low to high';
+    $('phrase-copy').textContent = all ? 'Move your hand along the B string, then finish on A on the high E string. The labels give the string and fret. Leave a pause before repeating.' : connectShapes ? 'Each label gives the string and fret. Try sliding between notes on the same string to carry the phrase into the next shape. Playback uses separate reference tones.' : 'Each label gives the string and fret. Start on A, explore two nearby notes, and come back to A. Leave a pause before repeating.';
+    $('play-pentatonic').textContent = all ? 'Hear the whole neck, low to high' : connectShapes ? 'Hear the highlighted shapes, low to high' : 'Hear the highlighted shape, low to high';
+    $('scale-audio-status').textContent = 'The buttons play reference tones so you can check the notes on your guitar.';
   }
-  document.querySelectorAll('[data-box]').forEach(button => button.addEventListener('click', () => {
-    clearPlayback(); pentatonicBox = button.dataset.box; renderPentatonic();
-    $('audio-status').textContent = idleAudioText;
-  }));
-  $('play-pentatonic').addEventListener('click', event => {
-    const notes = [...new Set(pentatonicNotes().map(note => note.midi))].sort((a, b) => a - b);
-    playNotes(notes, 0.3, 'Playing A minor pentatonic from low to high.', event.currentTarget);
+  $('connect-shapes').addEventListener('change', () => {
+    clearPlayback(); connectShapes = $('connect-shapes').checked; renderPentatonic(); setHash(scaleHash());
   });
-  $('play-phrase').addEventListener('click', event => playNotes(phraseNotes().map(note => note.midi), 0.45, 'Playing the A minor pentatonic phrase.', event.currentTarget));
+  $('play-pentatonic').addEventListener('click', event => {
+    const played = scaleShape === null ? neckNotes() : scaleNotes(scaleShape, connectShapes);
+    const notes = [...new Set(played.map(note => note.midi))].sort((a, b) => a - b);
+    playNotes(notes, 0.3, `Playing A minor pentatonic, ${scaleShape === null ? 'across the whole neck' : `shape ${scaleShape + 1}${connectShapes ? ' and its neighbour' : ''}`}, from low to high.`, event.currentTarget);
+  });
+  $('play-phrase').addEventListener('click', event => playNotes(currentScalePhrase().map(note => note.midi), 0.45, 'Playing the A minor pentatonic phrase.', event.currentTarget));
+  $('string-walk-notes').replaceChildren(...WALK.map(note => {
+    const button = node('button', `walk-note${note.name === 'A' ? ' root-note' : ''}`);
+    button.type = 'button'; button.setAttribute('aria-label', `Hear ${note.name}, B string, fret ${note.fret}`);
+    button.append(node('small', '', `fret ${note.fret}`), node('strong', '', note.name));
+    button.addEventListener('click', () => playNotes([note.midi], 0, `${note.name} on the B string, fret ${note.fret}.`, button));
+    return button;
+  }));
+  $('play-walk').addEventListener('click', event => playNotes(WALK.map(note => note.midi), 0.4, 'Playing E, G, A, C, D, E along the B string.', event.currentTarget));
   document.querySelectorAll('[data-compare]').forEach(button => button.addEventListener('click', () => {
     const minor = button.dataset.compare === 'minor';
     playNotes([48, minor ? 51 : 52, 55], 0.045, `Playing C ${minor ? 'minor: C, E♭, G.' : 'major: C, E, G.'}`, button);
@@ -282,8 +363,21 @@
     $('explorer').focus({ preventScroll: true });
     $('explorer').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   }));
-  window.addEventListener('hashchange', () => selectChord(location.hash.slice(1), false));
+  function restoreHash() {
+    const hash = location.hash.slice(1);
+    if (hash === 'lessons') return;
+    const scale = /^pentatonic(?:-(all|[1-5]))?(-connect)?$/.exec(hash);
+    if (scale) {
+      scaleShape = !scale[1] || scale[1] === 'all' ? null : Number(scale[1]) - 1;
+      connectShapes = scaleShape !== null && Boolean(scale[2]);
+      renderPentatonic(); showLesson('pentatonic', false);
+    } else {
+      selectChord(hash || 'C', false); showLesson('chords', false);
+    }
+  }
+  window.addEventListener('hashchange', restoreHash);
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearPlayback(); });
-  selectChord(location.hash.slice(1) || 'C', false);
+  selectChord('C', false);
   renderPentatonic();
+  restoreHash();
 })();

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="MS Trollfjord's latest reported AIS position on a minimal monochrome map.">
+  <title>MS Trollfjord · Ship tracker</title>
+  <link rel="stylesheet" href="vendor/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="vendor/leaflet.js" defer></script>
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="tracker">
+    <header class="header">
+      <div class="identity">
+        <a href="../" class="back" aria-label="All projects">↖</a>
+        <div>
+          <h1>MS Trollfjord</h1>
+          <p>HURTIGRUTEN <span>IMO 9233258</span></p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="report-age" class="report-age">Waiting for AIS</span>
+        <button id="refresh" type="button" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.2 8a7.5 7.5 0 0 1 12.3-2L20 9M4 15l2.5 3A7.5 7.5 0 0 0 18.8 16"/></svg>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="map-section" aria-label="Ship position map">
+      <div id="map" aria-label="Interactive map of MS Trollfjord’s latest reported position"></div>
+      <div class="map-caption"><span class="marker-key" aria-hidden="true"></span> LAST REPORTED POSITION</div>
+      <button id="locate" class="locate" type="button" disabled title="Centre map on MS Trollfjord">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
+        Locate ship
+      </button>
+      <p id="notice" class="notice" role="status">Fetching the latest AIS report…</p>
+      <p id="tiles-error" class="tiles-error" role="status" hidden>Some map tiles could not load. Ship data is shown below.</p>
+    </section>
+
+    <dl class="readout" aria-label="Latest AIS report">
+      <div><dt>Position</dt><dd id="position">—</dd></div>
+      <div><dt>Speed</dt><dd><span id="speed">—</span> <small>kn</small></dd></div>
+      <div><dt>Course</dt><dd id="course">—</dd></div>
+      <div><dt>Destination <span class="muted">/ AIS</span></dt><dd id="destination">—</dd></div>
+      <div><dt>Status</dt><dd id="navigation">—</dd></div>
+      <div><dt>Reported <span class="muted">/ UTC</span></dt><dd id="reported-at">—</dd></div>
+    </dl>
+
+    <footer class="footer">
+      <div class="source">AIS: <a href="https://kystdatahuset.kystverket.no/ws/swagger/index.html" target="_blank" rel="noopener noreferrer">Kystverket ↗</a><span class="divider">/</span><span id="checked-at">Not checked yet</span></div>
+      <div class="footer-controls">
+        <label><input id="auto-refresh" type="checkbox" checked> Auto-refresh · 60s</label>
+        <details>
+          <summary>About the data</summary>
+          <div class="data-notes">
+            <p>Public AIS from the Norwegian Coastal Administration, filtered to MMSI <strong>258465000</strong>. The marker is the last reported position, never an estimated position.</p>
+            <p>The thin line is the short track supplied by the feed, when available. The feed retains recent positions for up to 20 minutes; this is not a 24-hour history.</p>
+            <p>Reports can be delayed or missing outside Norwegian AIS coverage. If updates fail, the last successful report stays visible with its original time. Refreshing does not change the report time.</p>
+            <p>Checks run every minute while this tab is visible and online. The destination is the ship’s transmitted text. Times are UTC.</p>
+            <p><a href="https://www.kystverket.no/en/navigation-and-monitoring/ais/access-to-ais-data/" target="_blank" rel="noopener noreferrer">Data source &amp; NLOD licence ↗</a> · <a href="https://www.hurtigruten.com/en/on-board/ship-locator-map/ms-trollfjord" target="_blank" rel="noopener noreferrer">Operator’s tracker ↗</a></p>
+          </div>
+        </details>
+      </div>
+    </footer>
+    <noscript><p class="noscript">Enable JavaScript to load ship positions. <a href="https://www.hurtigruten.com/en/on-board/ship-locator-map/ms-trollfjord">Open Hurtigruten’s tracker ↗</a></p></noscript>
+  </main>
+</body>
+</html>
