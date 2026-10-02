@@ -9,7 +9,8 @@
     'report-age', 'position', 'speed', 'course', 'destination', 'navigation', 'reported-at',
     'checked-at'].map(id => [id, document.getElementById(id)]));
   let report = null;
-  let map, marker, track;
+  let mapView;
+  let explorer;
   let busy = false;
   let refreshTimer;
   let nextRefresh = Date.now();
@@ -29,7 +30,7 @@
     const stale = Date.now() - report.reportedAt > STALE_AFTER;
     ui['report-age'].textContent = data.reportAge(report.reportedAt);
     ui['report-age'].classList.toggle('is-recent', !stale);
-    marker?.getElement()?.classList.toggle('is-old', stale);
+    mapView?.setStale(stale);
   }
 
   function paintReport() {
@@ -42,20 +43,9 @@
     const date = new Date(report.reportedAt).toLocaleDateString('en-GB', { timeZone: 'UTC', day: '2-digit', month: 'short' });
     ui['reported-at'].textContent = `${date} · ${utcTime(report.reportedAt)}`;
     ui['reported-at'].title = new Date(report.reportedAt).toISOString();
-    if (map) {
-      const bearing = report.heading ?? report.course;
-      const shape = bearing === null
-        ? '<circle cx="17" cy="17" r="6" fill="#171717" stroke="white" stroke-width="2"/>'
-        : `<path transform="rotate(${bearing} 17 17)" d="M17 3 25 28 17 24 9 28Z" fill="#171717" stroke="white" stroke-width="2" stroke-linejoin="round"/>`;
-      const icon = L.divIcon({ className: 'ship-icon', html: `<svg viewBox="0 0 34 34" aria-hidden="true">${shape}</svg>`, iconSize: [34, 34], iconAnchor: [17, 17] });
-      if (!marker) {
-        marker = L.marker(report.position, { icon, title: 'MS Trollfjord — last reported position', alt: 'MS Trollfjord' }).addTo(map);
-        marker.bindTooltip('MS Trollfjord', { permanent: true, direction: 'right', offset: [15, 0], className: 'ship-label' });
-        map.setView(report.position, 9, { animate: false });
-      } else {
-        marker.setLatLng(report.position).setIcon(icon);
-      }
-      track.setLatLngs(report.track);
+    explorer?.setReport(report);
+    if (mapView) {
+      mapView.setReport(report);
       ui.locate.disabled = false;
     }
     updateAge();
@@ -118,23 +108,30 @@
     }
   }
 
-  if (window.L) {
-    map = L.map('map', { zoomControl: false, minZoom: 3, maxZoom: 17, scrollWheelZoom: false, worldCopyJump: true }).setView([68.5, 18], 5);
-    map.attributionControl.setPrefix(false);
-    L.control.zoom({ position: 'topright' }).addTo(map);
-    L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
-    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    let tileFailed = false;
-    tiles.on('loading', () => { tileFailed = false; });
-    tiles.on('tileerror', () => { tileFailed = true; ui['tiles-error'].hidden = false; });
-    tiles.on('load', () => { ui['tiles-error'].hidden = !tileFailed; });
-    track = L.polyline([], { color: '#333', weight: 1.5, opacity: .65, interactive: false }).addTo(map);
-  } else {
-    ui['tiles-error'].textContent = 'The map library could not load. Ship data is shown below.';
+  // Load the graphics independently: a disabled GPU or failed module must not
+  // stop AIS polling or the accessible text readout.
+  import('./map.mjs?v=20261002.1').then(({ createShipMap }) => {
+    mapView = createShipMap({
+      onError(message) { ui['tiles-error'].textContent = message; ui['tiles-error'].hidden = false; },
+      onReady() { ui['tiles-error'].hidden = true; }
+    });
+    explorer?.setMap(mapView);
+    if (report) paintReport();
+  }).catch(error => {
+    console.error('Could not load the WebGL map.', error);
+    ui['tiles-error'].setAttribute('data-error', error.message);
+    ui['tiles-error'].textContent = 'The WebGL map could not start. Ship data is still shown below.';
     ui['tiles-error'].hidden = false;
-  }
+  });
+
+  import('./explorer.mjs?v=20261002.1').then(({ createExplorer }) => {
+    explorer = createExplorer();
+    if (report) explorer.setReport(report);
+    if (mapView) explorer.setMap(mapView);
+  }).catch(error => {
+    console.error('Could not load the ship overview.', error);
+    document.getElementById('kid-movement').textContent = 'Ship overview unavailable. See the captain’s numbers below.';
+  });
 
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
@@ -144,7 +141,7 @@
 
   ui.refresh.disabled = false;
   ui.refresh.addEventListener('click', refreshData);
-  ui.locate.addEventListener('click', () => { if (report && map) map.setView(report.position, Math.max(map.getZoom(), 9), { animate: false }); });
+  ui.locate.addEventListener('click', () => mapView?.locate());
   ui['auto-refresh'].addEventListener('change', () => { nextRefresh = Date.now() + REFRESH_INTERVAL; schedule(); });
   document.addEventListener('visibilitychange', () => { updateAge(); schedule(); });
   window.addEventListener('online', schedule);

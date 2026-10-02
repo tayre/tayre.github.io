@@ -31,7 +31,8 @@ function app(cached = null) {
   const navigator = { onLine: true };
   const window = { TrollfjordData: { ...Data,
     normalizeFeature: value => Data.normalizeFeature(value, now),
-    latestReport: value => Data.latestReport(value, now) },
+    latestReport: value => Data.latestReport(value, now),
+    reportAge: timestamp => Data.reportAge(timestamp, now) },
     addEventListener: (name, fn) => { winEvents[name] = fn; } };
   class Clock extends Date { static now() { return now; } }
   vm.runInNewContext(source, { window, document, navigator, Date: Clock, AbortController,
