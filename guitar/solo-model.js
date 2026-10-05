@@ -39,5 +39,34 @@
     const target = notes.find(note => harmony.targets.some(tone => tone.pitch === note.pitch));
     return [notes[0], notes[1], notes[2], notes[1], target].map((note, index) => ({ ...note, beat: [0, 0.5, 1.5, 2, 3][index], length: [0.4, 0.7, 0.4, 0.7, 0.9][index] }));
   }
-  return { KEYS, tones, shape, chord, lick };
+  function connection(key, index) {
+    const left = Math.min(index, 3);
+    const shift = mod(key.pitch - 4) - 5;
+    const notes = [...shape(key, left), ...shape(key, left + 1)];
+    const phrase = scales.phrase(left, true).map(note => notes.find(n => n.string === note.string && n.fret === note.fret + shift));
+    return { indices: [left, left + 1], phrase };
+  }
+  function map(key, index, view) {
+    const pair = connection(key, index).indices;
+    const indices = view === 'single' ? [index] : view === 'pair' ? pair : [0, 1, 2, 3, 4];
+    const positions = new Map();
+    const spans = indices.map(i => {
+      const notes = shape(key, i);
+      notes.forEach(note => {
+        const id = `${note.string}:${note.fret}`;
+        if (!positions.has(id)) positions.set(id, { ...note, shapes: [] });
+        positions.get(id).shapes.push(i);
+      });
+      return { index: i, min: Math.min(...notes.map(n => n.fret)), max: Math.max(...notes.map(n => n.fret)) };
+    });
+    return { spans, notes: [...positions.values()].map(note => ({ ...note, shared: pair.every(i => note.shapes.includes(i)) })) };
+  }
+  function transitions(key) {
+    return [0, 1, 2, 3].map(index => {
+      const from = shape(key, index).filter(n => n.string === 4).at(-1);
+      const to = shape(key, index + 1).filter(n => n.string === 4).at(-1);
+      return { from, to, index };
+    });
+  }
+  return { KEYS, tones, shape, chord, lick, connection, map, transitions };
 });

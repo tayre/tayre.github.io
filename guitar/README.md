@@ -9,6 +9,10 @@ A small, dependency-free guitar chord and scale explorer at `/guitar/`.
 - Numbered major scales and note-labelled fret distances for each chord.
 - Separate Chords, Minor pentatonic and Solo practice tabs, with keyboard navigation.
 - Solo practice transposes all five minor pentatonic shapes into 12 keys.
+- Its default connected neck shows all five shapes equally, with quiet shape
+  bands and four always-visible B-string transition hints. No selection is
+  required while playing. The optional pair view has a numbered audible phrase.
+  Choose a connected pair or one shape to zoom in; the full neck scrolls on mobile.
 - A slow minor-chord vamp or i–♭VI–♭VII–i backing loop, with count-in,
   tempo, volume and optional click. Chord tones are ringed as landing notes.
 - Listen & answer alternates a one-bar example lick with a bar for your reply.
@@ -61,3 +65,7 @@ Chord links use hashes such as `#Am`. Scale links use `#pentatonic-3` or
 play a short phrase, leave space, and finish on a ringed chord tone. Try Listen
 & answer before adding chord changes. Changing the lesson, key, shape, mode,
 backing or tempo stops playback; hiding the page also stops playback.
+
+The backing scheduler precomputes its four-bar harmony and reuses control and
+note references. Unchanged chords do not rebuild the lick or fretboard; idle
+and hidden pages stop the playback timers. No framework or external assets.

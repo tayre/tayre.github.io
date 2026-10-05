@@ -139,11 +139,21 @@
         <p id="solo-status" class="audio-status" role="status">Start gives you four count-in clicks. Stop at any time with the same button.</p>
         <div class="solo-workspace">
           <section class="solo-map" aria-labelledby="solo-map-title">
-            <div class="solo-map-heading"><h3 id="solo-map-title"></h3><label><input id="solo-degrees" type="checkbox"> Show intervals</label></div>
+            <div class="solo-map-heading"><h3 id="solo-map-title"></h3><label>View <select id="solo-view"><option value="all">All five shapes</option><option value="pair">Connected pair</option><option value="single">One shape</option></select></label><label><input id="solo-degrees" type="checkbox"> Show intervals</label></div>
             <p class="fretboard-orientation">High E at the top. Every dot belongs to your minor pentatonic scale.</p>
-            <div id="solo-board" class="solo-board" role="group" aria-label="Solo practice fretboard"></div>
-            <p class="solo-legend"><span><i class="solo-root-key"></i> Root</span><span><i class="solo-target-key"></i> Ring = a chord tone to land on</span></p>
+            <p id="solo-map-help" class="lesson-detail">One scale across five positions. Follow the quiet line on the B string to move between them.</p>
+            <div id="solo-neck-scroll" class="solo-neck-scroll" tabindex="0" role="region" aria-label="Connected fretboard, scroll sideways" aria-describedby="solo-map-help"><div id="solo-spans" class="solo-spans"></div><div id="solo-board" class="solo-board" role="group" aria-label="Solo practice fretboard"></div></div>
+            <p class="solo-legend"><span><i class="solo-root-key"></i> Root</span><span><i class="solo-target-key"></i> Ring = chord tone</span><span class="pair-legend"><i class="solo-shared-key"></i> Gold = shared note</span><span class="pair-legend">Numbers = connecting phrase</span></p>
+            <div id="solo-transitions" class="solo-transitions" aria-label="Four ways to move between shapes"></div>
+            <p id="solo-gentle-hint" class="solo-gentle-hint">Try these on the B string (second thinnest). Shift your hand, repeat a little rhythm, and pause on a root. No need to play every note.</p>
             <p id="solo-scale-notes" class="lesson-detail"></p>
+          </section>
+          <section id="solo-connection" class="solo-lesson" aria-labelledby="solo-connection-title">
+            <p class="eyebrow">ONE SCALE. CONNECTED POSITIONS.</p><h3 id="solo-connection-title"></h3>
+            <p class="lesson-detail" id="solo-connection-copy"></p>
+            <div id="solo-route" class="solo-lick"></div>
+            <button id="solo-connect-demo" type="button" class="secondary-button">Hear the connection</button>
+            <p class="lesson-detail">Follow the numbered dots in order. When a phrase moves along the same string, shift your hand into the next shape. These are the same five notes across the neck—not new scales. Shape 1 repeats 12 frets higher.</p>
           </section>
           <section class="solo-lesson" aria-labelledby="solo-lesson-title">
             <p class="eyebrow">YOUR FIRST MUSICAL SENTENCE</p><h3 id="solo-lesson-title">Say something. Leave space.</h3>

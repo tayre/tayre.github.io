@@ -358,6 +358,26 @@ footer a { text-decoration: none; }
 .solo-beats span { width: 30px; height: 30px; border: 1px solid #c3c9ba; border-radius: 50%; display: grid; place-items: center; font-size: 12px; }
 .solo-beats .on { background: var(--ink); color: white; border-color: var(--ink); }
 .solo-workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; margin-top: 30px; }
+.solo-map { grid-column: 1 / -1; min-width: 0; }
+.solo-neck-scroll { overflow-x: auto; padding: 8px 6px; border: 1px solid var(--line); border-radius: 6px; }
+.solo-neck-scroll .solo-board, .solo-spans { min-width: calc(38px + var(--solo-frets) * 58px); }
+.solo-spans { display: grid; grid-template-columns: 38px repeat(var(--solo-frets), minmax(0, 1fr)); gap: 4px 0; }
+.solo-span { background: #e5e7de; color: var(--muted); border: 1px solid #c3c9ba; border-radius: 4px; padding: 7px; text-align: left; font-size: 12px; }
+.solo-span.connected { background: #dce7de; color: #244f43; border-color: #7a9989; }
+.solo-span[aria-pressed="true"] { box-shadow: inset 0 -3px var(--accent); }
+.solo-cell.shared-cell { background: #eee1ba; }
+.solo-cell.transition-string::before { background: #789487; height: 3px; }
+.all-shapes-view .pair-legend { display: none; }
+.all-shapes-view .solo-workspace > .solo-lesson:not([hidden]) { grid-column: 1 / -1; }
+.solo-transitions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 20px 0 12px; gap: 20px; }
+.solo-transition { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 4px; }
+.solo-transition strong { font: 21px Georgia, serif; }
+.solo-transition span { font-size: 12px; }
+.solo-transition small, .solo-gentle-hint { font-size: 12px; color: var(--muted); }
+.solo-gentle-hint { margin: 14px 0; }
+.solo-note[data-route]::after { content: attr(data-route); position: absolute; top: -10px; right: -10px; background: #fffefa; border: 1px solid var(--ink); color: var(--ink); border-radius: 50%; width: 18px; height: 18px; font: 11px/18px ui-monospace, monospace; }
+.solo-shared-key { background: #eee1ba; border: 1px solid #ae9460; }
+#solo-view { min-height: 40px; font: inherit; background: #fffefa; color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 5px; }
 .solo-map-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .solo-map h3 { font-size: 15px; margin: 0; }
 .solo-map-heading label { font-size: 11px; white-space: nowrap; }
@@ -386,6 +406,7 @@ footer a { text-decoration: none; }
 .solo-next { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 25px; max-width: 800px; }
 .solo-next p { font-size: 13px; color: var(--muted); line-height: 1.8; }
 @media (max-width: 760px) {
+  .solo-transitions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .solo-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .solo-workspace { grid-template-columns: 1fr; }
   .solo-now { flex-wrap: wrap; gap: 18px; padding: 18px; }
