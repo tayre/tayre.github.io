@@ -52,7 +52,7 @@ export function createShipMap({ onError, onReady }) {
     element.setAttribute('aria-label', `MS Trollfjord, ${speed}, ${latest.navigation}. Last reported position.`);
     if (!marker) {
       marker = new Marker({ element, anchor: 'bottom', offset: [0, 4] }).setLngLat([lon, lat]).addTo(map);
-      if (!explored) map.jumpTo({ center: [lon, lat], zoom: 6 });
+      if (!explored) map.jumpTo({ center: [lon, lat], zoom: 10 });
     } else marker.setLngLat([lon, lat]);
     if (loaded) {
       map.getSource('ship-track').setData(trackGeoJSON(latest));
