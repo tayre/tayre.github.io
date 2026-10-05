@@ -30,10 +30,21 @@ fs.mkdirSync(output, { recursive: true });
     assert.equal(await page.locator('#solo-board button').count(), 36);
     assert.equal(await page.locator('#solo-spans .solo-span').count(), 5);
     assert.equal(await page.locator('#solo-spans button').count(), 0);
-    assert.equal(await page.locator('#solo-transitions .solo-transition').count(), 4);
-    assert.deepEqual(await page.locator('.solo-transition strong').allTextContents(), ['1 → 2', '2 → 3', '3 → 4', '4 → 5']);
+    assert.equal(await page.locator('.solo-membership').count(), 36);
+    const fills = await page.locator('.solo-span').evaluateAll(bands => bands.map(band => getComputedStyle(band).backgroundColor));
+    assert.equal(new Set(fills).size, 5, 'every shape has a distinct matching fill');
+    assert.equal(await page.locator('[data-position="4:8"] + .solo-membership').textContent(), 'fret 8');
+    assert.equal(await page.locator('[data-position="3:7"] + .solo-membership').textContent(), 'fret 7');
+    assert.equal(await page.locator('[data-position="3:9"] + .solo-membership').textContent(), 'fret 9');
+    assert.ok(await page.locator('.shape-region[data-shapes="1 2"]').count() > 0);
     assert.equal(await page.locator('#solo-board [data-route]').count(), 0);
     assert.equal(await page.locator('#solo-connection').isVisible(), false);
+    assert.equal(await page.locator('.solo-shift-bridge').count(), 10);
+    assert.equal(await page.locator('.solo-note.shift-note').count(), 17);
+    assert.deepEqual(await page.locator('.solo-shift-caption strong').allTextContents(), ['10 ↔ 12', '15 ↔ 17', '8 ↔ 10', '10 ↔ 13', '13 ↔ 15', '15 ↔ 17', '7 ↔ 9', '12 ↔ 14', '10 ↔ 12', '14 ↔ 17']);
+    await page.locator('#solo-key').selectOption('5');
+    assert.match(await page.locator('.solo-shift-caption strong').first().textContent(), /15 ↔ 17/);
+    await page.locator('#solo-key').selectOption('0');
     await page.locator('#solo-view').selectOption('pair');
     assert.equal(await page.locator('#solo-board button').count(), 18);
     await page.locator('#solo-connect-demo').click();
@@ -108,14 +119,40 @@ fs.mkdirSync(output, { recursive: true });
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${width}px fits`);
       assert.equal(await page.locator('#solo-board button').count(), 36);
-      for (const hint of await page.locator('.solo-transition').all()) assert.equal(await hint.isVisible(), true);
+      const arrows = page.locator(width < 700 ? '#solo-mobile-neck .solo-shift-bridge' : '#solo-board .solo-shift-bridge');
+      const alignment = await arrows.evaluateAll(bridges => bridges.map(bridge => {
+        const board = bridge.closest('.solo-board');
+        const start = board.querySelector(`[data-position="${bridge.dataset.from}"]`).getBoundingClientRect();
+        const end = board.querySelector(`[data-position="${bridge.dataset.to}"]`).getBoundingClientRect();
+        const bounds = bridge.getBoundingClientRect();
+        const inset = Number.parseFloat(getComputedStyle(bridge).getPropertyValue('--slide-inset'));
+        return Math.abs(bounds.left - start.x - start.width / 2 - inset) < 2 && Math.abs(bounds.right - end.x - end.width / 2 + inset) < 5 && Math.abs(bounds.y + bounds.height / 2 - end.y - end.height / 2) < 2;
+      }));
+      assert.ok(alignment.every(Boolean), `${width}px transition arrows align with their notes`);
+      assert.equal(await arrows.count(), 10);
+      for (const arrow of await arrows.all()) assert.equal(await arrow.isVisible(), true);
       if (width < 400) {
-        assert.equal(await page.locator('#solo-neck-scroll').evaluate(el => el.scrollWidth > el.clientWidth), true);
-        await page.locator('#solo-neck-scroll').evaluate(el => { el.scrollLeft = el.scrollWidth; });
-        assert.ok(await page.locator('#solo-neck-scroll').evaluate(el => el.scrollLeft > 0));
-        await page.locator('#solo-neck-scroll').evaluate(el => { el.scrollLeft = 0; });
+        assert.equal(await page.locator('#solo-neck-scroll').isVisible(), false);
+        assert.equal(await page.locator('.solo-mobile-pair').count(), 4);
+        for (const board of await page.locator('.solo-mobile-pair .solo-board').all()) {
+          assert.equal(await board.locator('button').count(), 18);
+          assert.equal(await board.evaluate(el => el.scrollWidth <= el.clientWidth + 1), true, 'mobile pair needs no sideways scrolling');
+        }
+        const before = await page.evaluate(() => window.starts.length);
+        await page.locator('#solo-mobile-neck button').first().click();
+        await page.waitForFunction(count => window.starts.length > count, before);
+        await page.locator('#solo-degrees').check();
+        assert.ok((await page.locator('#solo-mobile-neck button').allTextContents()).includes('♭3'));
+        await page.locator('#solo-degrees').uncheck();
+        for (const view of ['pair', 'single']) {
+          await page.locator('#solo-view').selectOption(view);
+          assert.equal(await page.locator('#solo-neck-scroll').evaluate(el => el.scrollWidth <= el.clientWidth + 1), true, `${width}px ${view} fits`);
+          assert.equal(await page.locator('#solo-mobile-neck button').count(), 0);
+        }
+        await page.locator('#solo-view').selectOption('all');
       }
       await page.screenshot({ path: path.join(output, `solo-${width}.png`), fullPage: true });
+      if (width === 1440) await page.locator('.solo-map').screenshot({ path: path.join(output, 'transition-fretboard.png') });
     }
     await page.reload();
     await page.locator('#solo-panel').waitFor();

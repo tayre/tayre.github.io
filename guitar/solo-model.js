@@ -62,9 +62,11 @@
     return { spans, notes: [...positions.values()].map(note => ({ ...note, shared: pair.every(i => note.shapes.includes(i)) })) };
   }
   function transitions(key) {
-    return [0, 1, 2, 3].map(index => {
-      const from = shape(key, index).filter(n => n.string === 4).at(-1);
-      const to = shape(key, index + 1).filter(n => n.string === 4).at(-1);
+    // A continuous B-string route plus spaced alternatives on E, G and D.
+    const routes = [[0, 4], [1, 4], [2, 4], [3, 4], [1, 5], [3, 5], [0, 3], [2, 3], [1, 2], [3, 2]];
+    return routes.map(([index, string]) => {
+      const from = shape(key, index).filter(n => n.string === string).at(-1);
+      const to = shape(key, index + 1).filter(n => n.string === string).at(-1);
       return { from, to, index };
     });
   }

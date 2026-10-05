@@ -9,10 +9,12 @@ A small, dependency-free guitar chord and scale explorer at `/guitar/`.
 - Numbered major scales and note-labelled fret distances for each chord.
 - Separate Chords, Minor pentatonic and Solo practice tabs, with keyboard navigation.
 - Solo practice transposes all five minor pentatonic shapes into 12 keys.
-- Its default connected neck shows all five shapes equally, with quiet shape
-  bands and four always-visible B-string transition hints. No selection is
-  required while playing. The optional pair view has a numbered audible phrase.
-  Choose a connected pair or one shape to zoom in; the full neck scrolls on mobile.
+- A minimal, warm-paper solo workspace with muted shape colours and ten reversible
+  slide routes on high E, B, G and D. Arrows join actual notes and label the frets.
+- Phones show four stacked shape-pair diagrams without sideways scrolling.
+  Pair and single-shape views also fit small screens. Tap notes to hear them.
+  Phone diagrams are built only at the small-screen breakpoint; audio stops when
+  changing layouts. The optional pair view has a numbered audible phrase.
 - A slow minor-chord vamp or i–♭VI–♭VII–i backing loop, with count-in,
   tempo, volume and optional click. Chord tones are ringed as landing notes.
 - Listen & answer alternates a one-bar example lick with a bar for your reply.

@@ -16,6 +16,7 @@
   let playback, arrangement, lastHarmony = '';
   let noteButtons = [];
   const beatDots = [...document.querySelectorAll('.solo-beats span')];
+  const mobileLayout = matchMedia('(max-width: 700px)');
   const voices = new Set();
   const cueTimers = new Set();
   const configuration = () => ({ key: model.KEYS[Number($('solo-key').value)], shape: Number($('solo-shape').value), changes: $('solo-backing').value === 'changes', answer: $('solo-mode').value === 'answer', seconds: 60 / Number($('solo-tempo').value) });
@@ -38,7 +39,7 @@
     $('solo-start').textContent = 'Start groove';
     $('solo-start').setAttribute('aria-pressed', 'false');
     $('solo-turn').textContent = 'Ready when you are';
-    $('solo-status').textContent = 'Start gives you four count-in clicks. Stop at any time with the same button.';
+    $('solo-status').textContent = 'Four clicks, then play.';
     beatDots.forEach(dot => dot.classList.remove('on'));
     noteButtons.forEach(dot => dot.classList.remove('sounding'));
   }
@@ -73,7 +74,7 @@
     if (lastHarmony === harmony.label) return harmony;
     lastHarmony = harmony.label;
     $('solo-chord').textContent = harmony.label;
-    $('solo-targets').textContent = `Land on ${harmony.targets.map(tone => tone.name).join(' or ')}. These scale notes belong to ${harmony.label}.`;
+    $('solo-targets').textContent = `Land on ${harmony.targets.map(tone => tone.name).join(' or ')}.`;
     noteButtons.forEach(button => {
       const target = harmony.targets.some(tone => tone.pitch === Number(button.dataset.pitch));
       button.classList.toggle('landing-note', target);
@@ -92,17 +93,18 @@
     const config = configuration();
     const view = $('solo-view').value;
     const { notes, spans } = model.map(config.key, config.shape, view);
+    const regions = spans.map(span => {
+      const shape = model.shape(config.key, span.index);
+      return { index: span.index, strings: Array.from({ length: 6 }, (_, string) => {
+        const frets = shape.filter(n => n.string === string).map(n => n.fret);
+        return { min: Math.min(...frets), max: Math.max(...frets) };
+      }) };
+    });
     const connection = model.connection(config.key, config.shape);
     const transitions = model.transitions(config.key);
     $('solo-panel').classList.toggle('all-shapes-view', view === 'all');
-    $('solo-transitions').hidden = view !== 'all';
     $('solo-gentle-hint').hidden = view !== 'all';
-    $('solo-map-help').textContent = view === 'all' ? 'One scale across five positions. Follow the quiet line on the B string to move between them.' : 'High E above, low E below. Shared notes connect these positions.';
-    $('solo-transitions').replaceChildren(...transitions.map(({ index, from, to }) => {
-      const hint = node('div', 'solo-transition');
-      hint.append(node('strong', '', `${index + 1} → ${index + 2}`), node('span', '', `B string · ${from.fret} → ${to.fret}`), node('small', '', `${from.name} → ${to.name}`));
-      return hint;
-    }));
+    $('solo-map-help').textContent = view === 'all' ? '↔ Slide either way. Numbers are frets. High E on top.' : 'Shared notes connect the shapes. High E on top.';
     const min = Math.min(...notes.map(note => note.fret));
     const max = Math.max(...notes.map(note => note.fret));
     const label = view === 'all' ? 'all five shapes' : view === 'pair' ? `shapes ${connection.indices.map(i => i + 1).join(' + ')}` : `shape ${config.shape + 1}`;
@@ -114,6 +116,9 @@
       const band = node(view === 'all' ? 'span' : 'button', `solo-span${view !== 'all' && connection.indices.includes(span.index) ? ' connected' : ''}`, `Shape ${span.index + 1}`);
       band.style.gridColumn = `${span.min - min + 2} / ${span.max - min + 3}`;
       band.style.gridRow = span.index % 2 + 1;
+      band.dataset.shape = span.index + 1;
+      band.style.setProperty('--shape-fill', `var(--shape-${span.index + 1}-fill)`);
+      band.style.setProperty('--shape-edge', `var(--shape-${span.index + 1}-edge)`);
       if (view !== 'all') {
         band.type = 'button'; band.setAttribute('aria-pressed', String(span.index === config.shape));
         band.addEventListener('click', () => { $('solo-shape').value = span.index; stop(); render(); });
@@ -122,41 +127,108 @@
     }));
     $('solo-connection').hidden = view !== 'pair';
     $('solo-connection-title').textContent = `Shape ${connection.indices[0] + 1} → shape ${connection.indices[1] + 1}`;
-    $('solo-connection-copy').textContent = 'The gold cells belong to both shapes: same string, same fret. Use those shared notes as stepping stones. Pick a shape above, then try this short route into its neighbour.';
+    $('solo-connection-copy').textContent = 'Use the shared notes to change position.';
     $('solo-route').replaceChildren(...connection.phrase.map((note, index) => {
       const item = node('span', 'solo-lick-note');
       item.append(node('small', '', `step ${index + 1}`), node('strong', '', note.name), node('small', '', `str ${note.number} · fret ${note.fret}`));
       return item;
     }));
     const elements = [node('span', 'solo-fret-label', 'fret')];
-    for (let fret = min; fret <= max; fret++) elements.push(node('span', 'solo-fret-label', fret === 0 ? 'open' : fret));
+    for (let fret = min; fret <= max; fret++) {
+      const label = node('span', 'solo-fret-label', fret === 0 ? 'open' : fret); label.dataset.fret = fret; elements.push(label);
+    }
     for (let string = 5; string >= 0; string--) {
       elements.push(node('span', 'solo-string-label', `${Chordbook.STRINGS[string]} · ${6 - string}`));
       for (let fret = min; fret <= max; fret++) {
         const cell = node('span', 'solo-cell');
+        cell.dataset.string = string; cell.dataset.fret = fret;
+        cell.classList.toggle('slide-row', view === 'all' && transitions.some(t => t.from.string === string));
+        const memberships = regions.filter(region => fret >= region.strings[string].min && fret <= region.strings[string].max).map(region => region.index + 1);
+        if (memberships.length) {
+          cell.classList.add('shape-region');
+          cell.dataset.shapes = memberships.join(' ');
+          cell.style.setProperty('--region-fill', memberships.length === 1 ? `var(--shape-${memberships[0]}-fill)` : `linear-gradient(90deg, var(--shape-${memberships[0]}-fill) 50%, var(--shape-${memberships[1]}-fill) 50%)`);
+        }
         cell.classList.toggle('transition-string', view === 'all' && string === 4 && fret >= transitions[0].from.fret);
+        const transition = view === 'all' ? transitions.find(item => item.from.string === string && item.from.fret === fret) : null;
+        if (transition) {
+          const { index, from, to } = transition;
+          const bridge = node('span', 'solo-shift-bridge');
+          bridge.style.setProperty('--shift-distance', to.fret - from.fret);
+          bridge.style.setProperty('--slide-color', `var(--shape-${index + 2}-edge)`);
+          bridge.dataset.from = `${from.string}:${from.fret}`;
+          bridge.dataset.to = `${to.string}:${to.fret}`;
+          bridge.dataset.pair = index;
+          bridge.setAttribute('aria-label', `Slide either way on string ${from.number}, frets ${from.fret} and ${to.fret}, between shapes ${index + 1} and ${index + 2}.`);
+          const label = node('span', 'solo-shift-caption');
+          label.append(node('strong', '', `${from.fret} ↔ ${to.fret}`));
+          bridge.append(label); cell.append(bridge);
+        }
         const note = notes.find(note => note.string === string && note.fret === fret);
         if (note) {
           cell.classList.toggle('shared-cell', view === 'pair' && note.shared);
           const button = node('button', `solo-note${note.degree === '1' ? ' root' : ''}`, $('solo-degrees').checked ? note.degree : note.name);
           button.type = 'button'; button.dataset.pitch = note.pitch; button.dataset.midi = note.midi;
           button.dataset.position = `${string}:${fret}`;
+          const shifts = view === 'all' ? transitions.filter(t => string === t.from.string && (fret === t.from.fret || fret === t.to.fret)) : [];
+          button.classList.toggle('shift-note', shifts.length > 0);
           const step = connection.phrase.findIndex(n => n.string === string && n.fret === fret);
           if (view === 'pair' && step >= 0) button.dataset.route = step + 1;
           button.dataset.description = `${note.name}, interval ${note.degree}, string ${note.number}, ${fret === 0 ? 'open' : `fret ${fret}`}. Shapes ${note.shapes.map(i => i + 1).join(' and ')}.${note.shapes.length > 1 ? ' Shared note.' : ''}${view === 'pair' && step >= 0 ? ` Connection step ${step + 1}.` : ''}`;
+          if (shifts.length) button.dataset.description += ' Slide point. ' + shifts.map(t => fret === t.from.fret ? `Slide from here to fret ${t.to.fret} for shape ${t.index + 2}.` : `Land here in shape ${t.index + 2}.`).join(' ');
           button.addEventListener('click', async () => {
             const version = revision;
             try { await audio(); if (revision === version) sound(note.midi, context.currentTime + 0.01, 0.8, 0.22); }
             catch (error) { $('solo-status').textContent = error.message; }
           });
           cell.append(button);
+          const membership = node('span', `solo-membership${shifts.length ? ' slide-fret' : ''}`, shifts.length ? `fret ${fret}` : note.shapes.map(i => i + 1).join(' / '));
+          membership.setAttribute('aria-hidden', 'true');
+          cell.append(membership);
         }
         elements.push(cell);
       }
     }
     board.replaceChildren(...elements);
-    noteButtons = [...board.querySelectorAll('button')];
+    renderMobile(config, view, board);
+    noteButtons = [...board.querySelectorAll('button'), ...$('solo-mobile-neck').querySelectorAll('button')];
     renderHarmony();
+  }
+  function renderMobile(config, view, source) {
+    const cards = [];
+    if (view === 'all' && mobileLayout.matches) for (let index = 0; index < 4; index++) {
+      const pair = model.map(config.key, index, 'pair');
+      const min = Math.min(...pair.notes.map(n => n.fret)), max = Math.max(...pair.notes.map(n => n.fret));
+      const card = node('section', 'solo-mobile-pair');
+      card.setAttribute('aria-label', `Shapes ${index + 1} and ${index + 2}`);
+      card.append(node('h4', '', `Shapes ${index + 1} ↔ ${index + 2}`));
+      const board = node('div', 'solo-board');
+      board.style.setProperty('--solo-frets', max - min + 1);
+      for (const original of source.children) {
+        const fret = Number(original.dataset.fret), string = Number(original.dataset.string);
+        if (original.dataset.fret !== undefined && (fret < min || fret > max)) continue;
+        const cell = original.cloneNode(true);
+        if (original.classList.contains('solo-cell')) {
+          const membership = pair.notes.find(n => n.string === string && n.fret === fret);
+          if (!membership) { cell.querySelector('button')?.remove(); cell.querySelector('.solo-membership')?.remove(); }
+          const shapes = pair.spans.filter(span => {
+            const frets = pair.notes.filter(n => n.string === string && n.shapes.includes(span.index)).map(n => n.fret);
+            return fret >= Math.min(...frets) && fret <= Math.max(...frets);
+          }).map(span => span.index + 1);
+          cell.style.setProperty('--region-fill', shapes.length === 2 ? `linear-gradient(90deg, var(--shape-${shapes[0]}-fill) 50%, var(--shape-${shapes[1]}-fill) 50%)` : shapes.length ? `var(--shape-${shapes[0]}-fill)` : 'transparent');
+          cell.querySelectorAll('.solo-shift-bridge').forEach(bridge => { if (Number(bridge.dataset.pair) !== index) bridge.remove(); });
+          cell.querySelector('button')?.addEventListener('click', async event => {
+            const version = revision;
+            const midi = Number(event.currentTarget.dataset.midi);
+            try { await audio(); if (version === revision) sound(midi, context.currentTime + 0.01, 0.8, 0.22); }
+            catch (error) { $('solo-status').textContent = error.message; }
+          });
+        }
+        board.append(cell);
+      }
+      card.append(board); cards.push(card);
+    }
+    $('solo-mobile-neck').replaceChildren(...cards);
   }
   function schedule() {
     if (!running || context.state !== 'running') return;
@@ -235,7 +307,7 @@
   $('solo-volume').addEventListener('input', () => { if (master) master.gain.setTargetAtTime(Number($('solo-volume').value) / 100, context.currentTime, 0.02); });
   $('solo-degrees').addEventListener('change', () => {
     const notes = model.tones(configuration().key);
-    document.querySelectorAll('#solo-board button').forEach(button => {
+    noteButtons.forEach(button => {
       const tone = notes.find(note => note.pitch === Number(button.dataset.pitch));
       button.textContent = $('solo-degrees').checked ? tone.degree : tone.name;
     });
@@ -275,6 +347,7 @@
   });
   document.addEventListener('visibilitychange', () => { if (document.hidden) { stop(); context?.suspend().catch(() => {}); } });
   window.addEventListener('pagehide', stop);
+  mobileLayout.addEventListener('change', () => { stop(); render(); });
   window.ChordbookSolo = { stop };
   render();
 })();

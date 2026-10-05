@@ -202,6 +202,7 @@
     clearPlayback();
     window.ChordbookSolo?.stop();
     activeLesson = lesson;
+    document.body.classList.toggle('solo-active', lesson === 'solo');
     $('audio-status').textContent = idleAudioText;
     $('scale-audio-status').textContent = 'The buttons play reference tones so you can check the notes on your guitar.';
     document.querySelectorAll('.lesson-tabs [role="tab"]').forEach(tab => {

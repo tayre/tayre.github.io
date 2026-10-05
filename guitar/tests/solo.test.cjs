@@ -10,13 +10,15 @@ test('A minor progression and landing notes match the actual chords', () => {
 for (const key of KEYS) {
   test(`${key.name}: connected maps deduplicate shared notes and bridge every neighbouring pair`, () => {
     for (const { index, from, to } of transitions(key)) {
-      assert.equal(from.string, 4);
-      assert.equal(to.string, 4);
+      assert.equal(from.string, to.string);
+      assert.ok([2, 3, 4, 5].includes(from.string));
       assert.ok(to.fret > from.fret);
-      assert.ok(shape(key, index).some(n => n.string === 4 && n.fret === from.fret));
-      assert.ok(shape(key, index + 1).some(n => n.string === 4 && n.fret === from.fret));
-      assert.ok(shape(key, index + 1).some(n => n.string === 4 && n.fret === to.fret));
+      assert.ok(shape(key, index).some(n => n.string === from.string && n.fret === from.fret));
+      assert.ok(shape(key, index + 1).some(n => n.string === from.string && n.fret === from.fret));
+      assert.ok(shape(key, index + 1).some(n => n.string === to.string && n.fret === to.fret));
     }
+    assert.equal(transitions(key).length, 10);
+    assert.equal(new Set(transitions(key).map(t => t.from.string)).size, 4);
     for (let index = 0; index < 5; index++) {
       const all = map(key, index, 'all'), pair = map(key, index, 'pair');
       assert.equal(all.notes.length, 36);

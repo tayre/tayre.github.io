@@ -117,8 +117,7 @@
         <div class="beyond-box"><h3>Use the shapes in another key</h3><p>Move every note in every shape by the same number of frets. For G minor, move the A minor patterns two frets lower: shape 1 starts at fret 3 instead of 5, and the root becomes G. For B minor, move them two frets higher. The spacing between notes stays the same.</p><p>Learn the shapes in small pieces. Spend time connecting 1 and 2 before adding 3, then keep going. Shape 5 also fits at frets 2–5, so you can connect it to shape 1 near the bottom of the neck.</p></div>
       </section>
       <section id="solo-panel" role="tabpanel" aria-labelledby="solo-tab" tabindex="0" hidden>
-        <div class="lesson-heading"><div><p class="eyebrow">LESS PATTERN RUNNING. MORE PHRASING.</p><h2>Make the pentatonic sound like a solo.</h2></div></div>
-        <p class="lesson-intro">Start with A minor, shape 1 and a slow groove. Play a few notes, leave a gap, then answer yourself. You can play along on your guitar or tap the fretboard.</p>
+        <div class="lesson-heading"><div><p class="eyebrow">PRACTICE / PENTATONIC</p><h2>Find your way along the neck.</h2></div></div>
         <div class="solo-controls">
           <label>Minor key<select id="solo-key"></select></label>
           <label>Shape<select id="solo-shape"><option value="0">1 · start here</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option></select></label>
@@ -132,38 +131,33 @@
           <label class="solo-click"><input id="solo-click" type="checkbox" checked> Click</label>
         </div>
         <div class="solo-now">
-          <div><span class="eyebrow">OVER THIS CHORD</span><strong id="solo-chord">Am</strong></div>
+          <div><span class="eyebrow">CHORD</span><strong id="solo-chord">Am</strong></div>
           <div class="solo-cue"><h3 id="solo-turn">Ready when you are</h3><p id="solo-targets"></p></div>
           <div class="solo-beats" aria-label="Four beats per bar"><span>1</span><span>2</span><span>3</span><span>4</span></div>
         </div>
-        <p id="solo-status" class="audio-status" role="status">Start gives you four count-in clicks. Stop at any time with the same button.</p>
+        <p id="solo-status" class="audio-status" role="status">Four clicks, then play.</p>
         <div class="solo-workspace">
           <section class="solo-map" aria-labelledby="solo-map-title">
             <div class="solo-map-heading"><h3 id="solo-map-title"></h3><label>View <select id="solo-view"><option value="all">All five shapes</option><option value="pair">Connected pair</option><option value="single">One shape</option></select></label><label><input id="solo-degrees" type="checkbox"> Show intervals</label></div>
-            <p class="fretboard-orientation">High E at the top. Every dot belongs to your minor pentatonic scale.</p>
-            <p id="solo-map-help" class="lesson-detail">One scale across five positions. Follow the quiet line on the B string to move between them.</p>
+            <p id="solo-map-help" class="lesson-detail">↔ Slide either way. Numbers are frets. High E on top.</p>
             <div id="solo-neck-scroll" class="solo-neck-scroll" tabindex="0" role="region" aria-label="Connected fretboard, scroll sideways" aria-describedby="solo-map-help"><div id="solo-spans" class="solo-spans"></div><div id="solo-board" class="solo-board" role="group" aria-label="Solo practice fretboard"></div></div>
-            <p class="solo-legend"><span><i class="solo-root-key"></i> Root</span><span><i class="solo-target-key"></i> Ring = chord tone</span><span class="pair-legend"><i class="solo-shared-key"></i> Gold = shared note</span><span class="pair-legend">Numbers = connecting phrase</span></p>
-            <div id="solo-transitions" class="solo-transitions" aria-label="Four ways to move between shapes"></div>
-            <p id="solo-gentle-hint" class="solo-gentle-hint">Try these on the B string (second thinnest). Shift your hand, repeat a little rhythm, and pause on a root. No need to play every note.</p>
+            <div id="solo-mobile-neck" aria-label="Connected shapes, stacked for small screens"></div>
+            <p class="solo-legend"><span><i class="solo-root-key"></i> Root</span><span><i class="solo-target-key"></i> Ring = chord tone</span><span class="pair-legend">Split tint = shared note</span><span class="pair-legend">Raised numbers = connecting phrase</span></p>
+            <p id="solo-gentle-hint" class="solo-gentle-hint">Keep your finger down. Slide, pause, then answer.</p>
             <p id="solo-scale-notes" class="lesson-detail"></p>
           </section>
           <section id="solo-connection" class="solo-lesson" aria-labelledby="solo-connection-title">
-            <p class="eyebrow">ONE SCALE. CONNECTED POSITIONS.</p><h3 id="solo-connection-title"></h3>
+            <h3 id="solo-connection-title"></h3>
             <p class="lesson-detail" id="solo-connection-copy"></p>
             <div id="solo-route" class="solo-lick"></div>
             <button id="solo-connect-demo" type="button" class="secondary-button">Hear the connection</button>
-            <p class="lesson-detail">Follow the numbered dots in order. When a phrase moves along the same string, shift your hand into the next shape. These are the same five notes across the neck—not new scales. Shape 1 repeats 12 frets higher.</p>
           </section>
           <section class="solo-lesson" aria-labelledby="solo-lesson-title">
-            <p class="eyebrow">YOUR FIRST MUSICAL SENTENCE</p><h3 id="solo-lesson-title">Say something. Leave space.</h3>
-            <ol><li>Play just the two thinnest strings for a minute. Use two or three notes at a time.</li><li>Finish a phrase on a ringed note. Hold it for a beat and listen to it against the chord.</li><li>Repeat your rhythm, change one note, then leave a whole bar of silence.</li></ol>
-            <h4>A one-bar lick to borrow</h4><div id="solo-lick" class="solo-lick"></div>
+            <h3 id="solo-lesson-title">A phrase to borrow</h3><div id="solo-lick" class="solo-lick"></div>
             <button id="solo-demo" type="button" class="secondary-button">Hear the lick</button>
-            <p class="lesson-detail">The labels give string, fret and beat. “&” is halfway between beats. In Listen & answer, hear a lick for one bar, then use the next bar to play your own answer.</p>
+            <p class="lesson-detail">Repeat the rhythm. Change one note. Leave space.</p>
           </section>
         </div>
-        <div class="solo-next"><h3>When it starts to feel comfortable</h3><p>Try a different shape, add a slide between two scale notes, or select the chord changes. The rings follow the backing chord: they show notes from your pentatonic scale that also belong to that chord. The other scale notes add movement; use your ear and resolve to a ringed note.</p><p>This lesson uses minor pentatonic (1 · ♭3 · 4 · 5 · ♭7) over a minor chord or a compatible minor-key progression. A new song may need a different scale—match the key and harmony before using a pattern.</p></div>
       </section>
     </main>
     <footer><span>Chordbook · Guitar chords and scales in standard tuning</span><div><a href="https://www.fender.com/articles/chords/how-to-read-a-chord-chart">Reading diagrams ↗</a><a href="https://www.musictheory.net/lessons/40">More theory ↗</a></div></footer>

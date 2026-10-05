@@ -337,7 +337,7 @@ footer a { text-decoration: none; }
   h1 { font-size: 43px; }
   .shape-tag { font-size: 8px; }
 }
-#solo-panel { padding: 30px 0 40px; }
+#solo-panel { padding: 30px 0 40px; --shape-1-fill: #dceae0; --shape-1-edge: #427257; --shape-2-fill: #dce8f2; --shape-2-edge: #456e94; --shape-3-fill: #e9dff0; --shape-3-edge: #80618e; --shape-4-fill: #f1e6c8; --shape-4-edge: #937330; --shape-5-fill: #efdcda; --shape-5-edge: #a36762; }
 .solo-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 25px 0 18px; }
 .solo-controls label, .solo-transport label { font-size: 12px; color: var(--muted); }
 .solo-controls select { display: block; margin-top: 6px; width: 100%; min-height: 44px; padding: 8px; border: 1px solid var(--line); border-radius: 4px; background: #fffefa; color: var(--ink); font: inherit; font-size: 15px; }
@@ -362,19 +362,24 @@ footer a { text-decoration: none; }
 .solo-neck-scroll { overflow-x: auto; padding: 8px 6px; border: 1px solid var(--line); border-radius: 6px; }
 .solo-neck-scroll .solo-board, .solo-spans { min-width: calc(38px + var(--solo-frets) * 58px); }
 .solo-spans { display: grid; grid-template-columns: 38px repeat(var(--solo-frets), minmax(0, 1fr)); gap: 4px 0; }
-.solo-span { background: #e5e7de; color: var(--muted); border: 1px solid #c3c9ba; border-radius: 4px; padding: 7px; text-align: left; font-size: 12px; }
-.solo-span.connected { background: #dce7de; color: #244f43; border-color: #7a9989; }
+.solo-span { background: var(--shape-fill); color: var(--ink); border: 1px solid var(--shape-edge); border-left-width: 4px; border-radius: 4px; padding: 7px; text-align: left; font-size: 12px; font-weight: 600; }
 .solo-span[aria-pressed="true"] { box-shadow: inset 0 -3px var(--accent); }
-.solo-cell.shared-cell { background: #eee1ba; }
-.solo-cell.transition-string::before { background: #789487; height: 3px; }
+.solo-cell.shape-region { background: var(--region-fill); min-height: 68px; }
+.solo-membership { position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); font: 9px/12px ui-monospace, monospace; color: #465044; white-space: nowrap; }
+.solo-cell.slide-row { min-height: 82px; }
+.solo-shift-bridge { --slide-inset: 26px; position: absolute; left: calc(50% + var(--slide-inset)); top: calc(50% - 1px); height: 2px; width: calc(var(--shift-distance) * 100% - 2 * var(--slide-inset)); background: var(--slide-color); z-index: 2; pointer-events: none; }
+.solo-shift-bridge::after { content: ''; position: absolute; right: -1px; top: -4.5px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid var(--slide-color); }
+.solo-shift-bridge::before { content: ''; position: absolute; left: -1px; top: -4.5px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 9px solid var(--slide-color); }
+.solo-shift-caption { position: absolute; left: 50%; top: -23px; transform: translateX(-50%); white-space: nowrap; text-align: center; color: var(--slide-color); }
+.solo-shift-caption em { display: block; font: 600 9px/14px ui-monospace, monospace; letter-spacing: 1px; }
+.solo-shift-caption strong { display: block; font: 500 11px/20px ui-monospace, monospace; }
+.solo-shift-caption small { position: absolute; top: 47px; left: 50%; transform: translateX(-50%); font: 11px/16px ui-monospace, monospace; color: var(--ink); }
+.solo-membership.slide-fret { bottom: 4px; font-size: 11px; line-height: 16px; font-weight: 600; color: var(--ink); }
+.solo-note.shift-note { box-shadow: 0 0 0 5px #e7dfc5; }
 .all-shapes-view .pair-legend { display: none; }
 .all-shapes-view .solo-workspace > .solo-lesson:not([hidden]) { grid-column: 1 / -1; }
-.solo-transitions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 20px 0 12px; gap: 20px; }
-.solo-transition { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 4px; }
-.solo-transition strong { font: 21px Georgia, serif; }
-.solo-transition span { font-size: 12px; }
-.solo-transition small, .solo-gentle-hint { font-size: 12px; color: var(--muted); }
-.solo-gentle-hint { margin: 14px 0; }
+.solo-gentle-hint { font-size: 12px; color: var(--muted); margin: 14px 0; }
+.solo-shape-key { font-size: 12px; color: var(--muted); margin: 8px 0; }
 .solo-note[data-route]::after { content: attr(data-route); position: absolute; top: -10px; right: -10px; background: #fffefa; border: 1px solid var(--ink); color: var(--ink); border-radius: 50%; width: 18px; height: 18px; font: 11px/18px ui-monospace, monospace; }
 .solo-shared-key { background: #eee1ba; border: 1px solid #ae9460; }
 #solo-view { min-height: 40px; font: inherit; background: #fffefa; color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 5px; }
@@ -406,7 +411,6 @@ footer a { text-decoration: none; }
 .solo-next { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 25px; max-width: 800px; }
 .solo-next p { font-size: 13px; color: var(--muted); line-height: 1.8; }
 @media (max-width: 760px) {
-  .solo-transitions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .solo-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .solo-workspace { grid-template-columns: 1fr; }
   .solo-now { flex-wrap: wrap; gap: 18px; padding: 18px; }
@@ -416,5 +420,75 @@ footer a { text-decoration: none; }
   .solo-transport { gap: 14px; padding: 14px; }
   .solo-cue { min-width: 140px; }
   .solo-cue h3 { font-size: 20px; }
+}
+/* Solo practice: warm paper, muted natural colours, diagram-first spacing. */
+body.solo-active { --paper: #f5f2eb; --ink: #373c35; --muted: #6b7065; --accent: #8c5c48; --line: #d9d8cf; background: var(--paper); min-height: 100vh; }
+.solo-active .intro { display: none; }
+.solo-active .site-header { min-height: 80px; }
+.solo-active .lesson-tabs { margin-top: 16px; }
+.solo-active #solo-panel { padding-top: 24px; --shape-1-fill: #e4e8dc; --shape-1-edge: #657558; --shape-2-fill: #e0e6e5; --shape-2-edge: #58716e; --shape-3-fill: #e8e1d9; --shape-3-edge: #7e6a5b; --shape-4-fill: #ece7d6; --shape-4-edge: #86764d; --shape-5-fill: #eaddd6; --shape-5-edge: #956a56; }
+#solo-panel .lesson-heading h2 { font: 34px/1.2 Georgia, serif; letter-spacing: -.7px; margin: 0; }
+#solo-panel .lesson-heading .eyebrow { font-size: 9px; margin-bottom: 8px; }
+.solo-controls { margin: 22px 0 14px; gap: 18px; }
+.solo-controls select, #solo-view { background: transparent; border-radius: 2px; }
+.solo-transport { padding: 12px 0; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; }
+.solo-now { padding: 14px 0; margin: 0; background: transparent; gap: 22px; }
+#solo-chord { font-size: 32px; }
+.solo-cue h3 { font: 15px/1.4 Georgia, serif; margin-bottom: 4px; }
+#solo-status { margin-top: 0; }
+.solo-workspace { margin-top: 22px; gap: 20px; }
+#solo-map-help { margin: 8px 0 16px; font-size: 12px; }
+.solo-neck-scroll { background: #faf8f2; border-color: #d9d8cd; border-radius: 3px; }
+.solo-span { border-width: 0 0 2px; border-radius: 0; padding: 6px 10px; font-weight: 500; }
+.solo-cell.shape-region { border-right-color: #c6ccbf; }
+.solo-note { background: #faf8f2; color: var(--ink); border: 1px solid #717b6b; font-size: 12px; }
+.solo-note.root { background: var(--accent); color: #fffdfa; border-color: var(--accent); }
+.solo-note.landing-note { outline: 1px solid #7e8b71; outline-offset: 3px; }
+.solo-note.shift-note { box-shadow: none; }
+.solo-membership { color: #636b5d; }
+.solo-membership.slide-fret { font-size: 9px; font-weight: 400; }
+.solo-legend { margin: 12px 0; gap: 14px; }
+#solo-scale-notes { margin: 8px 0 12px; font-size: 11px; }
+.solo-lesson { background: transparent; border-top: 1px solid var(--line); padding: 20px 0 0; border-radius: 0; }
+.solo-lesson h3 { font-size: 22px; }
+.solo-lick { max-width: 630px; }
+.solo-lesson .lesson-detail { margin-bottom: 0; }
+#solo-mobile-neck { display: none; }
+@media (max-width: 700px) {
+  .solo-active .page { padding-left: 16px; padding-right: 16px; }
+  .solo-active .site-header { min-height: 64px; }
+  .solo-active .wordmark { font-size: 24px; }
+  .solo-active .lesson-tabs { margin-top: 6px; gap: 16px; }
+  .solo-active .lesson-tabs button { min-height: 44px; font-size: 12px; padding-bottom: 10px; }
+  #solo-panel .lesson-heading h2 { font-size: 28px; }
+  .solo-controls { gap: 10px 16px; margin-top: 18px; }
+  .solo-controls select { font-size: 16px; }
+  #solo-view { font-size: 16px; }
+  .solo-neck-scroll .solo-board, .solo-spans { min-width: 0; grid-template-columns: 26px repeat(var(--solo-frets), minmax(0, 1fr)); }
+  #solo-neck-scroll .solo-note { width: 30px; height: 30px; font-size: 10px; }
+  .solo-transport { gap: 12px; }
+  .solo-transport .primary-button { flex-basis: 118px; }
+  .solo-now { flex-wrap: nowrap; gap: 14px; }
+  .solo-cue { min-width: 0; }
+  .solo-beats { width: auto; gap: 4px; }
+  .solo-beats span { width: 18px; height: 18px; font-size: 9px; }
+  .solo-map-heading { gap: 5px 10px; }
+  .solo-map-heading h3 { flex-basis: 100%; font-size: 13px; }
+  .all-shapes-view #solo-neck-scroll { display: none; }
+  .all-shapes-view #solo-mobile-neck { display: grid; gap: 22px; }
+  .solo-mobile-pair { min-width: 0; }
+  .solo-mobile-pair h4 { margin: 0 0 8px; font: 18px Georgia, serif; }
+  .solo-mobile-pair .solo-board { min-width: 0; grid-template-columns: 26px repeat(var(--solo-frets), minmax(0, 1fr)); margin: 0; }
+  .solo-mobile-pair .solo-cell { min-height: 64px; }
+  .solo-mobile-pair .solo-cell.slide-row { min-height: 78px; }
+  .solo-mobile-pair .solo-note { width: 30px; height: 30px; font-size: 10px; }
+  .solo-mobile-pair .solo-string-label, .solo-mobile-pair .solo-fret-label { font-size: 9px; }
+  .solo-mobile-pair .solo-shift-bridge { --slide-inset: 21px; }
+  .solo-mobile-pair .solo-shift-caption strong { font-size: 9px; }
+  .solo-mobile-pair .solo-membership { font-size: 8px; }
+  .solo-mobile-pair .solo-membership.slide-fret { font-size: 8px; }
+  .solo-lick { gap: 4px; }
+  .solo-lick-note { min-width: 45px; }
+  .solo-lick-note small { font-size: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
