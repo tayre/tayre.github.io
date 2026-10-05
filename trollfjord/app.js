@@ -14,6 +14,8 @@
   let mapView;
   let explorer;
   let temperatures;
+  let crossingWatcher;
+  let lastLiveReport;
   let traffic = [];
   let busy = false;
   let refreshTimer;
@@ -100,6 +102,8 @@
         const serialized = JSON.stringify(incoming.feature);
         const changed = serialized !== savedFeature;
         report = incoming;
+        lastLiveReport = incoming;
+        crossingWatcher?.(incoming);
         if (changed) paintReport();
         else temperatures?.setReport(report, { refresh: !document.hidden && navigator.onLine });
         showNotice(Date.now() - report.reportedAt > STALE_AFTER ? 'This AIS report is over 20 minutes old. Showing the last known position.' : '');
@@ -177,6 +181,11 @@
     document.getElementById('kid-movement').textContent = 'Ship overview unavailable. See the captain’s numbers below.';
   });
 
+  import('./arctic-celebration.mjs?v=20261005.15').then(({ createCrossingWatcher, celebrateArcticCrossing }) => {
+    crossingWatcher = createCrossingWatcher({ storage: localStorage, celebrate: celebrateArcticCrossing });
+    if (lastLiveReport) crossingWatcher(lastLiveReport);
+  }).catch(() => { /* Optional effect; ship tracking remains available. */ });
+
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
     report = data.normalizeFeature(cached);
@@ -188,7 +197,7 @@
   ui.refresh.addEventListener('click', refreshData);
   ui.locate.addEventListener('click', () => mapView?.locate());
   ui['auto-refresh'].addEventListener('change', () => { nextRefresh = Date.now() + REFRESH_INTERVAL; schedule(); });
-  document.addEventListener('visibilitychange', () => { updateAge(); schedule(); });
+  document.addEventListener('visibilitychange', () => { updateAge(); schedule(); crossingWatcher?.reset(); });
   window.addEventListener('online', schedule);
   window.addEventListener('offline', () => { showNotice(report ? 'Offline. Showing the last known position.' : 'Offline. Connect to load the ship’s position.'); schedule(); });
   setInterval(updateAge, 15000);
