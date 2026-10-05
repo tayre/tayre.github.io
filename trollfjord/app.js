@@ -2,7 +2,7 @@
   'use strict';
 
   const data = window.TrollfjordData;
-  const REFRESH_INTERVAL = 60000;
+  const REFRESH_INTERVAL = 10000;
   const STALE_AFTER = 20 * 60000;
   const CACHE_KEY = 'trollfjord-ais-v1';
   const ui = Object.fromEntries(['refresh', 'auto-refresh', 'locate', 'notice', 'tiles-error',
@@ -80,7 +80,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
     try {
-      const response = await fetch(data.API_URL, { signal: controller.signal, credentials: 'omit' });
+      const response = await fetch(data.API_URL, { signal: controller.signal, credentials: 'omit', cache: 'no-store' });
       if (!response.ok) throw new Error(`The AIS feed is unavailable (HTTP ${response.status}).`);
       const incoming = data.latestReport(await response.json());
       lastChecked = Date.now();
@@ -124,7 +124,7 @@
     ui['tiles-error'].hidden = false;
   });
 
-  import('./explorer.mjs?v=20261005.1').then(({ createExplorer }) => {
+  import('./explorer.mjs?v=20261005.2').then(({ createExplorer }) => {
     explorer = createExplorer();
     if (report) explorer.setReport(report);
     if (mapView) explorer.setMap(mapView);

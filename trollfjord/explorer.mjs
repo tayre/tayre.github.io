@@ -1,4 +1,4 @@
-import { kidReport, distanceKm, GUELPH_REFERENCE, NORTH_POLE } from './explorer-data.mjs?v=20261005.1';
+import { kidReport, distanceKm, GUELPH_REFERENCE, NORTH_POLE, ARCTIC_LATITUDE } from './explorer-data.mjs?v=20261005.1';
 
 export function createExplorer() {
   const el = id => document.getElementById(id);
@@ -18,6 +18,7 @@ export function createExplorer() {
       el('kid-latitude').textContent = facts.latitude;
       el('distance-guelph').textContent = distanceText(distanceKm(report.position, GUELPH_REFERENCE));
       el('distance-pole').textContent = distanceText(distanceKm(report.position, NORTH_POLE));
+      el('distance-arctic').textContent = distanceText(distanceKm(report.position, [ARCTIC_LATITUDE, report.position[1]]));
     },
     setMap(value) {
       map = value;

@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf9f4">
-  <meta name="description" content="MS Trollfjord’s reported position, speed, and distances from Guelph and the North Pole.">
+  <meta name="description" content="MS Trollfjord’s reported position, speed, and distances from Guelph, the North Pole, and the Arctic Circle.">
   <title>MS Trollfjord</title>
   <link rel="stylesheet" href="vendor/maplibre-gl.css">
   <link rel="stylesheet" href="style.css?v=20261005.1">
   <script src="data.js" defer></script>
-  <script src="app.js?v=20261005.1" defer></script>
+  <script src="app.js?v=20261005.3" defer></script>
 </head>
 <body>
   <main class="tracker">
     <header class="header">
       <div class="identity">
         <img class="brand-ship" src="ship.svg" alt="" width="100" height="40">
-        <div class="brand-copy"><p class="eyebrow">A journey along the Norwegian coast</p><h1>MS Trollfjord<span class="brand-dot">.</span></h1></div>
+        <div class="brand-copy"><h1>MS Trollfjord<span class="brand-dot">.</span></h1></div>
       </div>
       <div class="header-actions">
         <span id="report-age" class="report-age">Waiting for AIS</span>
@@ -42,6 +42,7 @@
         <dl class="distances" aria-label="Distance from the ship">
           <div><dt>From Guelph, Ontario</dt><dd><span id="distance-guelph">—</span> <small>km</small></dd></div>
           <div><dt>From the North Pole</dt><dd><span id="distance-pole">—</span> <small>km</small></dd></div>
+          <div><dt>From the Arctic Circle</dt><dd><span id="distance-arctic">—</span> <small>km</small></dd></div>
         </dl>
         <p class="distance-note">Approximate straight-line distances over the Earth, from the last reported position.</p>
       </div>
@@ -78,17 +79,17 @@
     <footer class="footer">
       <div class="source">AIS: <a href="https://kystdatahuset.kystverket.no/ws/swagger/index.html" target="_blank" rel="noopener noreferrer">Kystverket ↗</a><span class="divider">/</span><span id="checked-at">Not checked yet</span></div>
       <div class="footer-controls">
-        <label><input id="auto-refresh" type="checkbox" checked> Auto-refresh · 60s</label>
+        <label><input id="auto-refresh" type="checkbox" checked> Auto-refresh · 10s</label>
         <details>
           <summary>About the data</summary>
           <div class="data-notes">
             <p>Public AIS from the Norwegian Coastal Administration, filtered to MMSI <strong>258465000</strong>. The marker is the last reported position, never an estimated position.</p>
             <p>The ship drawing is illustrative; its size and direction are not to scale. The teal dot marks the reported coordinates. The Arctic Circle is drawn at approximately 66.56° N.</p>
-            <p>Distances are approximate great-circle distances over the Earth, rounded to the nearest kilometre. Guelph uses the supplied address’s coordinates from OpenStreetMap; the North Pole is geographic north at 90° N. These are not sailing or driving distances.</p>
+            <p>Distances are approximate great-circle distances over the Earth, rounded to the nearest kilometre. Guelph uses the supplied address’s coordinates from OpenStreetMap; the North Pole is geographic north at 90° N. Arctic Circle distance is measured north or south to 66.56° N at the ship’s longitude. These are not sailing or driving distances.</p>
             <p>Speed is reported in knots and converted using 1 kn = 1.852 km/h. Very small speeds while moored may reflect AIS position noise. Speed over ground differs from speed through the water.</p>
             <p>The thin line is the short track supplied by the feed, when available. The feed retains recent positions for up to 20 minutes; this is not a 24-hour history.</p>
             <p>Reports can be delayed or missing outside Norwegian AIS coverage. If updates fail, the last successful report stays visible with its original time. Refreshing does not change the report time.</p>
-            <p>Checks run every minute while this tab is visible and online. The destination is the ship’s transmitted text. Times are UTC.</p>
+            <p>Checks run every 10 seconds while this tab is visible and online, updating the position without reloading the page. The destination is the ship’s transmitted text. Times are UTC.</p>
             <p><a href="https://www.kystverket.no/en/navigation-and-monitoring/ais/access-to-ais-data/" target="_blank" rel="noopener noreferrer">Data source &amp; NLOD licence ↗</a> · <a href="https://www.hurtigruten.com/en/on-board/ship-locator-map/ms-trollfjord" target="_blank" rel="noopener noreferrer">Operator’s tracker ↗</a></p>
           </div>
         </details>

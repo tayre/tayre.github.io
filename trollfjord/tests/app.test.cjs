@@ -89,7 +89,7 @@ test('outages and empty or regressing feeds retain the last real report and time
 test('hidden/offline tabs and unchecked auto-refresh do not schedule network polls', async () => {
   const h = app();
   await h.flush();
-  assert.equal([...h.timers.values()][0].delay, 60000);
+  assert.equal([...h.timers.values()][0].delay, 10000);
   h.document.hidden = true;
   h.docEvents.visibilitychange();
   assert.equal(h.timers.size, 0);
