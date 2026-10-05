@@ -72,7 +72,7 @@ export function createShipMap({ onError, onReady }) {
     title.textContent = name;
     const detail = document.createElement('p');
     detail.textContent = latest
-      ? `About ${Math.round(distanceKm(latest.position, [lat, lon])).toLocaleString('en-CA')} km from the ship’s last position. Straight-line distance, not sailing distance.`
+      ? `About ${Math.round(distanceKm(latest.position, [lat, lon])).toLocaleString('en-CA')} km from the ship’s last position.`
       : 'A geographic reference point. Ship distance will appear once an AIS report is available.';
     content.append(title, detail);
     new Popup({ maxWidth: '230px', offset: 12 }).setLngLat([lon, lat]).setDOMContent(content).addTo(map);
