@@ -3,7 +3,7 @@
 
   const MMSI = 258465000;
   const IMO = 9233258;
-  const API_URL = 'https://kystdatahuset.kystverket.no/ws/api/ais/realtime/geojson?aisShipType=60';
+  const API_URL = 'https://kystdatahuset.kystverket.no/ws/api/ais/realtime/geojson';
   const NAVIGATION = {
     0: 'Under way', 1: 'At anchor', 2: 'Not under command',
     3: 'Restricted manoeuvrability', 4: 'Constrained by draught',
@@ -32,10 +32,10 @@
     return Number.isFinite(timestamp) ? timestamp : null;
   }
 
-  function normalizeFeature(feature, now = Date.now()) {
+  function normalizeVesselFeature(feature, now = Date.now()) {
     const properties = feature?.properties;
-    if (!properties || Number(properties.mmsi) !== MMSI) return null;
-    if (properties.imo && Number(properties.imo) !== IMO) return null;
+    const mmsi = numeric(properties?.mmsi, 100000000, 999999999);
+    if (!Number.isInteger(mmsi)) return null;
     const type = feature.geometry?.type;
     const coordinates = type === 'Point' ? [feature.geometry.coordinates]
       : type === 'LineString' ? feature.geometry.coordinates : null;
@@ -47,7 +47,8 @@
     const track = coordinates.map(coordinate);
     const destination = typeof properties.destination === 'string' ? properties.destination.trim().slice(0, 80) : '';
     return {
-      position, reportedAt,
+      mmsi, position, reportedAt,
+      name: typeof properties.ship_name === 'string' ? properties.ship_name.trim().slice(0, 80) : '',
       // Don't draw a line across malformed/missing points.
       track: track.every(Boolean) ? track : [],
       // The JSON API already decodes SOG to knots; do not divide by 10 again.
@@ -59,6 +60,13 @@
       navigation: NAVIGATION[numeric(properties.status, 0, 15)] || 'Not reported',
       feature
     };
+  }
+
+  function normalizeFeature(feature, now = Date.now()) {
+    const properties = feature?.properties;
+    if (!properties || Number(properties.mmsi) !== MMSI) return null;
+    if (properties.imo && Number(properties.imo) !== IMO) return null;
+    return normalizeVesselFeature(feature, now);
   }
 
   function latestReport(payload, now = Date.now()) {
@@ -81,7 +89,7 @@
     return `Reported ${Math.floor(minutes / 1440)}d ago`;
   }
 
-  const api = { MMSI, IMO, API_URL, normalizeFeature, latestReport, reportAge };
+  const api = { MMSI, IMO, API_URL, normalizeFeature, normalizeVesselFeature, latestReport, reportAge };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.TrollfjordData = api;
 })(typeof globalThis === 'object' ? globalThis : this);

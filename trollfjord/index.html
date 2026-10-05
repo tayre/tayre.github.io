@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf9f4">
-  <meta name="description" content="MS Trollfjord’s reported position, speed, and distances from Guelph, the North Pole, and the Arctic Circle.">
+  <meta name="description" content="Track MS Trollfjord, nearby ships, local air and sea temperatures, and distances from Guelph, the North Pole, and the Arctic Circle.">
   <title>MS Trollfjord</title>
   <link rel="stylesheet" href="vendor/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=20261005.1">
-  <script src="data.js" defer></script>
-  <script src="app.js?v=20261005.5" defer></script>
+  <link rel="stylesheet" href="style.css?v=20261005.6">
+  <script src="data.js?v=20261005.6" defer></script>
+  <script src="app.js?v=20261005.6" defer></script>
 </head>
 <body>
   <main class="tracker">
@@ -36,8 +36,14 @@
         <p class="speed-secondary"><span id="speed-knots">—</span> knots <span>· speed over ground</span></p>
         <div class="latitude-row"><span>Latitude</span><strong id="kid-latitude">—</strong></div>
       </div>
+      <div class="conditions">
+        <dl class="temperatures" aria-label="Estimated temperatures near the ship">
+          <div><dt>Outside air</dt><dd><span id="temperature-air">—</span> <small>°C</small></dd><dd id="temperature-air-time" class="temperature-time">Waiting for position</dd></div>
+          <div><dt>Sea surface</dt><dd><span id="temperature-sea">—</span> <small>°C</small></dd><dd id="temperature-sea-time" class="temperature-time">Waiting for position</dd></div>
+        </dl>
+        <p class="conditions-source">Nearby estimates · <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo ↗</a></p>
+      </div>
       <div class="distance-panel">
-        <p class="eyebrow">A little perspective</p>
         <dl class="distances" aria-label="Distance from the ship">
           <div><dt>From Guelph, Ontario</dt><dd><span id="distance-guelph">—</span> <small>km</small></dd></div>
           <div><dt>From the North Pole</dt><dd><span id="distance-pole">—</span> <small>km</small></dd></div>
@@ -45,7 +51,6 @@
         </dl>
         <p class="distance-note">Approximate straight-line distances over the Earth, from the last reported position.</p>
       </div>
-    <div class="field-note"><span class="field-number">66.56° N</span><h2>Crossing into the Arctic</h2><p>The dashed amber line marks the Arctic Circle. Select a town on the map to see its distance from the ship.</p></div>
     </aside>
     <section class="map-section" aria-label="Ship position map">
       <div id="map" aria-label="Interactive map of MS Trollfjord’s latest reported position"></div>
@@ -56,7 +61,7 @@
       </button>
       <button id="overview" type="button" disabled>Norway overview</button>
       </div>
-      <div class="map-legend" aria-label="Map legend"><span><i class="legend-dot"></i>Last position</span><span><i class="legend-track"></i>Recent track</span><span><i class="legend-arctic"></i>Arctic Circle</span></div>
+      <div class="map-legend" aria-label="Map legend"><span><i class="legend-dot"></i>Last position</span><span><i class="legend-nearby"></i><span id="nearby-count">Nearby ships · 50 mi</span></span><span><i class="legend-track"></i>Recent track</span><span><i class="legend-arctic"></i>Arctic Circle</span></div>
       <div class="compass" aria-label="North is up">N<span>↑</span></div>
       <p id="notice" class="notice" role="status">Fetching the latest AIS report…</p>
       <p id="tiles-error" class="tiles-error" role="status" hidden>Some map tiles could not load. Ship data is shown below.</p>
@@ -82,10 +87,11 @@
         <details>
           <summary>About the data</summary>
           <div class="data-notes">
-            <p>Public AIS from the Norwegian Coastal Administration, filtered to MMSI <strong>258465000</strong>. The marker is the last reported position, never an estimated position.</p>
+            <p>Public AIS from the Norwegian Coastal Administration. MS Trollfjord is identified by MMSI <strong>258465000</strong>. Muted markers show other reported vessels within 50 miles (80.5 km), excluding reports over 20 minutes old. Select a vessel for details. Markers show reported positions.</p>
             <p>The ship drawing is illustrative; its size and direction are not to scale. The teal dot marks the reported coordinates. The Arctic Circle is drawn at approximately 66.56° N.</p>
             <p>Distances are approximate great-circle distances over the Earth, rounded to the nearest kilometre. Guelph uses the supplied address’s coordinates from OpenStreetMap; the North Pole is geographic north at 90° N. Arctic Circle distance is measured north or south to 66.56° N at the ship’s longitude. These are not sailing or driving distances.</p>
             <p>Speed is reported in knots and converted using 1 kn = 1.852 km/h. Very small speeds while moored may reflect AIS position noise. Speed over ground differs from speed through the water.</p>
+            <p>Nearby temperatures are current model estimates from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener noreferrer">Open-Meteo’s weather models</a>, including MET Norway and DWD, and <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">Météo-France / Copernicus Marine</a>. Air temperature is at 2 m; sea temperature is near the surface in the nearest available sea grid cell. Times are UTC. Temperatures update every 15 minutes or after the ship moves 5 km, using its latest AIS position.</p>
             <p>The thin line is the short track supplied by the feed, when available. The feed retains recent positions for up to 20 minutes; this is not a 24-hour history.</p>
             <p>Reports can be delayed or missing outside Norwegian AIS coverage. If updates fail, the last successful report stays visible with its original time. Refreshing does not change the report time.</p>
             <p>Checks run every 10 seconds while this tab is visible and online, updating the position without reloading the page. The destination is the ship’s transmitted text. Times are UTC.</p>

@@ -148,16 +148,18 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
 .report-note { font-size: 11px; line-height: 1.6; max-width: 240px; color: #627770; }
 .latitude-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; padding-top: 16px; border-top: 1px solid #dce2d7; font-size: 12px; color: #627770; }
 .latitude-row strong { font-size: 19px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+.conditions { border-top: 1px solid #dce2d7; padding: 18px 0; }
+.temperatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0; }
+.temperatures dt { font-size: 12px; text-transform: none; letter-spacing: 0; margin-bottom: 3px; }
+.temperatures dd { font-size: 29px; letter-spacing: -.035em; }
+.temperatures small { font-size: 12px; letter-spacing: 0; }
+.temperatures .temperature-time { margin-top: 3px; font-size: 10px; color: #6c7e75; letter-spacing: 0; }
+.conditions-source { margin: 10px 0 0; color: #6c7e75; font-size: 10px; }
 .distance-panel { padding-top: 20px; }
-.distance-panel .eyebrow { margin-bottom: 18px; }
 .distances { gap: 20px; }
 .distances dd { font-size: 31px; }
 .distances dt { font-size: 12px; margin-bottom: 3px; }
 .distance-note { font-size: 10px; margin-top: 16px; }
-.field-note { border-left: 2px solid #bc8654; padding: 0 0 0 14px; margin-top: 28px; }
-.field-number { font-family: Georgia, serif; color: #9a633e; font-size: 25px; }
-.field-note h2 { margin: 8px 0 5px; font-size: 12px; font-weight: 500; }
-.field-note p { margin: 0; font-size: 11px; line-height: 1.65; color: #627770; }
 .map-section { min-height: 670px; }
 .map-toolbar button { box-shadow: 0 2px 8px #294b4e0a; border-radius: 100px; }
 .map-toolbar button:first-child { color: #fff; background: #255a60; border-color: #255a60; }
@@ -166,6 +168,7 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
 .map-legend > span { display: flex; align-items: center; gap: 6px; }
 .map-legend i { display: inline-block; width: 17px; }
 .map-legend .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+.map-legend .legend-nearby { width: 6px; height: 6px; border-radius: 50%; background: #7b8e94; opacity: .65; }
 .legend-track { border-top: 2px solid var(--teal); }
 .legend-arctic { border-top: 2px dashed #b98650; }
 .maplibregl-ctrl-bottom-left .maplibregl-ctrl { margin-bottom: 87px; }
@@ -211,8 +214,6 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
   .latitude-row { margin-top: 16px; }
   .distances { grid-template-columns: 1fr 1fr; }
   .distances dd { font-size: 29px; }
-  .field-note { margin-top: 24px; }
-  .field-note p { max-width: 430px; }
   .technical { padding: 0 24px; }
   .readout { grid-template-columns: 1fr 1fr; gap: 24px 18px; }
   .footer { padding: 16px 24px; }

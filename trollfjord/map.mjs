@@ -1,5 +1,5 @@
 import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, Popup, setWorkerUrl } from './vendor/maplibre-gl.mjs';
-import { createStyle, trackGeoJSON } from './map-style.mjs?v=20261005.1';
+import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.6';
 import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
 setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
@@ -19,6 +19,7 @@ export function createShipMap({ onError, onReady }) {
   map.getCanvas().setAttribute('aria-label', 'Interactive WebGL map of MS Trollfjord');
 
   let latest = null;
+  let traffic = [];
   let marker = null;
   let loaded = false;
   let stale = false;
@@ -57,11 +58,19 @@ export function createShipMap({ onError, onReady }) {
     }
   }
 
-  map.on('load', () => { loaded = true; drawReport(); });
+  function drawTraffic() {
+    const nearby = nearbyGeoJSON(traffic, latest);
+    if (loaded) map.getSource('nearby-ships').setData(nearby);
+    document.getElementById('nearby-count').textContent = latest && !stale
+      ? `${nearby.features.length} ships · 50 mi` : 'Nearby ships · 50 mi';
+  }
+
+  map.on('load', () => { loaded = true; drawReport(); drawTraffic(); });
   map.on('resize', () => { if (!explored) overview(false); });
   map.on('mouseenter', 'places', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'places', () => { map.getCanvas().style.cursor = ''; });
   map.on('click', 'places', event => {
+    if (map.queryRenderedFeatures(event.point, { layers: ['nearby-vessels'] }).length) return;
     const place = event.features?.[0];
     if (place?.geometry.type !== 'Point') return;
     const [lon, lat] = place.geometry.coordinates;
@@ -77,6 +86,23 @@ export function createShipMap({ onError, onReady }) {
     content.append(title, detail);
     new Popup({ maxWidth: '230px', offset: 12 }).setLngLat([lon, lat]).setDOMContent(content).addTo(map);
   });
+  map.on('mouseenter', 'nearby-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'nearby-vessels', () => { map.getCanvas().style.cursor = ''; });
+  map.on('click', 'nearby-vessels', event => {
+    const vessel = event.features?.[0];
+    if (vessel?.geometry.type !== 'Point') return;
+    const content = document.createElement('div');
+    content.className = 'place-card';
+    const title = document.createElement('strong');
+    title.textContent = vessel.properties.name;
+    const detail = document.createElement('p');
+    const speed = Number.isFinite(vessel.properties.speed) ? `${vessel.properties.speed.toFixed(1)} kn` : 'Speed unavailable';
+    detail.textContent = `${Number(vessel.properties.distanceMiles).toFixed(1)} mi from MS Trollfjord · ${speed}`;
+    const time = document.createElement('p');
+    time.textContent = `Reported ${new Date(vessel.properties.reportedAt).toLocaleTimeString('en-GB', { timeZone: 'UTC' })} UTC`;
+    content.append(title, detail, time);
+    new Popup({ maxWidth: '260px', offset: 8 }).setLngLat(vessel.geometry.coordinates).setDOMContent(content).addTo(map);
+  });
   map.on('error', () => {
     mapFailed = true;
     onError('Some map details could not load. Ship data is still available below.');
@@ -84,14 +110,16 @@ export function createShipMap({ onError, onReady }) {
   map.on('idle', () => { if (!contextLost && !mapFailed) onReady(); });
   map.on('movestart', event => { mapFailed = false; if (event.originalEvent) explored = true; });
   map.on('webglcontextlost', () => { contextLost = true; onError('The map graphics were interrupted. Ship data continues to update below.'); });
-  map.on('webglcontextrestored', () => { contextLost = false; mapFailed = false; drawReport(); });
+  map.on('webglcontextrestored', () => { contextLost = false; mapFailed = false; drawReport(); drawTraffic(); });
 
   return {
     setReport(report) { latest = report; drawReport(); },
+    setTraffic(reports) { traffic = reports; drawTraffic(); },
     setStale(value) {
       stale = value;
       element.classList.toggle('is-old', stale);
       if (loaded) map.setPaintProperty('ship-trail', 'line-opacity', stale ? .3 : .65);
+      drawTraffic();
     },
     locate() {
       explored = true;

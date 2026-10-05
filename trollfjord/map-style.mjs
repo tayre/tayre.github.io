@@ -1,4 +1,4 @@
-import { ARCTIC_LATITUDE } from './explorer-data.mjs?v=20261005.1';
+import { ARCTIC_LATITUDE, distanceKm } from './explorer-data.mjs?v=20261005.1';
 // OpenMapTiles schema, served by OpenFreeMap. Keep the style local so the
 // palette and label density stay under our control without a hosted style key.
 export const palette = {
@@ -8,6 +8,27 @@ export const palette = {
 
 const labelName = ['coalesce', ['get', 'name:en'], ['get', 'name:latin'], ['get', 'name']];
 const empty = () => ({ type: 'FeatureCollection', features: [] });
+export const NEARBY_RADIUS_KM = 50 * 1.609344;
+
+export function nearbyGeoJSON(reports, ship, now = Date.now()) {
+  if (!ship || now - ship.reportedAt > 20 * 60000 || distanceKm(ship.position, ship.position) !== 0) return empty();
+  const newest = new Map();
+  for (const report of reports) {
+    if (report.mmsi === ship.mmsi || now - report.reportedAt > 20 * 60000 || report.reportedAt > now + 5 * 60000) continue;
+    if (!newest.has(report.mmsi) || newest.get(report.mmsi).reportedAt < report.reportedAt) newest.set(report.mmsi, report);
+  }
+  const features = [];
+  for (const report of newest.values()) {
+    const distance = distanceKm(ship.position, report.position);
+    if (distance === null || distance > NEARBY_RADIUS_KM) continue;
+    features.push({ type: 'Feature', id: report.mmsi,
+      geometry: { type: 'Point', coordinates: [report.position[1], report.position[0]] },
+      properties: { mmsi: report.mmsi, name: report.name || `MMSI ${report.mmsi}`,
+        speed: report.speed, reportedAt: report.reportedAt, distanceMiles: distance / 1.609344 }
+    });
+  }
+  return { type: 'FeatureCollection', features };
+}
 
 export function trackGeoJSON(report) {
   if (!report || report.track.length < 2) return empty();
@@ -28,6 +49,7 @@ export function createStyle() {
       coast: { type: 'vector', url: 'https://tiles.openfreemap.org/planet',
         attribution: '<a href="https://openfreemap.org/">OpenFreeMap</a> · <a href="https://www.openmaptiles.org/">© OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a>' },
       'ship-track': { type: 'geojson', data: empty() },
+      'nearby-ships': { type: 'geojson', data: empty() },
       discoveries: { type: 'geojson', data: { type: 'FeatureCollection', features: [
         { type: 'Feature', properties: { name: 'ARCTIC CIRCLE · ≈66.56° N' },
           geometry: { type: 'LineString', coordinates: [[-180, ARCTIC_LATITUDE], [0, ARCTIC_LATITUDE], [180, ARCTIC_LATITUDE]] } }
@@ -74,6 +96,11 @@ export function createStyle() {
         layout: { 'symbol-placement': 'line', 'symbol-spacing': 430, 'text-field': ['get', 'name'],
           'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, -1], 'text-letter-spacing': .05 },
         paint: { 'text-color': '#8d6a40', 'text-halo-color': palette.land, 'text-halo-width': 2 } },
+      { id: 'nearby-vessels', type: 'circle', source: 'nearby-ships',
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 2.5, 9, 4, 14, 5],
+          'circle-color': '#7b8e94', 'circle-opacity': .55,
+          'circle-stroke-color': '#f8f6ef', 'circle-stroke-width': 1, 'circle-stroke-opacity': .65 }
+      },
       { id: 'ship-trail', type: 'line', source: 'ship-track',
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': palette.ship, 'line-width': 2, 'line-opacity': .65 }

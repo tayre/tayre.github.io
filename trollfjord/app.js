@@ -7,10 +7,13 @@
   const CACHE_KEY = 'trollfjord-ais-v1';
   const ui = Object.fromEntries(['refresh', 'auto-refresh', 'locate', 'notice', 'tiles-error',
     'report-age', 'position', 'speed', 'course', 'destination', 'navigation', 'reported-at',
-    'checked-at'].map(id => [id, document.getElementById(id)]));
+    'checked-at', 'temperature-air', 'temperature-sea', 'temperature-air-time',
+    'temperature-sea-time'].map(id => [id, document.getElementById(id)]));
   let report = null;
   let mapView;
   let explorer;
+  let temperatures;
+  let traffic = [];
   let busy = false;
   let refreshTimer;
   let nextRefresh = Date.now();
@@ -31,6 +34,7 @@
     ui['report-age'].textContent = data.reportAge(report.reportedAt);
     ui['report-age'].classList.toggle('is-recent', !stale);
     mapView?.setStale(stale);
+    temperatures?.setReport(report, { refresh: false });
   }
 
   function paintReport() {
@@ -44,6 +48,7 @@
     ui['reported-at'].textContent = `${date} · ${utcTime(report.reportedAt)}`;
     ui['reported-at'].title = new Date(report.reportedAt).toISOString();
     explorer?.setReport(report);
+    temperatures?.setReport(report, { refresh: !document.hidden && navigator.onLine });
     if (mapView) {
       mapView.setReport(report);
       ui.locate.disabled = false;
@@ -82,7 +87,9 @@
     try {
       const response = await fetch(data.API_URL, { signal: controller.signal, credentials: 'omit', cache: 'no-store' });
       if (!response.ok) throw new Error(`The AIS feed is unavailable (HTTP ${response.status}).`);
-      const incoming = data.latestReport(await response.json());
+      const payload = await response.json();
+      const incoming = data.latestReport(payload);
+      traffic = payload.features.map(feature => data.normalizeVesselFeature(feature)).filter(Boolean);
       lastChecked = Date.now();
       if (!incoming) {
         showNotice(report ? 'No newer report in the feed. Showing the last known position.' : 'MS Trollfjord has no valid position in the current feed. Retrying automatically while auto-refresh is on.');
@@ -94,6 +101,7 @@
         showNotice(Date.now() - report.reportedAt > STALE_AFTER ? 'This AIS report is over 20 minutes old. Showing the last known position.' : '');
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(report.feature)); } catch { /* The map works without browser storage. */ }
       }
+      mapView?.setTraffic(traffic);
     } catch (error) {
       const reason = error.name === 'AbortError' ? 'The AIS request timed out.' : 'Could not update the AIS feed.';
       showNotice(`${reason} ${report ? 'Showing the last known position.' : 'Use Refresh to try again.'}`);
@@ -110,11 +118,12 @@
 
   // Load the graphics independently: a disabled GPU or failed module must not
   // stop AIS polling or the accessible text readout.
-  import('./map.mjs?v=20261005.2').then(({ createShipMap }) => {
+  import('./map.mjs?v=20261005.6').then(({ createShipMap }) => {
     mapView = createShipMap({
       onError(message) { ui['tiles-error'].textContent = message; ui['tiles-error'].hidden = false; },
       onReady() { ui['tiles-error'].hidden = true; }
     });
+    mapView.setTraffic(traffic);
     explorer?.setMap(mapView);
     if (report) paintReport();
   }).catch(error => {
@@ -122,6 +131,26 @@
     ui['tiles-error'].setAttribute('data-error', error.message);
     ui['tiles-error'].textContent = 'The WebGL map could not start. Ship data is still shown below.';
     ui['tiles-error'].hidden = false;
+  });
+
+  import('./temperatures.mjs?v=20261005.6').then(({ createTemperatures }) => {
+    temperatures = createTemperatures({
+      onUpdate(kind, reading) {
+        const value = ui[`temperature-${kind}`];
+        const time = ui[`temperature-${kind}-time`];
+        value.textContent = reading.state === 'ready' ? reading.value.toFixed(1) : '—';
+        time.textContent = reading.state === 'ready' ? `${utcTime(reading.time).slice(0, 5)} UTC`
+          : reading.state === 'loading' ? 'Updating…'
+          : reading.state === 'unavailable' ? 'Unavailable'
+          : reading.state === 'stale-position' ? 'Position too old' : 'Waiting for position';
+        value.title = reading.state === 'ready' ? `Nearby model estimate for ${new Date(reading.time).toISOString()}` : '';
+      }
+    });
+    if (report) temperatures.setReport(report, { refresh: !document.hidden && navigator.onLine });
+  }).catch(error => {
+    console.error('Could not load nearby temperatures.', error);
+    ui['temperature-air-time'].textContent = 'Unavailable';
+    ui['temperature-sea-time'].textContent = 'Unavailable';
   });
 
   import('./explorer.mjs?v=20261005.3').then(({ createExplorer }) => {
