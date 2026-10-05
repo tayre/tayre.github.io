@@ -20,6 +20,7 @@ function app(cached = null) {
   const docEvents = {};
   const winEvents = {};
   const elements = {};
+  let writes = 0;
   const storage = new Map(cached ? [['trollfjord-ais-v1', JSON.stringify(cached)]] : []);
   const request = { payload: payload(report()), calls: 0, error: null };
   const document = { hidden: false,
@@ -38,14 +39,14 @@ function app(cached = null) {
   vm.runInNewContext(source, { window, document, navigator, Date: Clock, AbortController,
     setTimeout: (fn, delay) => { timers.set(++nextId, { fn, delay }); return nextId; },
     clearTimeout: id => timers.delete(id), setInterval() {},
-    localStorage: { getItem: key => storage.get(key) || null, setItem: (key, value) => storage.set(key, value) },
+    localStorage: { getItem: key => storage.get(key) || null, setItem: (key, value) => { writes++; storage.set(key, value); } },
     fetch: async () => {
       request.calls++;
       if (request.error) throw request.error;
       return { ok: true, json: async () => request.payload };
     }
   });
-  return { elements, timers, storage, request, navigator, document, docEvents, winEvents,
+  return { elements, timers, storage, get writes() { return writes; }, request, navigator, document, docEvents, winEvents,
     advance: ms => { now += ms; },
     flush: () => new Promise(resolve => setImmediate(resolve)),
     refresh: () => elements.refresh.events.click() };
@@ -116,4 +117,15 @@ test('cached reports retain their original time until a newer report arrives', a
   assert.match(h.elements.notice.textContent, /saved report/);
   await h.flush();
   assert.match(h.elements['reported-at'].textContent, /02 Oct.*15:58:44/);
+});
+
+test('identical AIS polls skip storage writes but same-time corrections are retained', async () => {
+  const h = app(); await h.flush();
+  assert.equal(h.writes, 1);
+  await h.refresh(); await h.refresh();
+  assert.equal(h.writes, 1);
+  h.request.payload.features[0].properties.speed = 2;
+  await h.refresh();
+  assert.equal(h.writes, 2);
+  assert.equal(h.elements.speed.textContent, '2.0');
 });

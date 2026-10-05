@@ -10,6 +10,7 @@
     'checked-at', 'temperature-air', 'temperature-air-time',
     'sunrise', 'sunset', 'sun-times-note'].map(id => [id, document.getElementById(id)]));
   let report = null;
+  let savedFeature = null;
   let mapView;
   let explorer;
   let temperatures;
@@ -29,7 +30,7 @@
   }
 
   function updateAge() {
-    if (!report) return;
+    if (!report || document.hidden) return;
     const stale = Date.now() - report.reportedAt > STALE_AFTER;
     ui['report-age'].textContent = data.reportAge(report.reportedAt);
     ui['report-age'].classList.toggle('is-recent', !stale);
@@ -89,17 +90,21 @@
       if (!response.ok) throw new Error(`The AIS feed is unavailable (HTTP ${response.status}).`);
       const payload = await response.json();
       const incoming = data.latestReport(payload);
-      traffic = payload.features.map(feature => data.normalizeVesselFeature(feature)).filter(Boolean);
+      traffic = payload.features.map(feature => data.normalizeVesselFeature(feature, Date.now(), { includeTrack: false })).filter(Boolean);
       lastChecked = Date.now();
       if (!incoming) {
         showNotice(report ? 'No newer report in the feed. Showing the last known position.' : 'MS Trollfjord has no valid position in the current feed. Retrying automatically while auto-refresh is on.');
       } else if (report && incoming.reportedAt < report.reportedAt) {
         showNotice('The feed returned an older report. Keeping the newer saved position.');
       } else {
+        const serialized = JSON.stringify(incoming.feature);
+        const changed = serialized !== savedFeature;
         report = incoming;
-        paintReport();
+        if (changed) paintReport();
+        else temperatures?.setReport(report, { refresh: !document.hidden && navigator.onLine });
         showNotice(Date.now() - report.reportedAt > STALE_AFTER ? 'This AIS report is over 20 minutes old. Showing the last known position.' : '');
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify(report.feature)); } catch { /* The map works without browser storage. */ }
+        try { if (changed) localStorage.setItem(CACHE_KEY, serialized); } catch { /* The map works without browser storage. */ }
+        savedFeature = serialized;
       }
       mapView?.setTraffic(traffic);
     } catch (error) {
@@ -118,7 +123,7 @@
 
   // Load the graphics independently: a disabled GPU or failed module must not
   // stop AIS polling or the accessible text readout.
-  import('./map.mjs?v=20261005.13').then(({ createShipMap }) => {
+  import('./map.mjs?v=20261005.14').then(({ createShipMap }) => {
     mapView = createShipMap({
       onError(message) { ui['tiles-error'].textContent = message; ui['tiles-error'].hidden = false; },
       onReady() { ui['tiles-error'].hidden = true; }
@@ -175,6 +180,7 @@
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
     report = data.normalizeFeature(cached);
+    if (report) savedFeature = JSON.stringify(report.feature);
     if (report) { paintReport(); showNotice('Showing a saved report while checking for updates…'); }
   } catch { /* Ignore corrupt or unavailable local storage. */ }
 

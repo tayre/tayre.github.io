@@ -28,6 +28,7 @@ export function nearbyGeoJSON(reports, ship, now = Date.now()) {
         speed: report.speed, reportedAt: report.reportedAt, distanceMiles: distance / 1.609344 }
     });
   }
+  features.sort((a, b) => a.id - b.id);
   return { type: 'FeatureCollection', features };
 }
 

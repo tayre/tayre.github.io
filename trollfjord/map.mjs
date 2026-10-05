@@ -1,7 +1,8 @@
 import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, Popup, setWorkerUrl } from './vendor/maplibre-gl.mjs';
-import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.8';
+import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.14';
 import { createVesselCard } from './vessel-card.mjs?v=20261005.8';
 import { pickMapFeature } from './map-interaction.mjs?v=20261005.8';
+import { createSourceUpdater, createNearbyCache } from './map-updates.mjs?v=20261005.14';
 import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
 setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
@@ -14,6 +15,8 @@ export function createShipMap({ onError, onReady }) {
     scrollZoom: false, maxPitch: 0,
     canvasContextAttributes: { antialias: true }
   });
+  const updateSource = createSourceUpdater(map);
+  const getNearby = createNearbyCache(nearbyGeoJSON);
   map.touchZoomRotate.disableRotation();
   map.addControl(new NavigationControl({ showCompass: false }), 'top-right');
   map.addControl(new ScaleControl({ maxWidth: 90, unit: 'metric' }), 'bottom-left');
@@ -54,19 +57,18 @@ export function createShipMap({ onError, onReady }) {
       if (!explored) map.jumpTo({ center: [lon, lat], zoom: 10 });
     } else marker.setLngLat([lon, lat]);
     if (loaded) {
-      map.getSource('ship-track').setData(trackGeoJSON(latest));
-      map.setPaintProperty('ship-trail', 'line-opacity', stale ? .3 : .65);
+      updateSource('ship-track', trackGeoJSON(latest));
     }
   }
 
   function drawTraffic() {
-    const nearby = nearbyGeoJSON(traffic, latest);
-    if (loaded) map.getSource('nearby-ships').setData(nearby);
+    const nearby = getNearby(traffic, latest);
+    if (loaded) updateSource('nearby-ships', nearby);
     document.getElementById('nearby-count').textContent = latest && !stale
       ? `${nearby.features.length} ships · 50 mi` : 'Nearby ships · 50 mi';
   }
 
-  map.on('load', () => { loaded = true; drawReport(); drawTraffic(); });
+  map.on('load', () => { loaded = true; drawReport(); drawTraffic(); map.setPaintProperty('ship-trail', 'line-opacity', stale ? .3 : .65); });
   map.on('mouseenter', 'places', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'places', () => { map.getCanvas().style.cursor = ''; });
   map.on('mouseenter', 'nearby-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
@@ -122,9 +124,11 @@ export function createShipMap({ onError, onReady }) {
     setReport(report) { latest = report; drawReport(); },
     setTraffic(reports) { traffic = reports; drawTraffic(); },
     setStale(value) {
-      stale = value;
-      element.classList.toggle('is-old', stale);
-      if (loaded) map.setPaintProperty('ship-trail', 'line-opacity', stale ? .3 : .65);
+      if (stale !== value) {
+        stale = value;
+        element.classList.toggle('is-old', stale);
+        if (loaded) map.setPaintProperty('ship-trail', 'line-opacity', stale ? .3 : .65);
+      }
       drawTraffic();
     },
     locate() {

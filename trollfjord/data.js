@@ -32,7 +32,7 @@
     return Number.isFinite(timestamp) ? timestamp : null;
   }
 
-  function normalizeVesselFeature(feature, now = Date.now()) {
+  function normalizeVesselFeature(feature, now = Date.now(), { includeTrack = true } = {}) {
     const properties = feature?.properties;
     const mmsi = numeric(properties?.mmsi, 100000000, 999999999);
     if (!Number.isInteger(mmsi)) return null;
@@ -44,7 +44,7 @@
     const position = coordinate(coordinates[coordinates.length - 1]);
     const reportedAt = utcTimestamp(properties.date_time_utc);
     if (!position || reportedAt === null || reportedAt > now + 5 * 60 * 1000) return null;
-    const track = coordinates.map(coordinate);
+    const track = includeTrack ? coordinates.map(coordinate) : [];
     const destination = typeof properties.destination === 'string' ? properties.destination.trim().slice(0, 80) : '';
     return {
       mmsi, position, reportedAt,
@@ -59,7 +59,7 @@
       heading: numeric(properties.true_heading, 0, 359),
       destination: destination || 'Not reported',
       navigation: NAVIGATION[numeric(properties.status, 0, 15)] || 'Not reported',
-      feature
+      feature: includeTrack ? feature : undefined
     };
   }
 
