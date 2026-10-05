@@ -11,9 +11,6 @@ export function createExplorer() {
       const facts = kidReport(report);
       el('kid-speed').textContent = facts.speed;
       el('speed-knots').textContent = report.speed === null ? '—' : report.speed.toFixed(1);
-      el('speed-note').textContent = report.speed !== null && report.speed < .5 && ['Moored', 'At anchor'].includes(report.navigation)
-        ? 'Tiny speeds at rest can reflect AIS position noise. This is the last reported reading.'
-        : 'Speed from the last AIS report, not a live estimate.';
       el('kid-movement').textContent = facts.movement;
       el('kid-latitude').textContent = facts.latitude;
       el('distance-guelph').textContent = distanceText(distanceKm(report.position, GUELPH_REFERENCE));

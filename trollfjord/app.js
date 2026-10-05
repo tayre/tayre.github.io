@@ -124,7 +124,7 @@
     ui['tiles-error'].hidden = false;
   });
 
-  import('./explorer.mjs?v=20261005.2').then(({ createExplorer }) => {
+  import('./explorer.mjs?v=20261005.3').then(({ createExplorer }) => {
     explorer = createExplorer();
     if (report) explorer.setReport(report);
     if (mapView) explorer.setMap(mapView);
