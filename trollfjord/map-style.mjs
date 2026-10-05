@@ -24,6 +24,7 @@ export function nearbyGeoJSON(reports, ship, now = Date.now()) {
     features.push({ type: 'Feature', id: report.mmsi,
       geometry: { type: 'Point', coordinates: [report.position[1], report.position[0]] },
       properties: { mmsi: report.mmsi, name: report.name || `MMSI ${report.mmsi}`,
+        imo: report.imo, destination: report.destination, navigation: report.navigation, course: report.course,
         speed: report.speed, reportedAt: report.reportedAt, distanceMiles: distance / 1.609344 }
     });
   }

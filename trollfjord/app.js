@@ -118,7 +118,7 @@
 
   // Load the graphics independently: a disabled GPU or failed module must not
   // stop AIS polling or the accessible text readout.
-  import('./map.mjs?v=20261005.6').then(({ createShipMap }) => {
+  import('./map.mjs?v=20261005.7').then(({ createShipMap }) => {
     mapView = createShipMap({
       onError(message) { ui['tiles-error'].textContent = message; ui['tiles-error'].hidden = false; },
       onReady() { ui['tiles-error'].hidden = true; }
@@ -133,7 +133,7 @@
     ui['tiles-error'].hidden = false;
   });
 
-  import('./temperatures.mjs?v=20261005.6').then(({ createTemperatures }) => {
+  import('./temperatures.mjs?v=20261005.7').then(({ createTemperatures }) => {
     temperatures = createTemperatures({
       onUpdate(kind, reading) {
         const value = ui[`temperature-${kind}`];

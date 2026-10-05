@@ -1,5 +1,6 @@
 import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, Popup, setWorkerUrl } from './vendor/maplibre-gl.mjs';
-import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.6';
+import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.7';
+import { createVesselCard } from './vessel-card.mjs?v=20261005.7';
 import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
 setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
@@ -91,17 +92,10 @@ export function createShipMap({ onError, onReady }) {
   map.on('click', 'nearby-vessels', event => {
     const vessel = event.features?.[0];
     if (vessel?.geometry.type !== 'Point') return;
-    const content = document.createElement('div');
-    content.className = 'place-card';
-    const title = document.createElement('strong');
-    title.textContent = vessel.properties.name;
-    const detail = document.createElement('p');
-    const speed = Number.isFinite(vessel.properties.speed) ? `${vessel.properties.speed.toFixed(1)} kn` : 'Speed unavailable';
-    detail.textContent = `${Number(vessel.properties.distanceMiles).toFixed(1)} mi from MS Trollfjord · ${speed}`;
-    const time = document.createElement('p');
-    time.textContent = `Reported ${new Date(vessel.properties.reportedAt).toLocaleTimeString('en-GB', { timeZone: 'UTC' })} UTC`;
-    content.append(title, detail, time);
-    new Popup({ maxWidth: '260px', offset: 8 }).setLngLat(vessel.geometry.coordinates).setDOMContent(content).addTo(map);
+    const card = createVesselCard(vessel.properties);
+    const popup = new Popup({ maxWidth: '300px', offset: 8 })
+      .setLngLat(vessel.geometry.coordinates).setDOMContent(card.element).addTo(map);
+    popup.on('close', card.dispose);
   });
   map.on('error', () => {
     mapFailed = true;

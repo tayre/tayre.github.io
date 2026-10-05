@@ -48,6 +48,7 @@
     const destination = typeof properties.destination === 'string' ? properties.destination.trim().slice(0, 80) : '';
     return {
       mmsi, position, reportedAt,
+      imo: Number.isInteger(numeric(properties.imo, 1000000, 9999999)) ? Number(properties.imo) : null,
       name: typeof properties.ship_name === 'string' ? properties.ship_name.trim().slice(0, 80) : '',
       // Don't draw a line across malformed/missing points.
       track: track.every(Boolean) ? track : [],
