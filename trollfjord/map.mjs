@@ -34,7 +34,7 @@ export function createShipMap({ onError, onReady }) {
   element.className = 'ship-icon';
   element.setAttribute('role', 'img');
   element.setAttribute('aria-label', 'MS Trollfjord — last reported position');
-  element.innerHTML = '<img src="ship.svg" alt="" aria-hidden="true"><span class="ship-point"></span><span class="ship-label"><strong>MS Trollfjord</strong><span class="ship-reading"></span></span>';
+  element.innerHTML = '<img src="ship.svg" alt="" aria-hidden="true"><span class="ship-point"></span>';
 
   function overview(animate = true) {
     const lon = latest?.position[1] ?? 26;
@@ -48,7 +48,6 @@ export function createShipMap({ onError, onReady }) {
     const [lat, lon] = latest.position;
     element.classList.toggle('is-old', stale);
     const speed = latest.speed === null ? 'Speed unavailable' : `${latest.speed.toFixed(1)} kn · ${(latest.speed * 1.852).toFixed(1)} km/h`;
-    element.querySelector('.ship-reading').textContent = speed;
     element.setAttribute('aria-label', `MS Trollfjord, ${speed}, ${latest.navigation}. Last reported position.`);
     if (!marker) {
       marker = new Marker({ element, anchor: 'bottom', offset: [0, 4] }).setLngLat([lon, lat]).addTo(map);

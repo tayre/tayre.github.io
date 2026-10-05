@@ -58,7 +58,6 @@ button svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.4;
 .ship-icon img { position: absolute; width: 104px; height: 42px; max-width: none; left: -14px; top: -5px; filter: drop-shadow(0 2px 0 #fff); }
 .ship-point { position: absolute; width: 9px; height: 9px; background: var(--teal); border: 2px solid white; border-radius: 50%; bottom: 0; left: calc(50% - 4.5px); box-shadow: 0 0 0 5px #227d831a; }
 .ship-icon.is-old { opacity: .5; }
-.ship-label { position: absolute; top: 49px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: #285d62; padding: 5px 9px; background: #fffdf8f2; border-radius: 4px; font-size: 11px; font-weight: 600; line-height: 1.5; }
 .technical { border-top: 1px solid #dce2d7; padding: 0 32px; }
 .technical > h2 { margin: 0; padding: 17px 0; font-size: 12px; font-weight: 400; }
 .technical > h2 span { color: #748175; margin-left: 10px; font-size: 11px; }
@@ -172,9 +171,6 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
 .legend-track { border-top: 2px solid var(--teal); }
 .legend-arctic { border-top: 2px dashed #b98650; }
 .maplibregl-ctrl-bottom-left .maplibregl-ctrl { margin-bottom: 87px; }
-.ship-label { padding: 7px 12px; border: 1px solid #9cbdba; box-shadow: 0 3px 12px #244a4b14; text-align: center; }
-.ship-label strong { font-size: 12px; font-weight: 600; display: block; }
-.ship-reading { display: block; font-size: 10px; font-weight: 400; color: #566f6d; margin-top: 2px; }
 .technical { background: #fcfbf7; padding: 0 36px; }
 .technical > h2 { font-family: Georgia, serif; font-size: 19px; padding: 21px 0 18px; }
 .technical > h2 span { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-left: 16px; font-size: 11px; }
