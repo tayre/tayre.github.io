@@ -98,8 +98,8 @@ export function createStyle() {
           'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, -1], 'text-letter-spacing': .05 },
         paint: { 'text-color': '#8d6a40', 'text-halo-color': palette.land, 'text-halo-width': 2 } },
       { id: 'nearby-vessels', type: 'circle', source: 'nearby-ships',
-        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 2.5, 9, 4, 14, 5],
-          'circle-color': '#7b8e94', 'circle-opacity': .55,
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 3.5, 9, 5, 14, 6],
+          'circle-color': '#607d84', 'circle-opacity': .8,
           'circle-stroke-color': '#f8f6ef', 'circle-stroke-width': 1, 'circle-stroke-opacity': .65 }
       },
       { id: 'ship-trail', type: 'line', source: 'ship-track',

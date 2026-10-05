@@ -231,3 +231,21 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
 .vessel-photo figcaption { margin-top: 5px; }
 .vessel-card .vessel-identifiers { font-size: 10px; color: #627770; }
 .vessel-card .vessel-profile { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; color: #255a60; }
+
+/* Larger touch controls, with details kept inside the map on small screens. */
+.map-details-popup { z-index: 6; }
+.map-details-popup .place-card { overflow-wrap: anywhere; }
+.map-details-popup .place-card > strong { display: block; padding-right: 25px; }
+.map-details-popup .maplibregl-popup-close-button { width: 44px; height: 44px; min-height: 44px; font-size: 26px; }
+@media (max-width: 720px) {
+  .header-actions .refresh { min-height: 44px; padding: 9px 13px; }
+  .map-toolbar button { min-height: 44px; font-size: 12px; }
+  .map-details-popup { left: 12px !important; right: 12px; top: auto !important; bottom: 28px; width: auto; max-width: none !important; transform: none !important; }
+  .map-details-popup .maplibregl-popup-tip { display: none; }
+  .map-details-popup .maplibregl-popup-content { width: 100%; max-height: min(380px, 48svh); overflow-y: auto; overscroll-behavior: contain; border: 1px solid #b9ccca; border-radius: 12px; padding: 12px; }
+  .map-details-popup .vessel-card { width: 100%; }
+  .map-details-popup .vessel-photo img { height: 110px; }
+  .map-details-popup .place-card p { font-size: 13px; }
+  .map-details-popup .vessel-profile { display: flex; align-items: center; min-height: 44px; font-size: 13px; }
+  .footer label, .footer summary { min-height: 44px; }
+}

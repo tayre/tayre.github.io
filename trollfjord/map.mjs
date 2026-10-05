@@ -1,6 +1,7 @@
 import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, Popup, setWorkerUrl } from './vendor/maplibre-gl.mjs';
-import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.7';
-import { createVesselCard } from './vessel-card.mjs?v=20261005.7';
+import { createStyle, trackGeoJSON, nearbyGeoJSON } from './map-style.mjs?v=20261005.8';
+import { createVesselCard } from './vessel-card.mjs?v=20261005.8';
+import { pickMapFeature } from './map-interaction.mjs?v=20261005.8';
 import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
 setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
@@ -27,6 +28,7 @@ export function createShipMap({ onError, onReady }) {
   let contextLost = false;
   let mapFailed = false;
   let explored = false;
+  let activePopup = null;
   const motion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900;
   const element = document.createElement('div');
   element.className = 'ship-icon';
@@ -70,32 +72,45 @@ export function createShipMap({ onError, onReady }) {
   map.on('resize', () => { if (!explored) overview(false); });
   map.on('mouseenter', 'places', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'places', () => { map.getCanvas().style.cursor = ''; });
-  map.on('click', 'places', event => {
-    if (map.queryRenderedFeatures(event.point, { layers: ['nearby-vessels'] }).length) return;
-    const place = event.features?.[0];
-    if (place?.geometry.type !== 'Point') return;
-    const [lon, lat] = place.geometry.coordinates;
-    const name = place.properties['name:en'] || place.properties['name:latin'] || place.properties.name;
-    const content = document.createElement('div');
-    content.className = 'place-card';
-    const title = document.createElement('strong');
-    title.textContent = name;
-    const detail = document.createElement('p');
-    detail.textContent = latest
-      ? `About ${Math.round(distanceKm(latest.position, [lat, lon])).toLocaleString('en-CA')} km from the ship’s last position.`
-      : 'A geographic reference point. Ship distance will appear once an AIS report is available.';
-    content.append(title, detail);
-    new Popup({ maxWidth: '230px', offset: 12 }).setLngLat([lon, lat]).setDOMContent(content).addTo(map);
-  });
   map.on('mouseenter', 'nearby-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'nearby-vessels', () => { map.getCanvas().style.cursor = ''; });
-  map.on('click', 'nearby-vessels', event => {
-    const vessel = event.features?.[0];
-    if (vessel?.geometry.type !== 'Point') return;
-    const card = createVesselCard(vessel.properties);
-    const popup = new Popup({ maxWidth: '300px', offset: 8 })
-      .setLngLat(vessel.geometry.coordinates).setDOMContent(card.element).addTo(map);
-    popup.on('close', card.dispose);
+  map.on('click', event => {
+    if (!loaded) return;
+    // A finger need not land on the exact painted pixel. Resolve overlaps by
+    // distance to the marker centre, with ships taking priority over labels.
+    const touch = window.matchMedia('(pointer: coarse), (max-width: 720px)').matches
+      || event.originalEvent?.pointerType === 'touch';
+    const radius = touch ? 24 : 8;
+    const box = [[event.point.x - radius, event.point.y - radius],
+      [event.point.x + radius, event.point.y + radius]];
+    const candidates = map.queryRenderedFeatures(box, { layers: ['nearby-vessels', 'places', 'place-dots'] });
+    const feature = pickMapFeature(candidates, event.point, coordinates => map.project(coordinates), radius)
+      || map.queryRenderedFeatures(event.point, { layers: ['places'] }).find(item => item.geometry.type === 'Point');
+    activePopup?.remove();
+    activePopup = null;
+    if (!feature) return;
+    const [lon, lat] = feature.geometry.coordinates;
+    let content;
+    let dispose;
+    if (feature.layer.id === 'nearby-vessels') {
+      const card = createVesselCard(feature.properties);
+      content = card.element;
+      dispose = card.dispose;
+    } else {
+      const name = feature.properties['name:en'] || feature.properties['name:latin'] || feature.properties.name;
+      content = document.createElement('div');
+      content.className = 'place-card';
+      const title = document.createElement('strong');
+      title.textContent = name;
+      const detail = document.createElement('p');
+      detail.textContent = latest
+        ? `About ${Math.round(distanceKm(latest.position, [lat, lon])).toLocaleString('en-CA')} km from the ship’s last position.`
+        : 'A geographic reference point. Ship distance will appear once an AIS report is available.';
+      content.append(title, detail);
+    }
+    activePopup = new Popup({ maxWidth: '300px', offset: 8, closeOnClick: false, className: 'map-details-popup' })
+      .setLngLat([lon, lat]).setDOMContent(content).addTo(map);
+    if (dispose) activePopup.on('close', dispose);
   });
   map.on('error', () => {
     mapFailed = true;
