@@ -50,6 +50,8 @@
       position, reportedAt,
       // Don't draw a line across malformed/missing points.
       track: track.every(Boolean) ? track : [],
+      // The JSON API already decodes SOG to knots; do not divide by 10 again.
+      // AIS 102.3 denotes unavailable, while a real zero must remain zero.
       speed: numeric(properties.speed, 0, 102.2),
       course: numeric(properties.cog, 0, 359.9),
       heading: numeric(properties.true_heading, 0, 359),

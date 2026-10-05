@@ -123,3 +123,102 @@ input { accent-color: var(--teal); width: 13px; height: 13px; margin: 0; }
   .data-notes { max-height: 60svh; overflow-y: auto; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+
+/* A coastal field journal: generous type, warm paper and a legible chart. */
+:root { --ink: #203e43; --teal: #14767d; color: var(--ink); background: #f8f6ef; }
+.header { min-height: 112px; padding: 20px 36px; background: #fcfbf7; }
+.identity { gap: 18px; }
+.brand-ship { width: 104px; height: auto; }
+.brand-copy h1 { margin: 5px 0 0; font-family: Georgia, 'Times New Roman', serif; font-size: 34px; font-weight: 400; letter-spacing: -.045em; line-height: 1.1; }
+.brand-dot { color: #bf7650; }
+.eyebrow { margin: 0 0 20px; color: #607771; font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; line-height: 1.6; }
+.brand-copy .eyebrow { margin: 0; font-size: 9px; letter-spacing: .14em; }
+.header-actions { gap: 20px; }
+.report-age { font-size: 12px; }
+.refresh { border-radius: 100px; padding: 10px 17px; }
+.expedition { grid-template-columns: 310px minmax(0, 1fr); min-height: 670px; }
+.explorer { padding: 30px 28px 28px 36px; background: #f8f6ef; }
+.ship-report { margin-bottom: 26px; }
+.movement { margin-bottom: 8px; font-size: 14px; }
+.speed-display { display: flex; align-items: baseline; gap: 10px; }
+.speed-display strong { font-size: 76px; font-weight: 400; letter-spacing: -.075em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.speed-display > span { font-size: 17px; color: #5f7774; }
+.speed-secondary { margin: 4px 0 12px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.speed-secondary > span:last-child { color: #697d74; font-size: 10px; }
+.report-note { font-size: 11px; line-height: 1.6; max-width: 240px; color: #627770; }
+.latitude-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; padding-top: 16px; border-top: 1px solid #dce2d7; font-size: 12px; color: #627770; }
+.latitude-row strong { font-size: 19px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+.distance-panel { padding-top: 20px; }
+.distance-panel .eyebrow { margin-bottom: 18px; }
+.distances { gap: 20px; }
+.distances dd { font-size: 31px; }
+.distances dt { font-size: 12px; margin-bottom: 3px; }
+.distance-note { font-size: 10px; margin-top: 16px; }
+.field-note { border-left: 2px solid #bc8654; padding: 0 0 0 14px; margin-top: 28px; }
+.field-number { font-family: Georgia, serif; color: #9a633e; font-size: 25px; }
+.field-note h2 { margin: 8px 0 5px; font-size: 12px; font-weight: 500; }
+.field-note p { margin: 0; font-size: 11px; line-height: 1.65; color: #627770; }
+.map-section { min-height: 670px; }
+.map-toolbar button { box-shadow: 0 2px 8px #294b4e0a; border-radius: 100px; }
+.map-toolbar button:first-child { color: #fff; background: #255a60; border-color: #255a60; }
+.map-toolbar button:first-child:hover:not(:disabled) { background: #19464c; }
+.map-legend { position: absolute; z-index: 4; bottom: 32px; left: 20px; display: flex; flex-wrap: wrap; gap: 16px; background: #fffdf7ed; border: 1px solid #b9ccca; border-radius: 5px; padding: 10px 13px; font-size: 10px; color: #496565; pointer-events: none; }
+.map-legend > span { display: flex; align-items: center; gap: 6px; }
+.map-legend i { display: inline-block; width: 17px; }
+.map-legend .legend-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+.legend-track { border-top: 2px solid var(--teal); }
+.legend-arctic { border-top: 2px dashed #b98650; }
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl { margin-bottom: 87px; }
+.ship-label { padding: 7px 12px; border: 1px solid #9cbdba; box-shadow: 0 3px 12px #244a4b14; text-align: center; }
+.ship-label strong { font-size: 12px; font-weight: 600; display: block; }
+.ship-reading { display: block; font-size: 10px; font-weight: 400; color: #566f6d; margin-top: 2px; }
+.technical { background: #fcfbf7; padding: 0 36px; }
+.technical > h2 { font-family: Georgia, serif; font-size: 19px; padding: 21px 0 18px; }
+.technical > h2 span { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin-left: 16px; font-size: 11px; }
+.readout { gap: 22px; padding-bottom: 25px; grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr 1.35fr; }
+.readout dt { font-size: 9px; letter-spacing: .09em; }
+.readout dd { font-size: 14px; }
+.footer { background: #f8f6ef; padding: 16px 36px; }
+@media (min-width: 1600px) { .expedition { grid-template-columns: 350px minmax(0, 1fr); } .explorer { padding-right: 36px; } }
+@media (max-width: 1050px) {
+  .header { padding: 20px 24px; }
+  .expedition { grid-template-columns: 270px minmax(0, 1fr); }
+  .explorer { padding: 28px 24px; }
+  .readout { grid-template-columns: repeat(3, 1fr); }
+  .brand-copy .eyebrow { letter-spacing: .08em; }
+  .map-legend { gap: 10px; }
+}
+@media (max-width: 720px) {
+  .header { min-height: 0; padding: 18px 20px 14px; gap: 15px; }
+  .identity { gap: 10px; }
+  .brand-ship { width: 70px; }
+  .brand-copy h1 { font-size: 29px; }
+  .brand-copy .eyebrow { font-size: 8px; letter-spacing: .08em; }
+  .header-actions { width: 100%; border-top: 1px solid #e1e5dc; padding-top: 10px; }
+  .header-actions .refresh { min-height: 32px; padding: 5px 9px; }
+  .refresh span { display: inline; }
+  .report-age { font-size: 11px; }
+  .map-section { min-height: 460px; height: 57svh; }
+  .map-toolbar { gap: 5px; }
+  .map-toolbar button { padding: 8px 10px; font-size: 10px; }
+  .map-legend { left: 14px; right: 14px; bottom: 35px; justify-content: space-between; gap: 8px; font-size: 9px; padding: 9px 10px; }
+  .maplibregl-ctrl-bottom-left .maplibregl-ctrl { margin-bottom: 83px; }
+  .explorer { padding: 26px 24px; display: block; }
+  .ship-report { margin-bottom: 24px; }
+  .ship-report .eyebrow { margin-bottom: 14px; }
+  .speed-display strong { font-size: 66px; }
+  .report-note { max-width: none; }
+  .latitude-row { margin-top: 16px; }
+  .distances { grid-template-columns: 1fr 1fr; }
+  .distances dd { font-size: 29px; }
+  .field-note { margin-top: 24px; }
+  .field-note p { max-width: 430px; }
+  .technical { padding: 0 24px; }
+  .readout { grid-template-columns: 1fr 1fr; gap: 24px 18px; }
+  .footer { padding: 16px 24px; }
+}
+.place-card { padding: 8px 9px 4px; color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.place-card strong { font-family: Georgia, serif; font-size: 20px; font-weight: 400; }
+.place-card p { margin: 8px 0 0; font-size: 12px; line-height: 1.6; }
+.maplibregl-popup-content { background: #fcfbf7; border-radius: 6px; box-shadow: 0 3px 16px #294b4e24; }
+.maplibregl-popup-close-button { padding: 0; min-height: 28px; width: 28px; font-size: 19px; border: 0; }

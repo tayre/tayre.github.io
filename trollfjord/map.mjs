@@ -1,5 +1,6 @@
-import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, setWorkerUrl } from './vendor/maplibre-gl.mjs';
-import { createStyle, trackGeoJSON } from './map-style.mjs?v=20261002.1';
+import { Map, Marker, NavigationControl, ScaleControl, AttributionControl, Popup, setWorkerUrl } from './vendor/maplibre-gl.mjs';
+import { createStyle, trackGeoJSON } from './map-style.mjs?v=20261005.1';
+import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
 setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
 
@@ -29,7 +30,7 @@ export function createShipMap({ onError, onReady }) {
   element.className = 'ship-icon';
   element.setAttribute('role', 'img');
   element.setAttribute('aria-label', 'MS Trollfjord — last reported position');
-  element.innerHTML = '<img src="ship.svg" alt="" aria-hidden="true"><span class="ship-point"></span><span class="ship-label">MS Trollfjord</span>';
+  element.innerHTML = '<img src="ship.svg" alt="" aria-hidden="true"><span class="ship-point"></span><span class="ship-label"><strong>MS Trollfjord</strong><span class="ship-reading"></span></span>';
 
   function overview(animate = true) {
     const lon = latest?.position[1] ?? 26;
@@ -43,6 +44,9 @@ export function createShipMap({ onError, onReady }) {
     if (!latest) return;
     const [lat, lon] = latest.position;
     element.classList.toggle('is-old', stale);
+    const speed = latest.speed === null ? 'Speed unavailable' : `${latest.speed.toFixed(1)} kn · ${(latest.speed * 1.852).toFixed(1)} km/h`;
+    element.querySelector('.ship-reading').textContent = speed;
+    element.setAttribute('aria-label', `MS Trollfjord, ${speed}, ${latest.navigation}. Last reported position.`);
     if (!marker) {
       marker = new Marker({ element, anchor: 'bottom', offset: [0, 4] }).setLngLat([lon, lat]).addTo(map);
       if (!explored) overview(false);
@@ -54,6 +58,25 @@ export function createShipMap({ onError, onReady }) {
   }
 
   map.on('load', () => { loaded = true; drawReport(); });
+  map.on('resize', () => { if (!explored) overview(false); });
+  map.on('mouseenter', 'places', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'places', () => { map.getCanvas().style.cursor = ''; });
+  map.on('click', 'places', event => {
+    const place = event.features?.[0];
+    if (place?.geometry.type !== 'Point') return;
+    const [lon, lat] = place.geometry.coordinates;
+    const name = place.properties['name:en'] || place.properties['name:latin'] || place.properties.name;
+    const content = document.createElement('div');
+    content.className = 'place-card';
+    const title = document.createElement('strong');
+    title.textContent = name;
+    const detail = document.createElement('p');
+    detail.textContent = latest
+      ? `About ${Math.round(distanceKm(latest.position, [lat, lon])).toLocaleString('en-CA')} km from the ship’s last position. Straight-line distance, not sailing distance.`
+      : 'A geographic reference point. Ship distance will appear once an AIS report is available.';
+    content.append(title, detail);
+    new Popup({ maxWidth: '230px', offset: 12 }).setLngLat([lon, lat]).setDOMContent(content).addTo(map);
+  });
   map.on('error', () => {
     mapFailed = true;
     onError('Some map details could not load. Ship data is still available below.');
@@ -73,7 +96,7 @@ export function createShipMap({ onError, onReady }) {
     locate() {
       explored = true;
       if (latest) {
-        map.easeTo({ center: [latest.position[1], latest.position[0]], zoom: 8, duration: motion() });
+        map.easeTo({ center: [latest.position[1], latest.position[0]], zoom: 10, duration: motion() });
       }
     },
     overview() { explored = true; overview(); }

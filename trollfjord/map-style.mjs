@@ -1,9 +1,9 @@
-import { ARCTIC_LATITUDE } from './explorer-data.mjs?v=20261002.1';
+import { ARCTIC_LATITUDE } from './explorer-data.mjs?v=20261005.1';
 // OpenMapTiles schema, served by OpenFreeMap. Keep the style local so the
 // palette and label density stay under our control without a hosted style key.
 export const palette = {
-  land: '#f7f6f1', water: '#cfE2e7', shore: '#bdd4d8',
-  vegetation: '#dfe8dc', road: '#d9d6cc', label: '#687975', ship: '#227d83'
+  land: '#f5f2e9', water: '#c5dde0', shore: '#a9c8cb',
+  vegetation: '#dce5d6', road: '#c8bfae', label: '#455f60', ship: '#14767d'
 };
 
 const labelName = ['coalesce', ['get', 'name:en'], ['get', 'name:latin'], ['get', 'name']];
@@ -51,7 +51,7 @@ export function createStyle() {
       vector('rivers', 'line', 'waterway', { minzoom: 9,
         paint: { 'line-color': palette.shore, 'line-width': .7 }
       }),
-      vector('roads', 'line', 'transportation', { minzoom: 8,
+      vector('roads', 'line', 'transportation', { minzoom: 6,
         filter: ['match', ['get', 'class'], ['motorway', 'trunk', 'primary', 'secondary', 'tertiary'], true, false],
         paint: { 'line-color': palette.road, 'line-opacity': .7,
           'line-width': ['interpolate', ['linear'], ['zoom'], 8, .4, 13, 1.5, 17, 3] }
@@ -59,6 +59,9 @@ export function createStyle() {
       vector('local-roads', 'line', 'transportation', { minzoom: 13,
         filter: ['match', ['get', 'class'], ['minor', 'service'], true, false],
         paint: { 'line-color': '#e2dfd6', 'line-width': 1 }
+      }),
+      vector('buildings', 'fill', 'building', { minzoom: 13,
+        paint: { 'fill-color': '#d5cec0', 'fill-outline-color': '#bdb6a8', 'fill-opacity': .65 }
       }),
       vector('borders', 'line', 'boundary', {
         filter: ['==', ['get', 'admin_level'], 2],
@@ -75,22 +78,36 @@ export function createStyle() {
         layout: { 'line-cap': 'round', 'line-join': 'round' },
         paint: { 'line-color': palette.ship, 'line-width': 2, 'line-opacity': .65 }
       },
-      vector('water-labels', 'symbol', 'water_name', { minzoom: 5,
+      vector('water-labels', 'symbol', 'water_name', { minzoom: 3,
         filter: ['==', ['geometry-type'], 'Point'],
         layout: { 'text-field': labelName, 'text-font': ['Noto Sans Italic'],
-          'text-size': 11, 'text-letter-spacing': .04, 'text-padding': 30 },
-        paint: { 'text-color': '#7c9fa7', 'text-halo-color': palette.water, 'text-halo-width': 1 }
+          'text-size': 12, 'text-letter-spacing': .06, 'text-padding': 12 },
+        paint: { 'text-color': '#547d85', 'text-halo-color': palette.water, 'text-halo-width': 1 }
       }),
-      vector('islands', 'symbol', 'place', { minzoom: 7,
+      vector('islands', 'symbol', 'place', { minzoom: 5,
         filter: ['==', ['get', 'class'], 'island'],
         layout: { 'text-field': labelName, 'text-font': ['Noto Sans Italic'], 'text-size': 11, 'text-padding': 15 },
         paint: { ...textPaint, 'text-color': '#8c998a' }
       }),
-      vector('places', 'symbol', 'place', { minzoom: 6,
-        filter: ['match', ['get', 'class'], ['city', 'town', 'village'], true, false],
+      vector('place-dots', 'circle', 'place', { minzoom: 3,
+        filter: ['match', ['get', 'class'], ['city', 'town'], true, false],
+        paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, 1.7, 9, 2.8],
+          'circle-color': '#667f78', 'circle-stroke-color': palette.land, 'circle-stroke-width': 1 }
+      }),
+      vector('places', 'symbol', 'place', { minzoom: 3,
+        filter: ['step', ['zoom'], ['==', ['get', 'class'], 'city'], 5, ['match', ['get', 'class'], ['city', 'town'], true, false], 8, ['match', ['get', 'class'], ['city', 'town', 'village', 'hamlet', 'suburb'], true, false]],
         layout: { 'text-field': labelName, 'text-font': ['Noto Sans Regular'],
-          'text-size': ['interpolate', ['linear'], ['zoom'], 6, 10, 13, 13], 'text-padding': 18 },
+          'text-size': ['interpolate', ['linear'], ['zoom'], 3, 11, 8, 12, 13, 14], 'text-padding': 6,
+          'text-anchor': 'top', 'text-offset': [0, .5], 'symbol-sort-key': ['coalesce', ['get', 'rank'], 10] },
         paint: textPaint
+      }),
+      vector('peaks', 'symbol', 'mountain_peak', { minzoom: 9,
+        layout: { 'text-field': ['concat', '△ ', labelName, ['case', ['!=', ['get', 'ele'], null], ['concat', '\n', ['to-string', ['get', 'ele']], ' m'], '']],
+          'text-font': ['Noto Sans Regular'], 'text-size': 10, 'text-padding': 12 }, paint: textPaint
+      }),
+      vector('waterway-labels', 'symbol', 'waterway', { minzoom: 10,
+        layout: { 'symbol-placement': 'line', 'text-field': labelName, 'text-font': ['Noto Sans Italic'], 'text-size': 11 },
+        paint: { 'text-color': '#547d85', 'text-halo-color': palette.water, 'text-halo-width': 1 }
       }),
       vector('countries', 'symbol', 'place', { maxzoom: 6,
         filter: ['==', ['get', 'class'], 'country'],

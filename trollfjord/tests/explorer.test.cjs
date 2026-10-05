@@ -29,3 +29,13 @@ test('WebGL trail preserves GeoJSON longitude/latitude order and never invents a
   assert.equal(trackGeoJSON({ track: [[70, 20]] }).features.length, 0);
   assert.equal(trackGeoJSON(null).features.length, 0);
 });
+
+test('moored AIS drift is converted faithfully, without implying that the ship is sailing', async () => {
+  const { kidReport } = await import('../explorer-data.mjs');
+  const report = { speed: .1, navigation: 'Moored', position: [67.29038, 14.39673] };
+  assert.equal(kidReport(report).speed, '0.2');
+  assert.equal(kidReport(report).movement, 'Tied up at the dock');
+  assert.equal(kidReport({ ...report, speed: 0 }).speed, '0.0');
+  assert.equal(kidReport({ ...report, speed: null }).speed, '—');
+  assert.equal(kidReport({ ...report, speed: 14.7, navigation: 'Under way' }).speed, '27.2');
+});

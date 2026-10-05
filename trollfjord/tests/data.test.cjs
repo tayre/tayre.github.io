@@ -76,3 +76,11 @@ test('report age grows from the AIS timestamp, including cached reports', () => 
   assert.equal(reportAge(now - 7200000, now), 'Reported 2h ago');
   assert.equal(reportAge(now - 172800000, now), 'Reported 2d ago');
 });
+
+test('decimal AIS speed is already in knots: preserve low speeds and reject unavailable readings', () => {
+  assert.equal(normalizeFeature(feature({ speed: .1, status: 5 }), now).speed, .1);
+  assert.equal(normalizeFeature(feature({ speed: '14.7' }), now).speed, 14.7);
+  for (const speed of [-1, 102.3, 1023, Infinity, 'NaN']) {
+    assert.equal(normalizeFeature(feature({ speed }), now).speed, null);
+  }
+});
