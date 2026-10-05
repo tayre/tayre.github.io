@@ -8,7 +8,7 @@ setWorkerUrl(new URL('./vendor/maplibre-gl-worker.mjs', import.meta.url).href);
 
 export function createShipMap({ onError, onReady }) {
   const map = new Map({
-    container: 'map', style: createStyle(), center: [18, 68.5], zoom: 4,
+    container: 'map', style: createStyle(), center: [18, 68.5], zoom: 5,
     minZoom: 2, maxZoom: 16, attributionControl: false,
     dragRotate: false, touchPitch: false, pitchWithRotate: false,
     scrollZoom: false, maxPitch: 0,
@@ -42,7 +42,6 @@ export function createShipMap({ onError, onReady }) {
     map.fitBounds([[Math.min(3.5, lon - 1), Math.min(58, lat - 1)], [Math.max(31.5, lon + 1), Math.max(71.5, lat + .8)]],
       { padding: { top: 85, bottom: 75, left: 40, right: 60 }, duration: animate ? motion() : 0 });
   }
-  overview(false);
 
   function drawReport() {
     if (!latest) return;
@@ -53,7 +52,7 @@ export function createShipMap({ onError, onReady }) {
     element.setAttribute('aria-label', `MS Trollfjord, ${speed}, ${latest.navigation}. Last reported position.`);
     if (!marker) {
       marker = new Marker({ element, anchor: 'bottom', offset: [0, 4] }).setLngLat([lon, lat]).addTo(map);
-      if (!explored) overview(false);
+      if (!explored) map.jumpTo({ center: [lon, lat], zoom: 6 });
     } else marker.setLngLat([lon, lat]);
     if (loaded) {
       map.getSource('ship-track').setData(trackGeoJSON(latest));
@@ -69,7 +68,6 @@ export function createShipMap({ onError, onReady }) {
   }
 
   map.on('load', () => { loaded = true; drawReport(); drawTraffic(); });
-  map.on('resize', () => { if (!explored) overview(false); });
   map.on('mouseenter', 'places', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'places', () => { map.getCanvas().style.cursor = ''; });
   map.on('mouseenter', 'nearby-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });

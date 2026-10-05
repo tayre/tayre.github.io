@@ -7,8 +7,8 @@
   const CACHE_KEY = 'trollfjord-ais-v1';
   const ui = Object.fromEntries(['refresh', 'auto-refresh', 'locate', 'notice', 'tiles-error',
     'report-age', 'position', 'speed', 'course', 'destination', 'navigation', 'reported-at',
-    'checked-at', 'temperature-air', 'temperature-sea', 'temperature-air-time',
-    'temperature-sea-time'].map(id => [id, document.getElementById(id)]));
+    'checked-at', 'temperature-air', 'temperature-air-time',
+    'sunrise', 'sunset', 'sun-times-note'].map(id => [id, document.getElementById(id)]));
   let report = null;
   let mapView;
   let explorer;
@@ -118,7 +118,7 @@
 
   // Load the graphics independently: a disabled GPU or failed module must not
   // stop AIS polling or the accessible text readout.
-  import('./map.mjs?v=20261005.8').then(({ createShipMap }) => {
+  import('./map.mjs?v=20261005.9').then(({ createShipMap }) => {
     mapView = createShipMap({
       onError(message) { ui['tiles-error'].textContent = message; ui['tiles-error'].hidden = false; },
       onReady() { ui['tiles-error'].hidden = true; }
@@ -133,9 +133,19 @@
     ui['tiles-error'].hidden = false;
   });
 
-  import('./temperatures.mjs?v=20261005.8').then(({ createTemperatures }) => {
+  import('./temperatures.mjs?v=20261005.11').then(({ createTemperatures }) => {
     temperatures = createTemperatures({
       onUpdate(kind, reading) {
+        if (kind === 'sun') {
+          ui.sunrise.textContent = reading.state === 'ready' ? (reading.sunrise || '—') : '—';
+          ui.sunset.textContent = reading.state === 'ready' ? (reading.sunset || '—') : '—';
+          ui['sun-times-note'].textContent = reading.state === 'ready'
+            ? `${reading.note} · ${reading.date} · ${reading.timezone.replaceAll('_', ' ')} local time`
+            : reading.state === 'loading' ? 'Updating sun times…'
+            : reading.state === 'stale-position' ? 'Position too old for sun times'
+            : reading.state === 'unavailable' ? 'Sun times unavailable' : 'Waiting for position';
+          return;
+        }
         const value = ui[`temperature-${kind}`];
         const time = ui[`temperature-${kind}-time`];
         value.textContent = reading.state === 'ready' ? reading.value.toFixed(1) : '—';
@@ -150,7 +160,7 @@
   }).catch(error => {
     console.error('Could not load nearby temperatures.', error);
     ui['temperature-air-time'].textContent = 'Unavailable';
-    ui['temperature-sea-time'].textContent = 'Unavailable';
+    ui['sun-times-note'].textContent = 'Sun times unavailable';
   });
 
   import('./explorer.mjs?v=20261005.3').then(({ createExplorer }) => {

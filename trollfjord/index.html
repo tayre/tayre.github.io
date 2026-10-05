@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#faf9f4">
-  <meta name="description" content="Track MS Trollfjord, nearby ships, local air and sea temperatures, and distances from Guelph, the North Pole, and the Arctic Circle.">
+  <meta name="description" content="Track MS Trollfjord, nearby ships, local air temperature, sunrise and sunset, and distances from Guelph, the North Pole, and the Arctic Circle.">
   <title>MS Trollfjord</title>
   <link rel="stylesheet" href="vendor/maplibre-gl.css">
-  <link rel="stylesheet" href="style.css?v=20261005.8">
+  <link rel="stylesheet" href="style.css?v=20261005.10">
   <script src="data.js?v=20261005.8" defer></script>
-  <script src="app.js?v=20261005.8" defer></script>
+  <script src="app.js?v=20261005.11" defer></script>
 </head>
 <body>
   <main class="tracker">
@@ -37,10 +37,14 @@
         <div class="latitude-row"><span>Latitude</span><strong id="kid-latitude">—</strong></div>
       </div>
       <div class="conditions">
-        <dl class="temperatures" aria-label="Estimated temperatures near the ship">
+        <dl class="temperatures" aria-label="Estimated air temperature near the ship">
           <div><dt>Outside air</dt><dd><span id="temperature-air">—</span> <small>°C</small></dd><dd id="temperature-air-time" class="temperature-time">Waiting for position</dd></div>
-          <div><dt>Sea surface</dt><dd><span id="temperature-sea">—</span> <small>°C</small></dd><dd id="temperature-sea-time" class="temperature-time">Waiting for position</dd></div>
         </dl>
+        <dl class="sun-times" aria-label="Sunrise and sunset near the ship">
+          <div><dt>Sunrise</dt><dd id="sunrise">—</dd></div>
+          <div><dt>Sunset</dt><dd id="sunset">—</dd></div>
+        </dl>
+        <p id="sun-times-note" class="conditions-source" aria-live="polite">Waiting for position</p>
         <p class="conditions-source">Nearby estimates · <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo ↗</a></p>
       </div>
       <div class="distance-panel">
@@ -91,7 +95,7 @@
             <p>The ship drawing is illustrative; its size and direction are not to scale. The teal dot marks the reported coordinates. The Arctic Circle is drawn at approximately 66.56° N.</p>
             <p>Distances are approximate great-circle distances over the Earth, rounded to the nearest kilometre. Guelph uses the supplied address’s coordinates from OpenStreetMap; the North Pole is geographic north at 90° N. Arctic Circle distance is measured north or south to 66.56° N at the ship’s longitude. These are not sailing or driving distances.</p>
             <p>Speed is reported in knots and converted using 1 kn = 1.852 km/h. Very small speeds while moored may reflect AIS position noise. Speed over ground differs from speed through the water.</p>
-            <p>Nearby temperatures are current model estimates from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener noreferrer">Open-Meteo’s weather models</a>, including MET Norway and DWD, and <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">Météo-France / Copernicus Marine</a>. Air temperature is at 2 m; sea temperature is near the surface in the nearest available sea grid cell. Times are UTC. Temperatures update every 15 minutes or after the ship moves 5 km, using its latest AIS position.</p>
+            <p>Air temperature is a model estimate at 2 m above the surface from <a href="https://open-meteo.com/en/docs" target="_blank" rel="noopener noreferrer">Open-Meteo’s weather models</a>. Its report time is UTC. Air temperature and sun times update every 15 minutes or after the ship moves 5 km, using its latest AIS position. Sunrise and sunset are calculated for that location and shown in its local time zone for the displayed date. Polar day and polar night are shown when the sun does not set or rise.</p>
             <p>The thin line is the short track supplied by the feed, when available. The feed retains recent positions for up to 20 minutes; this is not a 24-hour history.</p>
             <p>Reports can be delayed or missing outside Norwegian AIS coverage. If updates fail, the last successful report stays visible with its original time. Refreshing does not change the report time.</p>
             <p>Checks run every 10 seconds while this tab is visible and online, updating the position without reloading the page. The destination is the ship’s transmitted text. Times are UTC.</p>

@@ -1,9 +1,11 @@
 import { distanceKm } from './explorer-data.mjs?v=20261005.1';
 
+import { parseSunTimes } from './sun-times.mjs?v=20261005.10';
+
 const MINUTE = 60000;
 const SOURCES = [
-  { kind: 'air', endpoint: 'https://api.open-meteo.com/v1/forecast', variable: 'temperature_2m' },
-  { kind: 'sea', endpoint: 'https://marine-api.open-meteo.com/v1/marine', variable: 'sea_surface_temperature' }
+  { kind: 'sun', endpoint: 'https://api.open-meteo.com/v1/forecast' },
+  { kind: 'air', endpoint: 'https://api.open-meteo.com/v1/forecast', variable: 'temperature_2m' }
 ];
 
 async function loadTemperature(source, position, fetcher, now) {
@@ -11,6 +13,13 @@ async function loadTemperature(source, position, fetcher, now) {
     latitude: position[0], longitude: position[1], current: source.variable,
     cell_selection: 'sea', timeformat: 'unixtime', timezone: 'GMT'
   });
+  if (source.kind === 'sun') {
+    params.delete('current');
+    params.set('daily', 'sunrise,sunset,daylight_duration');
+    params.set('timezone', 'auto');
+    params.set('timeformat', 'iso8601');
+    params.set('forecast_days', '1');
+  }
   if (source.kind === 'air') {
     params.set('temperature_unit', 'celsius');
     params.set('elevation', '0');
@@ -21,6 +30,7 @@ async function loadTemperature(source, position, fetcher, now) {
     const response = await fetcher(`${source.endpoint}?${params}`, { signal: controller.signal, credentials: 'omit' });
     if (!response.ok) throw new Error(`Temperature feed HTTP ${response.status}`);
     const payload = await response.json();
+    if (source.kind === 'sun') return parseSunTimes(payload, now());
     const value = payload.current?.[source.variable];
     const time = payload.current?.time * 1000;
     if (!Number.isFinite(value) || payload.current_units?.[source.variable] !== '°C'
