@@ -337,4 +337,63 @@ footer a { text-decoration: none; }
   h1 { font-size: 43px; }
   .shape-tag { font-size: 8px; }
 }
+#solo-panel { padding: 30px 0 40px; }
+.solo-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 25px 0 18px; }
+.solo-controls label, .solo-transport label { font-size: 12px; color: var(--muted); }
+.solo-controls select { display: block; margin-top: 6px; width: 100%; min-height: 44px; padding: 8px; border: 1px solid var(--line); border-radius: 4px; background: #fffefa; color: var(--ink); font: inherit; font-size: 15px; }
+.solo-transport { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 18px; border: 1px solid var(--line); border-radius: 6px; }
+.solo-transport .primary-button { flex: 0 0 132px; font-size: 13px; }
+.solo-tempo, .solo-volume { display: grid; grid-template-columns: auto auto; gap: 5px 12px; flex: 1; min-width: 120px; }
+.solo-tempo output { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+.solo-transport input[type="range"] { width: 100%; grid-column: 1 / -1; accent-color: var(--accent); min-height: 24px; margin: 0; }
+.solo-click, .solo-map-heading label { display: flex; align-items: center; gap: 7px; min-height: 44px; }
+.solo-click input, .solo-map-heading input { accent-color: var(--accent); width: 17px; height: 17px; }
+.solo-now { display: flex; align-items: center; gap: 30px; background: #eeeee4; padding: 24px; margin-top: 20px; border-radius: 6px; }
+.solo-now .eyebrow { display: block; margin-bottom: 5px; }
+#solo-chord { font: 44px Georgia, serif; white-space: nowrap; }
+.solo-cue { flex: 1; }
+.solo-cue h3 { font: 23px Georgia, serif; margin: 0 0 8px; }
+.solo-cue p { color: var(--muted); font-size: 12px; margin: 0; }
+.solo-beats { display: flex; gap: 7px; }
+.solo-beats span { width: 30px; height: 30px; border: 1px solid #c3c9ba; border-radius: 50%; display: grid; place-items: center; font-size: 12px; }
+.solo-beats .on { background: var(--ink); color: white; border-color: var(--ink); }
+.solo-workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; margin-top: 30px; }
+.solo-map-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.solo-map h3 { font-size: 15px; margin: 0; }
+.solo-map-heading label { font-size: 11px; white-space: nowrap; }
+.solo-board { display: grid; grid-template-columns: 38px repeat(var(--solo-frets), minmax(0, 1fr)); margin-top: 15px; }
+.solo-fret-label, .solo-string-label { display: grid; place-items: center; font: 11px ui-monospace, monospace; color: var(--muted); padding: 8px 0; }
+.solo-cell { min-height: 58px; position: relative; border-right: 1px solid #c3c9ba; display: grid; place-items: center; }
+.solo-cell::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: #a5ae9a; }
+.solo-note { z-index: 1; position: relative; width: 37px; height: 37px; border: 0; border-radius: 50%; background: var(--ink); color: white; font-size: 12px; padding: 0; }
+.solo-note.root { background: var(--accent); }
+.solo-note.landing-note { outline: 2px solid var(--role-1); outline-offset: 3px; }
+.solo-note:hover, .solo-note.sounding { box-shadow: 0 0 0 7px #d5ddc9; }
+.solo-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 11px; color: var(--muted); }
+.solo-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.solo-legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.solo-root-key { background: var(--accent); }
+.solo-target-key { border: 2px solid var(--role-1); }
+.solo-lesson { padding: 24px; background: #eeeee4; border-radius: 6px; }
+.solo-lesson h3, .solo-next h3 { font: 24px Georgia, serif; margin: 0 0 15px; }
+.solo-lesson ol { padding-left: 19px; color: #535b4d; font-size: 13px; line-height: 1.8; }
+.solo-lesson li { margin-bottom: 9px; }
+.solo-lesson h4 { font-size: 13px; margin-bottom: 12px; }
+.solo-lick { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.solo-lick-note { flex: 1; min-width: 58px; text-align: center; border-bottom: 2px solid #a6af9a; padding-bottom: 8px; }
+.solo-lick-note strong { display: block; font: 25px Georgia, serif; margin: 6px 0; }
+.solo-lick-note small { font-size: 9px; color: var(--muted); display: block; }
+.solo-next { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 25px; max-width: 800px; }
+.solo-next p { font-size: 13px; color: var(--muted); line-height: 1.8; }
+@media (max-width: 760px) {
+  .solo-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .solo-workspace { grid-template-columns: 1fr; }
+  .solo-now { flex-wrap: wrap; gap: 18px; padding: 18px; }
+  .solo-beats { width: 100%; }
+  .solo-map-heading { flex-wrap: wrap; gap: 0; }
+  .lesson-tabs { flex-wrap: wrap; gap: 15px; }
+  .solo-transport { gap: 14px; padding: 14px; }
+  .solo-cue { min-width: 140px; }
+  .solo-cue h3 { font-size: 20px; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }

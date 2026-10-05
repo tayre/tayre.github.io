@@ -7,7 +7,12 @@ A small, dependency-free guitar chord and scale explorer at `/guitar/`.
 - Finger numbers, muted/open strings, mini-barre F and barre B minor.
 - Notes and chord formulas, semitone distances, and basic explanations.
 - Numbered major scales and note-labelled fret distances for each chord.
-- Separate Chords and Minor pentatonic lesson tabs, with keyboard navigation.
+- Separate Chords, Minor pentatonic and Solo practice tabs, with keyboard navigation.
+- Solo practice transposes all five minor pentatonic shapes into 12 keys.
+- A slow minor-chord vamp or i–♭VI–♭VII–i backing loop, with count-in,
+  tempo, volume and optional click. Chord tones are ringed as landing notes.
+- Listen & answer alternates a one-bar example lick with a bar for your reply.
+  The example includes string/fret labels and rhythm; no microphone is required.
 - All five A minor pentatonic shapes, from frets 5–17, plus shape 1 repeating
   at frets 17–20. All shapes share one continuous, playable fretboard with numbered shape spans.
 - Shape highlighting keeps the whole neck visible and shows shared notes,
@@ -35,6 +40,7 @@ note spelling, finger positions and muted strings. Browser QA is optional:
 
 ```sh
 PLAYWRIGHT_PATH=/path/to/playwright TEST_URL=http://127.0.0.1:8089/guitar/ node qa/browser.cjs
+PLAYWRIGHT_PATH=/path/to/playwright TEST_URL=http://127.0.0.1:8089/guitar/ node qa/solo-browser.cjs
 ```
 
 Set `CHROME_PATH` to a local Chrome executable if Playwright's Chromium is not
@@ -51,3 +57,7 @@ diagrams and musictheory.net's introduction to triads for further learning.
 Chord links use hashes such as `#Am`. Scale links use `#pentatonic-3` or
 `#pentatonic-3-connect` to restore the lesson and highlights.
 `#pentatonic-all` shows all shapes equally on the continuous fretboard.
+`#solo` opens solo practice. Start with A minor, shape 1 and the minor vamp:
+play a short phrase, leave space, and finish on a ringed chord tone. Try Listen
+& answer before adding chord changes. Changing the lesson, key, shape, mode,
+backing or tempo stops playback; hiding the page also stops playback.

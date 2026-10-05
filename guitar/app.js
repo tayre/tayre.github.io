@@ -200,6 +200,7 @@
   function scaleHash() { return `pentatonic-${scaleShape === null ? 'all' : scaleShape + 1}${connectShapes && scaleShape !== null ? '-connect' : ''}`; }
   function showLesson(lesson, updateURL = true) {
     clearPlayback();
+    window.ChordbookSolo?.stop();
     activeLesson = lesson;
     $('audio-status').textContent = idleAudioText;
     $('scale-audio-status').textContent = 'The buttons play reference tones so you can check the notes on your guitar.';
@@ -209,14 +210,15 @@
       tab.tabIndex = active ? 0 : -1;
       $(tab.getAttribute('aria-controls')).hidden = !active;
     });
-    if (updateURL) setHash(lesson === 'pentatonic' ? scaleHash() : selected.id);
+    if (updateURL) setHash(lesson === 'solo' ? 'solo' : lesson === 'pentatonic' ? scaleHash() : selected.id);
   }
   document.querySelectorAll('.lesson-tabs [role="tab"]').forEach(tab => {
-    tab.addEventListener('click', () => showLesson(tab.id === 'pentatonic-tab' ? 'pentatonic' : 'chords'));
+    tab.addEventListener('click', () => showLesson(tab.id.replace('-tab', '')));
     tab.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault();
-      const lesson = event.key === 'Home' ? 'chords' : event.key === 'End' ? 'pentatonic' : activeLesson === 'chords' ? 'pentatonic' : 'chords';
+      const lessons = ['chords', 'pentatonic', 'solo'];
+      const lesson = event.key === 'Home' ? lessons[0] : event.key === 'End' ? lessons.at(-1) : lessons[(lessons.indexOf(activeLesson) + (event.key === 'ArrowRight' ? 1 : 2)) % lessons.length];
       showLesson(lesson);
       $(`${lesson}-tab`).focus();
     });
@@ -366,6 +368,7 @@
   function restoreHash() {
     const hash = location.hash.slice(1);
     if (hash === 'lessons') return;
+    if (hash === 'solo') { showLesson('solo', false); return; }
     const scale = /^pentatonic(?:-(all|[1-5]))?(-connect)?$/.exec(hash);
     if (scale) {
       scaleShape = !scale[1] || scale[1] === 'all' ? null : Number(scale[1]) - 1;

@@ -142,6 +142,9 @@ fs.mkdirSync(output, { recursive: true });
     assert.equal(await page.evaluate(() => document.activeElement.id), 'chords-tab');
     assert.equal(await page.locator('.is-playing').count(), 0, 'switching lessons stops note playback');
     await page.keyboard.press('End');
+    assert.equal(await page.locator('#solo-panel').isVisible(), true);
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'solo-tab');
+    await page.keyboard.press('ArrowLeft');
     assert.equal(await page.locator('#pentatonic-panel').isVisible(), true);
     assert.equal(await page.evaluate(() => document.activeElement.id), 'pentatonic-tab');
     await page.reload();
@@ -199,7 +202,7 @@ fs.mkdirSync(output, { recursive: true });
     assert.deepEqual(errors, []);
     assert.deepEqual(failures, []);
     assert.deepEqual(external, [], 'no external asset or API requests');
-    console.log('PASS: all chord lessons; separate keyboard-accessible tabs and scale links; continuous 42-note fretboard, five shape spans, overlaps and highlights that preserve the full neck; note pitches, roots, shared notes, phrases and playback; no backing track; 320/390/768/1440 layouts; no autoplay or external requests; audio fallback.');
+    console.log('PASS: all chord lessons; three keyboard-accessible tabs and scale links; continuous 42-note fretboard, five shape spans, overlaps and highlights that preserve the full neck; note pitches, roots, shared notes, phrases and playback; 320/390/768/1440 layouts; no autoplay or external requests; audio fallback.');
     console.log('Screenshots:', output);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });
