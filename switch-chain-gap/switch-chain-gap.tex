@@ -1,0 +1,214 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,geometry,hyperref}
+\hypersetup{hidelinks,pdftitle={A sharp spectral-gap refinement for the switch chain},pdfauthor={Tom Ayre}}
+\setlength{\emergencystretch}{2em}
+\geometry{margin=1in}
+\newtheorem{theorem}{Theorem}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\gap}{\operatorname{gap}}
+\title{A sharp spectral-gap refinement for the switch chain}
+\author{Tom Ayre\\\small ayre.tom at gmail.com}
+\date{October 7, 2026}
+\begin{document}\maketitle
+\paragraph{Status.} Conditional research note prepared with assistance from Codex. This note retains the
+triple-resampling inequality and slice equality-projection inequality of
+OpenAI's \emph{Polynomial Mixing of the Switch Chain for Every Graphical
+Degree Sequence} (September 25, 2026). The new step strengthens its
+nonnegative disjoint-pair estimate to $D\succeq H$. We also use the exact
+Johnson-slice gap. A targeted literature search did not locate this
+statement; publication priority is not established. The source was read at
+the \href{https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026}{archived source directory} at revision\\
+\texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
+Separate agent reviews of the source's finite row, triple, slice and
+disjoint-cell arguments found no gap. These are local AI-assisted checks,
+not formal verification or independent external human peer review.
+
+Let $\Omega_d$ be the simple labeled graphs with fixed graphical degree
+sequence $d$ on $n\ge4$ vertices. For a vertex pair $a$, let $E_a$ be
+conditional uniform resampling of its singleton neighbors, $h_a=I-E_a$,
+and $H=\sum_a h_a$. Let $L$ be the unnormalized Laplacian whose states
+are $\Omega_d$ and whose edges are single valid switches, each neighbor
+counted once. Set $D=\sum_{a\cap b=\varnothing}h_a h_b$, summing ordered
+pairs. All inner products use the uniform probability measure.
+
+\begin{theorem}[Conditional candidate]
+Assume the source's triple inequality $H_T^2\succeq H_T$ and slice
+inequality $S\preceq G$ described below. Then
+\[
+ D\succeq H,\qquad H^2\succeq2H,\qquad H\preceq L.
+\]
+If $|\Omega_d|>1$, then $\gap(L)\ge2$, with sharp universal constant.
+For the source's lazy four-vertex-proposal chain,
+\[
+ \gap(P_d)\ge\frac1{6\binom n4},\qquad
+ t_{\rm mix}(\varepsilon)\le
+ \left\lceil6\binom n4\left(\tfrac12\log|\Omega_d|
+                  +\log\frac1{2\varepsilon}\right)\right\rceil
+ \quad(0<\varepsilon<1/2).
+\]
+Thus $t_{\rm mix}(1/4)=O(n^6)$ rather than the displayed $O(n^8)$ bound.
+The spectral-gap bound is attained for $d=(2,2,1,1,0,\ldots,0)$.
+The nonlazy uniform-pair heat-bath chain $K=\binom n2^{-1}\sum_a E_a$
+has sharp universal gap $\gap(K)\ge2/\binom n2$.
+\end{theorem}
+
+\paragraph{Proposal conventions.}
+The chain $P_d$ holds with probability $1/2$. Otherwise it chooses a
+four-vertex set uniformly, chooses uniformly one of the six ordered
+pairs of distinct perfect matchings on that set, and replaces the first
+matching by the second if all removed edges are present and all added
+edges are absent; otherwise it holds. Thus every distinct switch
+neighbor has transition probability $1/[12\binom n4]$.
+The chain $K$ chooses a pair uniformly and samples uniformly from its
+entire pair fiber, including its current state. This chain is a convex
+combination of orthogonal projections, so its eigenvalues are nonnegative.
+
+\paragraph{Borrowed inputs.}
+For disjoint pairs $a,b$, let $g_{a,b}=(I-T_{a,b})/2$, where $T_{a,b}$
+switches the four cross edges when possible. On an $a$-fiber, $R_{a,b}$
+projects onto the centered indicator that the two singleton neighbors in
+$b$ receive the same endpoint. It is zero if either is not a singleton,
+or if the indicator is constant. On a uniform $q$-subset slice of $N$
+singleton labels put
+\[
+ G=\tfrac12\sum_{k<l}(I-\tau_{kl}),\qquad S=\sum_{k<l}Q_{kl},
+\]
+where $Q_{kl}$ is the equality-indicator projection. Source Lemma
+\texttt{sl:comparison} proves $S\preceq G$. The elementary Johnson calculation in the appendix
+gives $G\succeq (N/2)(I-E)$ on nonconstant slices. Source Proposition
+\texttt{tri:gap} proves $H_T^2\succeq H_T$. The disjoint-cell decomposition
+used next is spelled out in its \texttt{sections/disjoint.tex}.
+
+\paragraph{A sharper disjoint-cell estimate.}
+Fix disjoint pairs $a,b$. In a source disjoint cell, outside singleton
+sets have sizes $A,B$; the $2\times2$ cross matrix has total $s$, first
+row sum $r$ and first column sum $c$. The counts of compatible outside
+subsets are $a_r=\binom A{k+1-r}$ and $b_c=\binom B{l+1-c}$.
+In the dependent case $s=2$, the matrix-multiplicity table has center
+two, four adjacent entries one, and zero corners. If both off-center
+events have positive mass, $a_1b_1>0$. Set
+\[
+ \alpha=\frac{a_0+a_2}{a_1},\quad
+ \beta=\frac{b_0+b_2}{b_1},\quad
+ \rho^2=\frac{\alpha\beta}{(2+\alpha)(2+\beta)}.
+\]
+Here $\rho$ is the magnitude of the rank-one correlation in the source.
+For $0\le k\le A$,
+\[
+ \alpha=\frac{A-k}{k+1}+\frac{k}{A-k+1}\le(A-k)+k=A,
+\]
+and similarly $\beta\le B$. Thus, for $\kappa_A=A/(A+2)$ and
+$\kappa_B=B/(B+2)$, we have $\rho^2\le\kappa_A\kappa_B$.
+
+The source's correlation-plane component $f=xu+yv$ satisfies
+$h_a f=y(v+\rho u)$, $h_b f=x(u+\rho v)$; each parenthesized vector has
+squared norm $1-\rho^2$ and their mutual product is $\rho(1-\rho^2)$.
+Weighted Young gives
+\[
+ 2xy\rho(1-\rho^2)\ge
+ -\kappa_A y^2(1-\rho^2)-\kappa_B x^2(1-\rho^2).
+\]
+The first error line lies in $\operatorname{ran}R_{a,b}$ and the second
+in $\operatorname{ran}R_{b,a}$, as in the source. The common orthogonal
+component contributes at least $2\|g_{a,b}f\|^2$. Therefore
+\[
+ 2\langle h_af,h_bf\rangle\ge2\|g_{a,b}f\|^2
+       -\kappa_A\|R_{a,b}f\|^2-\kappa_B\|R_{b,a}f\|^2.\tag{*}
+\]
+Independent cells satisfy this without the error terms. The coefficients
+have a fiberwise interpretation: $R_{a,b}=0$ unless $c=1$, and on such
+fibers the singleton count is $N=A+2$. Its coefficient is therefore
+$1-2/N$; symmetrically for $R_{b,a}$. Constant slices have $h_a=0$.
+
+\paragraph{Summing the positive remainder.}
+Sum (*) over unordered disjoint pairs. For fixed $a$, the resulting
+operator on a nonconstant fiber is
+\[
+ G-(1-2/N)S\succeq(2/N)G\succeq I-E.
+\]
+The first step uses $S\preceq G$ and $N\ge2$, the second the Johnson
+gap. Averaging and summing over $a$ gives $D\succeq H$.
+\newpage
+The source's exact identity is
+\[
+ H^2=\sum_{T\in\binom{[n]}3}H_T^2-(n-3)H+D.
+\]
+The triple inequality now gives $H^2\succeq2H$. Connectivity by switches
+identifies its kernel with constants, hence
+$2\Var(f)\le\langle f,Hf\rangle$.
+Let $J_a=\sum_{k<l}(I-\tau_{kl})$ on each fiber. Its nonzero gap is $N$,
+so $h_a\preceq J_a/N\preceq J_a/2$. Each switch has exactly two pair
+representations; thus $\sum_aJ_a=2L$, and $H\preceq L$.
+This proves $\gap(L)\ge2$. The source normalization is
+$I-P_d=L/[12\binom n4]$; the usual $L^2$-to-TV estimate gives the
+stated mixing bound.
+
+\paragraph{Sharpness.}
+For $d=(2,2,1,1)$ the only realizations have edge sets $\{12,13,24\}$
+and $\{12,14,23\}$. They are joined by one switch; the Laplacian has
+spectrum $\{0,2\}$. Adding isolated vertices preserves this state space.
+The lazy proposal kernel has off-diagonal entry $1/[12\binom n4]$,
+so its gap is exactly $1/[6\binom n4]$.
+Exactly two vertex pairs have nonconstant fibers in this example.
+Each such resampling is averaging on the two states, so $H$ has spectrum
+$\{0,2\}$ and $\gap(K)=2/\binom n2$ as well.
+
+\paragraph{Checks and limitations.}
+The operator diagnostic checks $D\succeq H$, $H^2\succeq2H$, $H\preceq L$
+and the nontrivial spectral gaps for all 144 degree-sequence classes on
+$n=4,5,6$, scanning 33,856 labeled graphs. A separate implementation
+constructs $L$ directly from switches, without using pair fibers or the
+operators $H,D$. It checks all 486 degree-sequence classes on $n=4,5,6,7$,
+including 366 nontrivial classes. The minimum observed gap is 2, within
+tolerance $10^{-7}$. These are finite floating-point diagnostics, not proofs.
+The source's triple and equality-projection inequalities were reviewed
+locally in separate Codex passes without locating a gap. External peer
+review and formal verification remain outstanding; no fresh Lean kernel
+verification was performed. No definitive novelty claim is made. Only
+the spectral-gap constant is asserted sharp, not the $O(n^6)$ mixing exponent.
+
+\paragraph{Primary literature checked.}
+The closest located sharp analogue is Fu, Qin and Wang,
+\emph{Spectral Gap for the Binary Fixed-Margin Swap Chain},
+\url{https://arxiv.org/abs/2606.22636}. It treats binary fixed-margin
+matrices, equivalently bipartite graphs, rather than the general undirected
+state space considered here. It also supplies the three-row inequality
+used in the source framework.
+Johnson-spectrum switch/Curveball comparison is already standard:
+\url{https://arxiv.org/abs/1709.07290} and
+\url{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.APPROX-RANDOM.2018.36}.
+For undirected Curveball and the two pair representations per switch,
+see \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC6072652/}.
+For the unified switch-chain analysis see
+\url{https://arxiv.org/abs/1903.06600}.
+The potentially new part is the sharper disjoint-interaction estimate
+and sharp universal spectral-gap consequence within the source framework.
+A targeted search found no matching general undirected statement; it does
+not rule out a known implicit consequence or establish publication priority.
+\clearpage
+\appendix
+\section{An elementary Johnson-slice gap proof}
+Let $\mathcal X_{N,q}$ be the uniform $q$-subsets of $[N]$, with
+$1\le q\le N-1$, and let $J=\sum_{i<j}(I-\tau_{ij})$.
+For $A\subseteq[N]$ put $x_A=\prod_{i\in A}x_i$. Let $V_k$ be the span
+of the monomials of degree at most $k$ on the slice. For $|A|=k$, direct
+summation over transpositions with one endpoint in $A$ gives
+\[
+ Jx_A=k(N-k+1)x_A-(q-k+1)\sum_{a\in A}x_{A\setminus\{a\}}.\tag{J}
+\]
+Indeed before using $\sum_i x_i=q$ the expression is
+$k(N-k)x_A-\sum_{a\in A}x_{A\setminus\{a\}}\sum_{b\notin A}x_b$,
+and each product in the second sum equals
+$(q-k+1)x_{A\setminus\{a\}}-x_A$.
+Thus $J$ preserves $V_k$, and modulo $V_{k-1}$ acts as
+$\lambda_k=k(N-k+1)$. Self-adjointness shows that on
+$V_k\cap V_{k-1}^{\perp}$ it acts by exactly this scalar: the difference
+$(J-\lambda_k I)f$ lies in both $V_{k-1}$ and its orthogonal complement.
+Finally $V_q$ is the full function space, because degree-$q$ monomials
+are point indicators. On each nonconstant nonzero level,
+\[
+ \lambda_k-N=(k-1)(N-k)\ge0.
+\]
+This proves $J\succeq N(I-E)$, or $G=J/2\succeq(N/2)(I-E)$.
+The levels $q=0,N$ are constant and need no gap estimate.
+\end{document}

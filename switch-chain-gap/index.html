@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A sharp spectral-gap refinement for the switch chain | Tom Ayre</title>
+  <meta name="description" content="A conditional research note on a potentially novel sharp spectral-gap bound for undirected graph switches. PDF, LaTeX source, proof audit, and Python diagnostics.">
+  <meta name="author" content="Tom Ayre">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tayre.github.io/switch-chain-gap/">
+  <meta name="citation_title" content="A sharp spectral-gap refinement for the switch chain">
+  <meta name="citation_author" content="Tom Ayre">
+  <meta name="citation_publication_date" content="2026/10/07">
+  <meta name="citation_pdf_url" content="https://tayre.github.io/switch-chain-gap/switch-chain-gap.pdf">
+  <meta name="citation_language" content="en">
+</head>
+<body>
+  <h1>A sharp spectral-gap refinement for the switch chain</h1>
+  <p>Tom Ayre<br>ayre.tom at gmail.com</p>
+  <p>October 7, 2026</p>
+  <hr>
+  <p><a href="switch-chain-gap.pdf">Read the paper (PDF)</a></p>
+  <p>For simple undirected graphs with a fixed degree sequence, let
+    <i>L</i> be the unnormalized Laplacian of the graph of realizations,
+    with each distinct valid switch neighbor counted once. The proposed bound is
+    <strong>&lambda;<sub>2</sub>(<i>L</i>) &ge; 2</strong> whenever there is
+    more than one realization. The constant 2 is sharp. For the source's
+    lazy switch chain, the resulting mixing-time guarantee improves from
+    O(<i>n</i><sup>8</sup>) to O(<i>n</i><sup>6</sup>).</p>
+  <p><strong>Status:</strong> a potentially novel quantitative refinement,
+    conditional on two lemmas from
+    <a href="https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026">OpenAI's source manuscript</a>.
+    The new step strengthens its disjoint-pair estimate to <i>D</i> &ge; <i>H</i>.
+    The closest located sharp analogue concerns
+    <a href="https://arxiv.org/abs/2606.22636">bipartite graphs</a>.
+    Novelty remains unconfirmed.</p>
+  <p>Prepared with assistance from Codex. Local proof audits found no gap,
+    and a separate numerical check passed all 486 degree-sequence classes
+    on four through seven vertices, including 366 nontrivial classes.
+    These finite diagnostics are not a proof. No external peer review or
+    fresh Lean kernel verification has been performed.</p>
+  <ul>
+    <li><a href="switch-chain-gap.tex">LaTeX source</a></li>
+    <li><a href="audit-switch-gap.txt">Local proof audit and literature notes</a></li>
+    <li><a href="check_switch_gap_candidate.py">Operator checks (Python)</a></li>
+    <li><a href="check_switch_gap_independent.py">Independent Laplacian checks (Python)</a></li>
+    <li><a href="README.md">README and reproduction instructions</a></li>
+  </ul>
+  <hr>
+  <p><a href="/">Home</a></p>
+</body>
+</html>

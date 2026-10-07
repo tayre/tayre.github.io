@@ -1,0 +1,148 @@
+Local AI-assisted audit of the candidate sharp undirected switch gap
+Date: October 7, 2026
+
+STATUS
+
+Separate Codex review passes found no gap in the proposed implication.
+This is a local AI-assisted review, not external human peer review. It gives
+lambda_2(L) >= 2 for every nonsingleton realization space of a labeled
+simple undirected graphical degree sequence, with every distinct valid
+switch neighbor counted once in L. The constant is sharp. The main new
+step is a weighted refinement of the source's disjoint-pair calculation,
+giving D >= H instead of D >= 0.
+
+This is a human-readable mathematical and numerical audit carried out
+with Codex assistance. It is not fresh Lean kernel verification and does
+not certify publication priority. The source manuscript is model-produced.
+
+SOURCE AND SCOPE OF REVIEW
+
+Source directory:
+preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/build/sections/
+
+Read and checked the core arguments in:
+  rows.tex: fixed-block variance, adjacent-total coupling, eigenvector
+    argument for random block sizes, and the three-row variance inequality.
+  triples.tex: bijective augmented three-row encoding and identification
+    of conditional operators, giving H_T^2 >= H_T.
+  disjoint.tex: conditional cell encoding, rank-one correlation, error
+    projection identification, and ordered versus unordered pair counts.
+  slice.tex: coefficient-space decomposition, both projection eigenvalue
+    bounds, and the comparison S <= G.
+  mixing.tex: H^2 expansion and the exact identity sum_a J_a = 2L.
+
+No issue was found in these pivotal arguments. This was not a new audit of
+the source's separate exact-sampling implementation or its Lean artifacts.
+
+CHECK OF THE NEW ESTIMATE
+
+In a nonproduct disjoint-pair cell, let A and B count outside singletons.
+For the first pair, with the central assignment leaving k outside choices,
+  alpha = binom(A,k+1)/binom(A,k) + binom(A,k-1)/binom(A,k)
+        = (A-k)/(k+1) + k/(A-k+1) <= A.
+The analogous beta is at most B. The central assignment is feasible, so
+0 <= k <= A; invalid adjacent binomial terms are zero. The source's
+correlation is
+  rho^2 = alpha beta / ((2+alpha)(2+beta))
+        <= kappa_A kappa_B,   kappa_A=A/(A+2), kappa_B=B/(B+2).
+
+For the source's plane component xu+yv, weighted Young gives
+  2xy rho(1-rho^2)
+    >= -(kappa_A y^2 + kappa_B x^2)(1-rho^2).
+The a-error is y(v+rho u), so the coefficient orientation is kappa_A
+on R_{a,b}, and kappa_B on R_{b,a}. This orientation is essential.
+When one outside count vanishes, rho=0 and the product case applies.
+
+On an a-fiber where R_{a,b} can be nonzero, the singleton count is
+N=A+2, hence kappa_A=1-2/N. Summing the ordered pair contributions on
+that fiber gives
+  G - (1-2/N) S >= (2/N) G >= h_a.
+Here S <= G is the source's proved slice comparison, and 2G=J is the
+Johnson Laplacian with gap N. If a pair b does not consist of two
+singleton vertices, both its switch projection and its error vanish.
+Nonconstant fibers have N>=2; constant fibers contribute zero.
+Thus D >= H. All factors of two match the source's ordered D convention.
+
+The source's triple inequality and expansion now give
+  H^2 = sum_T H_T^2 - (n-3)H + D >= H+D >= 2H.
+The kernel of H consists of constants by switch connectivity. On every
+nonconstant pair fiber h_a <= J_a/N <= J_a/2, and sum_a J_a=2L, so
+H <= L. Consequently lambda_2(L) >= 2.
+
+SELF-CONTAINED JOHNSON GAP CHECK
+
+On the uniform q-subsets of [N], write x_A=product_{i in A} x_i and let
+V_k be the span of monomials of degree at most k. For |A|=k, direct
+expansion of J=sum_{i<j}(I-tau_ij) gives
+  J x_A = k(N-k+1)x_A - (q-k+1) sum_{a in A} x_{A\{a}}.
+Hence J preserves V_k and acts as k(N-k+1) modulo V_{k-1}.
+Self-adjointness shows it acts by that scalar on V_k orthogonal to
+V_{k-1}. V_q is the entire function space, since its degree-q monomials
+are point indicators. For 1<=k<=q<=N-1,
+  k(N-k+1)-N = (k-1)(N-k) >= 0.
+This proves J >= N(I-E). The q=0,N fibers are constant. The argument
+needs no external spectral theorem. A classical primary reference is
+Diaconis and Shahshahani, SIAM J. Math. Anal. 18(1), 208-218 (1987),
+https://doi.org/10.1137/0518016.
+
+SHARPNESS
+
+For degree vector (2,2,1,1), the only two graphs have edge sets
+  {12,13,24} and {12,14,23}.
+They are switch neighbors, giving L=[[1,-1],[-1,1]] and eigenvalues 0,2.
+Adding isolated labeled vertices preserves this witness for every n>=4.
+
+INDEPENDENT NUMERICAL CHECK
+
+Script: check_switch_gap_independent.py
+The original local verification environment contained Python 3.11.14, NumPy 2.4.6, and
+SciPy 1.17.1.
+The default system Python lacked NumPy. Portable invocation with uv:
+  uv run --with numpy --with scipy python check_switch_gap_independent.py
+The script seeds its sparse eigensolver starting vector for reproducibility.
+This is separate from check_switch_gap_candidate.py. It never
+uses H, D, pair-resampling fibers, or any intermediate identity in the
+proof. It enumerates simple graphs in Gray order, retains every labeled
+realization of each nonincreasing graphical degree sequence, and builds
+L from valid four-edge symmetric differences, each neighbor once.
+
+Completed default run:
+  n   degree classes   nontrivial classes   largest state space   min gap
+  4        11                  3                    3               2
+  5        31                 15                   12               2
+  6       102                 70                   70               2
+  7       342                278                  810               2
+Totals: 486 degree classes, 366 nontrivial classes. All numerical gaps
+were at least 2 within tolerance 1e-7. Every minimizing space in this
+range had two states. These finite floating-point tests are diagnostics,
+not a replacement for the proof and not a classification of equality.
+
+LITERATURE CHECK AND NOVELTY LIMITS
+
+The closest located prior result is Fu, Qin, and Wang,
+"Spectral Gap for the Binary Fixed-Margin Swap Chain", arXiv:2606.22636v2,
+July 13, 2026: https://arxiv.org/abs/2606.22636.
+It proves the sharp gap 1/(binom(m,2)binom(n,2)) for their lazy binary
+fixed-margin swap chain, equivalently an unnormalized swap gap 2. Its
+state space is binary matrices with prescribed row and column margins,
+or equivalently bipartite graphs. It does not establish the same sharp
+statement for arbitrary simple undirected graphical degree sequences.
+It also supplies the three-row inequality used in the repo's proof.
+
+The repo's undirected source states only the weaker gap following from
+lambda_2(L)>=1/(2n^2), together with O(n^8) mixing. Searches of the repo
+and primary literature for the undirected sharp gap, realization-graph
+algebraic connectivity, and switch-chain sharp spectral bounds found no
+prior general statement lambda_2(L)>=2 for this undirected state space.
+This targeted search cannot rule out an unpublished proof, an implicit
+corollary, or an independently obtained result. Appropriate description:
+"a candidate sharp quantitative strengthening of the repo's undirected
+switch-chain proof; novelty remains unconfirmed."
+
+An immediate consequence is the edge-expansion inequality
+  |boundary A| >= 2 |A| (1-|A|/|Omega|).
+In particular |boundary A|>=|A| when |A|<=|Omega|/2. Every switch is an
+edge of the fixed-degree graph polytope: fixing all other coordinates
+leaves exactly its two endpoints. Thus the same expansion lower bound
+holds for its full 1-skeleton. This parallels the Mihail-Vazirani
+consequence explicitly stated in the bipartite Fu-Qin-Wang paper.
