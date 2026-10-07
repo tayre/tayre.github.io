@@ -2,7 +2,7 @@
 
 **Tom Ayre**
 
-[Read the paper and download its resources](https://tayre.github.io/depth-three/).
+[Read the paper and download its resources](https://tayre.github.io/quantitative-depth-three/).
 
 This note derives an explicit asymptotic rate for the existing depth-three circuit construction: for some absolute constant `c > 0` and all sufficiently large input lengths `n`, the required number of OR–AND–OR gates exceeds
 
@@ -43,4 +43,4 @@ Alternatively, run `pdflatex depth-three-quantitative-bound.tex` twice with a st
 
 The language, polynomial-time algorithm, qualitative lower bound, and restriction lemma come from OpenAI’s *Beyond the Square-Root Exponent for Depth-Three Boolean Circuits*. The source revision used is [`adc7f1241b42e322a6451854ab7e4b4c146bf78a`](https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Beyond-the-Square-Root-Exponent-for-Depth-Three-Boolean-Circuits-September-23-2026). The new claim is the quantitative parameter schedule and its resulting explicit growth rate. The paper cites the published sparsification results on which that implication depends.
 
-Novelty and publication priority remain unconfirmed. The manuscript was prepared with assistance from Codex; no fresh Lean kernel verification was performed.
+This is a potentially new quantitative refinement of the existing result; publication priority remains unconfirmed. The manuscript was prepared with assistance from Codex; no fresh Lean kernel verification was performed.

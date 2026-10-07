@@ -2,7 +2,7 @@
 # Other paths retain the existing crawl restriction.
 User-agent: *
 Allow: /$
-Allow: /depth-three/
+Allow: /quantitative-depth-three/
 Disallow: /
 
-Sitemap: https://tayre.github.io/depth-three/sitemap.xml
+Sitemap: https://tayre.github.io/quantitative-depth-three/sitemap.xml
