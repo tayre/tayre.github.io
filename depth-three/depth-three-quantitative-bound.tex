@@ -1,0 +1,769 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={A quantitative refinement of a depth-three circuit lower bound},pdfauthor={Tom Ayre},pdfsubject={Quantitative sparsification and Boolean circuit lower bounds}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\numberwithin{equation}{section}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\bits}{\{0,1\}}
+\DeclareMathOperator{\corr}{corr}
+\setlist[itemize]{itemsep=3pt,topsep=5pt}
+\setlength{\emergencystretch}{2em}
+\clubpenalty=10000
+\widowpenalty=10000
+\title{A quantitative refinement of a\ depth-three circuit lower bound}
+\author{Tom Ayre}
+\date{October 6, 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+OpenAI's depth-three circuit construction gives a single polynomial-time
+language whose $n$-bit membership function requires
+$2^{\omega(\sqrt n)}$ total gates in unrestricted OR--AND--OR circuits.
+We derive the explicit lower bound
+$2^{c\sqrt{n\ln n/\ln\ln n}}$ for an absolute $c>0$, at every sufficiently
+large input length, for the same language. The additional input is the
+published quantitative form of disjoint CNF sparsification, with clause
+density at most $(Kb)^{Kb}$ at width $b$. This permits the target width to
+grow as $\Theta(\ln n/\ln\ln n)$. We verify the counting, moment, restriction,
+and gate-count estimates uniformly for this schedule. We also reproduce
+the source's finite restriction argument, including the backwards path
+count that removes dependence on the number of clauses. The refinement
+changes the proof parameters, not the language or its evaluation algorithm.
+\end{abstract}
+
+\section{Introduction}
+For a Boolean function $f$, let $S_3(f)$ denote the minimum total number
+of AND and OR gates in an exact OR--AND--OR circuit for $f$. Bottom gates
+read input literals and optional constants; middle gates read bottom-gate
+outputs; and the output is an OR of middle-gate outputs. Fan-in and
+fan-out are unrestricted. Input negations are free, and all bottom,
+middle, and output gates are counted. Unary gates permit functions of
+smaller depth in this model.
+
+OpenAI~\cite{OAI26} constructs one language $L\in\mathsf P$ such that its
+$n$-bit membership function $f_n$ satisfies
+$\log_2 S_3(f_n)/\sqrt n\to\infty$. Its argument first fixes a desired
+constant in the circuit exponent, then chooses a constant CNF width, and
+finally takes the input length sufficiently large. The present note
+extracts an explicit rate by allowing that width to grow. The language is
+recalled completely in Section~\ref{sec:language}.
+
+\begin{theorem}\label{thm:main}
+For the language $L$ of Definition~\ref{def:language}, there exist absolute
+constants $c>0$ and $n_0$ such that
+\begin{equation}\label{eq:main}
+ S_3(f_n)>2^{c\sqrt{n\ln n/\ln\ln n}}
+ \qquad\text{for every }n\ge n_0.
+\end{equation}
+The language is decided by one deterministic polynomial-time algorithm.
+For any absolute $K\ge2$ satisfying Lemma~\ref{lem:sparsification},
+one may take $c=1/(6144\sqrt K)$.
+\end{theorem}
+
+The displayed value of $c$ is explicit in terms of $K$; no numerical
+value of the sparsification constant is claimed. The threshold $n_0$ is
+absolute once this constant has been fixed.
+
+\paragraph{Contribution and attribution.}
+The language, clause-count-independent restriction lemma, and circuit
+contradiction are from~\cite{OAI26}. The restriction proof reproduced in
+Appendix~\ref{app:restriction} is an adaptation of that source, not a new
+restriction lemma. The extra ingredient is the quantitative sparsification
+estimate of Calabro, Impagliazzo, and Paturi~\cite{CIP}, combined with the
+disjoint refinement of Dell et al.~\cite{DHMTW}; Williams~\cite{Williams}
+explicitly uses this quantitative counting form. Our contribution is the
+growing-parameter schedule and the uniform estimates that yield
+\eqref{eq:main} for the existing construction.
+
+The distinction between unrestricted and bounded-bottom-fan-in circuits
+is essential. Recent exponential bounds for majority and inner product
+concern restricted models~\cite{GKKPRST,GKPRT26IP}. The stronger unrestricted
+majority bound $2^{\Omega(\sqrt{n\log n})}$ is presented as a conjectural
+target in~\cite{GKKPRST}. The rate in~\eqref{eq:main} is not stated in
+the source manuscript or its accompanying formalization. A targeted
+literature search found no prior statement of this quantitative refinement;
+this observation does not establish publication priority.
+
+\paragraph{Proof overview.}
+The construction has data bits and parameter bits. Suitable fixed parameter
+bits give a data slice whose sign has small correlation with every narrow
+CNF on most random restrictions. Sparsification makes the family of tests
+small enough for a limited-independence moment bound. The restriction lemma
+transfers this correlation bound to wider CNFs. After deleting very wide
+bottom clauses from a hypothetical small circuit, each middle gate accepts
+too few inputs to cover the slice's positive set. Quantitative
+sparsification permits width $b=\Theta(\ln n/\ln\ln n)$ and hence a circuit
+exponent of order $\sqrt{bn}$.
+
+\section{Correlation and the two structural tools}\label{sec:tools}
+The cube $\bits^V$ on a finite coordinate set $V$ has uniform measure.
+Boolean functions are identified with $0/1$ indicators. A clause is an OR
+of literals, and its width is the number of distinct variables after
+normalization. A false clause has width zero; an empty CNF is true.
+For $b\ge1$ and a real function $G$ on this cube, define
+\[
+ \corr_b(G)=\max_J |\E[GJ]|,
+\]
+where $J$ ranges over all width-at-most-$b$ CNF indicators, without a
+clause-count restriction. Constants are allowed. There are finitely many
+such indicators, so the maximum exists.
+
+A $p$-random restriction retains each coordinate independently with
+probability $p$, giving a live set $T$, and assigns the other coordinates
+uniformly, giving $\rho$. Write $G_{T,\rho}$ for the remaining function.
+Uniform completion of a random restriction is uniform on the full cube;
+therefore
+\begin{equation}\label{eq:restriction-average}
+ \E_xG(x)H(x)=\E_{T,\rho}\E_zG_{T,\rho}(z)H_{T,\rho}(z).
+\end{equation}
+
+\begin{lemma}[Quantitative disjoint sparsification]\label{lem:sparsification}
+There exist an absolute constant $K\ge2$ and positive integers $M(b)$,
+for $b\ge2$, such that every width-$b$ CNF indicator on $m\ge1$ variables
+is a sum of at most $2^{m/8}$ pairwise disjoint width-$b$ CNF indicators,
+each having at most $M(b)m$ clauses, with
+\begin{equation}\label{eq:sparse}
+ M(b)\le(Kb)^{Kb}.
+\end{equation}
+\end{lemma}
+\begin{proof}[Derivation from quantitative sparsification]
+We use the quantitative counting form stated in~\cite[Section~4,
+p.~6:9]{Williams}, combining~\cite[Section~6]{CIP} with the disjoint
+refinement in~\cite[Appendix~A, Lemma~A.1 and its following proof]{DHMTW}.
+Fix an absolute error $\eta_0\in(0,1/8]$ in that bound. The quantitative
+estimate $(b/\eta_0)^{O(b)}$ means that there are absolute constants
+$A,C\ge1$, independent of both $b$ and $m$, for which the density before
+adding branch-defining units is at most
+\[
+ D(b)\le A(b/\eta_0)^{Cb}.
+\]
+The finite sparsification recursion has at most $2^{\eta_0m}$ leaves
+for every input on $m$ variables. Lemma~A.1 of~\cite{DHMTW} states these
+finite quantifiers explicitly; they are bounds on the leaves and formulas,
+not just an asymptotic running-time estimate.
+
+Here is the disjointness modification. At a flower with heart clause
+$H=\bigvee_{\ell\in U}\ell$ and petals $P_i$, the relevant clauses are
+$H\vee P_i$. The heart branch enforces $H$; the petal branch enforces
+all $P_i$ and the units $\neg\ell$ for $\ell\in U$. These two branches
+partition the satisfying assignments according to the truth of $H$.
+Iterating gives disjoint leaves. A consistent leaf contains at most one
+distinct added unit per variable, hence at most $m$; inconsistent leaves
+are discarded. Width cannot increase. The reduction step removes clauses
+properly containing a unit, so these units create no new flowers and the
+leaf bound is unchanged, as proved in~\cite[Appendix~A]{DHMTW}.
+
+Set $M(b)=\lceil D(b)\rceil+1$. For example, choosing any absolute
+$K\ge\max\{2,2C,\eta_0^{-1},3A\}$ gives
+\[
+ M(b)\le D(b)+2\le3A(b/\eta_0)^{Cb}\le(Kb)^{Kb}
+ \qquad(b\ge2).
+\]
+Also $2^{\eta_0m}\le2^{m/8}$. Both estimates hold for every finite $m$,
+including when $b>m$. The identically false formula may be represented
+by no nonzero leaves. This proves the claimed indicator identity.
+No numerical values of $A,C,\eta_0$, or $K$ are needed or asserted here.
+\end{proof}
+
+\begin{lemma}[Restriction bound from~\cite{OAI26}]\label{lem:restriction}
+Let $k\ge0$ and $b\ge1$ be integers, let $H$ be a width-$k$ CNF on $d$
+variables, and let $0<p<1$. If
+\begin{equation}\label{eq:theta}
+ \theta=\sum_{\ell=b+1}^k\binom{k}{\ell}
+             \left(\frac{2p}{1-p}\right)^\ell<1,
+\end{equation}
+there is a nonnegative $W_H=W(H,T,\rho)$ such that
+\[
+ \E W_H\le(1-\theta)^{-1},\qquad
+ |\E_z G(z)H_{T,\rho}(z)|\le W_H\corr_b(G)
+\]
+simultaneously for every real function $G$ on the live cube.
+\end{lemma}
+The full finite proof appears in Appendix~\ref{app:restriction}. It applies
+to each finite choice of $b,k,d,p$; no fixed-width limiting argument is
+part of the lemma.
+
+\section{The language and finite hard-slice estimates}\label{sec:language}
+We recall the evaluator from~\cite[Section~4]{OAI26}. Its use of parameter
+bits to select hard subfunctions is related to the input-index method
+of Paturi, Saks, and Zane~\cite[Section~5]{PSZ00}.
+
+\begin{definition}[The fixed language]\label{def:language}
+For input length $n$, set $d=\lfloor n/5\rfloor$ and reject if $d<64$.
+Otherwise set
+\[
+ r=\lceil d^{2/3}\rceil,\qquad
+ t=\max\{j\ge0:j\text{ is even and }j^6\le d\}.
+\]
+As a safety check, reject if fewer than $2d+(t+2)r-1$ bits are available;
+Proposition~\ref{prop:polytime} shows this branch is never taken for $d\ge64$.
+Parse the input,
+in order, into $d$ data bits $x$, $d+r-1$ hash bits $u$, $r$ modulus bits
+$p_0,\ldots,p_{r-1}$, and $t$ coefficient blocks of $r$ bits each.
+Ignore unused bits. The modulus bits define
+\[
+ P(Z)=Z^r+\sum_{i=0}^{r-1}p_iZ^i,
+ \qquad R_P=\mathbb F_2[Z]/(P),
+\]
+and the coefficient blocks define $\beta_0,\ldots,\beta_{t-1}\in R_P$
+in the basis $1,Z,\ldots,Z^{r-1}$.
+Let
+\begin{equation}\label{eq:hash}
+ h_i(x)=\sum_{a=1}^d u_{i+a-1}x_a\pmod2\quad(1\le i\le r),
+ \qquad h_u(x)=\sum_{i=1}^rh_i(x)Z^{i-1}.
+\end{equation}
+If $\lambda:R_P\to\mathbb F_2$ selects the constant coefficient of the
+representative of degree less than $r$, accept exactly when
+\begin{equation}\label{eq:evaluator}
+ \lambda\!\left(\sum_{j=0}^{t-1}\beta_jh_u(x)^j\right)=0.
+\end{equation}
+\end{definition}
+
+\begin{proposition}\label{prop:polytime}
+Definition~\ref{def:language} gives one deterministic polynomial-time
+language. For all sufficiently large $d$,
+\begin{equation}\label{eq:rt}
+ r\ge d^{2/3},\qquad \tfrac12d^{1/6}\le t\le d^{1/6}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+For $d\ge64$, $r\le2d^{2/3}$ and $t+2\le2d^{1/6}$. Thus the blocks use
+$2d+(t+2)r-1\le2d+4d^{5/6}-1\le4d-1\le n$ bits.
+Also $d^{1/6}-2<t\le d^{1/6}$, which gives~\eqref{eq:rt} for
+$d\ge4096$. Already $t\ge2$ for $d\ge64$, which is all that the finite
+criterion below requires. The integer parameters can be found by testing $r^3\ge d^2$
+and the sixth powers of even integers, with polynomial overhead.
+
+Every monic modulus gives a well-defined quotient ring, whether or not it
+is irreducible. Schoolbook multiplication and monic reduction cost
+$O(r^2)$ bit-array operations; the hash costs $O(rd)$; and Horner evaluation
+costs $O(tr^2)$. These fixed loops are implementable by one Turing machine
+with polynomial overhead. The evaluator neither searches for hard
+parameters nor tests irreducibility.
+\end{proof}
+
+\begin{lemma}[Finite hard-slice criterion]\label{lem:slices}
+Let $d\ge64$, with $r,t$ as above, and let $b\ge2$, $0<p<1$, and
+$\mu=pd\ge2$. Set $M=M(b)$ from Lemma~\ref{lem:sparsification}.
+Assume $r\ge(33/16)\mu$ and, for every integer $m\in[\mu/2,2\mu]$,
+\begin{equation}\label{eq:union}
+ \frac{M[1+b\log_2(2m+1)]}{t}+\frac{\log_2t}{m}\le\frac18.
+\end{equation}
+There is a fixed setting of the non-data bits whose sign
+$g:\bits^d\to\{-1,1\}$, with $+1$ on acceptance, satisfies
+\begin{equation}\label{eq:finite-good}
+ \Prb_{T,\rho}\!\left[
+ |T|\notin[\mu/2,2\mu]\ \text{or}\
+ \corr_b(g_{T,\rho})>2^{-|T|/8}\right]
+ \le4\cdot2^{-\mu/16}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Choose a monic irreducible $P$ of degree $r$, which exists over
+$\mathbb F_2$ for each $r\ge1$, and identify $R_P$ with
+$F=\mathbb F_{2^r}$. Choose $u$ and the coefficients $\beta_j$ independently
+and uniformly. We first bound the joint failure probability over these
+choices and the random restriction.
+
+\paragraph{Hash injectivity.}
+For nonzero $w\in\bits^d$, let $a$ be its largest nonzero coordinate.
+The $i$th output bit of $h_u(w)$ contains $u_{i+a-1}$ with coefficient one,
+and all other indices in that row are smaller. These successive pivots
+show that the linear map $u\mapsto h_u(w)$ has rank $r$. Hence its image
+is uniform and $\Prb_u[h_u(w)=0]=2^{-r}$. A restricted data cube of dimension
+$m$ has $2^m-1$ nonzero difference vectors, all supported on $T$.
+Linearity and a union bound give
+\begin{equation}\label{eq:collision}
+ \Prb_u[h_u\text{ is not injective on this cube}]
+ \le(2^m-1)2^{-r}\le2^{m-r}.
+\end{equation}
+
+\paragraph{Limited independence.}
+Fix an injective hash on the cube. For any $q\le t$ distinct points, the
+hashes are distinct elements $a_1,\ldots,a_q\in F$. Lagrange interpolation
+shows that evaluation of degree-less-than-$t$ polynomials onto $F^q$ is
+surjective. Uniform coefficients therefore give independent uniform
+values at those points. Since $\lambda$ is a nonzero binary linear
+functional, applying $(-1)^\lambda$ yields unbiased $t$-wise independent
+signs. Thus the following moment bound is conditional on any injective hash.
+
+\paragraph{Sparse tests.}
+There are at most $(2m+1)^b$ normalized clauses of width at most $b$:
+encode their literals in a fixed order and pad to length $b$. Include the
+empty false clause. Lists of $Mm$ clauses, with an extra padding symbol,
+then encode at most
+\begin{equation}\label{eq:test-count}
+ 2^{Mm[1+b\log_2(2m+1)]}
+\end{equation}
+CNF indicators. This includes both constants.
+
+For one such indicator $J$, put $Y=\sum_{z\in\bits^T}g_{T,\rho}(z)J(z)$.
+In the expansion of $Y^t$, a tuple with a point occurring exactly once has
+zero expectation. Every remaining tuple uses at most $t/2$ distinct points.
+Listing $t/2$ points, with padding, and a choice of list position for each
+factor gives at most $t^t2^{mt/2}$ tuples. Since $t$ is even,
+\[
+ \E|Y|^t\le t^t2^{mt/2},\qquad
+ \Prb[|\E_z g_{T,\rho}J|>2^{-m/4}]\le t^t2^{-mt/4}.
+\]
+Combining this with~\eqref{eq:test-count}, the probability that any sparse
+test fails is at most
+\[
+ 2^{Mm[1+b\log_2(2m+1)]+t\log_2t-mt/4}
+ \le2^{mt(1/8-1/4)}=2^{-mt/8},
+\]
+where the inequality is exactly~\eqref{eq:union}. On the complementary
+event, Lemma~\ref{lem:sparsification} expresses every width-$b$ CNF as a
+sum of at most $2^{m/8}$ tests from this same sparse family. The triangle
+inequality gives $\corr_b(g_{T,\rho})\le2^{-m/8}$ simultaneously for all
+width-$b$ CNFs.
+
+\paragraph{Restriction tails and averaging.}
+The live dimension $m$ is binomial with mean $\mu$. Independence gives
+\[
+ \E2^{-m}=(1-p/2)^d\le e^{-\mu/2},\qquad
+ \E2^m=(1+p)^d\le e^\mu.
+\]
+Markov's inequality yields
+\begin{align*}
+ \Prb[m<\mu/2]&\le2^{-((\log_2e-1)/2)\mu},\\
+ \Prb[m>2\mu]&\le2^{-(2-\log_2e)\mu}.
+\end{align*}
+Both exponent coefficients exceed $1/16$, so their sum is at most
+$2\cdot2^{-\mu/16}$. Inside the dimension window,
+$r\ge(33/16)\mu$ gives $2^{m-r}\le2^{-\mu/16}$, while $t\ge2$ gives
+$2^{-mt/8}\le2^{-\mu/16}$. Adding the two errors and the two dimension
+tails bounds joint failure by $4\cdot2^{-\mu/16}$.
+Averaging over the finitely many settings of $(u,\beta_0,\ldots,\beta_{t-1})$
+leaves one setting with at most this failure probability over restrictions.
+Fix it, the chosen $P$, and arbitrary unused bits.
+\end{proof}
+
+\section{Growing parameters and the lower bound}\label{sec:main-proof}
+
+
+We now prove Theorem~\ref{thm:main}. All unqualified logarithms are natural.
+For sufficiently large $d$, set
+\begin{align*}
+ b&=\left\lfloor\frac{\ln d}{24K\ln\ln d}\right\rfloor,&
+ s&=\frac{\sqrt b}{256},& B&=64(s+1),\\
+ p&=\frac{B}{\sqrt d},& \mu&=B\sqrt d,&
+ k&=\left\lceil3(s+1)\sqrt d\right\rceil.
+\end{align*}
+We work beyond a fixed absolute threshold so that $b\ge65536$, $s\ge1$,
+and $p\le1/2$. Let $M=M(b)$ from Lemma~\ref{lem:sparsification}.
+
+\paragraph{The sparse-test union bound.}
+Eventually $\ln(Kb)\le2\ln\ln d$, so \eqref{eq:sparse} gives
+\[
+ \ln M\le Kb\ln(Kb)\le\frac{\ln d}{12},\qquad M\le d^{1/12}.
+\]
+Uniformly for $\mu/2\le m\le2\mu$, we have
+$\log_2(2m+1)=O(\ln d)$ and $b=O(\ln d)$.
+More explicitly, \eqref{eq:rt} gives the finite envelope
+\begin{align*}
+ \frac{M[1+b\log_2(2m+1)]}{t}+\frac{\log_2t}{m}
+ &\le 2M d^{-1/6}
+       [1+b\log_2((4B+1)\sqrt d)]
+       +\frac{\ln d}{3B\ln2\,\sqrt d}\\
+ &\le 2d^{-1/12}
+       [1+b\log_2((4B+1)\sqrt d)]
+       +\frac{\ln d}{3B\ln2\,\sqrt d}.
+\end{align*}
+Consequently,
+\[
+ \frac{M[1+b\log_2(2m+1)]}{t}
+       +\frac{\log_2t}{m}
+ =O\!\left(d^{-1/12}(\ln d)^2
+                   +\frac{\ln d}{\sqrt d}\right)=o(1).
+\]
+The constants here are absolute once the absolute $K$ is fixed.
+This proves \eqref{eq:union} uniformly over the entire window.
+
+\paragraph{Hash and restriction tails.}
+Since $B=O(\sqrt{\ln d})$, we have $r/\mu\to\infty$.
+In particular, eventually $r\ge(33/16)\mu$. Within the window,
+\[
+ 2^{m-r}\le2^{-\mu/16},\qquad
+ 2^{-mt/8}\le2^{-\mu/16}.
+\]
+For the binomial random variable $m=|T|$ of mean $\mu$, the
+exponential-moment bounds in Lemma~\ref{lem:slices} give
+\[
+ \Prb[m\notin[\mu/2,2\mu]]\le2\cdot2^{-\mu/16}.
+\]
+Averaging the joint failure probability over the parameter bits therefore
+gives one setting of those bits, for this length, whose sign function $g$
+satisfies
+\begin{equation}\label{eq:good}
+ \Prb\left[m\notin[\mu/2,2\mu]
+       \text{ or }\corr_b(g_{T,\rho})>2^{-m/8}\right]
+       \le4\cdot2^{-\mu/16}.
+\end{equation}
+This is a pointwise existence argument at each $d$; it does not exchange
+the original fixed-parameter asymptotic quantifiers.
+
+\paragraph{The restriction lemma still applies.}
+For $d\ge1$,
+\[
+ k\le[3(s+1)+1]\sqrt d,\qquad
+ \frac{2pk}{1-p}\le4B[3(s+1)+1]=:Q.
+\]
+Using $B=64(s+1)$ and $s\ge1$,
+\[
+ Q\le1024(s+1)^2\le4096s^2=\frac b{16}.
+\]
+By $\binom{k}{\ell}\le k^\ell/\ell!$ and
+$\ell!\ge(\ell/e)^\ell$,
+\[
+ \theta\le\sum_{\ell>b}\frac{Q^\ell}{\ell!}
+ \le\sum_{\ell>b}(e/16)^\ell<\frac12.
+\]
+Thus Lemma~\ref{lem:restriction} supplies $\E W_H\le2$ for every width-$k$ test $H$.
+
+\subsection{Correlation transfer and the circuit contradiction}
+
+On the good restrictions in \eqref{eq:good}, the restricted correlation
+is at most $W_H2^{-\mu/16}$. On the bad restrictions it is at most one.
+Uniform completion of a random restriction is uniform on $\bits^d$.
+Taking expectations and using the triangle inequality gives
+\begin{equation}\label{eq:corr}
+ |\E_x g(x)H(x)|\le6\cdot2^{-\mu/16}
+\end{equation}
+for every width-$k$ CNF $H$. Independence of $W_H$ and the good event
+is not required. Applying \eqref{eq:corr} to the constant-true CNF
+shows that $\Prb[g=1]\ge1/4$ for sufficiently large $d$.
+
+Suppose there were a circuit for $f_n$ with at most $S\le2^{s\sqrt d}$
+total gates. Fix its parameter inputs to the setting chosen above.
+Delete gates not connected to the output. Each remaining middle AND gate
+is a CNF $H$ with at most $S$ distinct bottom clauses, and there are at
+most $S$ middle gates, even with shared bottom gates. Normalize its clauses
+by deleting true clauses and repeated literals; tautological clauses are
+true and are removed. A middle gate with a false clause computes zero
+and may be omitted.
+Delete from $H$ the clauses of width greater than $k$, obtaining $H'$.
+Then $H'\ge H$ and
+\[
+ \E(H'-H)\le S2^{-k}.
+\]
+Every input accepted by $H$ is accepted by the top OR, so $gH=H$.
+Equation \eqref{eq:corr} therefore implies
+\[
+ \E H\le6\cdot2^{-\mu/16}+S2^{-k}.
+\]
+Taking the union over middle gates yields
+\begin{align*}
+ \Prb[g=1]
+ &\le6S2^{-\mu/16}+S^2 2^{-k}\\
+ &\le6\cdot2^{-(3s+4)\sqrt d}
+             +2^{-(s+3)\sqrt d}=o(1),
+\end{align*}
+contradicting $\Prb[g=1]\ge1/4$.
+Hence $S_3(f_n)>2^{s\sqrt d}$ for every sufficiently large $n$.
+Finally,
+\[
+s\sqrt d=\frac{\sqrt{bd}}{256}
+       =\Theta\!\left(\sqrt{\frac{n\ln n}{\ln\ln n}}\right),
+\]
+because $d=\lfloor n/5\rfloor$ and
+$b=\Theta(\ln d/\ln\ln d)$. More explicitly, eventually
+\[
+ d\ge\frac n6,\qquad \ln d\ge\frac{\ln n}{2},\qquad
+ b\ge\frac{\ln d}{48K\ln\ln d}
+   \ge\frac{\ln n}{96K\ln\ln n}.
+\]
+It follows that
+\[
+ s\sqrt d\ge\frac1{6144\sqrt K}
+                 \sqrt{\frac{n\ln n}{\ln\ln n}},
+\]
+which proves Theorem~\ref{thm:main}. \hfill$\square$
+
+
+\section{Remarks on scope}
+The gain in the exponent is the unbounded factor
+$\sqrt{\ln n/\ln\ln n}$. It remains smaller than every fixed positive
+power of $n$, so this argument does not give $2^{n^{1/2+\varepsilon}}$ for
+fixed $\varepsilon>0$. The role of quantitative sparsification is specific:
+$M(b)\le\exp(O(b\log b))$ remains small enough compared with the
+$d^{1/6}$ independence parameter when $b$ is of order $\ln d/\ln\ln d$.
+The relation $s=\sqrt b/256$ then converts this width into the asserted
+circuit exponent.
+
+\paragraph{Size of the threshold.}
+The proof is asymptotic, with extremely conservative constants. The
+requirement $b\ge65536$ alone implies
+\[
+ \frac{\ln d}{\ln\ln d}\ge24K\cdot65536\ge3{,}145{,}728.
+\]
+On the large-$d$ branch this requires $d$ to have more than 24 million
+decimal digits. The other eventual inequalities may increase the threshold
+further. This is a limitation of the displayed parameter schedule, not a
+claim about the smallest lengths at which the lower bound is true.
+
+\paragraph{The logarithmic loss.}
+With the available estimate $M(b)\le\exp(O(b\ln b))$, certifying that
+$M(b)$ stays within a fixed power of $d$ leads to
+$b\ln b=O(\ln d)$. This accounts for the $\ln\ln n$ loss. A hypothetical
+uniform disjoint sparsification theorem with $M(b)\le2^{Cb}$ for an
+absolute $C$ and the same $2^{m/8}$ piece bound would permit
+$b=\delta\ln d$ for a sufficiently small absolute $\delta>0$.
+The same estimates would then give $2^{\Omega(\sqrt{n\ln n})}$ for this
+language, without implying the conjectural majority bound.
+Section~7 of~\cite{CIP} asks about a corresponding improvement in
+sparsification density. We do not assert that such a disjoint improvement
+is impossible; the present density estimate supplies a sufficient bound,
+not a matching lower bound.
+
+Increasing $t$ to another fixed power of $d$, while maintaining the input
+budget and hash estimates, would enlarge the polynomial density allowance.
+With the same sparsification estimate it would change constants, not the
+order $\ln d/\ln\ln d$ of the certified width. Moreover, $t$ determines the
+number of coefficient blocks, so changing it would define a variant of
+the language rather than merely retune its proof.
+
+All choices of parameter bits are existential restrictions of one fixed
+language. They may depend on $n$ and on the proof parameters, while the
+membership algorithm does not. The proof uses no uniformity assumption
+on the competing circuits.
+
+\appendix
+\section{The finite restriction argument}\label{app:restriction}
+For completeness, we reproduce the argument of~\cite[Section~2]{OAI26}
+in the notation of Lemma~\ref{lem:restriction}. The two points to check are
+an exact finite signed expansion into width-$b$ tests and a bound on its
+expected absolute coefficient mass. Counting paths backwards is what
+removes the number of clauses from that bound.
+
+\begin{proof}[Proof of Lemma~\ref{lem:restriction}]
+Normalize $H$ by deleting tautological and true clauses and deleting repeated
+literals within each remaining clause. Keep clause indices, including
+repeated clauses. Write $E_i$ for the scope of clause $C_i$. A violation of
+$C_i$ specifies a unique pattern on $E_i$; the false clause has empty scope.
+Fix a restriction $(T,\rho)$, and let $v_i(z)$ be its violation indicator.
+For $U\subseteq T$ set
+\[
+ q=\sum_i v_i,\qquad
+ a_U=\sum_{i:\,|E_i\cap(T\setminus U)|\le b}v_i,\qquad
+ c_U=\sum_{i:\,E_i\cap(T\setminus U)=\varnothing}v_i.
+\]
+Call an index hard at $U$ if $|E_i\cap(T\setminus U)|>b$.
+The function $K_0=\mathbf1[a_\varnothing=0]$ is a width-$b$ CNF.
+
+A path $P=(i_1,\ldots,i_j)$ starts at $U_0=\varnothing$, selects an index
+hard at $U_{h-1}$, and sets $U_h=U_{h-1}\cup(E_{i_h}\cap T)$.
+Each step adds at least $b+1$ coordinates, so paths have length at most
+$L=\lfloor |T|/(b+1)\rfloor$. On the support of
+$\prod_{h=1}^j v_{i_h}$, the selected indices are distinct and
+$a_{U_h}\ge c_{U_h}\ge h$.
+All fractions below are defined as zero when their numerator vanishes.
+
+For a nonempty path define
+\[
+ r_P=\frac{\prod_{h=1}^jv_{i_h}}
+                {q\prod_{h=1}^{j-1}a_{U_h}},\qquad
+ t_P=\frac{\prod_{h=1}^jv_{i_h}}
+                {\prod_{h=1}^{j}a_{U_h}}.
+\]
+Since $q=a_{U_j}+\sum_{i\text{ hard at }U_j}v_i$,
+\[
+ r_P=t_P-\sum_{i\text{ hard at }U_j}r_{Pi}.
+\]
+At a point with $K_0=1$ and $q>0$, all violated clauses are initially hard,
+and $\sum_{|P|=1}r_P=1$. Iterating the displayed identity until there are
+no further paths gives
+\begin{equation}\label{eq:audited-expansion}
+ H_{T,\rho}=K_0+
+   \sum_{j=1}^{L}(-1)^j\sum_{|P|=j}K_0t_P.
+\end{equation}
+At points with $K_0=0$ every term vanishes; at points with $q=0$ the
+nonempty-path terms vanish and $K_0=H_{T,\rho}=1$.
+Thus this is an identity on the whole cube, not just on its error set.
+
+Call a path compatible with $\rho$ when its selected violating patterns
+are mutually consistent and agree with $\rho$ on fixed coordinates.
+For such a path, all selected violations prescribe a single pattern
+$\sigma_P$ on $U_j$. Denote its cylinder by $Z_P$.
+The numerator of $t_P$ is $\mathbf1_{Z_P}$.
+On $Z_P$ the function $c_{U_h}$ is a positive constant $c_h$, because all
+variables of every counted clause have been fixed. Moreover,
+\[
+ a_{U_h}=c_h+w_h,
+ \qquad
+ w_h=\sum_{i:\,0<|E_i\cap(T\setminus U_h)|\le b}v_i.
+\]
+After substituting the final pattern $\sigma_P$, the indexed clauses
+counted by $w_h$ have width at most $b$ on the remaining coordinates.
+Their multiplicities and any constant clauses are retained.
+
+For any indexed family of clauses and positive integer $c$, randomly
+permute its clause objects together with $c$ distinct markers, and take
+the conjunction of the clauses preceding the first marker. On an assignment
+violating $w$ of those clauses, this conjunction holds with probability
+$c/(c+w)$: the earliest of the $w$ violated clause objects and $c$ markers
+must be a marker. This is a finite convex mixture of CNF indicators.
+Apply the construction independently for each $h$, then conjoin the sampled
+CNFs with $K_0$ and the unit clauses defining $Z_P$. Every resulting test
+$J_P$ has width at most $b$, using $b\ge1$. It satisfies
+\[
+ K_0t_P=\omega(P)\,\E J_P,
+ \qquad \omega(P)=\prod_{h=1}^j\frac1{c_h}.
+\]
+An incompatible path contributes zero. Define
+\[
+ W_0=1,\qquad
+ W_j=\sum_{\substack{|P|=j\\P\text{ compatible with }\rho}}\omega(P),
+ \qquad W=\sum_{j=0}^{\lfloor d/(b+1)\rfloor}W_j.
+\]
+Equation~\eqref{eq:audited-expansion} and the triangle inequality prove
+$|\E_zGH_{T,\rho}|\le W\corr_b(G)$ for every $G$ simultaneously.
+The construction of $W$ never uses $G$.
+
+It remains to prove $\E W_j\le\theta^j$ for $j\ge1$.
+Generate a uniform full assignment $y$, independently of $T$, and set
+$\rho=y|_{[d]\setminus T}$. Conditional on $(T,\rho)$, a compatible path
+has all its clauses violated by $y$ with probability $2^{-|U_j|}$.
+Consequently
+\begin{equation}\label{eq:audited-reweight}
+ \E W_j=\E_{T,y}
+ \sum_{\substack{|P|=j\\C_{i_1},\ldots,C_{i_j}\text{ violated by }y}}
+ 2^{|U_j|}\prod_{h=1}^j\frac1{c_{U_h}(y|_T)}.
+\end{equation}
+This is conditional cylinder averaging; it makes no claim of independence
+between the path and its denominators.
+
+Fix $y$, and for a remainder $R\subseteq[d]$ put
+\[
+ V_R=\{i:C_i(y)=0,\ E_i\cap R=\varnothing\}.
+\]
+An actual path has $R_h=T\setminus U_h$ and
+$D_h=U_h\setminus U_{h-1}$, with
+\[
+ i_h\in V_{R_h},\qquad D_h\subseteq E_{i_h},\qquad |D_h|>b,
+ \qquad R_{h-1}=R_h\mathbin{\dot\cup}D_h,\qquad
+ c_{U_h}(y|_T)=|V_{R_h}|.
+\]
+Its terminal remainder $R_j$ and the reverse sequence
+$(i_j,D_j),\ldots,(i_1,D_1)$ determine both $T$ and its entire indexed
+path. Hence this is an injective encoding even when clauses repeat.
+
+Let $\alpha=2p/(1-p)$ and
+$\pi(R)=p^{|R|}(1-p)^{d-|R|}$. The weight of an encoded path in
+\eqref{eq:audited-reweight}, including its live-set probability, is exactly
+\[
+ \pi(T)2^{|U_j|}\prod_h\frac1{|V_{R_h}|}
+   =\pi(R_j)\prod_h\frac{\alpha^{|D_h|}}{|V_{R_h}|}.
+\]
+Enlarge the reverse sequences by allowing, at any state $R$, every choice
+$i\in V_R$ and $D\subseteq E_i$ with $|D|>b$, followed by $R\cup D$.
+Here $D\cap R=\varnothing$ because $i\in V_R$.
+All weights are nonnegative, and the outgoing weight at each state with
+$V_R\ne\varnothing$ is at most
+\[
+ \frac1{|V_R|}\sum_{i\in V_R}
+          \sum_{\ell=b+1}^{|E_i|}\binom{|E_i|}{\ell}\alpha^\ell
+ \le\sum_{\ell=b+1}^k\binom{k}{\ell}\alpha^\ell=\theta.
+\]
+If $V_R$ is empty there are no outgoing steps. Induction on the number
+of reverse steps bounds their total weight from any state by $\theta^j$.
+Summing over terminal remainders costs only
+$\sum_R\pi(R)=1$. This proves $\E_T[\text{path mass}]\le\theta^j$ for every fixed $y$, and
+therefore $\E W_j\le\theta^j$.
+
+Finally $\E W\le\sum_{j=0}^{\lfloor d/(b+1)\rfloor}\theta^j
+\le(1-\theta)^{-1}$. Empty formulas, false clauses, repeated clauses,
+empty live sets, and $k\le b$ all satisfy the same argument.
+\end{proof}
+
+
+\section{Verification and provenance}\label{app:verification}
+The source construction and restriction argument were read at repository
+revision \href{https://github.com/openai/math/commit/adc7f1241b42e322a6451854ab7e4b4c146bf78a}{\texttt{adc7f1241b42e}}. The accompanying
+research note records the detailed literature comparison and search scope.
+The manuscript date of the source is September 23, 2026; its inspected Git
+revision is dated October 6, 2026. These dates alone do not establish
+publication priority for an unstated consequence.
+
+Two Python programs accompany the derivation. The file
+\path{check_quantitative_depth_three.py} checks the elementary constants
+with exact arithmetic and nine illustrative parameter choices in the log
+domain. The chosen sample values of $K$ are not certified sparsification
+constants. The file \path{check_restriction_lemma.py} checks all 512
+sets of normalized clauses on two variables, and 11 additional formulas
+at two rational retention probabilities. Its 534 formula--parameter cases
+cover 11,254 restrictions and 43,524 completions, including nonzero
+three-step paths and marker mixtures with seven indexed clauses.
+All checks passed. These finite diagnostics support the proof but do not
+replace its universal arguments.
+
+The repository contains a Lean theorem for the restriction lemma and
+finite numerical estimates. The strengthened rate and growing schedule
+in this paper have not been integrated into that formalization, and no
+fresh Lean kernel verification was performed for this work. The manuscript
+was prepared with assistance from Codex, including derivation review,
+literature search, computational diagnostics, and typesetting. It is a
+research preprint and has not undergone external peer review.
+
+\begin{thebibliography}{9}
+\bibitem{OAI26}
+OpenAI.
+\emph{Beyond the Square-Root Exponent for Depth-Three Boolean Circuits}.
+Manuscript dated September 23, 2026. Repository revision
+\texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
+\href{https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Beyond-the-Square-Root-Exponent-for-Depth-Three-Boolean-Circuits-September-23-2026}{Source manuscript and LaTeX}.
+
+\bibitem{CIP}
+Chris Calabro, Russell Impagliazzo, and Ramamohan Paturi.
+A duality between clause width and clause density for SAT.
+In \emph{21st IEEE Conference on Computational Complexity},
+pages 252--260, 2006. Section 6.
+\href{https://doi.org/10.1109/CCC.2006.6}{doi:10.1109/CCC.2006.6}.
+\href{https://cseweb.ucsd.edu/~ccalabro/cip.pdf}{Author manuscript}.
+
+\bibitem{DHMTW}
+Holger Dell, Thore Husfeldt, D\'aniel Marx, Nina Taslaman, and Martin Wahl\'en.
+Exponential time complexity of the permanent and the Tutte polynomial.
+\emph{ACM Transactions on Algorithms}, 10(4), article 21, 2014.
+Appendix A of the \href{https://arxiv.org/abs/1206.1775v1}{2012 full version}.
+\href{https://doi.org/10.1145/2635812}{doi:10.1145/2635812}.
+
+\bibitem{Williams}
+R. Ryan Williams.
+Counting solutions to polynomial systems via reductions.
+In \emph{SOSA 2018}, OASIcs 61, article 6, 2018. Section 4, p.~6:9.
+\href{https://people.csail.mit.edu/rrw/counting-sosa.pdf}{Author manuscript}.
+
+\bibitem{PSZ00}
+Ramamohan Paturi, Michael E. Saks, and Francis Zane.
+Exponential lower bounds for depth three Boolean circuits.
+\emph{Computational Complexity}, 9(1):1--15, 2000.
+\href{https://doi.org/10.1007/PL00001598}{doi:10.1007/PL00001598}.
+
+\bibitem{GKKPRST}
+Mohit Gurumukhani, Daniel Kleber, Ramamohan Paturi, Christopher Rosin,
+Michael Saks, and Navid Talebanfard.
+\emph{Optimal Monotone Depth-Three Circuit Lower Bounds for Majority}.
+arXiv:2601.04072v2, February 3, 2026.
+\href{https://arxiv.org/abs/2601.04072v2}{arXiv:2601.04072v2}.
+
+\bibitem{GKPRT26IP}
+Mohit Gurumukhani, Daniel Kleber, Ramamohan Paturi, Christopher Rosin,
+and Navid Talebanfard.
+\emph{Optimal Depth-Three Circuits for Inner Product}.
+arXiv:2601.04446v2, February 12, 2026.
+\href{https://arxiv.org/abs/2601.04446v2}{arXiv:2601.04446v2}.
+\end{thebibliography}
+\end{document}

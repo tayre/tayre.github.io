@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A quantitative refinement of a depth-three circuit lower bound — Tom Ayre</title>
+  <meta name="description" content="A research preprint by Tom Ayre deriving an explicit depth-three Boolean circuit lower bound through quantitative CNF sparsification. Full PDF, LaTeX source, and Python checks.">
+  <meta name="author" content="Tom Ayre">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tayre.github.io/depth-three/">
+  <meta name="citation_title" content="A quantitative refinement of a depth-three circuit lower bound">
+  <meta name="citation_author" content="Tom Ayre">
+  <meta name="citation_publication_date" content="2026/10/06">
+  <meta name="citation_pdf_url" content="https://tayre.github.io/depth-three/depth-three-quantitative-bound.pdf">
+  <meta name="citation_language" content="en">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A quantitative refinement of a depth-three circuit lower bound">
+  <meta property="og:description" content="An explicit quantitative refinement of OpenAI's depth-three circuit construction, with proof, sources, and reproducibility checks.">
+  <meta property="og:url" content="https://tayre.github.io/depth-three/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "A quantitative refinement of a depth-three circuit lower bound",
+    "author": {"@type": "Person", "name": "Tom Ayre", "url": "https://tayre.github.io/"},
+    "datePublished": "2026-10-06",
+    "dateModified": "2026-10-06",
+    "url": "https://tayre.github.io/depth-three/",
+    "mainEntityOfPage": "https://tayre.github.io/depth-three/",
+    "inLanguage": "en",
+    "isAccessibleForFree": true,
+    "description": "A research preprint deriving the explicit lower bound 2^(c sqrt(n ln n / ln ln n)) for the existing depth-three circuit construction using quantitative disjoint CNF sparsification.",
+    "encoding": {
+      "@type": "MediaObject",
+      "encodingFormat": "application/pdf",
+      "contentUrl": "https://tayre.github.io/depth-three/depth-three-quantitative-bound.pdf"
+    }
+  }
+  </script>
+  <style>
+    :root { color-scheme: light; --ink: #202c30; --muted: #536369; --accent: #14665b; --line: #d6dedb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fcfcf9; color: var(--ink); font: 18px/1.65 Georgia, "Times New Roman", serif; }
+    main { max-width: 790px; margin: 0 auto; padding: 38px 28px 48px; }
+    nav, .byline, .status, .downloads, footer { font-family: system-ui, sans-serif; }
+    nav { margin-bottom: 32px; font-size: 14px; }
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: #093b33; }
+    a:focus-visible { outline: 3px solid #adccbf; outline-offset: 4px; }
+    h1 { margin: 0 0 14px; font-size: clamp(29px, 4.5vw, 39px); font-weight: 500; line-height: 1.18; letter-spacing: -.025em; }
+    h2 { margin: 30px 0 10px; font-size: 23px; font-weight: 500; }
+    p { margin: 0 0 16px; }
+    .byline { margin-bottom: 28px; color: var(--muted); font-size: 15px; }
+    .byline strong { color: var(--ink); font-weight: 600; }
+    .abstract { font-size: 17px; }
+    .result { margin: 24px 0; padding: 18px 20px; background: #edf3ee; border-left: 3px solid var(--accent); }
+    .result math { font-size: clamp(20px, 4vw, 26px); margin: 8px 0 12px; }
+    .result p { margin: 0; font-size: 15px; }
+    .downloads { padding-left: 22px; font-size: 16px; }
+    .downloads li { margin-bottom: 10px; }
+    .downloads span { color: var(--muted); }
+    .status { color: var(--muted); font-size: 14px; }
+    pre { padding: 16px 18px; background: #f0f1ec; overflow-x: auto; font-size: 13px; line-height: 1.7; }
+    code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    @media (max-width: 480px) { main { padding: 24px 20px 36px; } nav { margin-bottom: 24px; } .result { padding: 14px 12px; } }
+  </style>
+</head>
+<body>
+<main>
+  <nav aria-label="Breadcrumb"><a href="/">Tom Ayre</a> / Research</nav>
+  <article>
+    <header>
+      <h1>A quantitative refinement of a depth-three circuit lower bound</h1>
+      <p class="byline"><strong>Tom Ayre</strong> · <time datetime="2026-10-06">October 6, 2026</time> · Research preprint</p>
+    </header>
+    <section aria-labelledby="abstract-title" class="abstract">
+      <h2 id="abstract-title">Abstract</h2>
+      <p>OpenAI's depth-three circuit construction gives a single polynomial-time
+        language whose <i>n</i>-bit membership function requires
+        2<sup>ω(√n)</sup> total gates in unrestricted OR–AND–OR circuits.
+        We derive the explicit lower bound 2<sup>c√(n ln n / ln ln n)</sup>
+        for an absolute <i>c</i> &gt; 0, at every sufficiently large input length,
+        for the same language. The additional input is the published quantitative
+        form of disjoint CNF sparsification, with clause density at most
+        (<i>Kb</i>)<sup><i>Kb</i></sup> at width <i>b</i>. This permits the target
+        width to grow as Θ(ln n / ln ln n). We verify the counting, moment,
+        restriction, and gate-count estimates uniformly for this schedule.
+        We also reproduce the source's finite restriction argument, including
+        the backwards path count that removes dependence on the number of
+        clauses. The refinement changes the proof parameters, not the language
+        or its evaluation algorithm.</p>
+    </section>
+    <div class="result">
+      <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="S three of f n is greater than two to the power c times the square root of n natural log n divided by natural log natural log n">
+        <mrow>
+          <msub><mi>S</mi><mn>3</mn></msub><mo stretchy="false">(</mo><msub><mi>f</mi><mi>n</mi></msub><mo stretchy="false">)</mo><mo>&gt;</mo>
+          <msup><mn>2</mn><mrow><mi>c</mi><msqrt><mfrac><mrow><mi>n</mi><mspace width="0.15em"/><mi mathvariant="normal">ln</mi><mo>&#x2061;</mo><mi>n</mi></mrow><mrow><mi mathvariant="normal">ln</mi><mo>&#x2061;</mo><mrow><mi mathvariant="normal">ln</mi><mo>&#x2061;</mo><mi>n</mi></mrow></mrow></mfrac></msqrt></mrow></msup>
+        </mrow>
+      </math>
+      <p>For some absolute <i>c</i> &gt; 0 and every sufficiently large <i>n</i>.
+        <i>S</i><sub>3</sub> counts all gates, with unrestricted fan-in and fan-out.</p>
+    </div>
+    <section aria-labelledby="resources-title">
+      <h2 id="resources-title">Paper and resources</h2>
+      <ul class="downloads">
+        <li><a href="depth-three-quantitative-bound.pdf">Read the paper (PDF)</a> <span>— complete proof and references</span></li>
+        <li><a href="depth-three-quantitative-bound.tex">LaTeX source</a> <span>— standalone paper</span></li>
+        <li><a href="derivation-and-literature-notes.tex">Extended derivation and literature notes (TeX)</a></li>
+        <li><a href="check_quantitative_depth_three.py">Quantitative checks (Python)</a> <span>— exact constants and nine parameter examples</span></li>
+        <li><a href="check_restriction_lemma.py">Restriction-lemma checks (Python)</a> <span>— 534 finite cases</span></li>
+        <li><a href="README.md">README</a> <span>— build instructions and verification details</span></li>
+      </ul>
+    </section>
+    <section aria-labelledby="scope-title">
+      <h2 id="scope-title">Contribution and status</h2>
+      <p>The language and restriction lemma come from
+        <a href="https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Beyond-the-Square-Root-Exponent-for-Depth-Three-Boolean-Circuits-September-23-2026">OpenAI's source manuscript</a>.
+        This note supplies a growing-parameter schedule and uniform estimates,
+        using the published sparsification bounds of
+        <a href="https://cseweb.ucsd.edu/~ccalabro/cip.pdf">Calabro, Impagliazzo, and Paturi</a>,
+        the disjoint refinement of
+        <a href="https://arxiv.org/abs/1206.1775v1">Dell and coauthors</a>, and the quantitative counting form used by
+        <a href="https://people.csail.mit.edu/rrw/counting-sosa.pdf">Williams</a>.</p>
+      <p>The theorem is asymptotic, and the current proof uses an extremely large
+        threshold. The revised proof makes the finite sparsification statement,
+        disjointness, and uniform constants explicit. It also explains the
+        limitation imposed by the available sparsification bound.</p>
+      <p class="status">Novelty and publication priority remain unconfirmed.
+        This preprint has not undergone external peer review. The Python checks
+        are finite diagnostics, not a formal verification. No fresh Lean kernel
+        verification was performed. The manuscript was prepared with assistance
+        from Codex.</p>
+    </section>
+    <section aria-labelledby="reproduce-title">
+      <h2 id="reproduce-title">Run the checks</h2>
+      <p>Download both Python files and run them with Python 3.11 or later.
+        They use only the standard library.</p>
+      <pre><code>python3 check_quantitative_depth_three.py
+python3 check_restriction_lemma.py</code></pre>
+      <p>To rebuild the PDF, download the main LaTeX source and run:</p>
+      <pre><code>tectonic --untrusted depth-three-quantitative-bound.tex</code></pre>
+    </section>
+  </article>
+  <footer>Tom Ayre · <a href="https://github.com/tayre/tayre.github.io/tree/master/depth-three">Source files on GitHub</a></footer>
+</main>
+</body>
+</html>

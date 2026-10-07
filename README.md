@@ -63,3 +63,11 @@ by Kystverket under [NLOD](https://www.kystverket.no/en/navigation-and-monitorin
 Run the tracker checks with `node --test trollfjord/tests/*.test.cjs`.
 Publish these static files with the rest of the GitHub Pages site to make it
 available at https://tayre.github.io/trollfjord/.
+
+The **depth-three circuit lower bound paper** lives at
+[`/depth-three/`](https://tayre.github.io/depth-three/). Its directory contains
+the revised PDF, standalone LaTeX sources, two Python diagnostic scripts, and
+[a short reproduction guide](depth-three/README.md). The static landing page
+provides the abstract, citation metadata, and direct resource links. The root
+robots file permits crawling the homepage and this directory, and advertises
+the paper's sitemap. Google decides whether and when to index the content.
