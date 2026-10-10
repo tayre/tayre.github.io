@@ -1,12 +1,15 @@
-import { createProgress, normalizeProgress, factKey, makeRound, recordAttempt, getStats, getTableStats, getHint } from './engine.js';
+import { createProgress, normalizeProgress, factKey, makeRound, recordAttempt, getStats, getTableStats } from './engine.js';
 import { getPacing, HINT_AT_MS, REVEAL_AT_MS, FULL_REVEAL_AT_MS } from './pacing.js';
 import { FACTS, FACT_TOPICS } from './facts-data.js';
 import { createFactProgress, normalizeFactProgress, makeFactRound, recordFactAttempt, getFactStats } from './facts-engine.js';
+import { makeMemoryLesson, recordMemoryAttempt } from './memory.js';
+import { getMemoryStrategy } from './memory-strategies.js';
 
 const STORAGE_KEY = 'grade4.multiplication.v1';
 const SETTINGS_KEY = 'grade4.multiplication.tables.v1';
 const POINTS_KEY = 'grade4.multiplication.points.v1';
 const FACTS_KEY = 'grade4.facts.v1';
+const MODE_KEY = 'grade4.multiplication.mode.v1';
 const FACT_READING_TIME_MS = 3000;
 const $ = (selector) => document.querySelector(selector);
 const allTables = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -30,10 +33,14 @@ let reviewFacts = [];
 let reviewFactIds = [];
 let selectedFactTopics = ['geography', 'science'];
 let activeLesson = 'math';
+let mathMode = readSaved(MODE_KEY) === 'quick' ? 'quick' : 'learn';
+let lesson = null;
+let studyIndex = 0;
 let explored = { a: 3, b: 4 };
 let questionTimer = null;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const isFactRound = () => round?.kind === 'facts';
+const isLearningRound = () => round?.kind === 'math' && round.mode === 'learn';
 const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 
 function answerText() {
@@ -66,16 +73,17 @@ function updatePacing() {
   if (!round || round.solved) return;
   const elapsed = elapsedTime();
   const readingTime = isFactRound() ? FACT_READING_TIME_MS : 0;
-  const state = getPacing(Math.max(0, elapsed - readingTime), { hintUsed: round.assisted, misses: round.misses });
+  const pace = isLearningRound() ? 2 : 1;
+  const state = getPacing(Math.max(0, elapsed - readingTime) / pace, { hintUsed: round.assisted, misses: round.misses });
   if (state.hintDue && !round.hintShown) showHint({ automatic: true });
   round.availablePoints = state.points;
   $('#available-points').textContent = `${state.points} points available`;
-  $('#reveal-fill').style.width = `${Math.min(100, elapsed / (FULL_REVEAL_AT_MS + readingTime) * 100)}%`;
+  $('#reveal-fill').style.width = `${Math.min(100, elapsed / (FULL_REVEAL_AT_MS * pace + readingTime) * 100)}%`;
   $('#pacing-caption').textContent = state.fullyRevealed ? 'The answer is here. You can still earn points!'
     : state.answerDue ? 'The answer is appearing…'
-      : state.hintDue ? `Try the hint · answer appears in ${Math.ceil((REVEAL_AT_MS + readingTime - elapsed) / 1000)}s`
-        : round.hintShown ? `Hint ready · answer appears in ${Math.ceil((REVEAL_AT_MS + readingTime - elapsed) / 1000)}s`
-          : `Hint in ${Math.ceil((HINT_AT_MS + readingTime - elapsed) / 1000)}s · answer begins to appear at ${(REVEAL_AT_MS + readingTime) / 1000}s`;
+      : state.hintDue ? `Try the hint · answer appears in ${Math.ceil((REVEAL_AT_MS * pace + readingTime - elapsed) / 1000)}s`
+        : round.hintShown ? `Hint ready · answer appears in ${Math.ceil((REVEAL_AT_MS * pace + readingTime - elapsed) / 1000)}s`
+          : `Hint in ${Math.ceil((HINT_AT_MS * pace + readingTime - elapsed) / 1000)}s · answer begins to appear at ${(REVEAL_AT_MS * pace + readingTime) / 1000}s`;
   if (state.answerDue) {
     round.assisted = true;
     $('#answer-reveal').textContent = answerText();
@@ -105,7 +113,7 @@ function showView(name, { focus = true } = {}) {
   document.querySelectorAll('.view').forEach((element) => { element.hidden = element.id !== `${name}-view`; });
   document.querySelectorAll('.nav-link').forEach((button) => {
     const lessonView = activeLesson === 'facts' ? 'facts' : 'home';
-    const current = button.dataset.view === name || (button.dataset.view === lessonView && ['practice', 'results'].includes(name));
+    const current = button.dataset.view === name || (button.dataset.view === lessonView && ['learn', 'practice', 'results'].includes(name));
     button.classList.toggle('active', current);
     if (current) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
@@ -137,10 +145,17 @@ function renderPicker() {
 }
 
 function updatePicker() {
+  const learning = mathMode === 'learn';
+  $('#learn-mode').setAttribute('aria-pressed', String(learning));
+  $('#quick-mode').setAttribute('aria-pressed', String(!learning));
+  $('#setup-count').textContent = learning ? '3 facts at a time' : '10 questions';
+  $('#start-round').innerHTML = `${learning ? 'Learn 3 facts' : 'Let’s practice'} <span aria-hidden="true">↗</span>`;
+  $('#setup-footnote').textContent = learning ? 'Look, say, remember · More time to think' : 'Hint at 5s · Answer fades in at 10s · Up to 100 points';
   document.querySelectorAll('[data-table]').forEach((button) => button.setAttribute('aria-pressed', String(selected.has(Number(button.dataset.table)))));
   $('#start-round').disabled = !selected.size;
   $('#all-tables').textContent = selected.size === 10 ? 'Clear selection' : 'Choose all';
   $('#selection-note').textContent = !selected.size ? 'Pick at least one table to get going.'
+    : learning ? selected.size === 1 ? `Three facts from the ${[...selected][0]}s, with a trick to help them stick.` : 'We’ll focus on one of your chosen tables at a time.'
     : selected.size === 10 ? 'The whole crew! A mix of tables from 1 to 10.'
       : [...selected].sort((a, b) => a - b).join(', ') === '2, 5, 10' ? 'A friendly place to start.'
         : selected.size === 1 ? `All 10 facts in the ${[...selected][0]} times table.`
@@ -204,11 +219,47 @@ function startFactRound(topics = selectedFactTopics, reviewIds = null) {
 }
 
 function startRound(facts = null) {
+  if (mathMode === 'learn') {
+    lesson = makeMemoryLesson({ tables: [...selected], progress, reviewFacts: facts });
+    if (!lesson.facts.length) return;
+    pauseQuestionClock();
+    round = null;
+    activeLesson = 'math';
+    studyIndex = 0;
+    renderStudy();
+    showView('learn');
+    return;
+  }
   const questions = makeRound({ tables: [...selected], progress, reviewFacts: facts });
   if (!questions.length) return;
   pauseQuestionClock();
   activeLesson = 'math';
-  round = { kind: 'math', questions, index: 0, results: [], input: '', solved: false, assisted: false, misses: 0, scored: false };
+  round = { kind: 'math', mode: 'quick', questions, index: 0, results: [] };
+  showView('practice', { focus: false });
+  renderQuestion();
+}
+
+function renderStudy() {
+  const { a, b } = lesson.facts[studyIndex];
+  const strategy = getMemoryStrategy(a, b);
+  $('#study-count').textContent = `Fact ${studyIndex + 1} of ${lesson.facts.length}`;
+  $('#learn-title').textContent = `Let’s learn a little of the ${a}s.`;
+  $('#study-equation').textContent = `${a} × ${b} = ${a * b}`;
+  $('#study-strategy').textContent = strategy.title;
+  $('#study-steps').innerHTML = strategy.steps.map((step) => `<li>${escapeHTML(step)}</li>`).join('');
+  $('#study-shortcut').textContent = strategy.equation;
+  $('#study-flip').textContent = strategy.flip;
+  $('#study-array-caption').textContent = `${a} rows of ${b} dots make ${a * b}.`;
+  drawMemoryDots($('#study-dots'), strategy);
+  $('#study-groups').innerHTML = strategy.groups.map((group, index) => `<span class="group-label group-${index}">${escapeHTML(group.label)}</span>`).join('');
+  $('#study-back').disabled = studyIndex === 0;
+  $('#study-next').innerHTML = `${studyIndex + 1 === lesson.facts.length ? 'Try from memory' : 'Next fact'} <span aria-hidden="true">→</span>`;
+  $('#study-plan').textContent = `Look and say each fact. Then try ${lesson.questions.length} ${lesson.questions.length === 1 ? 'question' : 'short questions'} from memory.`;
+}
+
+function beginRecall() {
+  round = { kind: 'math', mode: 'learn', questions: lesson.questions, lessonFacts: lesson.facts,
+    creditedKeys: new Set(), index: 0, results: [] };
   showView('practice', { focus: false });
   renderQuestion();
 }
@@ -238,12 +289,12 @@ function renderQuestion() {
   } else {
     $('#equation').innerHTML = `${a} <span class="times" aria-hidden="true">×</span> ${b}`;
     $('#equation').setAttribute('aria-label', `${a} times ${b}`);
-    $('#round-title').textContent = 'A little practice goes a long way';
+    $('#round-title').textContent = isLearningRound() ? `REMEMBER THE ${a}s · TRY ${question.visit} OF ${round.lessonFacts.length}` : 'A little practice goes a long way';
   }
   $('#answer').value = '';
   $('#answer').classList.remove('correct');
   $('#answer').setAttribute('aria-label', `Your answer to ${a} times ${b}`);
-  $('#feedback').textContent = factsMode ? 'Read, think, then tap your answer.' : 'Try it before the hints appear!';
+  $('#feedback').textContent = factsMode ? 'Read, think, then tap your answer.' : isLearningRound() ? 'Picture the groups. Say the fact in your head.' : 'Try it before the hints appear!';
   $('#feedback').className = 'feedback';
   $('#question-label').textContent = 'GIVE IT A GO';
   $('#answer-reveal').textContent = '';
@@ -264,9 +315,9 @@ function renderQuestion() {
   resumeQuestionClock();
 }
 
-function drawDots(element, a, b) {
-  element.style.setProperty('--cols', b);
-  element.innerHTML = '<i></i>'.repeat(a * b);
+function drawMemoryDots(element, strategy) {
+  element.style.setProperty('--cols', strategy.groups[0].columns);
+  element.innerHTML = strategy.groups.map((group, index) => `<span class="dot-group group-${index}">${'<i></i>'.repeat(group.rows * group.columns)}</span>`).join('');
 }
 
 function showHint({ automatic = false } = {}) {
@@ -275,7 +326,7 @@ function showHint({ automatic = false } = {}) {
   round.hintShown = true;
   const question = round.questions[round.index];
   const { a, b } = question;
-  const hint = isFactRound() ? question.hint : getHint(a, b);
+  const hint = isFactRound() ? question.hint : getMemoryStrategy(a, b).summary;
   // Automatic help stays beside the question; the full picture is optional.
   if (!automatic && !isFactRound()) $('#hint-panel').hidden = false;
   $('#hint-text').textContent = hint;
@@ -284,8 +335,8 @@ function showHint({ automatic = false } = {}) {
   if (round.misses === 0) $('#feedback').textContent = 'A hint is here. Keep going — you’ve got this!';
   $('#reveal-announcement').textContent = `Here’s a hint: ${hint}`;
   if (!isFactRound()) {
-    $('#array-caption').textContent = `${a} ${a === 1 ? 'row' : 'rows'} of ${b}. Count by ${b}s to find the total.`;
-    drawDots($('#dot-array'), a, b);
+    $('#array-caption').textContent = `${a} ${a === 1 ? 'row' : 'rows'} of ${b}. Use the groups to find the total.`;
+    drawMemoryDots($('#dot-array'), getMemoryStrategy(a, b));
   }
   $('#show-hint').hidden = isFactRound() || !automatic;
   if (automatic && !isFactRound()) $('#show-hint').innerHTML = '<span aria-hidden="true">✧</span> Show me a picture';
@@ -330,7 +381,8 @@ function checkAnswer() {
       recordFactAttempt(factProgress, { id: question.id, correct, assisted: round.assisted });
       save(FACTS_KEY, factProgress);
     } else {
-      recordAttempt(progress, { a, b, correct, assisted: round.assisted });
+      if (isLearningRound()) recordMemoryAttempt(progress, { a, b, correct, assisted: round.assisted, creditedKeys: round.creditedKeys });
+      else recordAttempt(progress, { a, b, correct, assisted: round.assisted });
       save();
     }
     round.scored = true;
@@ -380,7 +432,7 @@ function checkAnswer() {
   $('#answer-reveal').textContent = answerText();
   $('#answer-reveal').style.opacity = 1;
   $('#reveal-placeholder').hidden = true;
-  $('#timed-hint').textContent = factsMode ? question.explanation : `${a} × ${b} = ${a * b}. One more fact practiced!`;
+  $('#timed-hint').textContent = factsMode ? question.explanation : `Say it: ${a} times ${b} is ${a * b}. Flip it: ${b} × ${a} = ${a * b}, too!`;
   $('#show-hint').hidden = true;
   $('#check-answer').hidden = true;
   $('#next-question').hidden = false;
@@ -398,6 +450,7 @@ function nextQuestion() {
 function finishRound() {
   pauseQuestionClock();
   const factsMode = isFactRound();
+  const learning = isLearningRound();
   const clean = round.results.filter((fact) => fact.clean).length;
   const total = round.questions.length;
   const points = round.results.reduce((sum, result) => sum + result.points, 0);
@@ -408,15 +461,17 @@ function finishRound() {
     factProgress.completedRounds += 1;
     save(FACTS_KEY, factProgress);
   } else {
-    reviewFacts = round.results.filter((fact) => !fact.clean).map(({ a, b }) => ({ a, b }));
+    reviewFacts = [...new Map(round.results.filter((fact) => !fact.clean).map(({ a, b }) => [factKey(a, b), { a, b }])).values()];
     progress.completedRounds += 1;
     save();
   }
   $('#result-clean').textContent = clean;
   $('#result-learning').textContent = total - clean;
   $('#result-total').textContent = total;
+  $('#result-total-label').textContent = learning ? 'practice tries' : 'facts practiced';
   $('#results-title').textContent = clean === total ? 'That’s a round of high-fives!' : 'Your brain just got some practice.';
   $('#results-message').textContent = clean === total ? 'You found every answer on your own. Look at you go!' : 'Every try helps it stick. Be proud of showing up and sticking with it.';
+  if (learning) $('#results-message').textContent = `You practiced ${round.lessonFacts.length} ${round.lessonFacts.length === 1 ? 'fact' : 'facts'}. Come back another day to help them stick!`;
   const reviewCount = factsMode ? reviewFactIds.length : reviewFacts.length;
   $('#review-section').hidden = !reviewCount;
   $('#review-round').hidden = !reviewCount;
@@ -441,9 +496,10 @@ function selectExplore(a, b) {
   explored = { a, b };
   $('#explore-equation').textContent = `${a} × ${b} = ${a * b}`;
   $('#explore-flip').textContent = `${b} × ${a} = ${a * b}, too!`;
-  $('#explore-caption').textContent = `${a} ${a === 1 ? 'row' : 'rows'} of ${b} ${a === 1 ? 'makes' : 'make'} ${a * b}.`;
+  const strategy = getMemoryStrategy(a, b);
+  $('#explore-caption').textContent = `${strategy.title}: ${strategy.equation}.`;
   $('#practice-explored').innerHTML = `Practice the ${a}s <span aria-hidden="true">↗</span>`;
-  drawDots($('#explore-dots'), a, b);
+  drawMemoryDots($('#explore-dots'), strategy);
   $('#times-grid').querySelectorAll('[data-explore-a]').forEach((button) => {
     const match = Number(button.dataset.exploreA) === a && Number(button.dataset.exploreB) === b;
     button.classList.toggle('selected', match);
@@ -478,6 +534,16 @@ document.addEventListener('click', (event) => {
 $('#easy-tables').addEventListener('click', () => chooseTables([2, 5, 10]));
 $('#all-tables').addEventListener('click', () => chooseTables(selected.size === 10 ? [] : allTables));
 $('#start-round').addEventListener('click', () => startRound());
+for (const mode of ['learn', 'quick']) $(`#${mode}-mode`).addEventListener('click', () => {
+  mathMode = mode;
+  save(MODE_KEY, mode);
+  updatePicker();
+});
+$('#study-back').addEventListener('click', () => { if (studyIndex > 0) { studyIndex -= 1; renderStudy(); } });
+$('#study-next').addEventListener('click', () => {
+  if (studyIndex + 1 === lesson.facts.length) beginRecall();
+  else { studyIndex += 1; renderStudy(); $('#study-equation').focus({ preventScroll: true }); }
+});
 $('#check-answer').addEventListener('click', checkAnswer);
 $('#next-question').addEventListener('click', nextQuestion);
 $('#show-hint').addEventListener('click', () => {

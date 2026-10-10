@@ -33,25 +33,26 @@
           <div class="welcome">
             <p class="eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span> LESSON 01 · MULTIPLICATION</p>
             <h1 id="home-title">Little practice.<br>Big <span class="underline">high-fives.</span></h1>
-            <p class="intro">Let’s make those times tables stick.<br>Guess sooner. Earn more. Help appears as you go.</p>
+            <p class="intro">Three little facts. One clever pattern.<br>Look, say, and try from memory.</p>
             <div class="welcome-bottom">
               <div class="mascot" aria-hidden="true">
                 <svg viewBox="0 0 220 190" fill="none"><path d="M41 67 18 61M37 42 25 25M177 35 189 20M190 61 209 54" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="m109 14 22 39 44-6-5 46 34 30-42 19-10 44-40-22-41 20-8-44-41-21 36-28-3-45 43 8Z" fill="#f6d85b" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><ellipse cx="88" cy="93" rx="4.5" ry="7" fill="currentColor"/><ellipse cx="133" cy="93" rx="4.5" ry="7" fill="currentColor"/><path d="M94 111q17 20 33 0" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><ellipse cx="75" cy="108" rx="9" ry="5" fill="#e9a180"/><ellipse cx="145" cy="108" rx="9" ry="5" fill="#e9a180"/></svg>
               </div>
               <div class="hand-note">A little every day<br>goes a long way.<span aria-hidden="true">↙</span></div>
             </div>
-            <div class="feature-line"><span><i class="feature-dot mint"></i>Gradual hints</span><span><i class="feature-dot lilac"></i>Keep trying</span><span><i class="feature-dot yellow"></i>Earn points</span></div>
+            <div class="feature-line"><span><i class="feature-dot mint"></i>Picture it</span><span><i class="feature-dot lilac"></i>Remember it</span><span><i class="feature-dot yellow"></i>Earn points</span></div>
           </div>
 
           <div class="practice-setup card">
-            <div class="card-topline"><span class="eyebrow">LET’S WARM UP</span><span class="pill">10 questions</span></div>
+            <div class="card-topline"><span class="eyebrow">SMALL STEPS. BIG WINS.</span><span id="setup-count" class="pill">3 facts at a time</span></div>
+            <div class="math-modes" role="group" aria-label="How to practice"><button id="learn-mode" aria-pressed="true">Learn &amp; remember<span>See a trick. Try it again.</span></button><button id="quick-mode" aria-pressed="false">Quick practice<span>Mix the facts you know.</span></button></div>
             <h2>Pick your tables.</h2>
             <p class="muted">Choose one, a few, or the whole crew.</p>
             <div id="table-picker" class="table-picker" role="group" aria-label="Choose times tables"></div>
             <div class="picker-shortcuts"><button id="easy-tables" class="text-button">Start with 2, 5 &amp; 10</button><button id="all-tables" class="text-button">Choose all</button></div>
             <div class="round-note"><span class="note-icon" aria-hidden="true">✦</span><p id="selection-note">A friendly place to start.</p></div>
             <button id="start-round" class="button primary">Let’s practice <span aria-hidden="true">↗</span></button>
-            <p class="setup-footnote">Hint at 5s · Answer fades in at 10s · Up to 100 points</p>
+            <p id="setup-footnote" class="setup-footnote">Look, say, remember · More time to think</p>
           </div>
         </div>
 
@@ -71,6 +72,17 @@
         <div class="facts-mix"><div><h2>A bit of both?</h2><p>10 questions · Big buttons · Hints as you go</p></div><button class="button primary" data-start-facts="mixed">Mix it up <span aria-hidden="true">↗</span></button></div>
         <p class="facts-timing-note">A little time to read: hints arrive at 8 seconds, and answers start fading in at 13 seconds. Earlier answers earn more points.</p>
         <section class="study-section" aria-labelledby="study-title"><div class="section-heading"><div><p class="eyebrow">LOOK FIRST. TRY NEXT.</p><h2 id="study-title">Meet the facts.</h2></div><span class="muted">Tap a topic to learn.</span></div><div id="fact-study"></div></section>
+      </section>
+
+      <section id="learn-view" class="view" aria-labelledby="learn-title" hidden>
+        <div class="study-top"><button class="text-button" data-view="home">← My tables</button><span class="pill">LOOK FIRST · NO TIMER</span><span id="study-count" class="pill">Fact 1 of 3</span></div>
+        <div class="study-heading"><h1 id="learn-title" tabindex="-1">Let’s learn a little.</h1><p id="study-plan" class="intro"></p></div>
+        <article class="memory-card card">
+          <div class="memory-picture"><p class="eyebrow">LOOK AT THE GROUPS</p><h2 id="study-equation" tabindex="-1" aria-live="polite"></h2><div id="study-dots" class="dot-array" aria-hidden="true"></div><p id="study-array-caption" class="sr-only"></p><div id="study-groups" class="group-labels"></div></div>
+          <div class="memory-trick"><p class="eyebrow">A TRICK TO HELP IT STICK</p><h2 id="study-strategy"></h2><ol id="study-steps"></ol><p id="study-shortcut" class="memory-shortcut"></p><div class="memory-flip"><span>Turn it around. Same answer!</span><strong id="study-flip"></strong></div></div>
+          <div class="say-it"><span aria-hidden="true">✦</span><p><strong>Say the whole fact out loud.</strong> Then picture it with your eyes closed.</p></div>
+        </article>
+        <div class="study-actions"><button id="study-back" class="button secondary" disabled>← Look back</button><button id="study-next" class="button primary">Next fact <span aria-hidden="true">→</span></button></div>
       </section>
 
       <section id="practice-view" class="view" aria-labelledby="round-title" hidden>
@@ -108,7 +120,7 @@
       <section id="results-view" class="view results-view" aria-labelledby="results-title" hidden>
         <div class="result-star" aria-hidden="true">✦</div><p class="eyebrow">LITTLE STEPS ADD UP</p><h1 id="results-title" tabindex="-1">That’s a round of high-fives!</h1><p id="results-message" class="intro"></p>
         <div class="round-score"><strong id="result-points">0</strong><span>points earned this round</span><p id="result-points-detail"></p></div>
-        <div class="result-stats"><div><strong id="result-clean">0</strong><span>on your own</span></div><div><strong id="result-learning">0</strong><span>with a little help</span></div><div><strong id="result-total">10</strong><span>facts practiced</span></div></div>
+        <div class="result-stats"><div><strong id="result-clean">0</strong><span>on your own</span></div><div><strong id="result-learning">0</strong><span>with a little help</span></div><div><strong id="result-total">10</strong><span id="result-total-label">facts practiced</span></div></div>
         <div id="review-section" class="review-section" hidden><h2>A little more practice with these.</h2><div id="review-facts" class="review-facts"></div></div>
         <div class="result-actions"><button id="practice-again" class="button primary">Another round <span aria-hidden="true">↗</span></button><button id="review-round" class="button secondary" hidden>Practice these again</button><button id="back-to-lesson" class="text-button" data-view="home">Back to my tables</button></div>
       </section>
@@ -119,7 +131,7 @@
       </section>
 
       <section id="progress-view" class="view" aria-labelledby="progress-title" hidden>
-        <div class="section-intro"><p class="eyebrow">LOOK HOW FAR YOU’VE COME</p><h1 id="progress-title" tabindex="-1">Every little bit counts.</h1><p class="intro">A fact earns a star after 3 correct answers in a row, without hints.</p></div>
+        <div class="section-intro"><p class="eyebrow">LOOK HOW FAR YOU’VE COME</p><h1 id="progress-title" tabindex="-1">Every little bit counts.</h1><p class="intro">Recall a fact without help in 3 rounds to earn a star.<br>Keep the streak going. Repeats in one lesson count just once.</p></div>
         <h2 class="progress-subtitle">Multiplication</h2>
         <div class="progress-summary"><div><span class="stat-icon yellow" aria-hidden="true">✦</span><p><strong id="mastered-count">0 / 100</strong><span>facts with a star</span></p></div><div><span class="stat-icon mint" aria-hidden="true">✓</span><p><strong id="known-count">0</strong><span>facts answered correctly</span></p></div><div><span class="stat-icon lilac" aria-hidden="true">↗</span><p><strong id="rounds-count">0</strong><span>rounds completed</span></p></div></div>
         <p class="total-points-note"><strong id="total-points">0</strong> points earned so far · Earlier answers earn more.</p>

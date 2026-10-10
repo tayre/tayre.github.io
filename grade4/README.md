@@ -4,12 +4,22 @@ A small, buildless learning app for an iPad, served from `/grade4/` on this stat
 
 ## Finding an activity
 
-- **Math:** choose one or more times tables and answer using the number pad.
+- **Math:** choose times tables, then use the default **Learn 3 facts** lesson or switch to **Quick practice**. Answer using the number pad.
 - **Facts:** choose Geography, Science or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 15 Canadian and world capital questions and 15 science questions about space, plants, water, magnets, the body and living things.
 - **Tables:** explore the multiplication grid and see facts shown as rows of dots.
 - **Progress:** see math and facts practice history, mastery stars and points.
 
 Open a topic in **Meet the facts** to learn before a quiz. Read its questions, answers and short explanations. Each study card includes a clickable source link, which opens in a new tab. Reading the library has no timer and awards no points.
+
+## Learning multiplication
+
+**Learn 3 facts** focuses on one of the selected tables at a time. It prioritizes tables with unfinished or troublesome facts, then chooses up to three facts to practise. Start with a study preview showing each answer, a visual model, a useful shortcut and the flipped equation—for example, how `6 × 7` and `7 × 6` have the same answer.
+
+After the preview, recall each of the three facts three times: `A B C A B C A B C`. The nine tries put two other questions between repeats. This gives the child a chance to retrieve an answer again after thinking about something else. A review containing only two eligible facts uses `A B A B`; a single eligible fact appears once.
+
+**Quick practice** keeps the original 10 unique questions drawn from the selected tables. It uses the faster help schedule below. Both modes give extra practice to unfamiliar facts and earlier mistakes.
+
+A mastery star requires clean recalls across three different rounds. In a learning lesson, a fact can advance its mastery streak only once. Its first wrong or assisted response uses up that lesson's opportunity; later correct repeats still count as practice but cannot restore it. A wrong answer or help on a later repeat also resets the streak. A new lesson gives the fact another opportunity to advance.
 
 ## Saved progress
 
@@ -19,14 +29,14 @@ Everything is stored locally in the browser, with no accounts or analytics. Prog
 
 ## Practice and points
 
-Each question starts with 100 possible points. Facts add 3 seconds of reading time to the same scoring and help schedule used for math:
+Each question starts with 100 possible points. Learning lessons use a slower clock, giving twice as much time as quick math practice. Facts add 3 seconds of reading time to the quick-practice schedule:
 
-| Milestone | Math | Facts |
-| --- | --- | --- |
-| Full 100 points, before any help or mistakes | First 2 seconds | First 5 seconds |
-| Automatic hint appears | 5 seconds | 8 seconds |
-| Answer begins fading in | 10 seconds | 13 seconds |
-| Answer fully visible; time-based value reaches 20 points | 15 seconds | 18 seconds |
+| Milestone | Learn 3 facts | Quick practice | Facts |
+| --- | --- | --- | --- |
+| Full 100 points, before any help or mistakes | First 4 seconds | First 2 seconds | First 5 seconds |
+| Automatic hint appears | 10 seconds | 5 seconds | 8 seconds |
+| Answer begins fading in | 20 seconds | 10 seconds | 13 seconds |
+| Answer fully visible; time-based value reaches 20 points | 30 seconds | 15 seconds | 18 seconds |
 
 Earlier correct answers earn more as the time-based value falls. A hint caps the question at 60 points; once the answer starts appearing, the cap is 40 points. Each wrong answer subtracts 20 points after these caps, with a minimum award of 10 points for eventually answering correctly.
 
@@ -42,11 +52,13 @@ python3 -m http.server 8000
 
 Open <http://localhost:8000/grade4/>. No build step or package installation is required.
 
-Run the automated tests from the `grade4` directory:
+Run the automated tests from the `grade4` directory (Node.js required):
 
 ```sh
-node --test
+npm test
 ```
+
+The tests cover multiplication and fact selection, spaced learning lessons, per-lesson mastery credit, saved-progress recovery and scoring. No dependencies need installing.
 
 ## Use on an iPad
 
