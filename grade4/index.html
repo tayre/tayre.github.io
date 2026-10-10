@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5ed">
-  <meta name="description" content="Practice multiplication tables from 1 to 10 with gradual hints, fading answers, and more points for earlier guesses.">
+  <meta name="description" content="A friendly Grade 4 learning app: multiplication, capital cities, and basic science, with gradual hints and points.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Grade 4">
-  <title>Grade 4 · Multiplication 1–10</title>
+  <title>Grade 4 · Math, Geography &amp; Science</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -19,11 +19,12 @@
     <header class="site-header">
       <a class="brand" href="./" aria-label="Grade 4 home"><span class="brand-mark" aria-hidden="true">4</span> grade 4<span class="brand-dot">.</span></a>
       <nav aria-label="Main navigation">
-        <button class="nav-link active" data-view="home" aria-current="page">Practice</button>
-        <button class="nav-link" data-view="explore">Explore</button>
-        <button class="nav-link" data-view="progress">My progress</button>
+        <button class="nav-link active" data-view="home" aria-current="page">Math</button>
+        <button class="nav-link" data-view="facts">Facts</button>
+        <button class="nav-link" data-view="explore">Tables</button>
+        <button class="nav-link" data-view="progress">Progress</button>
       </nav>
-      <span class="header-note">MULTIPLICATION · 1–10</span>
+      <span class="header-note">A LITTLE EVERY DAY.</span>
     </header>
 
     <main id="main">
@@ -58,6 +59,18 @@
           <div class="section-heading"><div><p class="eyebrow">ONE FACT AT A TIME</p><h2 id="collection-title">Watch your confidence grow.</h2></div><button class="text-button arrow-link" data-view="progress">My progress <span aria-hidden="true">↗</span></button></div>
           <div id="home-tables" class="table-collection"></div>
         </section>
+        <button class="lesson-banner" data-view="facts"><span class="lesson-banner-icon" aria-hidden="true">◎</span><span><small>MORE TO EXPLORE</small><strong>A whole world of little facts.</strong><span>Capital cities, space, plants, and everyday science.</span></span><span class="lesson-banner-arrow" aria-hidden="true">↗</span></button>
+      </section>
+
+      <section id="facts-view" class="view" aria-labelledby="facts-title" hidden>
+        <div class="facts-intro"><div><p class="eyebrow">LESSON 02 · WORLD &amp; SCIENCE</p><h1 id="facts-title" tabindex="-1">Stay curious.<br>Discover <span class="underline">a little more.</span></h1><p class="intro">From the capital of Canada to the world around you.<br>Pick a topic, read the question, and tap your answer.</p></div><div class="curiosity-badge" aria-hidden="true"><span>BIG WORLD</span><strong>?</strong><span>CURIOUS MIND</span></div></div>
+        <div class="topic-cards">
+          <article class="topic-card geography-card"><div class="topic-card-top"><span class="topic-art" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="27"/><ellipse cx="40" cy="40" rx="13" ry="27"/><path d="M13 40h54M18 25h44M18 55h44M40 13v54"/></svg></span><span class="pill" id="geography-size">Capital cities</span></div><p class="eyebrow">AROUND THE WORLD</p><h2>Geography</h2><p>Meet capital cities in Canada and around the world.</p><p class="topic-progress" id="geography-progress"></p><button class="button secondary" data-start-facts="geography">Let’s explore <span aria-hidden="true">↗</span></button></article>
+          <article class="topic-card science-card"><div class="topic-card-top"><span class="topic-art" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><path d="M31 12h18M34 12v21L17 61q-4 8 5 8h36q9 0 5-8L46 33V12M25 48h30"/><circle cx="35" cy="57" r="3"/><circle cx="47" cy="62" r="2"/><path d="m60 14 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/></svg></span><span class="pill" id="science-size">Everyday wonders</span></div><p class="eyebrow">HOW THINGS WORK</p><h2>Science</h2><p>Get curious about space, living things, and everyday science.</p><p class="topic-progress" id="science-progress"></p><button class="button secondary" data-start-facts="science">Let’s discover <span aria-hidden="true">↗</span></button></article>
+        </div>
+        <div class="facts-mix"><div><h2>A bit of both?</h2><p>10 questions · Big buttons · Hints as you go</p></div><button class="button primary" data-start-facts="mixed">Mix it up <span aria-hidden="true">↗</span></button></div>
+        <p class="facts-timing-note">A little time to read: hints arrive at 8 seconds, and answers start fading in at 13 seconds. Earlier answers earn more points.</p>
+        <section class="study-section" aria-labelledby="study-title"><div class="section-heading"><div><p class="eyebrow">LOOK FIRST. TRY NEXT.</p><h2 id="study-title">Meet the facts.</h2></div><span class="muted">Tap a topic to learn.</span></div><div id="fact-study"></div></section>
       </section>
 
       <section id="practice-view" class="view" aria-labelledby="round-title" hidden>
@@ -70,14 +83,14 @@
             <div class="reveal-line"><span class="reveal-label">A little help</span><span id="answer-reveal" aria-hidden="true"></span><span id="reveal-placeholder" aria-hidden="true">· · ·</span></div>
             <p id="pacing-caption" class="pacing-caption">Hint in 5s · answer begins to appear at 10s</p>
             <div class="reveal-track" aria-hidden="true"><span id="reveal-fill"></span></div>
-            <label class="answer-label" for="answer">Your answer</label>
-            <input id="answer" class="answer" readonly inputmode="none" autocomplete="off" aria-describedby="feedback" placeholder="?">
+            <div id="numeric-answer-group"><label class="answer-label" for="answer">Your answer</label><input id="answer" class="answer" readonly inputmode="none" autocomplete="off" aria-describedby="feedback" placeholder="?"></div>
             <div id="feedback" class="feedback" role="status" aria-live="polite">Try it before the hints appear!</div>
             <p id="timed-hint" class="timed-hint">A little hint will appear here.</p>
             <p id="reveal-announcement" class="sr-only" aria-live="polite"></p>
             <button id="show-hint" class="hint-button"><span aria-hidden="true">✧</span> A little hint?</button>
           </div>
           <div class="input-panel">
+            <div id="fact-answer-panel" hidden><p class="eyebrow choice-instruction">TAP YOUR ANSWER</p><div id="fact-choices" class="fact-choices" role="group" aria-labelledby="equation"></div></div>
             <div id="keypad" class="keypad" role="group" aria-label="Answer number pad">
               <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
               <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
@@ -97,7 +110,7 @@
         <div class="round-score"><strong id="result-points">0</strong><span>points earned this round</span><p id="result-points-detail"></p></div>
         <div class="result-stats"><div><strong id="result-clean">0</strong><span>on your own</span></div><div><strong id="result-learning">0</strong><span>with a little help</span></div><div><strong id="result-total">10</strong><span>facts practiced</span></div></div>
         <div id="review-section" class="review-section" hidden><h2>A little more practice with these.</h2><div id="review-facts" class="review-facts"></div></div>
-        <div class="result-actions"><button id="practice-again" class="button primary">Another round <span aria-hidden="true">↗</span></button><button id="review-round" class="button secondary" hidden>Practice these again</button><button class="text-button" data-view="home">Back to my tables</button></div>
+        <div class="result-actions"><button id="practice-again" class="button primary">Another round <span aria-hidden="true">↗</span></button><button id="review-round" class="button secondary" hidden>Practice these again</button><button id="back-to-lesson" class="text-button" data-view="home">Back to my tables</button></div>
       </section>
 
       <section id="explore-view" class="view" aria-labelledby="explore-title" hidden>
@@ -107,16 +120,18 @@
 
       <section id="progress-view" class="view" aria-labelledby="progress-title" hidden>
         <div class="section-intro"><p class="eyebrow">LOOK HOW FAR YOU’VE COME</p><h1 id="progress-title" tabindex="-1">Every little bit counts.</h1><p class="intro">A fact earns a star after 3 correct answers in a row, without hints.</p></div>
+        <h2 class="progress-subtitle">Multiplication</h2>
         <div class="progress-summary"><div><span class="stat-icon yellow" aria-hidden="true">✦</span><p><strong id="mastered-count">0 / 100</strong><span>facts with a star</span></p></div><div><span class="stat-icon mint" aria-hidden="true">✓</span><p><strong id="known-count">0</strong><span>facts answered correctly</span></p></div><div><span class="stat-icon lilac" aria-hidden="true">↗</span><p><strong id="rounds-count">0</strong><span>rounds completed</span></p></div></div>
         <p class="total-points-note"><strong id="total-points">0</strong> points earned so far · Earlier answers earn more.</p>
         <div id="progress-tables" class="progress-tables"></div>
+        <section class="facts-progress-section" aria-labelledby="facts-progress-title"><div class="section-heading"><h2 id="facts-progress-title">World &amp; science</h2><button class="text-button" data-view="facts">Practice facts ↗</button></div><div id="facts-progress-summary" class="facts-progress-summary"></div><p id="facts-progress-points" class="total-points-note"></p></section>
         <div class="progress-bottom"><p class="muted">Progress belongs to this browser on this device.</p><button id="reset-progress" class="text-button">Reset progress</button></div>
       </section>
     </main>
     <footer class="site-footer"><span>ONE LITTLE PRACTICE AT A TIME.</span><span id="save-status"><span class="save-dot" aria-hidden="true"></span>Progress saved on this device</span></footer>
   </div>
-  <dialog id="break-dialog" aria-labelledby="break-title" aria-describedby="break-description"><h2 id="break-title">Take a little break?</h2><p id="break-description">The facts you’ve finished are saved. This round will end.</p><div class="dialog-actions"><button id="keep-playing" class="button primary">Keep going</button><button id="confirm-break" class="button secondary">Back to my tables</button></div></dialog>
-  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears all the practice progress saved in this browser. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
-  <noscript>This app needs JavaScript to run. Please enable JavaScript in your browser to practice multiplication.</noscript>
+  <dialog id="break-dialog" aria-labelledby="break-title" aria-describedby="break-description"><h2 id="break-title">Take a little break?</h2><p id="break-description">The facts you’ve finished are saved. This round will end.</p><div class="dialog-actions"><button id="keep-playing" class="button primary">Keep going</button><button id="confirm-break" class="button secondary">Leave this round</button></div></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears multiplication, geography, and science progress saved in this browser, including points. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
+  <noscript>This app needs JavaScript to run. Please enable JavaScript in your browser to practice.</noscript>
 </body>
 </html>

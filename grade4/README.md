@@ -1,16 +1,34 @@
 # Grade 4
 
-A small, buildless learning app for an iPad, served from `/grade4/` on this static site. Its first activity covers the 1–10 times tables with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future fact practice and basic French lessons.
+A small, buildless learning app for an iPad, served from `/grade4/` on this static site. It covers the 1–10 times tables, basic geography and science with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future lessons such as basic French.
 
-Progress and table choices are stored locally in the browser. There are no accounts, third-party services or analytics. Clearing this site's browser data removes saved progress; progress does not sync between devices or browsers.
+## Finding an activity
+
+- **Math:** choose one or more times tables and answer using the number pad.
+- **Facts:** choose Geography, Science or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 15 Canadian and world capital questions and 15 science questions about space, plants, water, magnets, the body and living things.
+- **Tables:** explore the multiplication grid and see facts shown as rows of dots.
+- **Progress:** see math and facts practice history, mastery stars and points.
+
+Open a topic in **Meet the facts** to learn before a quiz. Read its questions, answers and short explanations. Each study card includes a clickable source link, which opens in a new tab. Reading the library has no timer and awards no points.
+
+## Saved progress
+
+Math and facts have separate saved progress and point totals. Math continues to use its existing `grade4.multiplication.v1`, `grade4.multiplication.tables.v1` and `grade4.multiplication.points.v1` storage keys, preserving earlier practice. Facts use `grade4.facts.v1`.
+
+Everything is stored locally in the browser, with no accounts or analytics. Progress does not sync between devices or browsers. **Reset progress** clears practice history and points for both math and facts after confirmation. Clearing this site's browser data also removes saved progress.
 
 ## Practice and points
 
-Each question starts with 100 possible points, with a 2-second grace period before the score begins to fall. Earlier correct answers earn more: the time-based value gradually falls to 20 points by 15 seconds. Help arrives automatically while the child keeps working:
+Each question starts with 100 possible points. Facts add 3 seconds of reading time to the same scoring and help schedule used for math:
 
-- After 5 seconds, a strategy hint appears. A hint limits that question to at most 60 points.
-- After 10 seconds, the answer begins to fade in; it is fully visible at 15 seconds. Once the answer starts appearing, the question is worth at most 40 points.
-- Each wrong answer subtracts 20 points, with a minimum award of 10 points for eventually answering correctly.
+| Milestone | Math | Facts |
+| --- | --- | --- |
+| Full 100 points, before any help or mistakes | First 2 seconds | First 5 seconds |
+| Automatic hint appears | 5 seconds | 8 seconds |
+| Answer begins fading in | 10 seconds | 13 seconds |
+| Answer fully visible; time-based value reaches 20 points | 15 seconds | 18 seconds |
+
+Earlier correct answers earn more as the time-based value falls. A hint caps the question at 60 points; once the answer starts appearing, the cap is 40 points. Each wrong answer subtracts 20 points after these caps, with a minimum award of 10 points for eventually answering correctly.
 
 The child can ask for a hint earlier. Displaying a hint or the answer marks the question as assisted, so it cannot count toward an unassisted mastery star. There is no timeout: the child can keep learning and submit the correct answer even after it is fully shown. The question clock pauses while the app is hidden or the break dialog is open.
 
@@ -34,7 +52,7 @@ node --test
 
 Once this directory is published on the site, open `https://tayre.github.io/grade4/` in Safari. Use Share, then **Add to Home Screen** (under **More** or **View More** if needed), and tap **Add**. If Safari offers **Open as Web App**, leave it enabled. See [Apple's iPad instructions](https://support.apple.com/en-ie/guide/ipad/ipad8f1f7a29/ipados).
 
-Open the app online once so its files can finish downloading. It can then work offline while those cached files remain on the device. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
+Open the app online once so its files can finish downloading. Both activities and the study library can then work offline while those cached files remain on the device. The linked source websites need an internet connection. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
 
 ## Maintaining offline support
 
