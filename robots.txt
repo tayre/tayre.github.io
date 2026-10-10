@@ -4,8 +4,11 @@ User-agent: *
 Allow: /$
 Allow: /quantitative-depth-three/
 Allow: /switch-chain-gap/
+Allow: /hellinger-stability/
 Disallow: /
 
 Sitemap: https://tayre.github.io/quantitative-depth-three/sitemap.xml
 
 Sitemap: https://tayre.github.io/switch-chain-gap/sitemap.xml
+
+Sitemap: https://tayre.github.io/hellinger-stability/sitemap.xml

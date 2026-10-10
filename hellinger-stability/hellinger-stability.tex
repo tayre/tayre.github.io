@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,geometry,microtype}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\geometry{margin=1in}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\dist}{\operatorname{dist}}
+\hypersetup{pdftitle={A spectral remainder in the Hellinger-to-information implication},pdfauthor={Tom Ayre},pdfsubject={A quantitative refinement conditional on Hellinger contraction}}
+\title{A spectral remainder in the\\Hellinger-to-information implication}
+\author{Tom Ayre\\\small\href{mailto:ayre.tom@gmail.com}{ayre.tom@gmail.com}}
+\date{October 10, 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We retain a quadratic remainder in the standard implication from the
+Boolean Hellinger inequality to the Courtade--Kumar information bound.
+Assuming the Hellinger inequality for a Boolean function $f$, its
+information deficit is at least
+$[\rho^2-\Var(T_\rho f)]/6$. Combined with the
+Friedgut--Kalai--Naor theorem, this gives distance to a signed coordinate
+at most $C\Delta_\rho(f)/[\rho^2(1-\rho^2)]$ for a universal constant $C$.
+The general-function statement depends on the full-bias Hellinger
+inequality asserted in the cited source. For antipodal functions, the
+same conclusion follows from Ky's separate Hellinger theorem.
+This is a potentially new quantitative refinement of an existing
+argument; publication priority has not been established.
+\end{abstract}
+
+\section{Setting and source assumption}
+Let $n\ge1$, let $X$ be uniform on $\{-1,1\}^n$, and let
+$f:\{-1,1\}^n\to\{-1,1\}$. For $0\le\rho\le1$, obtain $Y_\rho$
+by independently flipping each coordinate of $X$ with probability
+$(1-\rho)/2$. The noise operator is
+\[
+ T_\rho f(y)=\E[f(X)\mid Y_\rho=y].
+\]
+All expectations use the uniform cube unless otherwise stated.
+All logarithms are natural, and mutual information is measured in nats.
+With $0\log0=0$, write
+\[
+ h_2(p)=-p\log p-(1-p)\log(1-p),\quad
+ \psi(r)=\log2-h_2((1+r)/2),\quad R(r)=\sqrt{1-r^2}.
+\]
+The information deficit from a signed coordinate is
+\[
+ \Delta_\rho(f)=\psi(\rho)-I(f(X);Y_\rho).
+\]
+For $S\subseteq[n]$, put
+$\widehat f(S)=\E[f(X)\prod_{i\in S}X_i]$ and
+$W_1(f)=\sum_{i=1}^n\widehat f(\{i\})^2$.
+
+The input to the argument is the Hellinger inequality
+\begin{equation}\label{eq:H}
+ R(\E f)-\E R(T_\rho f)\le1-R(\rho).
+ \tag{H}
+\end{equation}
+Theorem 1.1 of the repository manuscript \cite{source} asserts
+\eqref{eq:H} for all such $f$, including functions with nonzero mean.
+We prove an implication from this input and do not give a new proof
+of the general Hellinger inequality. The qualitative implication to
+mutual information is due to Anantharam et al.\ \cite{ABCJN}.
+
+\section{The spectral remainder}
+\begin{theorem}\label{thm:main}
+Let $f:\{-1,1\}^n\to\{-1,1\}$ and $0\le\rho\le1$.
+If \eqref{eq:H} holds for this $f$ and $\rho$, then
+\begin{align}
+ \Delta_\rho(f)
+ &\ge\frac16\left(\rho^2-\Var(T_\rho f)\right)\label{eq:main}\\
+ &=\frac{\rho^2}{6}\left((\E f)^2+
+ \sum_{|S|\ge2}(1-\rho^{2|S|-2})\widehat f(S)^2\right).\notag
+\end{align}
+Consequently,
+\begin{equation}\label{eq:level-one}
+ \Delta_\rho(f)\ge\frac{\rho^2(1-\rho^2)}6\bigl(1-W_1(f)\bigr).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Define $\phi(t)=h_2((1+\sqrt{1-t^2})/2)$ for $0\le t\le1$.
+For $0<t<1$, putting $v=\sqrt{1-t^2}$ gives
+\[
+ \phi'(t)=\frac{t\operatorname{atanh}(v)}v,\qquad
+ \phi''(t)=\frac{\operatorname{atanh}(v)-v}{v^3}
+ =\sum_{j\ge1}\frac{v^{2j-2}}{2j+1}\ge\frac13.
+\]
+Moreover $\phi'(t)\to0$ as $t\downarrow0$. It follows that
+$q(t)=\phi(t)-t^2/6$ is convex and nondecreasing on $[0,1]$.
+
+Put $g=T_\rho f$, $m=\E f$, $Z=R(g)$,
+$h=R(m)$, $b=\E Z$, and $s=R(\rho)$.
+Concavity of $R$ and $\E g=m$ give $0\le b\le h\le1$.
+Assumption \eqref{eq:H} gives $h-b\le1-s$.
+Jensen's inequality and convexity therefore yield
+\begin{equation}\label{eq:transfer}
+ q(h)-\E q(Z)\le q(h)-q(b)
+ \le q(1)-q(1-h+b)\le q(1)-q(s).
+\end{equation}
+For the middle inequality, translate the interval $[b,h]$ rightward
+by $1-h$; increments of a convex function over an interval of fixed
+length increase with its left endpoint. The last inequality follows
+from $1-h+b\ge s$ and monotonicity of $q$.
+
+The posterior-mean identity gives
+$I(f(X);Y_\rho)=\phi(h)-\E\phi(Z)$, and
+$\psi(\rho)=\phi(1)-\phi(s)$. Substituting
+$q(t)=\phi(t)-t^2/6$ into \eqref{eq:transfer} gives
+\[
+ \Delta_\rho(f)\ge\frac16(1-s^2-h^2+\E Z^2)
+ =\frac16(\rho^2+m^2-\E g^2),
+\]
+which is \eqref{eq:main}. Parseval and
+$\widehat{T_\rho f}(S)=\rho^{|S|}\widehat f(S)$ give its Fourier
+expansion. For $|S|\ge2$, $1-\rho^{2|S|-2}\ge1-\rho^2$;
+also $1\ge1-\rho^2$ for the mean term. This proves
+\eqref{eq:level-one}. The argument includes the endpoints by continuity.
+\end{proof}
+
+\begin{corollary}[Stability]\label{cor:stability}
+There is a universal $C<\infty$ such that, if \eqref{eq:H} holds for
+$f$ and $0<\rho<1$, then
+\[
+ \dist(f,\mathrm{dictators}):=
+ \min_{\substack{1\le i\le n\\\sigma\in\{-1,1\}}}
+ \Pr[f(X)\ne\sigma X_i]
+ \le\frac{C\Delta_\rho(f)}{\rho^2(1-\rho^2)}.
+\]
+\end{corollary}
+\begin{proof}
+Set $\eta=1-W_1(f)$. The Friedgut--Kalai--Naor theorem \cite{FKN}
+gives a Boolean function $a$ depending on at most one coordinate,
+with $\Pr[f\ne a]\le K\sum_{|S|\ge2}\widehat f(S)^2\le K\eta$,
+for some universal $K\ge1$.
+If $\eta<\min(1/4,1/(8K))$, then $(\E f)^2\le\eta$ implies
+$|\E f|<1/2$. Every constant consequently has disagreement greater
+than $1/4$ with $f$, whereas the FKN approximant has disagreement less
+than $1/8$. Thus $a$ is a signed coordinate.
+For larger $\eta$, the trivial bound
+$\dist(f,\mathrm{dictators})\le1/2$ gives the same conclusion
+$\dist(f,\mathrm{dictators})\le C_0\eta$ after enlarging the universal
+constant. Apply \eqref{eq:level-one} with $C=6C_0$.
+\end{proof}
+
+\begin{corollary}[Antipodal functions]\label{cor:antipodal}
+If $f(-x)=-f(x)$ for every $x$, then the conclusions of
+Theorem~\ref{thm:main} and Corollary~\ref{cor:stability} follow from
+Ky's antipodal Hellinger theorem \cite[Theorem 1.1]{Ky}, without using
+the general full-bias input of \cite{source}.
+\end{corollary}
+\begin{proof}
+Antipodality gives $\E f=0$. Ky's theorem states
+$\E\sqrt{1-(T_\rho f)^2}\ge\sqrt{1-\rho^2}$, which is exactly
+\eqref{eq:H} when $\E f=0$. Apply the preceding results.
+\end{proof}
+
+\section{Comparison and scope}
+Ky and Tran \cite[Theorem 1.1]{KT} prove
+\[
+ \dist(f,\mathrm{dictators})\le
+ \frac{10^8\Delta_\rho(f)}{\rho^2(1-\rho)h_2((1-\rho)/2)}.
+\]
+For increasing functions they remove $1-\rho$ from that denominator.
+Their Section 5.6 leaves open whether this extra factor can be removed
+for general functions. Conditional on \eqref{eq:H}, our denominator
+has order $1-\rho$ as $\rho\uparrow1$, improving the general bound's
+order $(1-\rho)^2\log(1/(1-\rho))$. Our unspecified universal constant
+means this is an asymptotic comparison, not a pointwise comparison of
+numerical constants. We do not achieve the increasing-function
+order $(1-\rho)\log(1/(1-\rho))$ or resolve the sharp general question.
+
+Dimension-independent stability is already known. The potential
+contribution here is the explicit spectral remainder and the resulting
+noise dependence. The convex-profile transfer is already in
+\cite{ABCJN} and is reproduced in \cite{source}. Our extra step is to
+subtract $t^2/6$ before that transfer. This coefficient is the largest
+allowed by this global quadratic-subtraction argument, since
+$\phi''(t)\to1/3$ as $t\uparrow1$. We do not claim that $1/6$ is
+the optimal coefficient in \eqref{eq:main}.
+
+The separate antipodal input \cite{Ky} was posted on October 7, 2026.
+Its Section 6.2 discusses quantitative stability as a further question.
+Corollary~\ref{cor:antipodal} supplies an information-stability
+consequence; it does not quantify all losses in that paper's matrix
+argument or give its equality classification for general product channels.
+A targeted literature check has not established priority for the present
+refinement. This manuscript is a research note, not a claim of a new
+construction or a new proof of the general Hellinger inequality.
+
+\section{Checks and disclosure}
+The accompanying script \path{check_hellinger_stability.py} enumerates
+every Boolean function in dimensions one through four at eight
+correlations. All 526,496 cases passed checks of the Hellinger input,
+the spectral remainder, and the Fourier identity, at floating-point
+tolerance $10^{-12}$. These finite diagnostics are not a proof.
+
+The source's complete \path{verification/verify_all.py} workflow was
+also rerun on October 7, 2026 with Python 3.11.14, SymPy 1.14.0 and
+\texttt{clang++}; all supplied arithmetic-certificate stages passed.
+The accompanying \path{source-verification-summary.json} records the
+source revision, file hashes, and outcomes. This checks finite
+certificates, not the entire analytic proof of \cite{source}.
+The note, diagnostic code, and internal reviews were prepared with
+assistance from Codex. No Lean kernel verification or external peer
+review is claimed.
+
+\begin{thebibliography}{9}
+\bibitem{source} OpenAI, \emph{Hellinger contraction with arbitrary Boolean
+output bias}, September 24, 2026, Theorem 1.1. In \texttt{openai/math},
+revision \texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
+\href{https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Hellinger-contraction-with-arbitrary-Boolean-output-bias-September-24-2026/main.pdf}{Manuscript and versioned repository source}.
+\bibitem{ABCJN} V. Anantharam, A. Bogdanov, A. Chakrabarti, T. S. Jayram,
+and C. Nair, \emph{A conjecture regarding optimality of the dictator
+function under Hellinger distance}, ITA workshop manuscript, 2017,
+Proposition 1 and Lemma 1.
+\url{https://chandra.ie.cuhk.edu.hk/pub/papers/HC/hel-conj.pdf}.
+\bibitem{FKN} E. Friedgut, G. Kalai, and A. Naor, \emph{Boolean functions
+whose Fourier transform is concentrated on the first two levels},
+Advances in Applied Mathematics 29 (2002), 427--437.
+\bibitem{KT} V. K. Ky and T. Tran, \emph{Stability of the Courtade--Kumar
+inequality}, arXiv:2609.31797v1, September 25, 2026.
+\url{https://arxiv.org/abs/2609.31797v1}.
+\bibitem{Ky} V. K. Ky, \emph{The Hellinger conjecture for antipodal Boolean
+functions}, arXiv:2610.10618v1, October 7, 2026.
+\url{https://arxiv.org/abs/2610.10618v1}.
+\end{thebibliography}
+\end{document}

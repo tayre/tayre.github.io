@@ -1,0 +1,100 @@
+{
+  "description": "Recorded replay of supplied Hellinger source arithmetic certificates. This is not verification of the complete analytic proof.",
+  "source_repository": "https://github.com/openai/math",
+  "source_revision": "adc7f1241b42e322a6451854ab7e4b4c146bf78a",
+  "source_directory": "preprints/Hellinger-contraction-with-arbitrary-Boolean-output-bias-September-24-2026",
+  "status": "pass",
+  "started_utc": "2026-10-07T13:18:37.094945+00:00",
+  "finished_utc": "2026-10-07T13:19:18.563094+00:00",
+  "python_version": "3.11.14 (main, Jan 27 2026, 23:58:06) [Clang 21.1.4 ]",
+  "sympy_version": "1.14.0",
+  "compiler": "clang++",
+  "source_sha256": {
+    "interval_certificate.cpp": "c3b93c21257ffaa786f4a51c4a7139181bdf0dcd9768021483e42cb4b9a3ed12",
+    "profile_certificate.py": "70aa31a4dfeaff3bdb8813228f316375b3ed1d7b42f00c0c98ae48cb680267b4",
+    "central_band.py": "5e4b0414b002272f095062d037817ec140aaed191646db246340efdc81185676",
+    "intermediate_bias.py": "f3b84225d9d85126a4adcc3a2e899b7b3f8110259384ff85fdf9ef0b9ea52621",
+    "large_bias.py": "b20bdf81cee876e82bd65ec20ca64d5d92973ab07c5c2ae6fd56ed7ab5b03915",
+    "profile_formula_audit.py": "098c5486474386c28edb0cab40d47a9e3257f1e86932e0dbfefa39a8882f9b27",
+    "data/profile_tables.txt": "0316dfd9df24557cbc73f3485ab9175d4224ebadc42b703a53541db8a743607e",
+    "requirements.txt": "25f9f1fb1988b230147a1d3092d34e09c069eb7a6c6d6df46b3973b9f2d36efc",
+    "provenance.json": "fad9901cff5088300bc7077af016783cb4e2ce5f37d19e02d8e18b4d2566514d",
+    "README.md": "a7ba6c6c45759facfd33e99c420fed56282e680c742af895309951e4cd3dfa6b",
+    "verify_all.py": "d1e8fa08823a806a0f6ce22f4b3937ac845d6960603b93b59001c87940ee353f"
+  },
+  "steps": [
+    {
+      "name": "environment",
+      "exit_code": 0,
+      "success_marker": "pass",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 0.1891052909195423
+    },
+    {
+      "name": "compiler_version",
+      "exit_code": 0,
+      "success_marker": null,
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 1.7919804999837652
+    },
+    {
+      "name": "compile_interval",
+      "exit_code": 0,
+      "success_marker": null,
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 0.9023187910206616
+    },
+    {
+      "name": "interval_certificate",
+      "exit_code": 0,
+      "success_marker": "pass",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 20.49315379105974
+    },
+    {
+      "name": "profile_certificate",
+      "exit_code": 0,
+      "success_marker": "pass",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 3.5445680000120774
+    },
+    {
+      "name": "profile_formula_audit",
+      "exit_code": 0,
+      "success_marker": "pass",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 9.18898666696623
+    },
+    {
+      "name": "central_band",
+      "exit_code": 0,
+      "success_marker": "PASS: central exact certificates and rational constant bounds",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 0.28512916702311486
+    },
+    {
+      "name": "intermediate_bias",
+      "exit_code": 0,
+      "success_marker": "PASS: rational root-coefficient and middle-band scalar margins",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 4.74973837507423
+    },
+    {
+      "name": "large_bias",
+      "exit_code": 0,
+      "success_marker": "PASS: all four claimed upward-rounded constants reproduced with exact rational arithmetic",
+      "success_marker_found": true,
+      "status": "pass",
+      "wall_seconds": 0.07339274999685585
+    }
+  ],
+  "replay": "From the source manuscript directory, run python verification/verify_all.py --output-dir <output-directory> --cxx clang++ with its pinned dependencies."
+}
