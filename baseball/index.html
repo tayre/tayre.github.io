@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#163d32">
+  <meta name="description" content="A baseball scorebook with a visual position picker, scoring lessons, and a quick reference.">
+  <title>Fieldnotes — Baseball scorebook</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23163d32'/%3E%3Cpath d='M20 7 33 20 20 33 7 20Z' fill='none' stroke='%23f4eedf' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a href="#score" class="brand" aria-label="Fieldnotes scorebook"><span class="brand-mark" aria-hidden="true">◇</span>fieldnotes<span class="brand-caption">BASEBALL</span></a>
+    <button id="new-game" class="button small">＋ New game</button>
+  </header>
+  <main>
+    <h1 class="sr-only">Baseball scorebook</h1>
+    <nav class="tabs" aria-label="Main navigation">
+      <a href="#score" data-tab="score">Scorebook</a>
+      <a href="#learn" data-tab="learn">Learn</a>
+      <a href="#reference" data-tab="reference">Reference</a>
+      <span id="save-status" role="status">Saved locally</span>
+    </nav>
+    <section id="score" class="tab-panel" aria-label="Scorebook">
+      <section class="scoreboard">
+        <div class="scoreboard-top"><span id="game-status" class="live-label"></span><span id="game-date"></span></div>
+        <div id="mobile-score" class="mobile-score"></div>
+        <button id="toggle-linescore" class="text-button" type="button" aria-expanded="false" aria-controls="linescore-wrap">Innings & totals ⌄</button>
+        <div id="linescore-wrap" class="table-scroll"><table id="linescore" aria-label="Game line score"></table></div>
+      </section>
+      <div class="game-layout">
+        <div class="scoring-main">
+          <section class="panel at-bat">
+            <div class="section-heading"><div><p class="eyebrow">BATTING</p><h2 id="batter-name"></h2></div><div id="out-indicator" class="out-indicator"></div></div>
+            <p id="batting-context" class="muted"></p>
+            <div id="play-buttons" class="play-buttons"></div>
+            <div class="action-bar"><button id="runner-play" class="text-button">Runner play ↗</button><button id="undo" class="text-button">↶ Undo</button></div>
+          </section>
+          <section class="panel scorecard-panel">
+            <div class="section-heading"><h2>Scorecard</h2><div class="segmented" id="team-switch" aria-label="Scorecard team"></div></div>
+            <div class="table-scroll"><table id="scorecard" aria-label="Batting scorecard"></table></div>
+            <div class="scorecard-key"><span>◆ Run</span><span>① Out</span><span>Swipe for innings →</span></div>
+          </section>
+        </div>
+        <aside class="sidebar">
+          <section class="field-panel"><div class="section-heading"><h3>On base</h3><span id="field-inning"></span></div><div id="live-field"></div><div id="base-summary" class="base-summary"></div></section>
+          <section class="panel log-panel"><div class="section-heading"><h3>Plays</h3><span id="play-count"></span></div><ol id="game-log"></ol></section>
+        </aside>
+      </div>
+      <div class="game-tools"><button id="export" class="text-button">Export game</button><button id="print" class="text-button">Print scorecards</button><button id="finish" class="text-button">Finish game</button></div>
+    </section>
+    <section id="learn" class="tab-panel" hidden>
+      <div class="page-heading"><h2>How to keep score</h2><p>One square for each batter, each inning.</p></div>
+      <div class="lesson-grid">
+        <article class="panel lesson"><span class="lesson-number">01</span><h3>Pick the square</h3><p>Find the batter’s row and the current inning. If the team bats around, add another entry in the same square.</p><div class="lesson-example"><span class="mini-label">BATTER 1 · INNING 1</span><strong>◇</strong></div></article>
+        <article class="panel lesson"><span class="lesson-number">02</span><h3>Record the result</h3><p>Use <b>1B</b> for a single, <b>BB</b> for a walk, or <b>K</b> for a strikeout. For fielding plays, tap the positions on the field.</p><div class="lesson-example notation-example"><strong>1B</strong><strong>BB</strong><strong>K</strong></div></article>
+        <article class="panel lesson"><span class="lesson-number">03</span><h3>Track the runners</h3><p>Trace the diamond as runners advance. Fill it when they score. Three outs end the half-inning.</p><div class="lesson-example path-example"><span>◇</span><span>→</span><strong>◆</strong></div></article>
+      </div>
+      <section class="practice panel"><div><p class="eyebrow">PRACTICE</p><h2>Call the play</h2><p>Choose the notation.</p><div id="quiz-progress" class="quiz-progress"></div></div><div class="quiz"><p id="quiz-count" class="eyebrow"></p><h3 id="quiz-question"></h3><div id="quiz-options"></div><p id="quiz-feedback" role="status"></p><button id="quiz-next" class="button" hidden>Next →</button></div></section>
+    </section>
+    <section id="reference" class="tab-panel" hidden>
+      <div class="page-heading"><h2>Quick reference</h2><p>Position numbers and common notation.</p></div>
+      <div class="reference-grid">
+        <section class="panel"><h3>Fielding positions</h3><div id="position-field"></div><div id="position-list"></div></section>
+        <section class="panel"><h3>Notation</h3><dl id="notation-list"></dl></section>
+      </div>
+      <details class="panel beyond"><summary>Double plays, sacrifices, and third outs</summary><p><b>Double play:</b> tap fielders in order, then mark both retired players Out. <b>Sacrifices:</b> choose Other and enter SF or SH.</p><p><b>Third out:</b> runs don’t count on a force out or when the batter is retired before first. On timing plays, select Home only for runners who crossed before the out; leave others at their last base. Check “Count runs” to include them.</p><p>This scorebook tracks runs, hits, errors, outs, and batting order. It doesn’t calculate RBI or earned runs.</p><a href="https://www.mlb.com/official-information/basics/score" target="_blank" rel="noreferrer">MLB scoring guide ↗</a></details>
+    </section>
+    <footer><span>fieldnotes</span><span>Saved in this browser</span></footer>
+  </main>
+  <dialog id="play-dialog" aria-labelledby="play-title">
+    <form id="play-form">
+      <div class="dialog-body">
+        <div class="section-heading"><h2 id="play-title"></h2><button type="button" class="close-button" data-close="play-dialog" aria-label="Close">×</button></div>
+        <p id="play-tip" class="muted"></p>
+        <section id="fielder-picker" hidden aria-label="Choose fielders">
+          <div id="picker-field" class="picker-field" role="group" aria-label="Defensive positions"></div>
+          <div class="picker-result"><div class="picker-result-text" aria-live="polite"><strong id="picker-code">—</strong><span id="picker-description">Choose a fielder</span></div><button type="button" id="picker-undo" class="text-button" aria-label="Undo last fielder">↶ Undo</button><button type="button" id="picker-clear" class="text-button">Clear</button></div>
+        </section>
+        <div id="runner-types" class="runner-types" hidden aria-label="Runner play type"></div>
+        <details id="notation-details"><summary>Edit notation</summary><label>Notation<input id="notation" maxlength="40" autocomplete="off" spellcheck="false"></label><div id="custom-flags"><label class="checkbox"><input type="checkbox" id="is-hit"> Hit</label><label class="checkbox"><input type="checkbox" id="is-error"> Error</label></div></details>
+        <div class="runner-heading"><h3>Runner destinations</h3><span class="muted">Adjust as needed</span></div>
+        <div id="runner-destinations"></div>
+        <div id="third-out-note" hidden><p>Third out: exclude runs on a force out or batter out before first.</p><label class="checkbox"><input id="count-runs" type="checkbox"> Count runs scored before a non-force third out</label></div>
+        <details id="note-details"><summary>Add note</summary><label class="sr-only" for="play-note">Play note</label><input id="play-note" maxlength="160" placeholder="Optional note"></details>
+      </div>
+      <div class="dialog-footer"><p id="play-error" class="error" role="alert"></p><button class="button full" type="submit">Save play</button></div>
+    </form>
+  </dialog>
+  <dialog id="setup-dialog" aria-labelledby="setup-title"><form id="setup-form"><div class="dialog-body"><div class="section-heading"><h2 id="setup-title">New game</h2><button type="button" class="close-button" data-close="setup-dialog" aria-label="Close">×</button></div><div class="setup-columns"><div><label>Visitors<input id="away-name" value="Visitors" maxlength="32" required></label><label>Batting order<textarea id="away-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div><div><label>Home<input id="home-name" value="Home" maxlength="32" required></label><label>Batting order<textarea id="home-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div></div><p class="form-help">Nine batters per team. Replaces the current game; export it first to keep a copy.</p></div><div class="dialog-footer"><button class="button full" type="submit">Start game</button></div></form></dialog>
+  <noscript>Enable JavaScript to use the scorebook.</noscript>
+</body>
+</html>
