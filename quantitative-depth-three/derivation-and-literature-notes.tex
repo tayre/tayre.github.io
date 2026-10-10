@@ -10,23 +10,29 @@
 \newcommand{\Prb}{\mathbb P}
 \newcommand{\bits}{\{0,1\}}
 \newcommand{\corr}{\operatorname{corr}}
-\title{An explicit rate from the depth-three circuit construction}
+\title{An explicit rate from the depth-three circuit construction\\[0.5em]
+\large Research note: extended derivation and literature notes}
 \author{Tom Ayre}
 \date{October 6, 2026}
 \begin{document}
 \maketitle
 
 \noindent\textbf{Status.}
-This note gives a mathematical proof of a quantitative strengthening of a
-result in OpenAI's mathematics repository. Its clause-count-independent
+This extended research note gives a mathematical proof of a quantitative
+refinement of a result in OpenAI's mathematics repository. It reuses the
+source construction and proof methods, combining them with published
+quantitative disjoint CNF sparsification. The contribution is a growing
+parameter schedule and uniform estimates that yield an explicit rate.
+Its clause-count-independent
 restriction lemma has now been audited independently and is proved in full
 below; the theorem is no longer conditional on that lemma. The external
 input is the published quantitative, disjoint version of CNF sparsification.
 The estimates needed for a growing proof parameter are checked directly.
-This is not a claim of publication priority or external peer review.
-Neither this strengthened theorem nor its new parameter schedule has been
-checked in Lean. The accompanying paper provides the revised presentation.
-This extended note was prepared with assistance from Codex.
+Novelty and publication priority remain unconfirmed; no external peer review
+is claimed. Neither this strengthened theorem nor its growing parameter
+schedule has been checked in Lean. The accompanying research note provides
+the revised presentation. These extended notes were prepared with assistance
+from Codex.
 
 \section{Statement and provenance}
 
@@ -479,9 +485,11 @@ which proves the theorem with the announced absolute constant.
 
 \section{What has and has not been established}
 
-The contribution is an explicit rate, obtained by replacing a
-fixed-width sparsification input with a quantitative one and checking
-all subsequent estimates for a growing width. It is stronger than the
+The contribution of this research note is a growing parameter schedule and
+the uniform estimates that yield an explicit rate from the existing
+construction and proof methods. This replaces a fixed-width sparsification
+input with a published quantitative one and checks all subsequent estimates
+for a growing width. The resulting rate is stronger than the
 source's stated $2^{\omega(\sqrt n)}$ guarantee, which gives no specific
 diverging factor. It does not reach $2^{n^{1/2+\epsilon}}$ for any fixed
 $\epsilon>0$.
@@ -573,9 +581,9 @@ The language, restriction lemma, signed expansion, marker mixtures, and
 backwards clause-count cancellation are all ingredients of the source.
 The independent audit above validates those ingredients; it does not claim
 to have invented them. Quantitative disjoint sparsification is also prior
-work \cite{CIP,DHMTW,Williams}. The contribution here is its combination
-with a growing parameter choice and the finite estimates needed to justify
-the resulting explicit rate.
+work \cite{CIP,DHMTW,Williams}. The contribution of this research note is
+its combination with a growing parameter schedule and the uniform finite
+estimates needed to justify the resulting explicit rate.
 
 \paragraph{Closest external comparisons.}
 \begin{itemize}

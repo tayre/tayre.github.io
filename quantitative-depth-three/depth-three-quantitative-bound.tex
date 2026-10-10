@@ -7,7 +7,7 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={A quantitative refinement of a depth-three circuit lower bound},pdfauthor={Tom Ayre},pdfsubject={Quantitative sparsification and Boolean circuit lower bounds}}
+\hypersetup{pdftitle={A quantitative refinement of a depth-three circuit lower bound},pdfauthor={Tom Ayre},pdfsubject={Research note on quantitative sparsification and Boolean circuit lower bounds}}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -22,16 +22,16 @@
 \setlength{\emergencystretch}{2em}
 \clubpenalty=10000
 \widowpenalty=10000
-\title{A quantitative refinement of a\ depth-three circuit lower bound}
+\title{A quantitative refinement of a\ depth-three circuit lower bound\\[0.5em]\large Research note}
 \author{Tom Ayre}
-\date{October 6, 2026}
+\date{October 6, 2026\\Revised October 10, 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
 OpenAI's depth-three circuit construction gives a single polynomial-time
 language whose $n$-bit membership function requires
 $2^{\omega(\sqrt n)}$ total gates in unrestricted OR--AND--OR circuits.
-We derive the explicit lower bound
+This research note derives the explicit lower bound
 $2^{c\sqrt{n\ln n/\ln\ln n}}$ for an absolute $c>0$, at every sufficiently
 large input length, for the same language. The additional input is the
 published quantitative form of disjoint CNF sparsification, with clause
@@ -39,8 +39,9 @@ density at most $(Kb)^{Kb}$ at width $b$. This permits the target width to
 grow as $\Theta(\ln n/\ln\ln n)$. We verify the counting, moment, restriction,
 and gate-count estimates uniformly for this schedule. We also reproduce
 the source's finite restriction argument, including the backwards path
-count that removes dependence on the number of clauses. The refinement
-changes the proof parameters, not the language or its evaluation algorithm.
+count that removes dependence on the number of clauses. The contribution
+is the growing parameter schedule and its uniform verification; the source's
+language and evaluation algorithm are retained.
 \end{abstract}
 
 \section{Introduction}
@@ -76,7 +77,7 @@ The displayed value of $c$ is explicit in terms of $K$; no numerical
 value of the sparsification constant is claimed. The threshold $n_0$ is
 absolute once this constant has been fixed.
 
-\paragraph{Contribution and attribution.}
+\paragraph{Scope and attribution.}
 The language, clause-count-independent restriction lemma, and circuit
 contradiction are from~\cite{OAI26}. The restriction proof reproduced in
 Appendix~\ref{app:restriction} is an adaptation of that source, not a new
@@ -85,9 +86,9 @@ estimate of Calabro, Impagliazzo, and Paturi~\cite{CIP}, combined with the
 disjoint refinement of Dell et al.~\cite{DHMTW}; Williams~\cite{Williams}
 explicitly uses this quantitative counting form. Our contribution is the
 growing-parameter schedule and the uniform estimates that yield
-\eqref{eq:main} for the existing construction. We regard this as a
-potentially new quantitative refinement of the existing result; publication
-priority remains unconfirmed.
+\eqref{eq:main} for the existing construction. This research note records a
+potentially new quantitative refinement of that result; publication priority
+remains unconfirmed.
 
 The distinction between unrestricted and bounded-bottom-fan-in circuits
 is essential. Recent exponential bounds for majority and inner product
@@ -694,7 +695,7 @@ empty live sets, and $k\le b$ all satisfy the same argument.
 \section{Verification and provenance}\label{app:verification}
 The source construction and restriction argument were read at repository
 revision \href{https://github.com/openai/math/commit/adc7f1241b42e322a6451854ab7e4b4c146bf78a}{\texttt{adc7f1241b42e}}. The accompanying
-research note records the detailed literature comparison and search scope.
+extended derivation and literature notes record the detailed comparison and search scope.
 The manuscript date of the source is September 23, 2026; its inspected Git
 revision is dated October 6, 2026. These dates alone do not establish
 publication priority for an unstated consequence.
@@ -713,11 +714,11 @@ replace its universal arguments.
 
 The repository contains a Lean theorem for the restriction lemma and
 finite numerical estimates. The strengthened rate and growing schedule
-in this paper have not been integrated into that formalization, and no
+in this note have not been integrated into that formalization, and no
 fresh Lean kernel verification was performed for this work. The manuscript
 was prepared with assistance from Codex, including derivation review,
 literature search, computational diagnostics, and typesetting. It is a
-research preprint and has not undergone external peer review.
+research note and has not undergone external peer review.
 
 \begin{thebibliography}{9}
 \bibitem{OAI26}

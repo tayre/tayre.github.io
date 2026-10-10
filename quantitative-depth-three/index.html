@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A quantitative refinement of a depth-three circuit lower bound | Tom Ayre</title>
-  <meta name="description" content="A research preprint by Tom Ayre deriving an explicit depth-three Boolean circuit lower bound through quantitative CNF sparsification. Full PDF, LaTeX source, and Python checks.">
+  <meta name="description" content="A research note by Tom Ayre deriving a quantitative refinement of an existing depth-three Boolean circuit lower bound. PDF, LaTeX source, and Python checks.">
   <meta name="author" content="Tom Ayre">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://tayre.github.io/quantitative-depth-three/">
@@ -15,7 +15,7 @@
   <meta name="citation_language" content="en">
   <meta property="og:type" content="article">
   <meta property="og:title" content="A quantitative refinement of a depth-three circuit lower bound">
-  <meta property="og:description" content="An explicit quantitative refinement of OpenAI's depth-three circuit construction, with proof, sources, and reproducibility checks.">
+  <meta property="og:description" content="A research note on a quantitative refinement of OpenAI's depth-three circuit construction, with proof, sources, and reproducibility checks.">
   <meta property="og:url" content="https://tayre.github.io/quantitative-depth-three/">
   <script type="application/ld+json">
   {
@@ -24,12 +24,13 @@
     "headline": "A quantitative refinement of a depth-three circuit lower bound",
     "author": {"@type": "Person", "name": "Tom Ayre", "url": "https://tayre.github.io/"},
     "datePublished": "2026-10-06",
-    "dateModified": "2026-10-06",
+    "dateModified": "2026-10-10",
     "url": "https://tayre.github.io/quantitative-depth-three/",
     "mainEntityOfPage": "https://tayre.github.io/quantitative-depth-three/",
     "inLanguage": "en",
     "isAccessibleForFree": true,
-    "description": "A research preprint deriving the explicit lower bound 2^(c sqrt(n ln n / ln ln n)) for the existing depth-three circuit construction using quantitative disjoint CNF sparsification.",
+    "genre": "Research note",
+    "description": "A research note deriving the explicit lower bound 2^(c sqrt(n ln n / ln ln n)) for the existing depth-three circuit construction using quantitative disjoint CNF sparsification.",
     "encoding": {
       "@type": "MediaObject",
       "encodingFormat": "application/pdf",
@@ -46,14 +47,15 @@
       <h1>A quantitative refinement of a depth-three circuit lower bound</h1>
       <p><strong>Tom Ayre</strong><br>
         ayre.tom at gmail.com<br>
-        <time datetime="2026-10-06">October 6, 2026</time> · Research preprint</p>
+        Research note<br>
+        <time datetime="2026-10-06">October 6, 2026</time>; revised <time datetime="2026-10-10">October 10, 2026</time></p>
     </header>
     <section aria-labelledby="abstract-title">
       <h2 id="abstract-title">Abstract</h2>
       <p>OpenAI's depth-three circuit construction gives a single polynomial-time
         language whose <i>n</i>-bit membership function requires
         2<sup>ω(√n)</sup> total gates in unrestricted OR–AND–OR circuits.
-        We derive the explicit lower bound 2<sup>c√(n ln n / ln ln n)</sup>
+        This research note derives the explicit lower bound 2<sup>c√(n ln n / ln ln n)</sup>
         for an absolute <i>c</i> &gt; 0, at every sufficiently large input length,
         for the same language. The additional input is the published quantitative
         form of disjoint CNF sparsification, with clause density at most
@@ -62,8 +64,9 @@
         restriction, and gate-count estimates uniformly for this schedule.
         We also reproduce the source's finite restriction argument, including
         the backwards path count that removes dependence on the number of
-        clauses. The refinement changes the proof parameters, not the language
-        or its evaluation algorithm.</p>
+        clauses. The contribution is the growing parameter schedule and its
+        uniform verification; the source's language and evaluation algorithm
+        are retained.</p>
     </section>
     <div>
       <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="S three of f n is greater than two to the power c times the square root of n natural log n divided by natural log natural log n">
@@ -76,10 +79,10 @@
         <i>S</i><sub>3</sub> counts all gates, with unrestricted fan-in and fan-out.</p>
     </div>
     <section aria-labelledby="resources-title">
-      <h2 id="resources-title">Paper and resources</h2>
+      <h2 id="resources-title">Note and resources</h2>
       <ul>
-        <li><a href="depth-three-quantitative-bound.pdf">Read the paper (PDF)</a><span>: complete proof and references</span></li>
-        <li><a href="depth-three-quantitative-bound.tex">LaTeX source</a><span>: standalone paper</span></li>
+        <li><a href="depth-three-quantitative-bound.pdf">Read the research note (PDF)</a><span>: complete proof and references</span></li>
+        <li><a href="depth-three-quantitative-bound.tex">LaTeX source</a><span>: standalone research note</span></li>
         <li><a href="derivation-and-literature-notes.tex">Extended derivation and literature notes (TeX)</a></li>
         <li><a href="check_quantitative_depth_three.py">Quantitative checks (Python)</a><span>: exact constants and nine parameter examples</span></li>
         <li><a href="check_restriction_lemma.py">Restriction-lemma checks (Python)</a><span>: 534 finite cases</span></li>
@@ -87,7 +90,7 @@
       </ul>
     </section>
     <section aria-labelledby="scope-title">
-      <h2 id="scope-title">Contribution and status</h2>
+      <h2 id="scope-title">Scope and status</h2>
       <p>The language and restriction lemma come from
         <a href="https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Beyond-the-Square-Root-Exponent-for-Depth-Three-Boolean-Circuits-September-23-2026">OpenAI's source manuscript</a>.
         This note supplies a growing-parameter schedule and uniform estimates,
@@ -100,8 +103,8 @@
         threshold. The revised proof makes the finite sparsification statement,
         disjointness, and uniform constants explicit. It also explains the
         limitation imposed by the available sparsification bound.</p>
-      <p>This is a potentially new quantitative refinement of the existing result;
-        publication priority remains unconfirmed. This preprint has not undergone external peer review. The Python checks
+      <p>This research note records a potentially new quantitative refinement of the existing result;
+        publication priority remains unconfirmed. The note has not undergone external peer review. The Python checks
         are finite diagnostics, not a formal verification. No fresh Lean kernel
         verification was performed. The manuscript was prepared with assistance
         from Codex.</p>
@@ -117,7 +120,7 @@ python3 check_restriction_lemma.py</code></pre>
     </section>
   </article>
   <hr>
-  <footer>Tom Ayre · <a href="https://github.com/tayre/tayre.github.io/tree/master/depth-three">Source files on GitHub</a></footer>
+  <footer>Tom Ayre · <a href="https://github.com/tayre/tayre.github.io/tree/master/quantitative-depth-three">Source files on GitHub</a></footer>
 </main>
 </body>
 </html>
