@@ -1,8 +1,18 @@
 # Grade 4
 
-A small, buildless learning app for an iPad, served from `/grade4/` on this static site. Its first activity covers the 1–10 times tables with untimed practice, hints, short rounds and a chance to revisit mistakes. The broader name leaves room for future fact practice and basic French lessons.
+A small, buildless learning app for an iPad, served from `/grade4/` on this static site. Its first activity covers the 1–10 times tables with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future fact practice and basic French lessons.
 
 Progress and table choices are stored locally in the browser. There are no accounts, third-party services or analytics. Clearing this site's browser data removes saved progress; progress does not sync between devices or browsers.
+
+## Practice and points
+
+Each question starts with 100 possible points, with a 2-second grace period before the score begins to fall. Earlier correct answers earn more: the time-based value gradually falls to 20 points by 15 seconds. Help arrives automatically while the child keeps working:
+
+- After 5 seconds, a strategy hint appears. A hint limits that question to at most 60 points.
+- After 10 seconds, the answer begins to fade in; it is fully visible at 15 seconds. Once the answer starts appearing, the question is worth at most 40 points.
+- Each wrong answer subtracts 20 points, with a minimum award of 10 points for eventually answering correctly.
+
+The child can ask for a hint earlier. Displaying a hint or the answer marks the question as assisted, so it cannot count toward an unassisted mastery star. There is no timeout: the child can keep learning and submit the correct answer even after it is fully shown. The question clock pauses while the app is hidden or the break dialog is open.
 
 ## Preview locally
 

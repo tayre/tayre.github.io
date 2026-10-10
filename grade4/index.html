@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5ed">
-  <meta name="description" content="Little practice. Big high-fives. A friendly, untimed way to learn multiplication tables from 1 to 10.">
+  <meta name="description" content="Practice multiplication tables from 1 to 10 with gradual hints, fading answers, and more points for earlier guesses.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Grade 4">
   <title>Grade 4 · Multiplication 1–10</title>
@@ -32,14 +32,14 @@
           <div class="welcome">
             <p class="eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span> LESSON 01 · MULTIPLICATION</p>
             <h1 id="home-title">Little practice.<br>Big <span class="underline">high-fives.</span></h1>
-            <p class="intro">Let’s make those times tables stick.<br>A few questions. Your own pace. You’ve got this.</p>
+            <p class="intro">Let’s make those times tables stick.<br>Guess sooner. Earn more. Help appears as you go.</p>
             <div class="welcome-bottom">
               <div class="mascot" aria-hidden="true">
                 <svg viewBox="0 0 220 190" fill="none"><path d="M41 67 18 61M37 42 25 25M177 35 189 20M190 61 209 54" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="m109 14 22 39 44-6-5 46 34 30-42 19-10 44-40-22-41 20-8-44-41-21 36-28-3-45 43 8Z" fill="#f6d85b" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><ellipse cx="88" cy="93" rx="4.5" ry="7" fill="currentColor"/><ellipse cx="133" cy="93" rx="4.5" ry="7" fill="currentColor"/><path d="M94 111q17 20 33 0" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><ellipse cx="75" cy="108" rx="9" ry="5" fill="#e9a180"/><ellipse cx="145" cy="108" rx="9" ry="5" fill="#e9a180"/></svg>
               </div>
               <div class="hand-note">A little every day<br>goes a long way.<span aria-hidden="true">↙</span></div>
             </div>
-            <div class="feature-line"><span><i class="feature-dot mint"></i>No timer</span><span><i class="feature-dot lilac"></i>No pressure</span><span><i class="feature-dot yellow"></i>Just progress</span></div>
+            <div class="feature-line"><span><i class="feature-dot mint"></i>Gradual hints</span><span><i class="feature-dot lilac"></i>Keep trying</span><span><i class="feature-dot yellow"></i>Earn points</span></div>
           </div>
 
           <div class="practice-setup card">
@@ -50,7 +50,7 @@
             <div class="picker-shortcuts"><button id="easy-tables" class="text-button">Start with 2, 5 &amp; 10</button><button id="all-tables" class="text-button">Choose all</button></div>
             <div class="round-note"><span class="note-icon" aria-hidden="true">✦</span><p id="selection-note">A friendly place to start.</p></div>
             <button id="start-round" class="button primary">Let’s practice <span aria-hidden="true">↗</span></button>
-            <p class="setup-footnote">Tables 1–10 · Hints whenever you need them</p>
+            <p class="setup-footnote">Hint at 5s · Answer fades in at 10s · Up to 100 points</p>
           </div>
         </div>
 
@@ -61,15 +61,20 @@
       </section>
 
       <section id="practice-view" class="view" aria-labelledby="round-title" hidden>
-        <div class="round-top"><button id="leave-round" class="text-button">← Take a break</button><span class="round-label" id="round-title">A little practice goes a long way</span><span id="round-count" class="pill">1 of 10</span></div>
+        <div class="round-top"><button id="leave-round" class="text-button">← Take a break</button><span class="round-label" id="round-title">A little practice goes a long way</span><div class="round-counters"><span id="round-points" class="pill points-pill">0 points</span><span id="round-count" class="pill">1 of 10</span></div></div>
         <div id="round-track" class="round-track" aria-label="Round progress"></div>
         <div class="play-grid">
           <div class="question-panel card">
-            <p id="question-label" class="eyebrow">TAKE YOUR TIME</p>
+            <div class="question-topline"><p id="question-label" class="eyebrow">GIVE IT A GO</p><span id="available-points" class="points-available">100 points available</span></div>
             <h1 id="equation" class="equation" aria-label="Multiplication question"></h1>
+            <div class="reveal-line"><span class="reveal-label">A little help</span><span id="answer-reveal" aria-hidden="true"></span><span id="reveal-placeholder" aria-hidden="true">· · ·</span></div>
+            <p id="pacing-caption" class="pacing-caption">Hint in 5s · answer begins to appear at 10s</p>
+            <div class="reveal-track" aria-hidden="true"><span id="reveal-fill"></span></div>
             <label class="answer-label" for="answer">Your answer</label>
             <input id="answer" class="answer" readonly inputmode="none" autocomplete="off" aria-describedby="feedback" placeholder="?">
-            <div id="feedback" class="feedback" role="status" aria-live="polite">Think it through. There’s no rush.</div>
+            <div id="feedback" class="feedback" role="status" aria-live="polite">Try it before the hints appear!</div>
+            <p id="timed-hint" class="timed-hint">A little hint will appear here.</p>
+            <p id="reveal-announcement" class="sr-only" aria-live="polite"></p>
             <button id="show-hint" class="hint-button"><span aria-hidden="true">✧</span> A little hint?</button>
           </div>
           <div class="input-panel">
@@ -89,6 +94,7 @@
 
       <section id="results-view" class="view results-view" aria-labelledby="results-title" hidden>
         <div class="result-star" aria-hidden="true">✦</div><p class="eyebrow">LITTLE STEPS ADD UP</p><h1 id="results-title" tabindex="-1">That’s a round of high-fives!</h1><p id="results-message" class="intro"></p>
+        <div class="round-score"><strong id="result-points">0</strong><span>points earned this round</span><p id="result-points-detail"></p></div>
         <div class="result-stats"><div><strong id="result-clean">0</strong><span>on your own</span></div><div><strong id="result-learning">0</strong><span>with a little help</span></div><div><strong id="result-total">10</strong><span>facts practiced</span></div></div>
         <div id="review-section" class="review-section" hidden><h2>A little more practice with these.</h2><div id="review-facts" class="review-facts"></div></div>
         <div class="result-actions"><button id="practice-again" class="button primary">Another round <span aria-hidden="true">↗</span></button><button id="review-round" class="button secondary" hidden>Practice these again</button><button class="text-button" data-view="home">Back to my tables</button></div>
@@ -102,6 +108,7 @@
       <section id="progress-view" class="view" aria-labelledby="progress-title" hidden>
         <div class="section-intro"><p class="eyebrow">LOOK HOW FAR YOU’VE COME</p><h1 id="progress-title" tabindex="-1">Every little bit counts.</h1><p class="intro">A fact earns a star after 3 correct answers in a row, without hints.</p></div>
         <div class="progress-summary"><div><span class="stat-icon yellow" aria-hidden="true">✦</span><p><strong id="mastered-count">0 / 100</strong><span>facts with a star</span></p></div><div><span class="stat-icon mint" aria-hidden="true">✓</span><p><strong id="known-count">0</strong><span>facts answered correctly</span></p></div><div><span class="stat-icon lilac" aria-hidden="true">↗</span><p><strong id="rounds-count">0</strong><span>rounds completed</span></p></div></div>
+        <p class="total-points-note"><strong id="total-points">0</strong> points earned so far · Earlier answers earn more.</p>
         <div id="progress-tables" class="progress-tables"></div>
         <div class="progress-bottom"><p class="muted">Progress belongs to this browser on this device.</p><button id="reset-progress" class="text-button">Reset progress</button></div>
       </section>
