@@ -370,7 +370,10 @@ $('#show-hint').addEventListener('click', () => {
 });
 $('#leave-round').addEventListener('click', () => navigate('home'));
 $('.brand').addEventListener('click', (event) => { event.preventDefault(); navigate('home'); });
-$('#keep-playing').addEventListener('click', () => $('#break-dialog').close());
+$('#keep-playing').addEventListener('click', () => {
+  $('#break-dialog').close();
+  resumeQuestionClock();
+});
 $('#break-dialog').addEventListener('close', resumeQuestionClock);
 $('#confirm-break').addEventListener('click', () => { pauseQuestionClock(); round = null; $('#break-dialog').close(); showView(pendingView); });
 $('#practice-again').addEventListener('click', () => startRound());
