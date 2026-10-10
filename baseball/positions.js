@@ -33,13 +33,13 @@ export function fieldingDescription(selection) {
 
 export function fieldArtwork() {
   return `<svg viewBox="0 0 400 340" aria-hidden="true" class="picker-art">
-    <path d="M200 316 24 140 Q-2 0 200 0 Q402 0 376 140Z" fill="#dce9d6"/>
-    <path d="M200 302 51 153 Q27 28 200 28 Q373 28 349 153Z" fill="#cddfca"/>
-    <path d="M200 302 82 184 Q70 86 200 82 Q330 86 318 184Z" fill="#e9d7b6"/>
-    <path d="M200 283 107 190 200 97 293 190Z" fill="#b6d1b0"/>
+    <path d="M200 316 24 140 Q-2 0 200 0 Q402 0 376 140Z" fill="#e2e4d6"/>
+    <path d="M200 302 51 153 Q27 28 200 28 Q373 28 349 153Z" fill="#d5dbc9"/>
+    <path d="M200 302 82 184 Q70 86 200 82 Q330 86 318 184Z" fill="#e7dcca"/>
+    <path d="M200 283 107 190 200 97 293 190Z" fill="#c4ccb3"/>
     <path d="M28 130 200 302 372 130" fill="none" stroke="#fffef5" stroke-width="2"/>
     <path d="M200 283 107 190 200 97 293 190Z" fill="none" stroke="#fffef5" stroke-width="1.5"/>
-    <circle cx="200" cy="194" r="15" fill="#e9d7b6"/>
+    <circle cx="200" cy="194" r="15" fill="#e7dcca"/>
     <path d="M194 194h12" stroke="#fffef5" stroke-width="3"/>
     <g fill="#fffef5"><path d="m293 184 6 6-6 6-6-6Z"/><path d="m200 91 6 6-6 6-6-6Z"/><path d="m107 184 6 6-6 6-6-6Z"/><path d="M194 283h12v6l-6 5-6-5Z"/></g>
   </svg>`;

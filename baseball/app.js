@@ -1,22 +1,44 @@
 import { PLAYS, newGame, derive, suggestedMoves, validateEvent } from './engine.js';
 import { POSITIONS, selectFielder, fieldingNotation, fieldingDescription, fieldArtwork } from './positions.js';
+import { LocalGameRepository, identifyGame } from './storage.js';
+import { MLBClient } from './mlb.js';
+import { setupLibrary } from './library-ui.js';
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const KEY = 'fieldnotes-game-v1';
-let game = newGame(), storageAvailable = true;
-try {
-  const saved = JSON.parse(localStorage.getItem(KEY));
-  if (saved?.version === 1 && saved.teams?.length === 2 && saved.lineups?.every(l => l.length === 9) && Array.isArray(saved.events)) {
-    derive(saved); game = saved;
-  }
-} catch { storageAvailable = false; }
+let browserStorage;
+try { browserStorage = window.localStorage; }
+catch { browserStorage = { getItem() { throw new Error('Storage unavailable'); }, setItem() { throw new Error('Storage unavailable'); } }; }
+const repository = await new LocalGameRepository(browserStorage).initialize();
+const mlb = new MLBClient();
+let game = await repository.getActiveGame() || identifyGame(newGame());
 let state = derive(game), cardSide = state.side, draft;
+let toastTimer;
 
-function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(game)); storageAvailable = true; }
-  catch { storageAvailable = false; }
-  $('#save-status').textContent = storageAvailable ? 'Saved locally' : 'Not saved · Export';
+function notify(message) {
+  clearTimeout(toastTimer);
+  $('#toast').textContent = message; $('#toast').hidden = false;
+  toastTimer = setTimeout(() => $('#toast').hidden = true, 3500);
+}
+async function save() {
+  try {
+    const saved = await repository.saveGame(game);
+    if (saved.id === game.id) game.updatedAt = saved.updatedAt;
+    $('#save-status').textContent = 'Saved';
+    $('#storage-warning').hidden = true;
+    return true;
+  } catch {
+    $('#save-status').textContent = 'Not saved';
+    $('#storage-warning').hidden = false;
+    $('#storage-warning').textContent = repository.readError ? 'Saved data could not be read. Open Settings to export a recovery copy.' : 'Storage unavailable or full. Export this game in Settings.';
+    return false;
+  }
+}
+async function activateGame(next) {
+  if (!await save()) throw new Error('Current game is not saved');
+  const saved = await repository.saveGame(next);
+  game = saved; cardSide = derive(game).side;
+  location.hash = 'score'; render();
 }
 function inningName(s = state) { return `${s.side === 0 ? 'Top' : 'Bottom'} ${s.inning}`; }
 function runnerName(r) { return game.lineups[r.side][r.slot]; }
@@ -24,9 +46,9 @@ function total(side) { return state.runs[side].reduce((sum, r) => sum + r, 0); }
 function innings() { return Math.max(9, state.inning); }
 
 function field(positions = false) {
-  const base = (x, y, i) => `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" transform="rotate(45 ${x} ${y})" fill="${!positions && state.bases[i] ? '#b4512d' : '#fffdf4'}" stroke="#78896c" stroke-width="1"/>`;
+  const base = (x, y, i) => `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" transform="rotate(45 ${x} ${y})" fill="${!positions && state.bases[i] ? '#916c51' : '#fffdf4'}" stroke="#78896c" stroke-width="1"/>`;
   const labels = [[150, 157, '1'], [150, 225, '2'], [218, 155, '3'], [184, 108, '4'], [82, 155, '5'], [116, 108, '6'], [62, 67, '7'], [150, 44, '8'], [238, 67, '9']];
-  return `<svg class="field-svg" viewBox="0 0 300 260" role="img" aria-label="${positions ? 'Baseball field showing the nine numbered defensive positions' : 'Baseball diamond with occupied bases in orange'}"><path d="M150 225 30 105 Q25 20 150 12 Q275 20 270 105Z" fill="#d5dfc8"/><path d="M150 225 50 125 Q45 50 150 42 Q255 50 250 125Z" fill="#cad8b9"/><path d="M150 225 72 147 Q65 77 150 70 Q235 77 228 147Z" fill="#e7d8b9"/><path d="M150 211 86 147 150 83 214 147Z" fill="#adc59e" stroke="#f8f6e8" stroke-width="1"/><path d="M23 98 150 225 277 98" fill="none" stroke="#fcfaee" stroke-width="1.5"/><path d="M150 218 155 218 155 223 150 227 145 223 145 218Z" fill="#fffdf4"/><circle cx="150" cy="153" r="11" fill="#e7d8b9"/><path d="M146 152h8" stroke="#fffdf4" stroke-width="2"/>${base(214,147,0)}${base(150,83,1)}${base(86,147,2)}${positions ? labels.map(([x,y,n]) => `<circle cx="${x}" cy="${y}" r="12" fill="#183f35"/><text x="${x}" y="${y+4}" text-anchor="middle" fill="#fffdf4" font-family="monospace" font-size="11">${n}</text>`).join('') : `<text x="235" y="151" font-size="9" fill="#6f7d64">1B</text><text x="145" y="64" font-size="9" fill="#6f7d64">2B</text><text x="49" y="151" font-size="9" fill="#6f7d64">3B</text>`}</svg>`;
+  return `<svg class="field-svg" viewBox="0 0 300 260" role="img" aria-label="${positions ? 'Baseball field showing the nine numbered defensive positions' : 'Baseball diamond with occupied bases in orange'}"><path d="M150 225 30 105 Q25 20 150 12 Q275 20 270 105Z" fill="#e0e3d3"/><path d="M150 225 50 125 Q45 50 150 42 Q255 50 250 125Z" fill="#d1d8bf"/><path d="M150 225 72 147 Q65 77 150 70 Q235 77 228 147Z" fill="#e8ddc7"/><path d="M150 211 86 147 150 83 214 147Z" fill="#bcc8a7" stroke="#f8f6e8" stroke-width="1"/><path d="M23 98 150 225 277 98" fill="none" stroke="#fcfaee" stroke-width="1.5"/><path d="M150 218 155 218 155 223 150 227 145 223 145 218Z" fill="#fffdf4"/><circle cx="150" cy="153" r="11" fill="#e8ddc7"/><path d="M146 152h8" stroke="#fffdf4" stroke-width="2"/>${base(214,147,0)}${base(150,83,1)}${base(86,147,2)}${positions ? labels.map(([x,y,n]) => `<circle cx="${x}" cy="${y}" r="12" fill="#183f35"/><text x="${x}" y="${y+4}" text-anchor="middle" fill="#fffdf4" font-family="monospace" font-size="11">${n}</text>`).join('') : `<text x="235" y="151" font-size="9" fill="#6f7d64">1B</text><text x="145" y="64" font-size="9" fill="#6f7d64">2B</text><text x="49" y="151" font-size="9" fill="#6f7d64">3B</text>`}</svg>`;
 }
 function scoreBox(a) {
   const points = [[23,42],[42,23],[23,4],[4,23],[23,42]];
@@ -66,7 +88,6 @@ function render() {
   $('#runner-play').disabled = game.finished || !state.bases.some(Boolean);
   $('#finish').disabled = !game.events.length;
   $('#finish').textContent = game.finished ? 'Reopen game' : 'Finish game';
-  save();
 }
 
 function openPlay(code, kind = 'plate') {
@@ -79,9 +100,14 @@ function openPlay(code, kind = 'plate') {
   }
   $('#play-title').textContent = play.label;
   $('#play-tip').textContent = play.tip;
-  $('#notation').value = code === 'OTHER' || play.picker ? '' : play.code;
+  $('#notation').value = code === 'OTHER' ? 'SF' : play.picker ? '' : play.code;
   $('#notation').readOnly = !play.notation;
-  $('#notation-details').open = code === 'OTHER';
+  $('#notation-details').open = false;
+  $('#other-types').hidden = code !== 'OTHER';
+  if (code === 'OTHER') {
+    draft.moves.find(m => m.from === 'batter').to = 0;
+    renderOtherTypes('SF');
+  }
   $('#notation-details summary').textContent = play.notation ? 'Edit notation' : `Notation: ${play.code}`;
   $('#fielder-picker').hidden = !play.picker;
   if (play.picker) renderPicker();
@@ -95,11 +121,7 @@ function openPlay(code, kind = 'plate') {
   $('#play-note').value = '';
   $('#note-details').open = false;
   $('#play-error').textContent = '';
-  $('#runner-destinations').innerHTML = draft.moves.map((move,i)=> {
-    const batter = move.from === 'batter';
-    const name = batter ? game.lineups[state.side][state.next[state.side]] : runnerName(state.bases[Number(move.from)-1]);
-    return `<div class="runner-row"><label for="destination-${i}">${escape(name)}<small>${batter?'At the plate':`From ${['first','second','third'][Number(move.from)-1]} base`}</small></label><select id="destination-${i}" data-from="${move.from}">${[[0,'Out'],[1,'First base'],[2,'Second base'],[3,'Third base'],[4,'Home · run']].filter(([v])=>batter||v===0||v>=Number(move.from)).map(([v,label])=>`<option value="${v}" ${move.to===v?'selected':''}>${label}</option>`).join('')}</select></div>`;
-  }).join('');
+  renderDestinations();
   updateThirdOut();
   $('#play-dialog').showModal();
   $('#play-dialog').scrollTop = 0;
@@ -161,13 +183,42 @@ $('#runner-types').addEventListener('click', e => {
   $('#notation').value = button.dataset.runnerType;
   renderRunnerTypes(button.dataset.runnerType);
 });
-function getMoves() { return [...document.querySelectorAll('#runner-destinations select')].map(el=>({from:el.dataset.from,to:Number(el.value)})); }
+function renderDestinations() {
+  $('#runner-destinations').innerHTML = draft.moves.map((move, i) => {
+    const batter = move.from === 'batter';
+    const name = batter ? game.lineups[state.side][state.next[state.side]] : runnerName(state.bases[Number(move.from) - 1]);
+    return `<fieldset class="runner-row"><legend>${escape(name)}<small>${batter ? 'Batter' : `On ${['1st', '2nd', '3rd'][Number(move.from) - 1]}`}</small></legend><div class="destination-options">${[[0, 'Out'], [1, '1st'], [2, '2nd'], [3, '3rd'], [4, 'Home']].map(([value, label]) => `<button type="button" data-runner="${i}" data-destination="${value}" class="destination ${move.to === value ? 'active' : ''} ${value === 0 ? 'out' : ''}" aria-pressed="${move.to === value}" aria-label="${escape(name)} to ${label}" ${!batter && value > 0 && value < Number(move.from) ? 'disabled' : ''}>${label}</button>`).join('')}</div></fieldset>`;
+  }).join('');
+}
+function getMoves() { return draft.moves.map(move => ({ ...move })); }
 function updateThirdOut() {
   const moves = getMoves();
-  const third = state.outs + moves.filter(m=>m.to===0).length >= 3 && moves.some(m=>m.to===4);
+  const third = state.outs + moves.filter(m => m.to === 0).length >= 3 && moves.some(m => m.to === 4);
   $('#third-out-note').hidden = !third;
 }
-$('#runner-destinations').addEventListener('change', updateThirdOut);
+$('#runner-destinations').addEventListener('click', e => {
+  const button = e.target.closest('[data-destination]');
+  if (!button || button.disabled) return;
+  const index = Number(button.dataset.runner);
+  draft.moves[index].to = Number(button.dataset.destination);
+  button.closest('.destination-options').querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button));
+  });
+  $('#play-error').textContent = '';
+  updateThirdOut();
+});
+const otherTypes = [['SF', 'Sacrifice fly', 0], ['SH', 'Sacrifice bunt', 0], ['K', 'Dropped third strike', 1]];
+function renderOtherTypes(code) {
+  $('#other-types').innerHTML = otherTypes.map(([c, label]) => `<button type="button" data-other-type="${c}" class="${code === c ? 'active' : ''}" aria-pressed="${code === c}">${label}</button>`).join('');
+}
+$('#other-types').addEventListener('click', e => {
+  const button = e.target.closest('[data-other-type]');
+  if (!button) return;
+  const [code, , base] = otherTypes.find(([c]) => c === button.dataset.otherType);
+  $('#notation').value = code;
+  draft.moves.find(m => m.from === 'batter').to = base;
+  renderOtherTypes(code); renderDestinations(); updateThirdOut();
+});
 $('#toggle-linescore').addEventListener('click', () => {
   const expanded = $('#toggle-linescore').getAttribute('aria-expanded') !== 'true';
   $('#toggle-linescore').setAttribute('aria-expanded', String(expanded));
@@ -186,28 +237,24 @@ $('#play-form').addEventListener('submit',e=> {
     return;
   }
   game.events.push(event);cardSide=derive(game).side;
-  $('#play-dialog').close();render();
+  $('#play-dialog').close();render();save();
 });
 $('#team-switch').addEventListener('click',e=>{const b=e.target.closest('[data-side]');if(b){cardSide=Number(b.dataset.side);render();}});
-$('#undo').addEventListener('click',()=>{game.events.pop();game.finished=false;cardSide=derive(game).side;render();});
-$('#new-game').addEventListener('click',()=>$('#setup-dialog').showModal());
+$('#undo').addEventListener('click',()=>{game.events.pop();game.finished=false;cardSide=derive(game).side;render();save();});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.close).close()));
-$('#setup-form').addEventListener('submit',e=>{
+$('#setup-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const lineups = ['away','home'].map(side=>{
     const names=$(`#${side}-lineup`).value.split('\n').map(s=>s.trim().replace(/^\d+[.)]\s*/,''));
     return Array.from({length:9},(_,i)=>(names[i]||`Batter ${i+1}`).slice(0,40));
   });
-  game=newGame($('#away-name').value.trim()||'Visitors',$('#home-name').value.trim()||'Home',lineups);
-  game.date=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}).toUpperCase();
-  cardSide=0;$('#setup-dialog').close();location.hash='score';render();
+  const next=identifyGame(newGame($('#away-name').value.trim()||'Visitors',$('#home-name').value.trim()||'Home',lineups));
+  next.date=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+  next.dateISO = new Date().toLocaleDateString('en-CA');
+  try { await activateGame(next); $('#setup-dialog').close(); }
+  catch { notify('Could not save. Export the current game in Settings first.'); }
 });
-$('#finish').addEventListener('click',()=>{game.finished=!game.finished;render();});
-$('#export').addEventListener('click',()=>{
-  const data={...game,summary:{runs:[total(0),total(1)],hits:state.hits,errors:state.errors},journal:state.log};
-  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  const a=document.createElement('a');a.href=url;a.download=`fieldnotes-${game.teams.join('-vs-').replace(/[^a-z0-9-]/gi,'-')}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-});
+$('#finish').addEventListener('click',()=>{game.finished=!game.finished;render();save();});
 let printClone;
 window.addEventListener('beforeprint',()=>{
   if(printClone)return;
@@ -217,7 +264,7 @@ window.addEventListener('beforeprint',()=>{
   $('.scorecard-panel h2').textContent=`${game.teams[cardSide]} scorecard`;
 });
 window.addEventListener('afterprint',()=>{printClone?.remove();printClone=null;$('.scorecard-panel h2').textContent='Scorecard';});
-$('#print').addEventListener('click',()=>window.print());
+$('#print').addEventListener('click',()=>{ $('#settings-dialog').close(); window.print(); });
 function showTab(){const tab=['score','learn','reference'].includes(location.hash.slice(1))?location.hash.slice(1):'score';document.querySelectorAll('.tab-panel').forEach(p=>p.hidden=p.id!==tab);document.querySelectorAll('[data-tab]').forEach(a=>{a.classList.toggle('active',a.dataset.tab===tab);if(a.dataset.tab===tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});}
 window.addEventListener('hashchange',showTab);
 
@@ -240,4 +287,5 @@ $('#quiz-next').addEventListener('click',()=>{
   if(quizIndex<questions.length-1){quizIndex++;renderQuiz();return;}
   quizDone=true;$('#quiz-count').textContent='PRACTICE COMPLETE';$('#quiz-question').textContent='Practice complete';$('#quiz-options').innerHTML='';$('#quiz-feedback').textContent='5 plays completed.';$('#quiz-next').textContent='Practice again ↻';document.querySelectorAll('#quiz-progress span').forEach(s=>s.classList.add('done'));
 });
-render();showTab();renderQuiz();
+await setupLibrary({ repository, mlb, getGame: () => game, activate: activateGame, persist: save, refresh: render, notify });
+render();showTab();renderQuiz();await save();

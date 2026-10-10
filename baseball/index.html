@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163d32">
+  <meta name="theme-color" content="#5c6652">
   <meta name="description" content="A baseball scorebook with a visual position picker, scoring lessons, and a quick reference.">
   <title>Fieldnotes — Baseball scorebook</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23163d32'/%3E%3Cpath d='M20 7 33 20 20 33 7 20Z' fill='none' stroke='%23f4eedf' stroke-width='2'/%3E%3C/svg%3E">
@@ -13,7 +13,7 @@
 <body>
   <header class="masthead">
     <a href="#score" class="brand" aria-label="Fieldnotes scorebook"><span class="brand-mark" aria-hidden="true">◇</span>fieldnotes<span class="brand-caption">BASEBALL</span></a>
-    <button id="new-game" class="button small">＋ New game</button>
+    <div class="header-actions"><button id="new-game" class="button small">Choose game</button><button id="settings" class="icon-button" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--paper)"/><circle cx="16" cy="17" r="3" fill="var(--paper)"/></svg></button></div>
   </header>
   <main>
     <h1 class="sr-only">Baseball scorebook</h1>
@@ -21,8 +21,9 @@
       <a href="#score" data-tab="score">Scorebook</a>
       <a href="#learn" data-tab="learn">Learn</a>
       <a href="#reference" data-tab="reference">Reference</a>
-      <span id="save-status" role="status">Saved locally</span>
+      <span id="save-status" role="status">Saved</span>
     </nav>
+    <p id="storage-warning" class="storage-warning" role="alert" hidden></p>
     <section id="score" class="tab-panel" aria-label="Scorebook">
       <section class="scoreboard">
         <div class="scoreboard-top"><span id="game-status" class="live-label"></span><span id="game-date"></span></div>
@@ -49,7 +50,7 @@
           <section class="panel log-panel"><div class="section-heading"><h3>Plays</h3><span id="play-count"></span></div><ol id="game-log"></ol></section>
         </aside>
       </div>
-      <div class="game-tools"><button id="export" class="text-button">Export game</button><button id="print" class="text-button">Print scorecards</button><button id="finish" class="text-button">Finish game</button></div>
+      <div class="game-tools"><button id="finish" class="text-button">Finish game</button></div>
     </section>
     <section id="learn" class="tab-panel" hidden>
       <div class="page-heading"><h2>How to keep score</h2><p>One square for each batter, each inning.</p></div>
@@ -66,9 +67,9 @@
         <section class="panel"><h3>Fielding positions</h3><div id="position-field"></div><div id="position-list"></div></section>
         <section class="panel"><h3>Notation</h3><dl id="notation-list"></dl></section>
       </div>
-      <details class="panel beyond"><summary>Double plays, sacrifices, and third outs</summary><p><b>Double play:</b> tap fielders in order, then mark both retired players Out. <b>Sacrifices:</b> choose Other and enter SF or SH.</p><p><b>Third out:</b> runs don’t count on a force out or when the batter is retired before first. On timing plays, select Home only for runners who crossed before the out; leave others at their last base. Check “Count runs” to include them.</p><p>This scorebook tracks runs, hits, errors, outs, and batting order. It doesn’t calculate RBI or earned runs.</p><a href="https://www.mlb.com/official-information/basics/score" target="_blank" rel="noreferrer">MLB scoring guide ↗</a></details>
+      <details class="panel beyond"><summary>Double plays, sacrifices, and third outs</summary><p><b>Double play:</b> tap fielders in order, then mark both retired players Out. <b>Sacrifices:</b> choose Other, then tap Sacrifice fly or Sacrifice bunt.</p><p><b>Third out:</b> runs don’t count on a force out or when the batter is retired before first. On timing plays, select Home only for runners who crossed before the out; leave others at their last base. Check “Count runs” to include them.</p><p>This scorebook tracks runs, hits, errors, outs, and batting order. It doesn’t calculate RBI or earned runs.</p><a href="https://www.mlb.com/official-information/basics/score" target="_blank" rel="noreferrer">MLB scoring guide ↗</a></details>
     </section>
-    <footer><span>fieldnotes</span><span>Saved in this browser</span></footer>
+    <footer><span>fieldnotes</span><span>On this device</span></footer>
   </main>
   <dialog id="play-dialog" aria-labelledby="play-title">
     <form id="play-form">
@@ -79,9 +80,9 @@
           <div id="picker-field" class="picker-field" role="group" aria-label="Defensive positions"></div>
           <div class="picker-result"><div class="picker-result-text" aria-live="polite"><strong id="picker-code">—</strong><span id="picker-description">Choose a fielder</span></div><button type="button" id="picker-undo" class="text-button" aria-label="Undo last fielder">↶ Undo</button><button type="button" id="picker-clear" class="text-button">Clear</button></div>
         </section>
-        <div id="runner-types" class="runner-types" hidden aria-label="Runner play type"></div>
+        <div id="runner-types" class="runner-types" hidden aria-label="Runner play type"></div><div id="other-types" class="runner-types" hidden aria-label="Other play type"></div>
         <details id="notation-details"><summary>Edit notation</summary><label>Notation<input id="notation" maxlength="40" autocomplete="off" spellcheck="false"></label><div id="custom-flags"><label class="checkbox"><input type="checkbox" id="is-hit"> Hit</label><label class="checkbox"><input type="checkbox" id="is-error"> Error</label></div></details>
-        <div class="runner-heading"><h3>Runner destinations</h3><span class="muted">Adjust as needed</span></div>
+        <div class="runner-heading"><h3>Where did they finish?</h3></div>
         <div id="runner-destinations"></div>
         <div id="third-out-note" hidden><p>Third out: exclude runs on a force out or batter out before first.</p><label class="checkbox"><input id="count-runs" type="checkbox"> Count runs scored before a non-force third out</label></div>
         <details id="note-details"><summary>Add note</summary><label class="sr-only" for="play-note">Play note</label><input id="play-note" maxlength="160" placeholder="Optional note"></details>
@@ -89,7 +90,29 @@
       <div class="dialog-footer"><p id="play-error" class="error" role="alert"></p><button class="button full" type="submit">Save play</button></div>
     </form>
   </dialog>
-  <dialog id="setup-dialog" aria-labelledby="setup-title"><form id="setup-form"><div class="dialog-body"><div class="section-heading"><h2 id="setup-title">New game</h2><button type="button" class="close-button" data-close="setup-dialog" aria-label="Close">×</button></div><div class="setup-columns"><div><label>Visitors<input id="away-name" value="Visitors" maxlength="32" required></label><label>Batting order<textarea id="away-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div><div><label>Home<input id="home-name" value="Home" maxlength="32" required></label><label>Batting order<textarea id="home-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div></div><p class="form-help">Nine batters per team. Replaces the current game; export it first to keep a copy.</p></div><div class="dialog-footer"><button class="button full" type="submit">Start game</button></div></form></dialog>
+  <dialog id="setup-dialog" aria-labelledby="setup-title"><form id="setup-form"><div class="dialog-body"><div class="section-heading"><h2 id="setup-title">Custom game</h2><button type="button" class="close-button" data-close="setup-dialog" aria-label="Close">×</button></div><div class="setup-columns"><div><label>Visitors<input id="away-name" value="Visitors" maxlength="32" required></label><label>Batting order<textarea id="away-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div><div><label>Home<input id="home-name" value="Home" maxlength="32" required></label><label>Batting order<textarea id="home-lineup" rows="9" placeholder="One name per line (optional)"></textarea></label></div></div><p class="form-help">Nine batters. Your other games stay saved.</p></div><div class="dialog-footer"><button class="button full" type="submit">Start game</button></div></form></dialog>
+  <dialog id="games-dialog" aria-labelledby="games-title">
+    <div class="dialog-body">
+      <div class="section-heading"><h2 id="games-title">Choose a game</h2><button type="button" class="close-button" data-close="games-dialog" aria-label="Close">×</button></div>
+      <div class="schedule-filters"><div id="schedule-scope" class="segmented"><button id="favorite-filter" data-scope="favorite" class="active" aria-pressed="true">Blue Jays</button><button data-scope="all" aria-pressed="false">All MLB</button></div><button id="schedule-today" class="text-button">Today</button></div>
+      <div class="month-control"><button id="previous-month" class="icon-button" aria-label="Previous month">‹</button><label class="sr-only" for="schedule-month">Month</label><select id="schedule-month"></select><label class="sr-only" for="schedule-year">Season</label><select id="schedule-year"></select><button id="next-month" class="icon-button" aria-label="Next month">›</button></div>
+      <p id="schedule-status" class="form-help" role="status"></p>
+      <div id="schedule-games"></div>
+    </div>
+    <div class="dialog-footer schedule-footer"><button id="custom-game" class="text-button">Custom game</button><a href="https://www.mlb.com/schedule" target="_blank" rel="noreferrer">MLB schedule ↗</a></div>
+  </dialog>
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <div class="dialog-body">
+      <div class="section-heading"><h2 id="settings-title">Settings</h2><button type="button" class="close-button" data-close="settings-dialog" aria-label="Close">×</button></div>
+      <label for="favorite-team">Favourite team</label><select id="favorite-team"><option value="141">Toronto Blue Jays</option></select>
+      <p id="settings-status" class="form-help" role="status"></p>
+      <section class="settings-section"><div class="section-heading"><h3>This game</h3><span id="current-game-label" class="muted"></span></div><div class="settings-actions"><button id="export" class="soft-button">Export</button><button id="print" class="soft-button">Print</button><button id="refresh-lineup" class="soft-button" hidden>Load lineup</button></div><p id="lineup-status" class="form-help" role="status"></p></section>
+      <section class="settings-section"><div class="section-heading"><h3>Saved games</h3><button id="export-all" class="text-button">Export all ↓</button></div><div id="saved-games"></div></section>
+      <button id="recovery-export" class="text-button" hidden>Export recovery copy</button>
+      <p class="form-help storage-note">Stored in this browser. Export to keep a backup.</p>
+    </div>
+  </dialog>
+  <div id="toast" role="status" hidden></div>
   <noscript>Enable JavaScript to use the scorebook.</noscript>
 </body>
 </html>
