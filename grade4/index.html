@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5ed">
+  <meta name="description" content="Little practice. Big high-fives. A friendly, untimed way to learn multiplication tables from 1 to 10.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Grade 4">
+  <title>Grade 4 · Multiplication 1–10</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Grade 4 home"><span class="brand-mark" aria-hidden="true">4</span> grade 4<span class="brand-dot">.</span></a>
+      <nav aria-label="Main navigation">
+        <button class="nav-link active" data-view="home" aria-current="page">Practice</button>
+        <button class="nav-link" data-view="explore">Explore</button>
+        <button class="nav-link" data-view="progress">My progress</button>
+      </nav>
+      <span class="header-note">MULTIPLICATION · 1–10</span>
+    </header>
+
+    <main id="main">
+      <section id="home-view" class="view" aria-labelledby="home-title">
+        <div class="home-grid">
+          <div class="welcome">
+            <p class="eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span> LESSON 01 · MULTIPLICATION</p>
+            <h1 id="home-title">Little practice.<br>Big <span class="underline">high-fives.</span></h1>
+            <p class="intro">Let’s make those times tables stick.<br>A few questions. Your own pace. You’ve got this.</p>
+            <div class="welcome-bottom">
+              <div class="mascot" aria-hidden="true">
+                <svg viewBox="0 0 220 190" fill="none"><path d="M41 67 18 61M37 42 25 25M177 35 189 20M190 61 209 54" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="m109 14 22 39 44-6-5 46 34 30-42 19-10 44-40-22-41 20-8-44-41-21 36-28-3-45 43 8Z" fill="#f6d85b" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><ellipse cx="88" cy="93" rx="4.5" ry="7" fill="currentColor"/><ellipse cx="133" cy="93" rx="4.5" ry="7" fill="currentColor"/><path d="M94 111q17 20 33 0" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><ellipse cx="75" cy="108" rx="9" ry="5" fill="#e9a180"/><ellipse cx="145" cy="108" rx="9" ry="5" fill="#e9a180"/></svg>
+              </div>
+              <div class="hand-note">A little every day<br>goes a long way.<span aria-hidden="true">↙</span></div>
+            </div>
+            <div class="feature-line"><span><i class="feature-dot mint"></i>No timer</span><span><i class="feature-dot lilac"></i>No pressure</span><span><i class="feature-dot yellow"></i>Just progress</span></div>
+          </div>
+
+          <div class="practice-setup card">
+            <div class="card-topline"><span class="eyebrow">LET’S WARM UP</span><span class="pill">10 questions</span></div>
+            <h2>Pick your tables.</h2>
+            <p class="muted">Choose one, a few, or the whole crew.</p>
+            <div id="table-picker" class="table-picker" role="group" aria-label="Choose times tables"></div>
+            <div class="picker-shortcuts"><button id="easy-tables" class="text-button">Start with 2, 5 &amp; 10</button><button id="all-tables" class="text-button">Choose all</button></div>
+            <div class="round-note"><span class="note-icon" aria-hidden="true">✦</span><p id="selection-note">A friendly place to start.</p></div>
+            <button id="start-round" class="button primary">Let’s practice <span aria-hidden="true">↗</span></button>
+            <p class="setup-footnote">Tables 1–10 · Hints whenever you need them</p>
+          </div>
+        </div>
+
+        <section class="collection" aria-labelledby="collection-title">
+          <div class="section-heading"><div><p class="eyebrow">ONE FACT AT A TIME</p><h2 id="collection-title">Watch your confidence grow.</h2></div><button class="text-button arrow-link" data-view="progress">My progress <span aria-hidden="true">↗</span></button></div>
+          <div id="home-tables" class="table-collection"></div>
+        </section>
+      </section>
+
+      <section id="practice-view" class="view" aria-labelledby="round-title" hidden>
+        <div class="round-top"><button id="leave-round" class="text-button">← Take a break</button><span class="round-label" id="round-title">A little practice goes a long way</span><span id="round-count" class="pill">1 of 10</span></div>
+        <div id="round-track" class="round-track" aria-label="Round progress"></div>
+        <div class="play-grid">
+          <div class="question-panel card">
+            <p id="question-label" class="eyebrow">TAKE YOUR TIME</p>
+            <h1 id="equation" class="equation" aria-label="Multiplication question"></h1>
+            <label class="answer-label" for="answer">Your answer</label>
+            <input id="answer" class="answer" readonly inputmode="none" autocomplete="off" aria-describedby="feedback" placeholder="?">
+            <div id="feedback" class="feedback" role="status" aria-live="polite">Think it through. There’s no rush.</div>
+            <button id="show-hint" class="hint-button"><span aria-hidden="true">✧</span> A little hint?</button>
+          </div>
+          <div class="input-panel">
+            <div id="keypad" class="keypad" role="group" aria-label="Answer number pad">
+              <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
+              <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
+              <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
+              <button data-key="backspace" class="erase-key" aria-label="Erase last digit">⌫</button><button data-key="0">0</button><button data-key="check" class="check-key" aria-label="Check answer">↵</button>
+            </div>
+            <button id="check-answer" class="button primary">Check answer <span aria-hidden="true">→</span></button>
+            <button id="next-question" class="button primary" hidden>Next one <span aria-hidden="true">→</span></button>
+            <p class="keypad-note">Tap the numbers, then check your answer.</p>
+          </div>
+        </div>
+        <aside id="hint-panel" class="hint-panel" aria-labelledby="hint-title" tabindex="-1" hidden><div><p class="eyebrow" id="hint-title">LET’S PICTURE IT</p><p id="hint-text"></p><p id="array-caption" class="muted"></p></div><div id="dot-array" class="dot-array" aria-hidden="true"></div></aside>
+      </section>
+
+      <section id="results-view" class="view results-view" aria-labelledby="results-title" hidden>
+        <div class="result-star" aria-hidden="true">✦</div><p class="eyebrow">LITTLE STEPS ADD UP</p><h1 id="results-title" tabindex="-1">That’s a round of high-fives!</h1><p id="results-message" class="intro"></p>
+        <div class="result-stats"><div><strong id="result-clean">0</strong><span>on your own</span></div><div><strong id="result-learning">0</strong><span>with a little help</span></div><div><strong id="result-total">10</strong><span>facts practiced</span></div></div>
+        <div id="review-section" class="review-section" hidden><h2>A little more practice with these.</h2><div id="review-facts" class="review-facts"></div></div>
+        <div class="result-actions"><button id="practice-again" class="button primary">Another round <span aria-hidden="true">↗</span></button><button id="review-round" class="button secondary" hidden>Practice these again</button><button class="text-button" data-view="home">Back to my tables</button></div>
+      </section>
+
+      <section id="explore-view" class="view" aria-labelledby="explore-title" hidden>
+        <div class="section-intro"><p class="eyebrow">SPOT THE PATTERNS</p><h1 id="explore-title" tabindex="-1">Meet your times tables.</h1><p class="intro">Tap any answer. See how it fits together.</p></div>
+        <div class="explore-layout"><div class="grid-scroll card" tabindex="0" role="region" aria-label="Multiplication table, swipe sideways on a small screen"><table id="times-grid" class="times-grid"><caption class="sr-only">Multiplication facts from 1 to 10</caption></table></div><aside class="explore-detail card"><p class="eyebrow">SAME FACT. TWO WAYS.</p><h2 id="explore-equation" aria-live="polite">3 × 4 = 12</h2><p id="explore-flip">4 × 3 = 12, too!</p><div id="explore-dots" class="dot-array" aria-hidden="true"></div><p id="explore-caption" class="muted">3 rows of 4 make 12.</p><button id="practice-explored" class="button secondary">Practice the 3s <span aria-hidden="true">↗</span></button></aside></div>
+      </section>
+
+      <section id="progress-view" class="view" aria-labelledby="progress-title" hidden>
+        <div class="section-intro"><p class="eyebrow">LOOK HOW FAR YOU’VE COME</p><h1 id="progress-title" tabindex="-1">Every little bit counts.</h1><p class="intro">A fact earns a star after 3 correct answers in a row, without hints.</p></div>
+        <div class="progress-summary"><div><span class="stat-icon yellow" aria-hidden="true">✦</span><p><strong id="mastered-count">0 / 100</strong><span>facts with a star</span></p></div><div><span class="stat-icon mint" aria-hidden="true">✓</span><p><strong id="known-count">0</strong><span>facts answered correctly</span></p></div><div><span class="stat-icon lilac" aria-hidden="true">↗</span><p><strong id="rounds-count">0</strong><span>rounds completed</span></p></div></div>
+        <div id="progress-tables" class="progress-tables"></div>
+        <div class="progress-bottom"><p class="muted">Progress belongs to this browser on this device.</p><button id="reset-progress" class="text-button">Reset progress</button></div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>ONE LITTLE PRACTICE AT A TIME.</span><span id="save-status"><span class="save-dot" aria-hidden="true"></span>Progress saved on this device</span></footer>
+  </div>
+  <dialog id="break-dialog" aria-labelledby="break-title" aria-describedby="break-description"><h2 id="break-title">Take a little break?</h2><p id="break-description">The facts you’ve finished are saved. This round will end.</p><div class="dialog-actions"><button id="keep-playing" class="button primary">Keep going</button><button id="confirm-break" class="button secondary">Back to my tables</button></div></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears all the practice progress saved in this browser. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
+  <noscript>This app needs JavaScript to run. Please enable JavaScript in your browser to practice multiplication.</noscript>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "grade4",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test engine.test.js"
+  }
+}
