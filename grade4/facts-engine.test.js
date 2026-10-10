@@ -39,6 +39,14 @@ test('review IDs narrow the topic pool and cannot introduce unknown questions', 
   assert.deepEqual(makeFactRound({ topics: ['unknown'] }), []);
 });
 
+test('a Canadian provinces round includes all ten provincial capitals and no other facts', () => {
+  const provinceIds = geography.filter((fact) => fact.region === 'canada-provinces').map((fact) => fact.id);
+  const round = makeFactRound({ topics: ['geography'], reviewIds: provinceIds, random: () => 0 });
+  assert.equal(round.length, 10);
+  assert.deepEqual(new Set(round.map((fact) => fact.id)), new Set(provinceIds));
+  assert.ok(round.every((fact) => fact.region === 'canada-provinces'));
+});
+
 test('mixed rounds retain both topics even when weighting and random selection favor one', () => {
   const progress = createFactProgress();
   for (const fact of geography) {

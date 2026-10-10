@@ -2,14 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FACT_TOPICS, FACTS } from './facts-data.js';
 
-test('the library has two topics and fifteen questions per topic', () => {
+test('the library has two topics with enough questions for a full round', () => {
   assert.deepEqual(FACT_TOPICS.map(({ id }) => id), ['geography', 'science']);
-  assert.equal(FACTS.length, 30);
+  let total = 0;
   for (const topic of FACT_TOPICS) {
     assert.ok(topic.name.trim());
     assert.ok(topic.description.trim());
-    assert.equal(FACTS.filter((fact) => fact.topic === topic.id).length, 15);
+    const count = FACTS.filter((fact) => fact.topic === topic.id).length;
+    assert.ok(count >= 10, topic.id);
+    total += count;
   }
+  assert.equal(total, FACTS.length);
 });
 
 test('questions have stable unique IDs and four distinct choices with one answer', () => {
@@ -45,10 +48,37 @@ test('every teaching fact has a named HTTPS source from the verified source coll
   }
 });
 
-test('the requested Canadian and world capitals stay correctly paired', () => {
+test('all ten Canadian provinces have exactly one correctly paired capital', () => {
+  const provinces = [
+    ['geo-alberta', 'Alberta', 'Edmonton'],
+    ['geo-british-columbia', 'British Columbia', 'Victoria'],
+    ['geo-manitoba', 'Manitoba', 'Winnipeg'],
+    ['geo-new-brunswick', 'New Brunswick', 'Fredericton'],
+    ['geo-newfoundland-and-labrador', 'Newfoundland and Labrador', 'St. John’s'],
+    ['geo-nova-scotia', 'Nova Scotia', 'Halifax'],
+    ['geo-ontario', 'Ontario', 'Toronto'],
+    ['geo-prince-edward-island', 'Prince Edward Island', 'Charlottetown'],
+    ['geo-quebec', 'Quebec', 'Quebec City'],
+    ['geo-saskatchewan', 'Saskatchewan', 'Regina'],
+  ];
+  assert.equal(provinces.length, 10);
+  const tagged = FACTS.filter((fact) => fact.region === 'canada-provinces');
+  assert.equal(tagged.length, 10);
+  assert.deepEqual(new Set(tagged.map((fact) => fact.id)), new Set(provinces.map(([id]) => id)));
+  for (const [id, province, answer] of provinces) {
+    const matches = FACTS.filter((fact) => fact.question === `What is the capital of ${province}?`);
+    assert.equal(matches.length, 1, province);
+    assert.equal(matches[0].id, id, province);
+    assert.equal(matches[0].topic, 'geography', province);
+    assert.equal(matches[0].region, 'canada-provinces', province);
+    assert.equal(matches[0].answer, answer, province);
+    assert.equal(matches[0].source.url, 'https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada/read-online/canadas-regions.html', province);
+  }
+});
+
+test('Canada’s national capital and the world capitals stay correctly paired', () => {
   const capitals = {
-    'geo-canada': 'Ottawa', 'geo-ontario': 'Toronto', 'geo-quebec': 'Quebec City',
-    'geo-british-columbia': 'Victoria', 'geo-nova-scotia': 'Halifax',
+    'geo-canada': 'Ottawa',
     'geo-united-kingdom': 'London', 'geo-france': 'Paris', 'geo-japan': 'Tokyo',
     'geo-australia': 'Canberra', 'geo-italy': 'Rome', 'geo-spain': 'Madrid',
     'geo-egypt': 'Cairo', 'geo-india': 'New Delhi', 'geo-brazil': 'Brasilia',

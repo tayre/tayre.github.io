@@ -32,6 +32,7 @@ let round = null;
 let reviewFacts = [];
 let reviewFactIds = [];
 let selectedFactTopics = ['geography', 'science'];
+let selectedFactPool = null;
 let activeLesson = 'math';
 let mathMode = readSaved(MODE_KEY) === 'quick' ? 'quick' : 'learn';
 let lesson = null;
@@ -207,11 +208,12 @@ function renderFactStudy() {
   $('#fact-study').innerHTML = FACT_TOPICS.map((topic) => `<details class="study-topic"><summary><span>${escapeHTML(topic.name)}</span><span class="study-count">${FACTS.filter((fact) => fact.topic === topic.id).length} facts <span aria-hidden="true">＋</span></span></summary><dl>${FACTS.filter((fact) => fact.topic === topic.id).map((fact) => `<div class="study-fact"><dt>${escapeHTML(fact.question)}</dt><dd><strong>${escapeHTML(fact.answer)}</strong><p>${escapeHTML(fact.explanation)}</p><a href="${escapeHTML(fact.source.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(fact.source.title)} <span class="sr-only">(opens in a new tab)</span> ↗</a></dd></div>`).join('')}</dl></details>`).join('');
 }
 
-function startFactRound(topics = selectedFactTopics, reviewIds = null) {
-  const questions = makeFactRound({ topics, progress: factProgress, reviewIds });
+function startFactRound(topics = selectedFactTopics, reviewIds = null, poolIds = selectedFactPool) {
+  const questions = makeFactRound({ topics, progress: factProgress, reviewIds: reviewIds ?? poolIds });
   if (!questions.length) return;
   pauseQuestionClock();
   selectedFactTopics = [...topics];
+  selectedFactPool = poolIds;
   activeLesson = 'facts';
   round = { kind: 'facts', questions, index: 0, results: [] };
   showView('practice', { focus: false });
@@ -285,7 +287,7 @@ function renderQuestion() {
     $('#equation').setAttribute('aria-label', question.question);
     $('#equation').setAttribute('tabindex', '-1');
     $('#fact-choices').innerHTML = question.choices.map((choice, index) => `<button class="fact-choice" data-choice="${index}"><span class="choice-number" aria-hidden="true">${index + 1}</span><span>${escapeHTML(choice)}</span><span class="choice-mark" aria-hidden="true"></span></button>`).join('');
-    $('#round-title').textContent = question.topic === 'geography' ? 'AROUND THE WORLD · GEOGRAPHY' : 'HOW THINGS WORK · SCIENCE';
+    $('#round-title').textContent = question.topic === 'geography' ? selectedFactPool ? 'CANADIAN PROVINCES · CAPITAL CITIES' : 'AROUND THE WORLD · GEOGRAPHY' : 'HOW THINGS WORK · SCIENCE';
   } else {
     $('#equation').innerHTML = `${a} <span class="times" aria-hidden="true">×</span> ${b}`;
     $('#equation').setAttribute('aria-label', `${a} times ${b}`);
@@ -524,7 +526,8 @@ document.addEventListener('click', (event) => {
   }
   if (button.dataset.key) inputKey(button.dataset.key);
   if (button.dataset.choice !== undefined) chooseFactAnswer(Number(button.dataset.choice));
-  if (button.dataset.startFacts) startFactRound(button.dataset.startFacts === 'mixed' ? ['geography', 'science'] : [button.dataset.startFacts]);
+  if (button.dataset.startFacts) startFactRound(button.dataset.startFacts === 'mixed' ? ['geography', 'science'] : [button.dataset.startFacts], null, null);
+  if (button.hasAttribute('data-start-provinces')) startFactRound(['geography'], null, FACTS.filter((fact) => fact.region === 'canada-provinces').map(({ id }) => id));
   if (button.dataset.exploreA) {
     selectExplore(Number(button.dataset.exploreA), Number(button.dataset.exploreB));
     if (view !== 'explore') showView('explore');

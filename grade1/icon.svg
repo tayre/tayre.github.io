@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Grade 1</title>
+  <rect width="512" height="512" fill="#f7f5ed"/>
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="#f6d85b"/>
+  <path d="M204 202 270 148V368M212 368H328" fill="none" stroke="#242938" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

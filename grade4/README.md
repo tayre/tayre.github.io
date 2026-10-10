@@ -5,7 +5,8 @@ A small, buildless learning app for an iPad, served from `/grade4/` on this stat
 ## Finding an activity
 
 - **Math:** choose times tables, then use the default **Learn 3 facts** lesson or switch to **Quick practice**. Answer using the number pad.
-- **Facts:** choose Geography, Science or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 15 Canadian and world capital questions and 15 science questions about space, plants, water, magnets, the body and living things.
+- **Facts:** choose Geography, Science or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 21 Canadian and world capital questions and 15 science questions about space, plants, water, magnets, the body and living things.
+  **Canadian provinces** starts a focused round covering all 10 provincial capitals. Another round and review keep that scope. The geography study list includes each capital and its source.
 - **Tables:** explore the multiplication grid and see facts shown as rows of dots.
 - **Progress:** see math and facts practice history, mastery stars and points.
 
@@ -73,3 +74,5 @@ Open the app online once so its files can finish downloading. Both activities an
 The new cache is prepared before activation. A new worker waits until tabs using the previous worker close, so an update does not force a reload during practice. Close and reopen the app after loading an update online if it is waiting to activate. Device storage cleanup can remove offline files and local progress.
 
 All app code and artwork are local static files. `icon.svg` is the source artwork for the three PNG home-screen icons.
+
+The matching [Grade 1 app](../grade1/) offers alphabet flashcards, popcorn words and numbers 1–100. Its saved progress and offline cache are separate.
