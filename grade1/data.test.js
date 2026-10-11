@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { TOPICS, CARDS, WORD_PACKS, WORD_GROUPS } from './data.js';
 
 test('all cards have unique stable IDs, valid topics, and readable content', () => {
-  assert.deepEqual(TOPICS.map(({ id }) => id), ['alphabet', 'words', 'numbers']);
-  assert.equal(CARDS.length, 244);
+  assert.deepEqual(TOPICS.map(({ id }) => id), ['alphabet', 'words', 'numbers', 'phonics', 'families', 'arithmetic', 'shapes', 'money', 'calendar', 'nature']);
+  assert.equal(CARDS.length, 369);
   assert.equal(new Set(CARDS.map(({ id }) => id)).size, CARDS.length);
   for (const card of CARDS) {
     assert.ok(TOPICS.some(({ id }) => id === card.topic));
-    assert.match(card.id, /^[a-z]+-[a-z0-9]+$/);
+    assert.match(card.id, /^[a-z]+-[a-z0-9-]+$/);
     for (const field of ['front', 'back', 'example', 'speech']) {
       assert.equal(typeof card[field], 'string');
       assert.ok(card[field].trim().length > 0);

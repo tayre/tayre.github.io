@@ -1,4 +1,4 @@
-import { CARDS, WORD_PACKS } from './data.js';
+import { CARDS, WORD_PACKS, LEARNING_PACKS } from './data.js';
 
 const CARDS_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
 const NUMBER_RANGES = Array.from({ length: 10 }, (_, index) => `${index * 10 + 1}-${index * 10 + 10}`);
@@ -16,6 +16,7 @@ function unitRandom(random) {
  * Select cards in teaching order, optionally shuffled, without changing data.
  * Alphabet accepts 'all'; words accept 'all' or a WORD_PACKS ID; numbers accept
  * 'all' or a decade range such as '1-10', '11-20', through '91-100'.
+ * Added topics accept 'all' or their own LEARNING_PACKS ID.
  * Unsupported topics or selections return an empty deck.
  */
 export function makeDeck({ topic = 'alphabet', selection = 'all', shuffle = false, random = Math.random } = {}) {
@@ -28,10 +29,11 @@ export function makeDeck({ topic = 'alphabet', selection = 'all', shuffle = fals
       const [first, last] = selection.split('-').map(Number);
       cards = cards.filter(({ number }) => number >= first && number <= last);
     } else {
-      cards = [];
+      const pack = LEARNING_PACKS.find(({ id, topic: packTopic }) => id === selection && packTopic === topic);
+      cards = (pack?.ids || []).map((id) => CARDS_BY_ID.get(id));
     }
   }
-  const deck = cards.map((card) => ({ ...card }));
+  const deck = cards.map((card) => JSON.parse(JSON.stringify(card)));
   if (shuffle) {
     for (let index = deck.length - 1; index > 0; index -= 1) {
       const swap = Math.floor(unitRandom(random) * (index + 1));

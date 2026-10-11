@@ -1,8 +1,12 @@
-/** Local flashcard content. Speech names letters and words, rather than phonics. */
+import { LEARNING_TOPICS, LEARNING_CARDS } from './learning-data.js';
+export { LEARNING_PACKS } from './learning-data.js';
+
+/** Stable original card IDs preserve saved school-word and number practice. */
 export const TOPICS = [
-  { id: 'alphabet', title: 'Alphabet' },
-  { id: 'words', title: 'Popcorn words' },
-  { id: 'numbers', title: 'Numbers' },
+  { id: 'alphabet', title: 'Alphabet', description: 'Big letters, little letters and pictures.', icon: 'Aa', category: 'Read & say', theme: 'lilac', prompt: 'SAY THE LETTER. NAME THE PICTURE.' },
+  { id: 'words', title: 'Popcorn words', description: 'Your 118 school words, in little sets.', icon: '🍿', category: 'Read & say', theme: 'yellow', prompt: 'SAY THE WORD. READ IT TOGETHER.' },
+  { id: 'numbers', title: 'Numbers', description: 'Count from 1 to 100 with dots.', icon: '123', category: 'Count & notice', theme: 'lilac', prompt: 'SAY THE NUMBER. COUNT THE DOTS.' },
+  ...LEARNING_TOPICS,
 ];
 
 const LETTERS = [
@@ -86,6 +90,7 @@ function placeValue(number) {
 }
 
 export const CARDS = [
+  ...LEARNING_CARDS,
   ...LETTERS.map(([letter, example, picture]) => ({
     id: `letter-${letter.toLowerCase()}`, topic: 'alphabet',
     front: `${letter} ${letter.toLowerCase()}`, back: `${letter} is for ${example}.`,

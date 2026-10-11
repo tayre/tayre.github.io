@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CARDS, WORD_PACKS } from './data.js';
+import { CARDS, WORD_PACKS, LEARNING_PACKS } from './data.js';
 import { makeDeck, createProgress, normalizeProgress, recordCard, recordVisit, getStats } from './engine.js';
 
 test('decks preserve teaching order and scope word packs and number ranges', () => {
@@ -55,7 +55,7 @@ test('latest responses update known status while counting every card review', ()
   assert.deepEqual(progress.cards['letter-a'], { attempts: 3, known: false });
   recordCard(progress, { id: 'word-can', known: true });
   recordCard(progress, { id: 'number-23', known: false });
-  assert.deepEqual(getStats(progress), { seen: 3, known: 1, total: 244 });
+  assert.deepEqual(getStats(progress), { seen: 3, known: 1, total: CARDS.length });
   assert.deepEqual(getStats(progress, 'alphabet'), { seen: 1, known: 0, total: 26 });
   assert.deepEqual(getStats(progress, 'words'), { seen: 1, known: 1, total: 118 });
   assert.deepEqual(getStats(progress, 'numbers'), { seen: 1, known: 0, total: 100 });
@@ -83,7 +83,7 @@ test('normalization preserves saved history and rejects malformed or unknown ent
     'number-23': { attempts: 2, known: false },
     'number-24': { attempts: 0, known: false },
   } });
-  assert.deepEqual(getStats(normalized), { seen: 2, known: 1, total: 244 });
+  assert.deepEqual(getStats(normalized), { seen: 2, known: 1, total: CARDS.length });
   const huge = normalizeProgress({ cards: { 'letter-z': { attempts: Number.MAX_VALUE, known: true } } });
   assert.equal(huge.cards['letter-z'].attempts, Number.MAX_SAFE_INTEGER);
   recordCard(huge, { id: 'letter-z', known: false });
@@ -101,4 +101,23 @@ test('Next records practice without claiming knowledge and preserves matching sa
   assert.deepEqual(progress.cards['word-its'],{attempts:1,known:false});
   assert.deepEqual(progress.cards['letter-a'],{attempts:1,known:true});
   assert.throws(()=>recordVisit(progress,{id:'bad'}),RangeError);
+});
+
+
+test('every new small set is scoped to its own topic with independent diagram data', () => {
+  for (const pack of LEARNING_PACKS) {
+    const deck = makeDeck({topic:pack.topic, selection:pack.id});
+    assert.deepEqual(deck.map(card=>card.id), pack.ids);
+    assert.ok(deck.every(card=>card.topic===pack.topic));
+    assert.deepEqual(makeDeck({topic:'alphabet',selection:pack.id}),[]);
+    assert.deepEqual(makeDeck({topic:'numbers',selection:pack.id}),[]);
+  }
+  const deck = makeDeck({topic:'money',selection:'money-count'});
+  deck[0].visual.coins[0] = 999;
+  assert.equal(makeDeck({topic:'money',selection:'money-count'})[0].visual.coins[0],5);
+  const prior = normalizeProgress({version:1,cards:{'word-can':{attempts:5,known:true},'number-100':{attempts:2,known:false}}});
+  recordVisit(prior,{id:'arithmetic-ten-1'});
+  assert.deepEqual(prior.cards['word-can'],{attempts:5,known:true});
+  assert.deepEqual(prior.cards['number-100'],{attempts:2,known:false});
+  assert.equal(getStats(prior,'arithmetic').seen,1);
 });

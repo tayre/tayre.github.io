@@ -1,5 +1,5 @@
 /* Bump VERSION when app files change. Updates activate after old tabs close. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE_PREFIX = 'grade1-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);
@@ -8,6 +8,8 @@ const SHELL_FILES = [
   'styles.css',
   'app.js',
   'data.js',
+  'learning-data.js',
+  'visuals.js',
   'engine.js',
   'manifest.webmanifest',
   'icon.svg',

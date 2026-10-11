@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5ed">
-  <meta name="description" content="Friendly Grade 1 flashcards for the alphabet, popcorn words and numbers from 1 to 100. Made for little hands and iPads.">
+  <meta name="description" content="Friendly Grade 1 picture cards: letters, school words, numbers, little sums, shapes, Canadian coins and our world. Made for iPads.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Grade 1">
   <title>Grade 1 · Little things, big discoveries</title>
@@ -18,33 +18,29 @@
   <div class="shell">
     <header class="site-header">
       <a class="brand" href="./" aria-label="Grade 1 home"><span class="brand-mark" aria-hidden="true">1</span>grade 1<span class="brand-dot">.</span></a>
-      <nav aria-label="Learning activities"><button class="nav-link active" data-home aria-current="page">Home</button><button class="nav-link" data-topic="alphabet">Letters</button><button class="nav-link" data-topic="words">Words</button><button class="nav-link" data-topic="numbers">Numbers</button></nav>
+      <nav aria-label="Learning navigation"><button class="home-button" data-home aria-current="page"><span aria-hidden="true">▦</span> All topics</button></nav>
       <a class="sibling-link" href="../grade4/">Grade 4 ↗</a>
     </header>
     <main>
       <section id="home-view" class="view" aria-labelledby="home-title">
-        <div class="welcome"><div><p class="eyebrow">A LITTLE EVERY DAY</p><h1 id="home-title">Little things.<br>Big <span class="underline">discoveries.</span></h1><p class="intro">Meet a letter. Pop a word. Count a little.<br>Take your time. Let’s learn together.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-star">✦</span><span class="art-a">a</span><span class="art-two">2</span><span class="art-spark">✳</span></div></div>
-        <div class="topic-cards">
-          <article class="topic-card alphabet-theme"><div class="topic-top"><div class="topic-art letter-art" aria-hidden="true">Aa</div><span class="pill">26 letters</span></div><p class="eyebrow">BIG LETTER. LITTLE LETTER.</p><h2>The alphabet</h2><p>Meet A to Z, with a picture and a word for every letter.</p><p id="alphabet-progress" class="topic-progress"></p><button class="button light" data-topic="alphabet">Meet the letters <span aria-hidden="true">→</span></button></article>
-          <article class="topic-card words-theme"><div class="topic-top"><div class="topic-art word-art" aria-hidden="true"><span>the</span><span>and</span><span>can</span></div><span id="word-count" class="pill">118 school words</span></div><p class="eyebrow">WORDS THAT POP UP!</p><h2>Popcorn words</h2><p>Practise the words from your September–January school sheets.</p><p id="words-progress" class="topic-progress"></p><button class="button light" data-topic="words">Pop some words <span aria-hidden="true">→</span></button></article>
-          <article class="topic-card numbers-theme"><div class="topic-top"><div class="topic-art number-art" aria-hidden="true">1<span>2</span>3</div><span class="pill">1 to 100</span></div><p class="eyebrow">COUNT ON A LITTLE FUN</p><h2>Numbers</h2><p>See the number, say its name, and count the dots.</p><p id="numbers-progress" class="topic-progress"></p><button class="button light" data-topic="numbers">Let’s count <span aria-hidden="true">→</span></button></article>
-        </div>
+        <div class="welcome"><div><p class="eyebrow">A LITTLE EVERY DAY</p><h1 id="home-title" tabindex="-1">What will we<br><span class="underline">discover today?</span></h1><p class="intro">Pick a picture. Learn a little. Have a go together.</p></div><div class="welcome-art" aria-hidden="true"><span class="art-star">✦</span><span class="art-a">a</span><span class="art-two">2</span><span class="art-spark">✳</span></div></div>
+        <div id="topic-groups"></div>
         <div class="together-note"><span aria-hidden="true">✦</span><p><strong>No rush. No timer.</strong> Look, say it out loud, and tap Next. A grown-up can join in, too.</p></div>
       </section>
-
       <section id="cards-view" class="view" aria-labelledby="lesson-title" hidden>
-        <div class="card-toolbar"><h1 id="lesson-title">Letters</h1><label id="selection-control" hidden><span id="selection-label" class="sr-only">Choose a set</span><select id="deck-selection"></select></label><span id="card-count" class="pill">1 / 26</span></div>
-        <article id="flashcard" class="flashcard alphabet-theme" aria-labelledby="card-face">
+        <div class="card-toolbar"><h1 id="lesson-title" tabindex="-1">Alphabet</h1><label id="selection-control" hidden><span id="selection-label" class="sr-only">Choose a set</span><select id="deck-selection"></select></label><span id="card-count" class="pill">1 / 26</span></div>
+        <article id="flashcard" class="flashcard theme-lilac card-alphabet" aria-labelledby="card-face">
           <p id="card-prompt" class="eyebrow">SAY THE LETTER. NAME THE PICTURE.</p>
-          <div class="card-center"><h2 id="card-face">A <span>a</span></h2><span id="letter-picture" class="letter-picture" aria-hidden="true">🍎</span></div>
+          <div class="card-center"><h2 id="card-face">A<span>a</span></h2><span id="card-picture" class="card-picture" aria-hidden="true">🍎</span></div>
+          <div id="card-visual" class="card-visual" aria-hidden="true" hidden></div>
           <p id="card-example">A is for apple.</p>
-          <div id="counting-picture" aria-hidden="true" hidden></div><p id="number-groups" class="number-groups" hidden></p>
+          <p id="card-note" class="card-note" hidden></p>
         </article>
-        <button id="next-card" class="button primary">Next <span aria-hidden="true">→</span></button>
-        <p id="card-announcement" class="sr-only" role="status"></p>
+        <div class="card-bottom"><p id="set-message">Look. Say it. Take your time.</p><button id="next-card" class="next-button">Next <span aria-hidden="true">→</span></button></div>
+        <p id="card-announcement" class="sr-only" role="status" aria-atomic="true"></p>
       </section>
     </main>
-    <footer class="site-footer"><span id="save-status">Practice stays on this device.</span><a href="../grade4/">Grade 4 ↗</a></footer>
+    <footer class="site-footer"><span id="save-status">Practice stays on this device.</span><span>Made for little discoveries. ✦</span></footer>
   </div>
   <noscript>Please turn on JavaScript to use these flashcards.</noscript>
 </body>

@@ -1,3 +1,4 @@
+import { createExtraApp } from './extra-app.js';
 import { createProgress, normalizeProgress, factKey, makeRound, recordAttempt, getStats, getTableStats } from './engine.js';
 import { getPacing, HINT_AT_MS, REVEAL_AT_MS, FULL_REVEAL_AT_MS } from './pacing.js';
 import { FACTS, FACT_TOPICS } from './facts-data.js';
@@ -27,7 +28,8 @@ let totalPoints = Number.isSafeInteger(savedPoints) && savedPoints >= 0 ? savedP
 const savedTables = readSaved(SETTINGS_KEY);
 let selected = new Set(Array.isArray(savedTables) ? savedTables.filter((n) => allTables.includes(n)) : [2, 5, 10]);
 if (!selected.size) selected = new Set([2, 5, 10]);
-let view = 'home';
+let view = 'hub';
+let extras;
 let round = null;
 let reviewFacts = [];
 let reviewFactIds = [];
@@ -109,18 +111,21 @@ function save(key = STORAGE_KEY, value = progress) {
 
 function showView(name, { focus = true } = {}) {
   view = name;
+  extras?.onView(name);
+  document.body.classList.toggle('lesson-open', ['learn', 'practice', 'extra'].includes(name));
   if (name === 'facts') activeLesson = 'facts';
   if (name === 'home' || name === 'explore') activeLesson = 'math';
   document.querySelectorAll('.view').forEach((element) => { element.hidden = element.id !== `${name}-view`; });
   document.querySelectorAll('.nav-link').forEach((button) => {
     const lessonView = activeLesson === 'facts' ? 'facts' : 'home';
-    const current = button.dataset.view === name || (button.dataset.view === lessonView && ['learn', 'practice', 'results'].includes(name));
+    const current = button.dataset.view === name || (button.dataset.view === 'hub' && name === 'extra') || (button.dataset.view === lessonView && ['learn', 'practice', 'results'].includes(name));
     button.classList.toggle('active', current);
     if (current) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
   });
   if (name === 'home' || name === 'progress') renderProgress();
   if (name === 'facts' || name === 'progress') renderFactProgress();
+  if (name === 'progress' || name === 'hub') extras?.renderProgress();
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (focus) {
     const heading = $(`#${name}-view h1`);
@@ -133,9 +138,10 @@ function showView(name, { focus = true } = {}) {
 
 let pendingView = 'home';
 function navigate(name) {
-  if (view === 'practice' && round) {
+  if ((view === 'practice' && round) || extras?.isPracticing()) {
     pendingView = name;
     pauseQuestionClock();
+    extras?.pause();
     $('#break-dialog').showModal();
   } else showView(name);
 }
@@ -555,13 +561,13 @@ $('#show-hint').addEventListener('click', () => {
   if (isFactRound()) $('#equation').focus({ preventScroll: true }); else $('#hint-panel').focus();
 });
 $('#leave-round').addEventListener('click', () => navigate(activeLesson === 'facts' ? 'facts' : 'home'));
-$('.brand').addEventListener('click', (event) => { event.preventDefault(); navigate('home'); });
+$('.brand').addEventListener('click', (event) => { event.preventDefault(); navigate('hub'); });
 $('#keep-playing').addEventListener('click', () => {
   $('#break-dialog').close();
   resumeQuestionClock();
 });
-$('#break-dialog').addEventListener('close', resumeQuestionClock);
-$('#confirm-break').addEventListener('click', () => { pauseQuestionClock(); round = null; $('#break-dialog').close(); showView(pendingView); });
+$('#break-dialog').addEventListener('close', () => { resumeQuestionClock(); extras?.resume(); });
+$('#confirm-break').addEventListener('click', () => { pauseQuestionClock(); round = null; extras?.leave(); $('#break-dialog').close(); showView(pendingView); });
 $('#practice-again').addEventListener('click', () => activeLesson === 'facts' ? startFactRound() : startRound());
 $('#review-round').addEventListener('click', () => activeLesson === 'facts' ? startFactRound(selectedFactTopics, reviewFactIds) : startRound(reviewFacts));
 $('#practice-explored').addEventListener('click', () => { chooseTables([explored.a]); startRound(); });
@@ -571,6 +577,7 @@ $('#confirm-reset').addEventListener('click', () => {
   progress = createProgress();
   totalPoints = 0;
   factProgress = createFactProgress();
+  extras.reset();
   save();
   save(POINTS_KEY, totalPoints);
   save(FACTS_KEY, factProgress);
@@ -600,12 +607,13 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+extras = createExtraApp({ showView, navigate, readSaved, save });
 renderPicker();
 renderProgress();
 renderExplore();
 renderFactProgress();
 renderFactStudy();
-if (location.hash === '#facts') showView('facts', { focus: false });
+showView(location.hash === '#facts' ? 'facts' : 'hub', { focus: false });
 // Check that storage is writable without requiring a first answer.
 save();
 if ('serviceWorker' in navigator) {

@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5ed">
-  <meta name="description" content="A friendly Grade 4 learning app: multiplication, capital cities, basic science, and Canadian history, with gradual hints and points.">
+  <meta name="description" content="Playful Grade 4 lessons in math, French, reading, geography, science, and Canadian history.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Grade 4">
-  <title>Grade 4 · Math, Geography, Science &amp; History</title>
+  <title>Grade 4 · A little discovery every day</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./extra.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
@@ -19,16 +20,23 @@
     <header class="site-header">
       <a class="brand" href="./" aria-label="Grade 4 home"><span class="brand-mark" aria-hidden="true">4</span> grade 4<span class="brand-dot">.</span></a>
       <nav aria-label="Main navigation">
-        <button class="nav-link active" data-view="home" aria-current="page">Math</button>
+        <button class="nav-link active" data-view="hub" aria-current="page">Home</button>
+        <button class="nav-link" data-view="home">Math</button>
         <button class="nav-link" data-view="facts">Facts</button>
         <button class="nav-link" data-view="explore">Tables</button>
         <button class="nav-link" data-view="progress">Progress</button>
       </nav>
-      <span class="header-note">A LITTLE EVERY DAY.</span>
+      <a class="header-grade" href="../grade1/">Grade 1 ↗</a>
     </header>
 
     <main id="main">
-      <section id="home-view" class="view" aria-labelledby="home-title">
+      <section id="hub-view" class="view" aria-labelledby="hub-title">
+        <div class="hub-welcome"><div><p class="eyebrow">A LITTLE DISCOVERY EVERY DAY</p><h1 id="hub-title">What will you learn <span class="underline">today?</span></h1><p>Pick something curious. A few little wins go a long way.</p></div><span class="hub-spark" aria-hidden="true">✳<i>☺</i></span></div>
+        <div class="hub-prompt"><span aria-hidden="true">✦</span><p><strong>Small lessons. Big ideas.</strong> Look first, try from memory, and collect stars.</p></div>
+        <div id="lesson-hub" class="lesson-hub"></div>
+        <p class="hub-footnote">Your progress stays on this device. Come back for another little practice tomorrow.</p>
+      </section>
+      <section id="home-view" class="view" aria-labelledby="home-title" hidden>
         <div class="home-grid">
           <div class="welcome">
             <p class="eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span> LESSON 01 · MULTIPLICATION</p>
@@ -73,6 +81,18 @@
         <div class="facts-mix"><div><h2>A bit of everything?</h2><p>10 questions · Big buttons · Hints as you go</p></div><button class="button primary" data-start-facts="mixed">Mix it up <span aria-hidden="true">↗</span></button></div>
         <p class="facts-timing-note">A little time to read: hints arrive at 8 seconds, and answers start fading in at 13 seconds. Earlier answers earn more points.</p>
         <section class="study-section" aria-labelledby="study-title"><div class="section-heading"><div><p class="eyebrow">LOOK FIRST. TRY NEXT.</p><h2 id="study-title">Meet the facts.</h2></div><span class="muted">Tap a topic to learn.</span></div><div id="fact-study"></div></section>
+      </section>
+
+      <section id="extra-view" class="view" aria-labelledby="extra-title" hidden>
+        <div class="extra-toolbar"><button class="text-button" data-view="hub">← Topics</button><h1 id="extra-title">A little lesson</h1><span id="extra-count" class="pill"></span></div>
+        <div id="extra-track" class="extra-track" aria-label="Lesson progress"></div>
+        <article id="extra-card" class="extra-card">
+          <div id="extra-picture" class="extra-picture"></div>
+          <div class="extra-copy"><p id="extra-phase" class="eyebrow">LOOK FIRST · TAKE YOUR TIME</p><h2 id="extra-question" tabindex="-1"></h2><p id="extra-study-text"></p><p id="extra-passage" class="extra-passage" hidden></p><a id="extra-source" class="extra-source" target="_blank" rel="noopener noreferrer" hidden>Learn more ↗</a></div>
+        </article>
+        <div id="extra-practice" hidden><div class="extra-practice-bar"><span id="extra-points" class="pill"></span><span id="extra-pacing"></span><button id="extra-hint-button" class="text-button">A hint?</button></div><p id="extra-hint" class="extra-hint"></p><div id="extra-choices" class="extra-choices" role="group" aria-labelledby="extra-question"></div><div class="extra-answer-row"><p id="extra-feedback" role="status"></p><p id="extra-reveal" aria-hidden="true"></p></div><p id="extra-announcement" class="sr-only" role="status"></p></div>
+        <div class="extra-actions"><button id="extra-back" class="button secondary">← Look back</button><button id="extra-next" class="button primary">Next card →</button></div>
+        <div id="extra-results" class="extra-results" hidden><span class="extra-trophy" aria-hidden="true">✦</span><h2>Look what you learned!</h2><p id="extra-result-message"></p><div id="extra-result-stats"></div><div class="extra-result-actions"><button id="extra-again" class="button primary">Another little lesson ↗</button><button id="extra-review" class="button secondary" hidden>Try these again</button><button class="button secondary" data-view="hub">Pick a topic →</button></div></div>
       </section>
 
       <section id="learn-view" class="view" aria-labelledby="learn-title" hidden>
@@ -138,13 +158,14 @@
         <p class="total-points-note"><strong id="total-points">0</strong> points earned so far · Earlier answers earn more.</p>
         <div id="progress-tables" class="progress-tables"></div>
         <section class="facts-progress-section" aria-labelledby="facts-progress-title"><div class="section-heading"><h2 id="facts-progress-title">World, science &amp; history</h2><button class="text-button" data-view="facts">Practice facts ↗</button></div><div id="facts-progress-summary" class="facts-progress-summary"></div><p id="facts-progress-points" class="total-points-note"></p></section>
+        <section class="extra-progress-section"><div class="section-heading"><h2>More little discoveries</h2><button class="text-button" data-view="hub">Explore topics ↗</button></div><div id="extra-progress-grid" class="extra-progress-grid"></div></section>
         <div class="progress-bottom"><p class="muted">Progress belongs to this browser on this device.</p><button id="reset-progress" class="text-button">Reset progress</button></div>
       </section>
     </main>
-    <footer class="site-footer"><a class="grade-link" href="../grade1/">Grade 1 · Letters, words &amp; numbers ↗</a><span id="save-status"><span class="save-dot" aria-hidden="true"></span>Progress saved on this device</span></footer>
+    <footer class="site-footer"><a class="grade-link" href="../grade1/">Grade 1 · A world of little learners ↗</a><span id="save-status"><span class="save-dot" aria-hidden="true"></span>Progress saved on this device</span></footer>
   </div>
   <dialog id="break-dialog" aria-labelledby="break-title" aria-describedby="break-description"><h2 id="break-title">Take a little break?</h2><p id="break-description">The facts you’ve finished are saved. This round will end.</p><div class="dialog-actions"><button id="keep-playing" class="button primary">Keep going</button><button id="confirm-break" class="button secondary">Leave this round</button></div></dialog>
-  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears multiplication, geography, science, and history progress saved in this browser, including points. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears all Grade 4 lesson progress saved in this browser, including points. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
   <noscript>This app needs JavaScript to run. Please enable JavaScript in your browser to practice.</noscript>
 </body>
 </html>

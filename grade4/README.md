@@ -1,9 +1,10 @@
 # Grade 4
 
-A small, buildless learning app for an iPad, served from `/grade4/` on this static site. It covers the 1–10 times tables, basic geography, science and Canadian history with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future lessons such as basic French.
+A buildless learning app for an iPad, served from `/grade4/` on this static site. A colourful topic home screen opens multiplication, division, fractions, time and money, beginner French, reading, geography, science and Canadian history. Short lessons, large touch controls, gradual hints and opportunities to review mistakes keep practice manageable.
 
 ## Finding an activity
 
+- **Home:** choose a topic from the illustrated lesson tiles.
 - **Math:** choose times tables, then use the default **Learn 3 facts** lesson or switch to **Quick practice**. Answer using the number pad.
 - **Facts:** choose Geography, Science, Canadian history or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 21 Canadian and world capital questions, 15 science questions about space, plants, water, magnets, the body and living things, and 12 Canadian history questions. History covers Indigenous peoples, Confederation, the name Canada, the fur trade, Québec, the railway, the flag, Nunavut, Newfoundland and the Charter, with Government of Canada and Parks Canada sources.
   **Canadian provinces** starts a focused round covering all 10 provincial capitals. Another round and review keep that scope. The geography study list includes each capital and its source.
@@ -11,6 +12,21 @@ A small, buildless learning app for an iPad, served from `/grade4/` on this stat
 - **Progress:** see math and facts practice history, mastery stars and points.
 
 Open a topic in **Meet the facts** to learn before a quiz. Read its questions, answers and short explanations. Each study card includes a clickable source link, which opens in a new tab. Reading the library has no timer and awards no points.
+
+## New discovery lessons
+
+- **Division:** all 100 division facts related to the 1–10 multiplication tables, with equal-group diagrams and a multiplication connection.
+- **Fractions:** shaded equal-part models for naming, comparing and finding equivalent fractions.
+- **Time and money:** analog clocks, elapsed time, Canadian coins, prices and change.
+- **French:** greetings, colours, numbers, animals and classroom words. **Hear the French** uses the browser’s speech voices, when available; pronunciation playback may depend on voices installed on the device.
+- **Reading:** three original short passages, each with three comprehension questions. Read a passage once in study, then keep it visible while answering. Each question has an **I’m ready** step before the timer starts.
+- **More science:** food chains, habitats, light, sound, rocks and minerals, with links to primary sources.
+
+A discovery lesson contains up to five different cards from one topic. Study each idea with no timer, then answer four-choice questions. Reading lessons keep all questions tied to one passage. Review contains only the cards that needed help. First submitted answers update progress once; retrying the same question cannot inflate mastery. Three consecutive unassisted correct answers across lessons earn a star.
+
+Discovery practice uses the same slower pacing as multiplication learning: full points for four seconds, hints at ten seconds, and answer fade from twenty to thirty seconds. The clock pauses in the background and while a leave-confirmation dialog is open. A wrong answer offers a hint and another try, with no timeout.
+
+Diagrams are local SVG/CSS: fraction bars keep the same whole width, clocks move the hour hand with the minutes, and coin labels use Canadian values. Colours accompany labels and symbols rather than being the sole source of meaning. Motion respects the device’s reduced-motion preference.
 
 ## Learning multiplication
 
@@ -24,9 +40,9 @@ A mastery star requires clean recalls across three different rounds. In a learni
 
 ## Saved progress
 
-Math and facts have separate saved progress and point totals. Math continues to use its existing `grade4.multiplication.v1`, `grade4.multiplication.tables.v1` and `grade4.multiplication.points.v1` storage keys, preserving earlier practice. Facts use `grade4.facts.v1`.
+Math and facts have separate saved progress and point totals. Math continues to use its existing `grade4.multiplication.v1`, `grade4.multiplication.tables.v1` and `grade4.multiplication.points.v1` storage keys, preserving earlier practice. Facts use `grade4.facts.v1`. Discovery lessons use `grade4.discovery.v1`, independently of the existing progress keys.
 
-Everything is stored locally in the browser, with no accounts or analytics. Progress does not sync between devices or browsers. **Reset progress** clears practice history and points for both math and facts after confirmation. Clearing this site's browser data also removes saved progress.
+Everything is stored locally in the browser, with no accounts or analytics. Progress does not sync between devices or browsers. **Reset progress** clears practice history and points for all Grade 4 lessons after confirmation. Clearing this site's browser data also removes saved progress.
 
 ## Practice and points
 
@@ -59,13 +75,13 @@ Run the automated tests from the `grade4` directory (Node.js required):
 npm test
 ```
 
-The tests cover multiplication and fact selection, spaced learning lessons, per-lesson mastery credit, saved-progress recovery and scoring. No dependencies need installing.
+The tests cover multiplication and fact selection, spaced learning lessons, per-lesson mastery credit, discovery topic and passage selection, content consistency, visual model values, saved-progress recovery and scoring. No dependencies need installing.
 
 ## Use on an iPad
 
 Once this directory is published on the site, open `https://tayre.github.io/grade4/` in Safari. Use Share, then **Add to Home Screen** (under **More** or **View More** if needed), and tap **Add**. If Safari offers **Open as Web App**, leave it enabled. See [Apple's iPad instructions](https://support.apple.com/en-ie/guide/ipad/ipad8f1f7a29/ipados).
 
-Open the app online once so its files can finish downloading. Both activities and the study library can then work offline while those cached files remain on the device. The linked source websites need an internet connection. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
+Open the app online once so its files can finish downloading. All activities and the study library can then work offline while those cached files remain on the device. The linked source websites need an internet connection. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
 
 ## Maintaining offline support
 
@@ -75,4 +91,4 @@ The new cache is prepared before activation. A new worker waits until tabs using
 
 All app code and artwork are local static files. `icon.svg` is the source artwork for the three PNG home-screen icons.
 
-The matching [Grade 1 app](../grade1/) offers alphabet flashcards, popcorn words and numbers 1–100. Its saved progress and offline cache are separate.
+The matching [Grade 1 app](../grade1/) offers alphabet pictures, the school popcorn words, numbers 1–100, word families, early arithmetic, shapes, calendar cards, Canadian coins and living things. Its saved progress and offline cache are separate.
