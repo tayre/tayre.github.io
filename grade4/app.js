@@ -31,7 +31,7 @@ let view = 'home';
 let round = null;
 let reviewFacts = [];
 let reviewFactIds = [];
-let selectedFactTopics = ['geography', 'science'];
+let selectedFactTopics = FACT_TOPICS.map(({ id }) => id);
 let selectedFactPool = null;
 let activeLesson = 'math';
 let mathMode = readSaved(MODE_KEY) === 'quick' ? 'quick' : 'learn';
@@ -287,7 +287,7 @@ function renderQuestion() {
     $('#equation').setAttribute('aria-label', question.question);
     $('#equation').setAttribute('tabindex', '-1');
     $('#fact-choices').innerHTML = question.choices.map((choice, index) => `<button class="fact-choice" data-choice="${index}"><span class="choice-number" aria-hidden="true">${index + 1}</span><span>${escapeHTML(choice)}</span><span class="choice-mark" aria-hidden="true"></span></button>`).join('');
-    $('#round-title').textContent = question.topic === 'geography' ? selectedFactPool ? 'CANADIAN PROVINCES · CAPITAL CITIES' : 'AROUND THE WORLD · GEOGRAPHY' : 'HOW THINGS WORK · SCIENCE';
+    $('#round-title').textContent = question.topic === 'history' ? 'CANADA THROUGH TIME · HISTORY' : question.topic === 'geography' ? selectedFactPool ? 'CANADIAN PROVINCES · CAPITAL CITIES' : 'AROUND THE WORLD · GEOGRAPHY' : 'HOW THINGS WORK · SCIENCE';
   } else {
     $('#equation').innerHTML = `${a} <span class="times" aria-hidden="true">×</span> ${b}`;
     $('#equation').setAttribute('aria-label', `${a} times ${b}`);
@@ -484,7 +484,7 @@ function finishRound() {
     return `<span>${escapeHTML(fact.question)}<strong>${escapeHTML(fact.answer)}</strong></span>`;
   }).join('') : reviewFacts.map(({ a, b }) => `<span>${a} × ${b} = ${a * b}</span>`).join('');
   $('#back-to-lesson').dataset.view = factsMode ? 'facts' : 'home';
-  $('#back-to-lesson').textContent = factsMode ? 'Back to world & science' : 'Back to my tables';
+  $('#back-to-lesson').textContent = factsMode ? 'Back to facts' : 'Back to my tables';
   round = null;
   showView('results');
 }
@@ -526,7 +526,7 @@ document.addEventListener('click', (event) => {
   }
   if (button.dataset.key) inputKey(button.dataset.key);
   if (button.dataset.choice !== undefined) chooseFactAnswer(Number(button.dataset.choice));
-  if (button.dataset.startFacts) startFactRound(button.dataset.startFacts === 'mixed' ? ['geography', 'science'] : [button.dataset.startFacts], null, null);
+  if (button.dataset.startFacts) startFactRound(button.dataset.startFacts === 'mixed' ? FACT_TOPICS.map(({ id }) => id) : [button.dataset.startFacts], null, null);
   if (button.hasAttribute('data-start-provinces')) startFactRound(['geography'], null, FACTS.filter((fact) => fact.region === 'canada-provinces').map(({ id }) => id));
   if (button.dataset.exploreA) {
     selectExplore(Number(button.dataset.exploreA), Number(button.dataset.exploreB));

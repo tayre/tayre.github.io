@@ -1,11 +1,11 @@
 # Grade 4
 
-A small, buildless learning app for an iPad, served from `/grade4/` on this static site. It covers the 1–10 times tables, basic geography and science with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future lessons such as basic French.
+A small, buildless learning app for an iPad, served from `/grade4/` on this static site. It covers the 1–10 times tables, basic geography, science and Canadian history with short practice rounds, gradual help, points and a chance to revisit mistakes. The broader name leaves room for future lessons such as basic French.
 
 ## Finding an activity
 
 - **Math:** choose times tables, then use the default **Learn 3 facts** lesson or switch to **Quick practice**. Answer using the number pad.
-- **Facts:** choose Geography, Science or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 21 Canadian and world capital questions and 15 science questions about space, plants, water, magnets, the body and living things.
+- **Facts:** choose Geography, Science, Canadian history or a mix for a 10-question round. Each question has four large answer choices to tap. The library includes 21 Canadian and world capital questions, 15 science questions about space, plants, water, magnets, the body and living things, and 12 Canadian history questions. History covers Indigenous peoples, Confederation, the name Canada, the fur trade, Québec, the railway, the flag, Nunavut, Newfoundland and the Charter, with Government of Canada and Parks Canada sources.
   **Canadian provinces** starts a focused round covering all 10 provincial capitals. Another round and review keep that scope. The geography study list includes each capital and its source.
 - **Tables:** explore the multiplication grid and see facts shown as rows of dots.
 - **Progress:** see math and facts practice history, mastery stars and points.

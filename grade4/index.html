@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f5ed">
-  <meta name="description" content="A friendly Grade 4 learning app: multiplication, capital cities, and basic science, with gradual hints and points.">
+  <meta name="description" content="A friendly Grade 4 learning app: multiplication, capital cities, basic science, and Canadian history, with gradual hints and points.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Grade 4">
-  <title>Grade 4 · Math, Geography &amp; Science</title>
+  <title>Grade 4 · Math, Geography, Science &amp; History</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="manifest" href="./manifest.webmanifest">
@@ -60,16 +60,17 @@
           <div class="section-heading"><div><p class="eyebrow">ONE FACT AT A TIME</p><h2 id="collection-title">Watch your confidence grow.</h2></div><button class="text-button arrow-link" data-view="progress">My progress <span aria-hidden="true">↗</span></button></div>
           <div id="home-tables" class="table-collection"></div>
         </section>
-        <button class="lesson-banner" data-view="facts"><span class="lesson-banner-icon" aria-hidden="true">◎</span><span><small>MORE TO EXPLORE</small><strong>A whole world of little facts.</strong><span>Capital cities, space, plants, and everyday science.</span></span><span class="lesson-banner-arrow" aria-hidden="true">↗</span></button>
+        <button class="lesson-banner" data-view="facts"><span class="lesson-banner-icon" aria-hidden="true">◎</span><span><small>MORE TO EXPLORE</small><strong>A whole world of little facts.</strong><span>Capital cities, everyday science, and Canadian history.</span></span><span class="lesson-banner-arrow" aria-hidden="true">↗</span></button>
       </section>
 
       <section id="facts-view" class="view" aria-labelledby="facts-title" hidden>
-        <div class="facts-intro"><div><p class="eyebrow">LESSON 02 · WORLD &amp; SCIENCE</p><h1 id="facts-title" tabindex="-1">Stay curious.<br>Discover <span class="underline">a little more.</span></h1><p class="intro">From the capital of Canada to the world around you.<br>Pick a topic, read the question, and tap your answer.</p></div><div class="curiosity-badge" aria-hidden="true"><span>BIG WORLD</span><strong>?</strong><span>CURIOUS MIND</span></div></div>
+        <div class="facts-intro"><div><p class="eyebrow">WORLD · SCIENCE · CANADIAN HISTORY</p><h1 id="facts-title" tabindex="-1">Stay curious.<br>Discover <span class="underline">a little more.</span></h1><p class="intro">From Canada’s past to the world around you.<br>Pick a topic, read the question, and tap your answer.</p></div><div class="curiosity-badge" aria-hidden="true"><span>BIG WORLD</span><strong>?</strong><span>CURIOUS MIND</span></div></div>
         <div class="topic-cards">
           <article class="topic-card geography-card"><div class="topic-card-top"><span class="topic-art" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="27"/><ellipse cx="40" cy="40" rx="13" ry="27"/><path d="M13 40h54M18 25h44M18 55h44M40 13v54"/></svg></span><span class="pill" id="geography-size">Capital cities</span></div><p class="eyebrow">AROUND THE WORLD</p><h2>Geography</h2><p>Learn all 10 Canadian provincial capitals, plus capitals around the world.</p><p class="topic-progress" id="geography-progress"></p><button class="button secondary" data-start-facts="geography">All geography <span aria-hidden="true">↗</span></button><button class="button province-button" data-start-provinces>Canadian provinces <span aria-hidden="true">→</span></button></article>
           <article class="topic-card science-card"><div class="topic-card-top"><span class="topic-art" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><path d="M31 12h18M34 12v21L17 61q-4 8 5 8h36q9 0 5-8L46 33V12M25 48h30"/><circle cx="35" cy="57" r="3"/><circle cx="47" cy="62" r="2"/><path d="m60 14 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z"/></svg></span><span class="pill" id="science-size">Everyday wonders</span></div><p class="eyebrow">HOW THINGS WORK</p><h2>Science</h2><p>Get curious about space, living things, and everyday science.</p><p class="topic-progress" id="science-progress"></p><button class="button secondary" data-start-facts="science">Let’s discover <span aria-hidden="true">↗</span></button></article>
+          <article class="topic-card history-card"><div class="history-copy"><p class="eyebrow">CANADA THROUGH TIME</p><h2>Canadian history</h2><p>Meet the first peoples, learn about Confederation, and discover how Canada has changed.</p><p class="topic-progress" id="history-progress"></p></div><div class="history-action"><span class="history-art" aria-hidden="true">🍁</span><span class="pill" id="history-size">12 facts to discover</span><button class="button secondary" data-start-facts="history">Explore the past <span aria-hidden="true">↗</span></button></div></article>
         </div>
-        <div class="facts-mix"><div><h2>A bit of both?</h2><p>10 questions · Big buttons · Hints as you go</p></div><button class="button primary" data-start-facts="mixed">Mix it up <span aria-hidden="true">↗</span></button></div>
+        <div class="facts-mix"><div><h2>A bit of everything?</h2><p>10 questions · Big buttons · Hints as you go</p></div><button class="button primary" data-start-facts="mixed">Mix it up <span aria-hidden="true">↗</span></button></div>
         <p class="facts-timing-note">A little time to read: hints arrive at 8 seconds, and answers start fading in at 13 seconds. Earlier answers earn more points.</p>
         <section class="study-section" aria-labelledby="study-title"><div class="section-heading"><div><p class="eyebrow">LOOK FIRST. TRY NEXT.</p><h2 id="study-title">Meet the facts.</h2></div><span class="muted">Tap a topic to learn.</span></div><div id="fact-study"></div></section>
       </section>
@@ -136,14 +137,14 @@
         <div class="progress-summary"><div><span class="stat-icon yellow" aria-hidden="true">✦</span><p><strong id="mastered-count">0 / 100</strong><span>facts with a star</span></p></div><div><span class="stat-icon mint" aria-hidden="true">✓</span><p><strong id="known-count">0</strong><span>facts answered correctly</span></p></div><div><span class="stat-icon lilac" aria-hidden="true">↗</span><p><strong id="rounds-count">0</strong><span>rounds completed</span></p></div></div>
         <p class="total-points-note"><strong id="total-points">0</strong> points earned so far · Earlier answers earn more.</p>
         <div id="progress-tables" class="progress-tables"></div>
-        <section class="facts-progress-section" aria-labelledby="facts-progress-title"><div class="section-heading"><h2 id="facts-progress-title">World &amp; science</h2><button class="text-button" data-view="facts">Practice facts ↗</button></div><div id="facts-progress-summary" class="facts-progress-summary"></div><p id="facts-progress-points" class="total-points-note"></p></section>
+        <section class="facts-progress-section" aria-labelledby="facts-progress-title"><div class="section-heading"><h2 id="facts-progress-title">World, science &amp; history</h2><button class="text-button" data-view="facts">Practice facts ↗</button></div><div id="facts-progress-summary" class="facts-progress-summary"></div><p id="facts-progress-points" class="total-points-note"></p></section>
         <div class="progress-bottom"><p class="muted">Progress belongs to this browser on this device.</p><button id="reset-progress" class="text-button">Reset progress</button></div>
       </section>
     </main>
     <footer class="site-footer"><a class="grade-link" href="../grade1/">Grade 1 · Letters, words &amp; numbers ↗</a><span id="save-status"><span class="save-dot" aria-hidden="true"></span>Progress saved on this device</span></footer>
   </div>
   <dialog id="break-dialog" aria-labelledby="break-title" aria-describedby="break-description"><h2 id="break-title">Take a little break?</h2><p id="break-description">The facts you’ve finished are saved. This round will end.</p><div class="dialog-actions"><button id="keep-playing" class="button primary">Keep going</button><button id="confirm-break" class="button secondary">Leave this round</button></div></dialog>
-  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears multiplication, geography, and science progress saved in this browser, including points. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description"><h2 id="reset-title">A fresh start?</h2><p id="reset-description">This clears multiplication, geography, science, and history progress saved in this browser, including points. It can’t be undone.</p><div class="dialog-actions"><button id="cancel-reset" class="button primary">Keep my progress</button><button id="confirm-reset" class="button secondary">Clear progress</button></div></dialog>
   <noscript>This app needs JavaScript to run. Please enable JavaScript in your browser to practice.</noscript>
 </body>
 </html>

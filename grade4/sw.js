@@ -1,5 +1,5 @@
 /* Bump VERSION whenever the app shell changes. Updates activate once old tabs close. */
-const VERSION = 'v5';
+const VERSION = 'v6';
 const CACHE_PREFIX = 'grade4-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);
@@ -12,6 +12,7 @@ const SHELL_FILES = [
   'memory.js',
   'memory-strategies.js',
   'facts-data.js',
+  'history-data.js',
   'facts-engine.js',
   'manifest.webmanifest',
   'icon.svg',

@@ -5,10 +5,12 @@ A small, buildless flashcard app for an iPad, served from `/grade1/` on this sta
 ## Practice cards
 
 - **Letters:** all 26 English letters, with uppercase and lowercase forms.
-- **Popcorn words:** 30 easy, common words arranged in three packs of 10.
+- **Popcorn words:** 118 distinct words transcribed from the supplied September–January school worksheets. The seven groups are VC & CVC words, double consonants, open syllables, digraphs, blends, bossy e and heart words. Longer groups are divided into balanced sets of at most 10 cards; “All 118 words” visits each word once.
 - **Numbers:** 1–100, with a choice of groups of 10 or the whole set.
 
-Look at a card, try to remember it, then flip it to check. Mark cards as known or for another try to track progress. An optional listening action uses the device’s speech support when available. Voice availability depends on the browser and device; listening may need an internet connection even when the cards work offline.
+Each card shows its content immediately, including a large picture for every letter. Tap **Next** to move through the set; the last card loops back to the first. There is no flip, quiz, rating or results step. Compact Home, Letters, Words and Numbers navigation keeps the card large on an iPad. Word and number sets use a single selector.
+
+Next records that a card was practised, without claiming the child knows it. Matching word IDs keep earlier saved practice. Repeated words across school groups share a card and history; repeated entries within a group are included once. Old starter-pack selections fall back to the first school set.
 
 Progress is saved locally in this browser on this device. There are no accounts or analytics, and progress does not sync between devices or browsers. Clearing this site's browser data removes saved progress.
 

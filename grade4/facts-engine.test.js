@@ -47,7 +47,7 @@ test('a Canadian provinces round includes all ten provincial capitals and no oth
   assert.ok(round.every((fact) => fact.region === 'canada-provinces'));
 });
 
-test('mixed rounds retain both topics even when weighting and random selection favor one', () => {
+test('mixed rounds retain all topics even when weighting and random selection favor one', () => {
   const progress = createFactProgress();
   for (const fact of geography) {
     for (let attempt = 0; attempt < 3; attempt += 1) recordFactAttempt(progress, { id: fact.id, correct: true });
@@ -57,7 +57,7 @@ test('mixed rounds retain both topics even when weighting and random selection f
     const round = makeFactRound({ progress, length: 10, random });
     assert.equal(round.length, 10);
     assert.equal(new Set(round.map((fact) => fact.id)).size, 10);
-    assert.deepEqual(new Set(round.map((fact) => fact.topic)), new Set(['geography', 'science']));
+    assert.deepEqual(new Set(round.map((fact) => fact.topic)), new Set(['geography', 'science', 'history']));
   }
 });
 
@@ -173,4 +173,17 @@ test('round length and random boundaries stay within the available questions', (
     assert.equal(new Set(round.map((fact) => fact.id)).size, FACTS.length);
     assert.ok(round.every((fact) => fact.choices.length === 4 && fact.choices.includes(fact.answer)));
   }
+});
+
+test('Canadian history rounds and review retain history scope and existing progress', () => {
+  const progress = normalizeFactProgress({facts:{'geo-canada':{attempts:2,correct:2,streak:2,assisted:0,lastSeen:1}},totalPoints:200});
+  const round = makeFactRound({topics:['history'],length:99,progress});
+  assert.equal(round.length,12);
+  assert.ok(round.every(fact=>fact.topic==='history'));
+  const id=round[0].id;
+  recordFactAttempt(progress,{id,correct:true});
+  assert.equal(getFactStats(progress,'history').known,1);
+  assert.equal(progress.facts['geo-canada'].streak,2);
+  assert.equal(progress.totalPoints,200);
+  assert.deepEqual(makeFactRound({topics:['history'],reviewIds:[id,'geo-canada']}).map(fact=>fact.id),[id]);
 });

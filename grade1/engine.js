@@ -23,8 +23,7 @@ export function makeDeck({ topic = 'alphabet', selection = 'all', shuffle = fals
   if (selection !== 'all') {
     if (topic === 'words') {
       const pack = WORD_PACKS.find(({ id }) => id === selection);
-      const selectedIds = new Set(pack?.ids || []);
-      cards = cards.filter(({ id }) => selectedIds.has(id));
+      cards = (pack?.ids || []).map((id) => CARDS_BY_ID.get(id));
     } else if (topic === 'numbers' && NUMBER_RANGES.includes(selection)) {
       const [first, last] = selection.split('-').map(Number);
       cards = cards.filter(({ number }) => number >= first && number <= last);
@@ -78,4 +77,11 @@ export function getStats(progress, topic = null) {
     if (history.known === true) stats.known += 1;
   }
   return stats;
+}
+
+/** Next records practice, without claiming the child knows the answer. */
+export function recordVisit(progress, { id }) {
+  if (!CARDS_BY_ID.has(id)) throw new RangeError('Unknown flashcard ID.');
+  progress.cards[id] = { attempts: count(count(progress.cards[id]?.attempts) + 1), known: progress.cards[id]?.known === true };
+  return progress;
 }

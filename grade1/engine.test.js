@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CARDS, WORD_PACKS } from './data.js';
-import { makeDeck, createProgress, normalizeProgress, recordCard, getStats } from './engine.js';
+import { makeDeck, createProgress, normalizeProgress, recordCard, recordVisit, getStats } from './engine.js';
 
 test('decks preserve teaching order and scope word packs and number ranges', () => {
   assert.equal(makeDeck().length, 26);
   assert.equal(makeDeck()[0].front, 'A a');
   assert.equal(makeDeck().at(-1).front, 'Z z');
-  assert.equal(makeDeck({ topic: 'words' }).length, 30);
+  assert.equal(makeDeck({ topic: 'words' }).length, 118);
   for (const pack of WORD_PACKS) assert.deepEqual(makeDeck({ topic: 'words', selection: pack.id }).map(({ id }) => id), pack.ids);
   const allNumbers = [];
   for (let first = 1; first <= 91; first += 10) {
@@ -53,11 +53,11 @@ test('latest responses update known status while counting every card review', ()
   recordCard(progress, { id: 'letter-a', known: true });
   recordCard(progress, { id: 'letter-a', known: false });
   assert.deepEqual(progress.cards['letter-a'], { attempts: 3, known: false });
-  recordCard(progress, { id: 'word-see', known: true });
+  recordCard(progress, { id: 'word-can', known: true });
   recordCard(progress, { id: 'number-23', known: false });
-  assert.deepEqual(getStats(progress), { seen: 3, known: 1, total: 156 });
+  assert.deepEqual(getStats(progress), { seen: 3, known: 1, total: 244 });
   assert.deepEqual(getStats(progress, 'alphabet'), { seen: 1, known: 0, total: 26 });
-  assert.deepEqual(getStats(progress, 'words'), { seen: 1, known: 1, total: 30 });
+  assert.deepEqual(getStats(progress, 'words'), { seen: 1, known: 1, total: 118 });
   assert.deepEqual(getStats(progress, 'numbers'), { seen: 1, known: 0, total: 100 });
   assert.deepEqual(getStats(progress, 'unknown'), { seen: 0, known: 0, total: 0 });
   assert.throws(() => recordCard(progress, { id: 'unknown', known: true }), RangeError);
@@ -71,7 +71,7 @@ test('normalization preserves saved history and rejects malformed or unknown ent
   for (const raw of [undefined, null, false, [], 'broken', { cards: [] }]) assert.deepEqual(normalizeProgress(raw), createProgress());
   const normalized = normalizeProgress({ version: 99, cards: {
     'letter-a': { attempts: 3.9, known: true },
-    'word-see': { attempts: -1, known: true },
+    'word-can': { attempts: -1, known: true },
     'number-23': { attempts: 2, known: 'true' },
     'number-24': { attempts: Infinity, known: true },
     'number-25': [],
@@ -79,14 +79,26 @@ test('normalization preserves saved history and rejects malformed or unknown ent
   } });
   assert.deepEqual(normalized, { version: 1, cards: {
     'letter-a': { attempts: 3, known: true },
-    'word-see': { attempts: 0, known: false },
+    'word-can': { attempts: 0, known: false },
     'number-23': { attempts: 2, known: false },
     'number-24': { attempts: 0, known: false },
   } });
-  assert.deepEqual(getStats(normalized), { seen: 2, known: 1, total: 156 });
+  assert.deepEqual(getStats(normalized), { seen: 2, known: 1, total: 244 });
   const huge = normalizeProgress({ cards: { 'letter-z': { attempts: Number.MAX_VALUE, known: true } } });
   assert.equal(huge.cards['letter-z'].attempts, Number.MAX_SAFE_INTEGER);
   recordCard(huge, { id: 'letter-z', known: false });
   assert.equal(huge.cards['letter-z'].attempts, Number.MAX_SAFE_INTEGER);
   assert.equal(huge.cards['letter-z'].known, false);
+});
+
+test('Next records practice without claiming knowledge and preserves matching saved words', () => {
+  const progress = normalizeProgress({version:1,cards:{'word-can':{attempts:2,known:true},'word-see':{attempts:4,known:true},'letter-a':{attempts:1,known:true}}});
+  assert.deepEqual(progress.cards['word-can'],{attempts:2,known:true});
+  assert.equal(progress.cards['word-see'],undefined);
+  recordVisit(progress,{id:'word-can'});
+  recordVisit(progress,{id:'word-its'});
+  assert.deepEqual(progress.cards['word-can'],{attempts:3,known:true});
+  assert.deepEqual(progress.cards['word-its'],{attempts:1,known:false});
+  assert.deepEqual(progress.cards['letter-a'],{attempts:1,known:true});
+  assert.throws(()=>recordVisit(progress,{id:'bad'}),RangeError);
 });

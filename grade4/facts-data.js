@@ -1,7 +1,10 @@
+import { HISTORY_FACTS } from './history-data.js';
+
 /** Original, short practice questions; source links support the teaching facts. */
 export const FACT_TOPICS = [
   { id: 'geography', name: 'Geography', description: 'Canadian and world capitals.' },
   { id: 'science', name: 'Science', description: 'Space, nature and how things work.' },
+  { id: 'history', name: 'Canadian history', description: 'People, places and moments in Canada’s past.' },
 ];
 
 const canadaSource = {
@@ -306,4 +309,5 @@ export const FACTS = [
     explanation: 'Grass is a producer: it makes food using light and can feed animals.',
     source: { title: 'National Park Service: Food chains', url: 'https://www.nps.gov/teachers/classrooms/food-chain.htm' },
   },
+  ...HISTORY_FACTS,
 ];

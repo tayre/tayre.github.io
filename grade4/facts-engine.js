@@ -1,4 +1,4 @@
-import { FACTS } from './facts-data.js';
+import { FACTS, FACT_TOPICS } from './facts-data.js';
 
 /**
  * Progress is JSON-safe, with history keyed by a stable question ID:
@@ -82,7 +82,7 @@ function shuffledCopy(items, random) {
  * remaining slots use weighted selection, and mixed question order is shuffled.
  * Returned question objects and choice arrays are copies; source data is intact.
  */
-export function makeFactRound({ topics = ['geography', 'science'], progress = createFactProgress(), length = 10, reviewIds = null, random = Math.random } = {}) {
+export function makeFactRound({ topics = FACT_TOPICS.map(({ id }) => id), progress = createFactProgress(), length = 10, reviewIds = null, random = Math.random } = {}) {
   const selectedTopics = new Set(Array.isArray(topics) ? topics : []);
   const review = reviewIds === null ? null : new Set(Array.isArray(reviewIds) ? reviewIds : []);
   const seen = new Set();

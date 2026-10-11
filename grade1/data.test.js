@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TOPICS, CARDS, WORD_PACKS } from './data.js';
+import { TOPICS, CARDS, WORD_PACKS, WORD_GROUPS } from './data.js';
 
 test('all cards have unique stable IDs, valid topics, and readable content', () => {
   assert.deepEqual(TOPICS.map(({ id }) => id), ['alphabet', 'words', 'numbers']);
-  assert.equal(CARDS.length, 156);
+  assert.equal(CARDS.length, 244);
   assert.equal(new Set(CARDS.map(({ id }) => id)).size, CARDS.length);
   for (const card of CARDS) {
     assert.ok(TOPICS.some(({ id }) => id === card.topic));
@@ -30,19 +30,38 @@ test('the alphabet has every upper and lower case pair with letter-name speech',
   }
 });
 
-test('three word packs cover thirty distinct common words with short examples', () => {
+test('school categories match the supplied worksheets in reading order', () => {
+  const expected = [
+    ['short-words', 'I a at am an as it in if on up us has can ran had big did his him sit six not got hot run but cut red get yes let ten yet and'],
+    ['doubling', 'all will call fall off well tell'],
+    ['open-syllables', 'go no so we be he me she'],
+    ['digraphs', 'she wish much three with that this then them both thank think those these when which why white sing know going'],
+    ['blends', 'jump went must stop best cold help just its fast'],
+    ['bossy-e', 'make came ate made gave take like ride white five live write those use these here'],
+    ['heart-words', 'do to as said the was for is of are from look book your want go no so goes says she we he they there their were talk walk wash where what'],
+  ];
+  assert.equal(WORD_GROUPS.length, 7);
+  for (const [id, words] of expected) assert.deepEqual(WORD_GROUPS.find(group => group.id === id)?.words, words.split(' '));
+  const expectedWords = new Set(expected.flatMap(([, words]) => words.split(' ')));
+  assert.equal(expectedWords.size, 118);
+  assert.deepEqual(new Set(CARDS.filter(card => card.topic === 'words').map(card => card.front)), expectedWords);
+});
+
+test('small packs retain category order and share stable cards for repeated words', () => {
   const words = CARDS.filter(({ topic }) => topic === 'words');
-  assert.equal(words.length, 30);
-  assert.equal(WORD_PACKS.length, 3);
-  assert.equal(new Set(WORD_PACKS.map(({ id }) => id)).size, 3);
-  const assigned = WORD_PACKS.flatMap(({ ids }) => ids);
-  assert.equal(assigned.length, 30);
-  assert.equal(new Set(assigned).size, 30);
-  assert.deepEqual(new Set(assigned), new Set(words.map(({ id }) => id)));
-  for (const pack of WORD_PACKS) assert.equal(pack.ids.length, 10);
+  assert.equal(words.length, 118);
+  assert.equal(WORD_PACKS.length, 16);
+  assert.equal(new Set(WORD_PACKS.map(({ id }) => id)).size, WORD_PACKS.length);
+  assert.deepEqual(new Set(WORD_PACKS.flatMap(({ ids }) => ids)), new Set(words.map(({ id }) => id)));
+  for (const group of WORD_GROUPS) assert.deepEqual(WORD_PACKS.filter(pack => pack.groupId === group.id).flatMap(pack => pack.ids), group.words.map(word => `word-${word.toLowerCase()}`));
+  for (const pack of WORD_PACKS) {
+    assert.ok(pack.ids.length >= 5 && pack.ids.length <= 10);
+    assert.equal(new Set(pack.ids).size, pack.ids.length);
+  }
+  assert.equal(words.filter(card => card.id === 'word-she').length, 1);
   for (const card of words) {
-    assert.ok(card.back.split(/\s+/).length <= 6);
-    assert.match(card.back, new RegExp(`\\b${card.front}\\b`, 'i'));
+    assert.ok(card.back.split(/\s+/).length <= 7);
+    assert.ok(card.back.toLowerCase().split(/[^a-z]+/).includes(card.front.toLowerCase()), card.id);
     assert.equal(card.back, card.example);
     assert.equal(card.speech, card.front);
   }

@@ -1,5 +1,5 @@
 /* Bump VERSION when app files change. Updates activate after old tabs close. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE_PREFIX = 'grade1-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);

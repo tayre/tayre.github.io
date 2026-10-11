@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FACT_TOPICS, FACTS } from './facts-data.js';
 
-test('the library has two topics with enough questions for a full round', () => {
-  assert.deepEqual(FACT_TOPICS.map(({ id }) => id), ['geography', 'science']);
+test('the library has three topics with enough questions for a full round', () => {
+  assert.deepEqual(FACT_TOPICS.map(({ id }) => id), ['geography', 'science', 'history']);
   let total = 0;
   for (const topic of FACT_TOPICS) {
     assert.ok(topic.name.trim());
@@ -19,7 +19,7 @@ test('questions have stable unique IDs and four distinct choices with one answer
   assert.equal(new Set(FACTS.map(({ id }) => id)).size, FACTS.length);
   assert.equal(new Set(FACTS.map(({ question }) => question)).size, FACTS.length);
   for (const fact of FACTS) {
-    assert.match(fact.id, /^(geo|sci)-[a-z]+(?:-[a-z]+)*$/);
+    assert.match(fact.id, /^(geo|sci|hist)-[a-z]+(?:-[a-z]+)*$/);
     assert.ok(FACT_TOPICS.some(({ id }) => id === fact.topic), fact.id);
     for (const field of ['question', 'answer', 'hint', 'explanation']) {
       assert.equal(typeof fact[field], 'string', `${fact.id}.${field}`);
@@ -35,7 +35,7 @@ test('questions have stable unique IDs and four distinct choices with one answer
 
 test('every teaching fact has a named HTTPS source from the verified source collection', () => {
   const hosts = new Set([
-    'www.canada.ca', 'data.un.org', 'spaceplace.nasa.gov', 'www.nasa.gov',
+    'www.canada.ca', 'parks.canada.ca', 'data.un.org', 'spaceplace.nasa.gov', 'www.nasa.gov',
     'www.usgs.gov', 'web.extension.illinois.edu', 'spacemath.gsfc.nasa.gov',
     'www.eia.gov', 'www.nidcd.nih.gov', 'www.nhlbi.nih.gov', 'www.nps.gov',
   ]);
