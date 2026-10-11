@@ -1,5 +1,5 @@
 /* Bump VERSION when app files change. Updates activate after old tabs close. */
-const VERSION = 'v4';
+const VERSION = 'v5';
 const CACHE_PREFIX = 'grade1-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);
@@ -7,11 +7,11 @@ const SHELL_FILES = [
   'index.html',
   '../games/images/cat.svg',
   '../games/images/apple.svg',
-  'images/coins/nickel.png',
-  'images/coins/dime.png',
-  'images/coins/quarter.png',
-  'images/coins/loonie.png',
-  'images/coins/toonie.png',
+  'images/coins/nickel.webp',
+  'images/coins/dime.webp',
+  'images/coins/quarter.webp',
+  'images/coins/loonie.webp',
+  'images/coins/toonie.webp',
   'styles.css',
   'app.js',
   'data.js',

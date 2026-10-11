@@ -1,21 +1,26 @@
 Canadian circulation coin reverse images
 Source and image credit: Royal Canadian Mint
 https://www.mint.ca/en/discover/canadian-circulation
+High-resolution product images of the standard reverse designs from the 2019 set:
+https://www.mint.ca/en/shop/coins/2019/d-day-coin-set-75th-anniversary-pack-170630
 Retrieved 2026-10-10. Copyright remains with its owner.
 Used as visual references for coin identification; not actual or relative sizes.
 Images are served locally for offline lessons. No AI-generated coin designs.
+The Mint's 1198 x 1166 originals are downsampled to 800 x 779 WebP at quality 90.
+These replace enlarged 120-pixel circulation thumbnails, providing enough detail
+for the largest 290 CSS-pixel iPad cards on a Retina display.
 
-nickel.png
-https://www.mint.ca/globalassets/learn/discover/canadian-circulation/blurb_canadian-circ_5-cents.png?hash=637728482830000000&quality=80&width=400
+nickel.webp
+https://www.mint.ca/globalassets/new-catalog/imported/prod-170630/170630_5cent_rev-1198.png?width=800&quality=90&format=webp
 
-dime.png
-https://www.mint.ca/globalassets/learn/discover/canadian-circulation/blurb_canadian-circ_10-cents.png?hash=637728482830000000&quality=80&width=400
+dime.webp
+https://www.mint.ca/globalassets/new-catalog/imported/prod-170630/170630_10cent_rev-1198.png?width=800&quality=90&format=webp
 
-quarter.png
-https://www.mint.ca/globalassets/learn/discover/canadian-circulation/blurb_canadian-circ_25-cents.png?hash=637728482830000000&quality=80&width=400
+quarter.webp
+https://www.mint.ca/globalassets/new-catalog/imported/prod-170630/170630_25cent_rev-1198.png?width=800&quality=90&format=webp
 
-loonie.png
-https://www.mint.ca/globalassets/learn/discover/canadian-circulation/blurb_canadian-circ_1-dollar.png?hash=637728482830000000&quality=80&width=400
+loonie.webp
+https://www.mint.ca/globalassets/new-catalog/imported/prod-170630/170630_loonie_rev-1198.png?width=800&quality=90&format=webp
 
-toonie.png
-https://www.mint.ca/globalassets/learn/discover/canadian-circulation/blurb_canadian-circ_2-dollars.png?hash=637728482830000000&quality=80&width=400
+toonie.webp
+https://www.mint.ca/globalassets/new-catalog/imported/prod-170630/170630_toonie_rev-1198.png?width=800&quality=90&format=webp

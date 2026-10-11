@@ -155,7 +155,7 @@ const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:8765';
   await page.evaluate(()=>navigator.serviceWorker.ready); await page.reload(); await context.setOffline(true); await page.reload();
   await page.waitForFunction(()=>document.querySelector('#card-visual img')?.naturalWidth>0);
   await context.setOffline(false);
-  await page.goto(`${base}/grade1/images/coins/nickel.png`);
+  await page.goto(`${base}/grade1/images/coins/nickel.webp`);
   await context.setOffline(true);
   await page.goto(`${base}/grade1/#money/all`); await visible('#cards-view');
   assert.deepEqual(errors,[]);

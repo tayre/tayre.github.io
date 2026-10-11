@@ -64,7 +64,7 @@ function coinPicture(cents) {
   const names = { 5: 'nickel', 10: 'dime', 25: 'quarter', 100: 'loonie', 200: 'toonie' };
   const name = names[cents];
   const value = cents < 100 ? `${cents}¢` : `$${cents / 100}`;
-  return `<figure class="coin-picture"><img src="./images/coins/${name}.png" width="400" height="400" decoding="async" alt="Canadian ${name}, ${value}"><figcaption>${value}</figcaption></figure>`;
+  return `<figure class="coin-picture"><img src="./images/coins/${name}.webp" width="800" height="779" decoding="async" alt="Canadian ${name}, ${value}"><figcaption>${value}</figcaption></figure>`;
 }
 
 export function renderVisual(visual) {
