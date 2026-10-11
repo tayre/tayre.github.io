@@ -41,6 +41,12 @@ let lesson = null;
 let studyIndex = 0;
 let explored = { a: 3, b: 4 };
 let questionTimer = null;
+let activity = null;
+let activityId = 0;
+const visitKey = `${Date.now()}-${Math.random()}`;
+let restoringNavigation = false;
+const visits = new Map();
+const menuRoutes = { hub: 'home', home: 'math', facts: 'facts', explore: 'tables', progress: 'progress' };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const isFactRound = () => round?.kind === 'facts';
 const isLearningRound = () => round?.kind === 'math' && round.mode === 'learn';
@@ -110,8 +116,13 @@ function save(key = STORAGE_KEY, value = progress) {
 }
 
 function showView(name, { focus = true } = {}) {
+  if (Object.hasOwn(menuRoutes, name)) {
+    if (!restoringNavigation) rememberActivity();
+    activity = null;
+  }
+  pauseQuestionClock();
   view = name;
-  extras?.onView(name);
+  extras?.onView(name, !restoringNavigation);
   document.body.classList.toggle('lesson-open', ['learn', 'practice', 'extra'].includes(name));
   if (name === 'facts') activeLesson = 'facts';
   if (name === 'home' || name === 'explore') activeLesson = 'math';
@@ -125,6 +136,8 @@ function showView(name, { focus = true } = {}) {
   });
   if (name === 'home' || name === 'progress') renderProgress();
   if (name === 'facts' || name === 'progress') renderFactProgress();
+  if (name === 'facts' && !$('#fact-study').children.length) renderFactStudy();
+  if (name === 'explore' && !$('#times-grid button')) renderExplore();
   if (name === 'progress' || name === 'hub') extras?.renderProgress();
   window.scrollTo({ top: 0, behavior: 'instant' });
   if (focus) {
@@ -134,7 +147,73 @@ function showView(name, { focus = true } = {}) {
       heading.focus({ preventScroll: true });
     }
   }
+  rememberRoute();
 }
+
+// Each visit is one history entry. Cards, hints and answers stay in that visit.
+// In-memory snapshots keep Forward from replaying scores or restarting timers.
+function rememberActivity() {
+  pauseQuestionClock();
+  extras?.pause();
+  if (!activity) return;
+  visits.set(activity.id, { activity, view, round, lesson, studyIndex, activeLesson,
+    mathMode, tables: [...selected], selectedFactTopics, selectedFactPool,
+    reviewFacts, reviewFactIds, extra: extras?.capture() });
+  if (visits.size > 50) visits.delete(visits.keys().next().value);
+}
+
+function beginActivity(type, detail) {
+  rememberActivity();
+  activity = { id: `${visitKey}-${++activityId}`, type, detail };
+}
+
+function rememberRoute(replace = false) {
+  if (restoringNavigation) return;
+  const hash = activity ? `#${activity.type}/${encodeURIComponent(activity.detail)}` : `#${menuRoutes[view] || 'home'}`;
+  const route = activity || { view };
+  const same = activity ? history.state?.grade4?.id === activity.id : location.hash === hash;
+  history[replace || same ? 'replaceState' : 'pushState']({ grade4: route }, '', hash);
+}
+
+function restoreRoute() {
+  rememberActivity();
+  restoringNavigation = true;
+  document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
+  try {
+    const saved = visits.get(history.state?.grade4?.id);
+    if (saved) {
+      ({ activity, round, lesson, studyIndex, activeLesson, mathMode,
+        selectedFactTopics, selectedFactPool, reviewFacts, reviewFactIds } = saved);
+      selected = new Set(saved.tables);
+      updatePicker();
+      showView(saved.view, { focus: false });
+      if (saved.view === 'extra') extras.restore(saved.extra);
+      else if (saved.view === 'learn') renderStudy();
+      else if (saved.view === 'practice') renderQuestion({ restore: true });
+      else if (saved.view === 'results') finishRound({ restore: true });
+    } else {
+      const [type, encoded = ''] = location.hash.slice(1).split('/');
+      let detail = '';
+      try { detail = decodeURIComponent(encoded); } catch { /* Fall back to the menu. */ }
+      const menu = Object.keys(menuRoutes).find(key => menuRoutes[key] === type);
+      if (menu) showView(menu);
+      else if (type === 'lesson' && extras.hasTopic(detail)) extras.start(detail);
+      else if (type === 'quiz' && (detail === 'provinces' || FACT_TOPICS.some(topic => topic.id === detail))) {
+        startFactRound([detail === 'provinces' ? 'geography' : detail], null,
+          detail === 'provinces' ? FACTS.filter(fact => fact.region === 'canada-provinces').map(fact => fact.id) : null);
+      } else if (type === 'quiz' && detail === 'mixed') startFactRound(FACT_TOPICS.map(topic => topic.id), null, null);
+      else if (type === 'multiply') {
+        const [mode, ...tables] = detail.split(',');
+        mathMode = mode === 'quick' ? 'quick' : 'learn';
+        selected = new Set(tables.map(Number).filter(n => allTables.includes(n)));
+        if (!selected.size) selected = new Set([2, 5, 10]);
+        updatePicker(); startRound();
+      } else showView('hub');
+    }
+  } finally { restoringNavigation = false; }
+  rememberRoute(true);
+}
+window.addEventListener('popstate', restoreRoute);
 
 let pendingView = 'home';
 function navigate(name) {
@@ -217,6 +296,7 @@ function renderFactStudy() {
 function startFactRound(topics = selectedFactTopics, reviewIds = null, poolIds = selectedFactPool) {
   const questions = makeFactRound({ topics, progress: factProgress, reviewIds: reviewIds ?? poolIds });
   if (!questions.length) return;
+  beginActivity('quiz', poolIds ? 'provinces' : topics.length > 1 ? 'mixed' : topics[0]);
   pauseQuestionClock();
   selectedFactTopics = [...topics];
   selectedFactPool = poolIds;
@@ -228,8 +308,10 @@ function startFactRound(topics = selectedFactTopics, reviewIds = null, poolIds =
 
 function startRound(facts = null) {
   if (mathMode === 'learn') {
-    lesson = makeMemoryLesson({ tables: [...selected], progress, reviewFacts: facts });
-    if (!lesson.facts.length) return;
+    const nextLesson = makeMemoryLesson({ tables: [...selected], progress, reviewFacts: facts });
+    if (!nextLesson.facts.length) return;
+    beginActivity('multiply', [mathMode, ...selected].join(','));
+    lesson = nextLesson;
     pauseQuestionClock();
     round = null;
     activeLesson = 'math';
@@ -240,6 +322,7 @@ function startRound(facts = null) {
   }
   const questions = makeRound({ tables: [...selected], progress, reviewFacts: facts });
   if (!questions.length) return;
+  beginActivity('multiply', [mathMode, ...selected].join(','));
   pauseQuestionClock();
   activeLesson = 'math';
   round = { kind: 'math', mode: 'quick', questions, index: 0, results: [] };
@@ -272,13 +355,13 @@ function beginRecall() {
   renderQuestion();
 }
 
-function renderQuestion() {
+function renderQuestion({ restore = false } = {}) {
   pauseQuestionClock();
   const question = round.questions[round.index];
   const { a, b } = question;
   const factsMode = isFactRound();
-  Object.assign(round, { input: '', solved: false, assisted: false, misses: 0, scored: false, replaceInput: false,
-    elapsed: 0, clockStarted: null, hintShown: false, answerAnnounced: false, availablePoints: 100 });
+  if (!restore) Object.assign(round, { input: '', solved: false, assisted: false, misses: 0, scored: false, replaceInput: false,
+    elapsed: 0, clockStarted: null, hintShown: false, answerAnnounced: false, availablePoints: 100, wrongChoices: [] });
   $('#round-points').textContent = `${round.results.reduce((sum, result) => sum + result.points, 0)} points`;
   $('#round-count').textContent = `${round.index + 1} of ${round.questions.length}`;
   $('#round-track').innerHTML = round.questions.map((_, i) => `<span class="${i < round.index ? 'done' : i === round.index ? 'current' : ''}"></span>`).join('');
@@ -299,7 +382,7 @@ function renderQuestion() {
     $('#equation').setAttribute('aria-label', `${a} times ${b}`);
     $('#round-title').textContent = isLearningRound() ? `REMEMBER THE ${a}s · TRY ${question.visit} OF ${round.lessonFacts.length}` : 'A little practice goes a long way';
   }
-  $('#answer').value = '';
+  $('#answer').value = round.input;
   $('#answer').classList.remove('correct');
   $('#answer').setAttribute('aria-label', `Your answer to ${a} times ${b}`);
   $('#feedback').textContent = factsMode ? 'Read, think, then tap your answer.' : isLearningRound() ? 'Picture the groups. Say the fact in your head.' : 'Try it before the hints appear!';
@@ -319,6 +402,15 @@ function renderQuestion() {
   $('#next-question').hidden = true;
   $('#next-question').innerHTML = `${round.index + 1 === round.questions.length ? 'See how you did' : 'Next one'} <span aria-hidden="true">→</span>`;
   $('#keypad').querySelectorAll('button').forEach((button) => { button.disabled = false; });
+  if (restore) {
+    for (const index of round.wrongChoices || []) {
+      const button = $(`#fact-choices [data-choice="${index}"]`);
+      button.disabled = true; button.classList.add('wrong');
+      button.querySelector('.choice-mark').textContent = '×';
+    }
+    if (round.solved) return renderSolvedQuestion();
+    if (round.hintShown) showHint({ automatic: true });
+  }
   if (factsMode) $('#equation').focus({ preventScroll: true }); else $('#answer').focus({ preventScroll: true });
   resumeQuestionClock();
 }
@@ -399,6 +491,7 @@ function checkAnswer() {
     round.misses += 1;
     round.replaceInput = true;
     if (factsMode) {
+      round.wrongChoices.push(question.choices.indexOf(round.input));
       const wrongButton = $(`#fact-choices [data-choice="${question.choices.indexOf(round.input)}"]`);
       wrongButton.disabled = true;
       wrongButton.classList.add('wrong');
@@ -418,6 +511,19 @@ function checkAnswer() {
   if (factsMode) {
     factProgress.totalPoints = Math.min(Number.MAX_SAFE_INTEGER, factProgress.totalPoints + points);
     save(FACTS_KEY, factProgress);
+  } else {
+    totalPoints = Math.min(Number.MAX_SAFE_INTEGER, totalPoints + points);
+    save(POINTS_KEY, totalPoints);
+  }
+  renderSolvedQuestion();
+}
+
+function renderSolvedQuestion() {
+  const question = round.questions[round.index];
+  const { a, b } = question;
+  const { clean, points } = round.results.at(-1);
+  const factsMode = isFactRound();
+  if (factsMode) {
     $('#fact-choices').querySelectorAll('button').forEach((button, index) => {
       button.disabled = true;
       if (question.choices[index] === question.answer) {
@@ -425,9 +531,6 @@ function checkAnswer() {
         button.querySelector('.choice-mark').textContent = '✓';
       }
     });
-  } else {
-    totalPoints = Math.min(Number.MAX_SAFE_INTEGER, totalPoints + points);
-    save(POINTS_KEY, totalPoints);
   }
   $('#round-points').textContent = `${round.results.reduce((sum, result) => sum + result.points, 0)} points`;
   $('#available-points').textContent = `+${points} points!`;
@@ -455,7 +558,7 @@ function nextQuestion() {
   renderQuestion();
 }
 
-function finishRound() {
+function finishRound({ restore = false } = {}) {
   pauseQuestionClock();
   const factsMode = isFactRound();
   const learning = isLearningRound();
@@ -466,12 +569,10 @@ function finishRound() {
   $('#result-points-detail').textContent = `Out of ${total * 100} possible · ${(factsMode ? factProgress.totalPoints : totalPoints).toLocaleString()} ${factsMode ? 'facts' : 'math'} points earned so far`;
   if (factsMode) {
     reviewFactIds = round.results.filter((fact) => !fact.clean).map(({ id }) => id);
-    factProgress.completedRounds += 1;
-    save(FACTS_KEY, factProgress);
+    if (!restore) { factProgress.completedRounds += 1; save(FACTS_KEY, factProgress); }
   } else {
     reviewFacts = [...new Map(round.results.filter((fact) => !fact.clean).map(({ a, b }) => [factKey(a, b), { a, b }])).values()];
-    progress.completedRounds += 1;
-    save();
+    if (!restore) { progress.completedRounds += 1; save(); }
   }
   $('#result-clean').textContent = clean;
   $('#result-learning').textContent = total - clean;
@@ -491,13 +592,12 @@ function finishRound() {
   }).join('') : reviewFacts.map(({ a, b }) => `<span>${a} × ${b} = ${a * b}</span>`).join('');
   $('#back-to-lesson').dataset.view = factsMode ? 'facts' : 'home';
   $('#back-to-lesson').textContent = factsMode ? 'Back to facts' : 'Back to my tables';
-  round = null;
   showView('results');
 }
 
 function renderExplore() {
-  $('#times-grid').innerHTML = `<thead><tr><th scope="col" aria-label="times">×</th>${allTables.map((n) => `<th scope="col" data-column="${n}">${n}</th>`).join('')}</tr></thead><tbody>${allTables.map((a) => `<tr><th scope="row" data-row="${a}">${a}</th>${allTables.map((b) => `<td><button data-explore-a="${a}" data-explore-b="${b}" class="${a === b ? 'diagonal' : ''}" aria-label="${a} times ${b} equals ${a * b}" aria-pressed="false">${a * b}</button></td>`).join('')}</tr>`).join('')}</tbody>`;
-  selectExplore(3, 4);
+  $('#times-grid').innerHTML = `<caption class="sr-only">Multiplication facts from 1 to 10</caption><thead><tr><th scope="col" aria-label="times">×</th>${allTables.map((n) => `<th scope="col" data-column="${n}">${n}</th>`).join('')}</tr></thead><tbody>${allTables.map((a) => `<tr><th scope="row" data-row="${a}">${a}</th>${allTables.map((b) => `<td><button data-explore-a="${a}" data-explore-b="${b}" class="${a === b ? 'diagonal' : ''}" aria-label="${a} times ${b} equals ${a * b}" aria-pressed="false">${a * b}</button></td>`).join('')}</tr>`).join('')}</tbody>`;
+  selectExplore(explored.a, explored.b);
 }
 
 function selectExplore(a, b) {
@@ -565,9 +665,10 @@ $('.brand').addEventListener('click', (event) => { event.preventDefault(); navig
 $('#keep-playing').addEventListener('click', () => {
   $('#break-dialog').close();
   resumeQuestionClock();
+  extras?.resume();
 });
 $('#break-dialog').addEventListener('close', () => { resumeQuestionClock(); extras?.resume(); });
-$('#confirm-break').addEventListener('click', () => { pauseQuestionClock(); round = null; extras?.leave(); $('#break-dialog').close(); showView(pendingView); });
+$('#confirm-break').addEventListener('click', () => { $('#break-dialog').close(); showView(pendingView); });
 $('#practice-again').addEventListener('click', () => activeLesson === 'facts' ? startFactRound() : startRound());
 $('#review-round').addEventListener('click', () => activeLesson === 'facts' ? startFactRound(selectedFactTopics, reviewFactIds) : startRound(reviewFacts));
 $('#practice-explored').addEventListener('click', () => { chooseTables([explored.a]); startRound(); });
@@ -578,6 +679,7 @@ $('#confirm-reset').addEventListener('click', () => {
   totalPoints = 0;
   factProgress = createFactProgress();
   extras.reset();
+  visits.clear();
   save();
   save(POINTS_KEY, totalPoints);
   save(FACTS_KEY, factProgress);
@@ -607,13 +709,9 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-extras = createExtraApp({ showView, navigate, readSaved, save });
+extras = createExtraApp({ showView, readSaved, save, onStart: topic => beginActivity('lesson', topic) });
 renderPicker();
-renderProgress();
-renderExplore();
-renderFactProgress();
-renderFactStudy();
-showView(location.hash === '#facts' ? 'facts' : 'hub', { focus: false });
+restoreRoute();
 // Check that storage is writable without requiring a first answer.
 save();
 if ('serviceWorker' in navigator) {

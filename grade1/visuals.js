@@ -61,14 +61,10 @@ function calendarPicture({kind,position,label}) {
 }
 
 function coinPicture(cents) {
-  // Teaching drawings, not coin photographs; denominations remain prominent.
-  const motifs = { 5: '🦫', 10: '⛵', 25: '🦌', 100: '🦆', 200: '🐻‍❄️' };
-  const names = { 5: 'NICKEL', 10: 'DIME', 25: 'QUARTER', 100: 'LOONIE', 200: 'TOONIE' };
+  const names = { 5: 'nickel', 10: 'dime', 25: 'quarter', 100: 'loonie', 200: 'toonie' };
+  const name = names[cents];
   const value = cents < 100 ? `${cents}¢` : `$${cents / 100}`;
-  const fill = cents === 100 ? '#e9bf4c' : '#d5dade';
-  // A loon silhouette avoids confusing a duck emoji with the loonie's bird.
-  const motif = cents === 100 ? '<path d="M69 86q18-18 52-6l12-15q5-12 16-4l-4 6 12 5-14 2-7 17q-22 26-67 3l-13-8z" fill="#6b572b"/><path d="M63 102h99m-91 8h85" stroke="#927738" stroke-width="3"/>' : `<text x="120" y="102" text-anchor="middle" font-size="55">${motifs[cents]}</text>`;
-  return svg(`<circle cx="120" cy="90" r="81" fill="${fill}" stroke="#72716b" stroke-width="4"/><circle cx="120" cy="90" r="72" fill="${cents === 200 ? '#e9bf4c' : fill}" stroke="#929082" stroke-width="2"/><text x="120" y="42" text-anchor="middle" fill="#44443e" font-size="14" font-family="system-ui" font-weight="800">${names[cents]}</text>${motif}<text x="120" y="144" text-anchor="middle" fill="#353831" font-size="31" font-family="system-ui" font-weight="850">${value}</text>`, 'coin-picture');
+  return `<figure class="coin-picture"><img src="./images/coins/${name}.png" width="400" height="400" decoding="async" alt="Canadian ${name}, ${value}"><figcaption>${value}</figcaption></figure>`;
 }
 
 export function renderVisual(visual) {

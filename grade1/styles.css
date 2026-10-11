@@ -10,3 +10,13 @@
 .plant-picture,.habitat-picture{height:180px;width:240px;overflow:visible}.visual-plant .card-center,.visual-habitat .card-center{margin-bottom:0}@media(min-height:900px) and (min-width:700px){.plant-picture,.habitat-picture{height:235px;width:315px}}@media(max-width:600px){.plant-picture,.habitat-picture{height:155px;width:207px}}
 
 .calendar-picture{height:155px;width:207px}.week-picture{display:flex;gap:8px;align-items:center;justify-content:center;width:100%}.week-picture span{display:grid;place-items:center;width:64px;height:68px;border-radius:13px;background:#ffffff55;color:#665d73;font-size:20px;font-weight:750;border:1px solid #c9bed6}.week-picture .today{background:#f6d85b;color:#242938;border:2px solid #867397;transform:rotate(-4deg)}@media(min-height:900px) and (min-width:700px){.calendar-picture{height:205px;width:275px}}@media(max-width:600px){.calendar-picture{height:130px;width:175px}.week-picture{gap:4px}.week-picture span{width:39px;height:48px;border-radius:8px;font-size:12px}}
+
+/* Real circulation coins, with clear values outside the photograph. */
+.coins{align-items:center}.coin-picture{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;height:auto!important;max-width:20%;flex:0 1 156px}.coin-picture img{display:block;width:100%;height:auto;object-fit:contain}.coin-picture figcaption{font-size:23px;font-weight:800;line-height:1.2}.single-coin .coin-picture{max-width:220px;flex-basis:220px}.coin-credit{font-size:10px;text-align:center;line-height:1.3;min-height:24px;display:flex;align-items:center;justify-content:center;color:#666172}.coin-credit[hidden]{display:none}.coin-credit a{padding:4px}.topic-card{text-decoration:none}.topic-icon img{width:52px;height:52px}
+@media(min-height:950px) and (min-width:701px){.single-coin .coin-picture{max-width:290px;flex-basis:290px}}
+@media(max-width:700px){.coin-picture{flex-basis:85px}.coin-picture figcaption{font-size:18px}.single-coin .coin-picture{max-width:155px;flex-basis:155px}}
+
+.curriculum-link{min-height:44px;display:flex;align-items:center;text-underline-offset:4px}.site-footer{align-items:center;flex-wrap:wrap}
+@media(min-width:701px){.site-header{height:64px}#cards-view{height:calc(100svh - 64px)}}
+
+h1[tabindex="-1"]:focus{outline:none}

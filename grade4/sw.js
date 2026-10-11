@@ -1,10 +1,12 @@
 /* Bump VERSION whenever the app shell changes. Updates activate once old tabs close. */
-const VERSION = 'v7';
+const VERSION = 'v8';
 const CACHE_PREFIX = 'grade4-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);
 const SHELL_FILES = [
   'index.html',
+  '../games/images/star.svg',
+  '../games/images/leaf.svg',
   'styles.css',
   'app.js',
   'extra-app.js',
@@ -67,9 +69,9 @@ async function networkFirst(request, cacheKey) {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== 'GET' || url.origin !== ROOT.origin || !url.pathname.startsWith(ROOT.pathname)) return;
+  if (request.method !== 'GET' || url.origin !== ROOT.origin || (!url.pathname.startsWith(ROOT.pathname) && !SHELL_PATHS.has(url.pathname))) return;
 
-  if (request.mode === 'navigate') {
+  if (request.mode === 'navigate' && (url.pathname === ROOT.pathname || url.pathname === new URL(INDEX_URL).pathname)) {
     event.respondWith(networkFirst(request, INDEX_URL));
   } else if (SHELL_PATHS.has(url.pathname)) {
     // Canonical cache keys allow ordinary query strings without duplicate shell copies.

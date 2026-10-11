@@ -81,14 +81,24 @@ The tests cover multiplication and fact selection, spaced learning lessons, per-
 
 Once this directory is published on the site, open `https://tayre.github.io/grade4/` in Safari. Use Share, then **Add to Home Screen** (under **More** or **View More** if needed), and tap **Add**. If Safari offers **Open as Web App**, leave it enabled. See [Apple's iPad instructions](https://support.apple.com/en-ie/guide/ipad/ipad8f1f7a29/ipados).
 
-Open the app online once so its files can finish downloading. All activities and the study library can then work offline while those cached files remain on the device. The linked source websites need an internet connection. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
+Open the app online once so its files can finish downloading. All activities and the study library can then work offline while those cached files remain on the device. The parent curriculum guide and linked source websites need an internet connection. The service worker requires HTTPS or localhost; a plain HTTP preview opened through a computer's LAN address does not install the offline cache.
 
 ## Maintaining offline support
 
-`sw.js` caches only Grade 4's own files and uses network responses when available, with the saved app as the offline fallback. Its scope is `/grade4/`, so it does not control the other site apps. Update `VERSION` in `sw.js` whenever app files change, and add new required assets to `SHELL_FILES`.
+`sw.js` caches Grade 4's files and two small shared game thumbnails and uses network responses when available, with the saved app as the offline fallback. Its scope is `/grade4/`, so it does not control the other site apps. Update `VERSION` in `sw.js` whenever app files change, and add new required assets to `SHELL_FILES`.
 
 The new cache is prepared before activation. A new worker waits until tabs using the previous worker close, so an update does not force a reload during practice. Close and reopen the app after loading an update online if it is waiting to activate. Device storage cleanup can remove offline files and local progress.
 
 All app code and artwork are local static files. `icon.svg` is the source artwork for the three PNG home-screen icons.
 
 The matching [Grade 1 app](../grade1/) offers alphabet pictures, the school popcorn words, numbers 1–100, word families, early arithmetic, shapes, calendar cards, Canadian coins and living things. Its saved progress and offline cache are separate.
+
+## Browser history, games and Ontario curriculum
+
+Browser Back and Forward follow the menus and activities. Each activity occupies one entry; Next stays within it. During this visit, returning to a lesson restores its study card, answers, incorrect choices, elapsed hint time or results without awarding points again. Up to 50 previous activity snapshots stay in memory. Reloading an activity URL starts a fresh lesson while preserving saved learning progress. Timers pause when leaving a lesson, hiding the page or opening the break dialog.
+
+[Times-table and Canadian-capital pairs](../games/#grade4) add two untimed matching games, each with four pairs and a tap to continue after each turn. Open the games online once for their separate offline cache.
+
+The [Ontario curriculum guide](../curriculum/#grade4) cites official expectations and identifies partial coverage. Multiplication and division facts directly practise Math B2.2. Provincial capitals support part of Social Studies B3.5; territories, locations and peoples need further study. Modern Canadian history and world capitals are enrichment. The cents-based shopping examples extend beyond Grade 4 F1.2's whole-dollar transactions.
+
+The shared `tests/learning-browser.cjs` regression test covers history, clocks, completed rounds, games, real coin images, iPad layouts and offline use. From the repository root, with a local server on port 8765 and an existing Playwright installation, run `PLAYWRIGHT_MODULE_PATH=/path/to/playwright node tests/learning-browser.cjs`.

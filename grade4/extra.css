@@ -11,3 +11,9 @@
 /* Keep actions clear of the iPad home indicator in standalone mode. */
 #extra-view{padding-bottom:max(20px,calc(env(safe-area-inset-bottom) + 8px))}
 .lesson-open #practice-view,.lesson-open #learn-view{padding-bottom:max(20px,calc(env(safe-area-inset-bottom) + 8px))}
+
+.hub-tile{text-decoration:none;color:inherit}
+
+.curriculum-link{min-height:44px;display:flex;align-items:center;text-underline-offset:4px}.site-footer{flex-wrap:wrap;gap:12px 22px}
+
+h1[tabindex="-1"]:focus{outline:none}

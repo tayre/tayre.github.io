@@ -1,10 +1,17 @@
 /* Bump VERSION when app files change. Updates activate after old tabs close. */
-const VERSION = 'v3';
+const VERSION = 'v4';
 const CACHE_PREFIX = 'grade1-';
 const CACHE_NAME = `${CACHE_PREFIX}${VERSION}`;
 const ROOT = new URL('./', self.registration.scope);
 const SHELL_FILES = [
   'index.html',
+  '../games/images/cat.svg',
+  '../games/images/apple.svg',
+  'images/coins/nickel.png',
+  'images/coins/dime.png',
+  'images/coins/quarter.png',
+  'images/coins/loonie.png',
+  'images/coins/toonie.png',
   'styles.css',
   'app.js',
   'data.js',
@@ -59,9 +66,9 @@ async function networkFirst(request, cacheKey) {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== 'GET' || url.origin !== ROOT.origin || !url.pathname.startsWith(ROOT.pathname)) return;
+  if (request.method !== 'GET' || url.origin !== ROOT.origin || (!url.pathname.startsWith(ROOT.pathname) && !SHELL_PATHS.has(url.pathname))) return;
 
-  if (request.mode === 'navigate') {
+  if (request.mode === 'navigate' && (url.pathname === ROOT.pathname || url.pathname === new URL(INDEX_URL).pathname)) {
     event.respondWith(networkFirst(request, INDEX_URL));
   } else if (SHELL_PATHS.has(url.pathname)) {
     event.respondWith(networkFirst(request, new URL(url.pathname, ROOT.origin).href));

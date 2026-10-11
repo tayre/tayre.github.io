@@ -21,6 +21,7 @@ let deck = [];
 let index = 0;
 let view = 'home';
 let lastTopicButton = null;
+let restoringNavigation = false;
 
 function save(key = STORAGE_KEY, value = progress) {
   try {
@@ -35,11 +36,13 @@ function renderHome() {
     const stats = getStats(progress, id);
     const packs = LEARNING_PACKS.filter(pack => pack.topic === id).length;
     const count = id === 'words' ? `${wordCount} school words` : id === 'numbers' ? '1 to 100' : id === 'alphabet' ? '26 letters' : `${packs} little sets`;
-    return `<button class="topic-card theme-${theme}" data-topic="${id}"><span class="topic-top"><span class="topic-icon${id === 'alphabet' || id === 'numbers' ? ' type-icon' : ''}" aria-hidden="true">${icon}</span><span class="topic-arrow" aria-hidden="true">↗</span></span><span class="topic-title">${escapeHTML(title)}</span><span class="topic-description">${escapeHTML(description)}</span><span class="topic-detail">${stats.seen ? `${stats.seen} of ${stats.total} explored` : count}</span></button>`;
+    return `<button class="topic-card theme-${theme}" data-topic="${id}"><span class="topic-top"><span class="topic-icon${id === 'alphabet' || id === 'numbers' ? ' type-icon' : ''}" aria-hidden="true">${id === 'money' ? '<img src="./images/coins/quarter.png" width="52" height="52" alt="" loading="lazy">' : icon}</span><span class="topic-arrow" aria-hidden="true">↗</span></span><span class="topic-title">${escapeHTML(title)}</span><span class="topic-description">${escapeHTML(description)}</span><span class="topic-detail">${stats.seen ? `${stats.seen} of ${stats.total} explored` : count}</span></button>`;
   }).join('')}</div></section>`).join('');
+  $('#topic-groups').insertAdjacentHTML('beforeend', `<section class="topic-group"><h2>A little playtime</h2><div class="topic-grid"><a class="topic-card theme-lilac" href="../games/#word-pictures"><span class="topic-top"><span class="topic-icon"><img src="../games/images/cat.svg" width="52" height="52" alt="" loading="lazy"></span><span class="topic-arrow" aria-hidden="true">↗</span></span><span class="topic-title">Picture word hunt</span><span class="topic-description">Look at the picture. Find its word.</span><span class="topic-detail">6 little turns · No timer</span></a><a class="topic-card theme-mint" href="../games/#count-pictures"><span class="topic-top"><span class="topic-icon"><img src="../games/images/apple.svg" width="52" height="52" alt="" loading="lazy"></span><span class="topic-arrow" aria-hidden="true">↗</span></span><span class="topic-title">Count & play</span><span class="topic-description">Count the little things. Tap the number.</span><span class="topic-detail">Numbers 1–10 · No timer</span></a></div></section>`);
+
 }
 
-function showView(name) {
+function showView(name, { replace = false } = {}) {
   view = name;
   document.body.classList.toggle('cards-open', name === 'cards');
   document.querySelectorAll('.view').forEach(element => { element.hidden = element.id !== `${name}-view`; });
@@ -51,6 +54,7 @@ function showView(name) {
     const target = lastTopicButton ? $(`[data-topic="${lastTopicButton}"]`) : $('#home-title');
     target.focus({ preventScroll: !lastTopicButton });
   }
+  rememberRoute(replace);
 }
 
 function renderSelection() {
@@ -61,7 +65,7 @@ function renderSelection() {
   if (topic === 'words') {
     $('#deck-selection').innerHTML = WORD_GROUPS.map(group => `<optgroup label="${escapeHTML(group.title)}">${WORD_PACKS.filter(pack => pack.groupId === group.id).map(({ id, title, ids }) => `<option value="${id}">${escapeHTML(title)} · ${ids.length} words</option>`).join('')}</optgroup>`).join('') + `<option value="all">All ${wordCount} words</option>`;
   } else if (topic === 'numbers') {
-    $('#deck-selection').innerHTML = numberRanges.map(range => `<option value="${range}">Numbers ${range.replace('-', '–')}</option>`).join('') + '<option value="all">All 1–100</option>';
+    $('#deck-selection').innerHTML = numberRanges.map(range => `<option value="${range}">Numbers ${range.replace('-', '–')}${Number(range.split('-')[0]) > 50 ? ' · Stretch' : ''}</option>`).join('') + '<option value="all">All 1–100</option>';
   } else {
     $('#deck-selection').innerHTML = LEARNING_PACKS.filter(pack => pack.topic === topic).map(({ id, title, ids }) => `<option value="${id}">${escapeHTML(title)} · ${ids.length} cards</option>`).join('') + '<option value="all">All cards in this topic</option>';
   }
@@ -81,7 +85,7 @@ function startDeck() {
   deck = makeDeck({ topic, selection: selections[topic] });
   index = 0;
   if (!deck.length) return;
-  showView('cards');
+  showView('cards', { replace: view === 'cards' });
   renderCard();
 }
 
@@ -103,6 +107,7 @@ function renderCard(wrapped = false) {
   visual.innerHTML = topic === 'numbers' ? numberFrames(card.number) : renderVisual(card.visual);
   $('#card-note').hidden = ['alphabet', 'words'].includes(topic);
   $('#card-note').textContent = card.example;
+  $('#coin-credit').hidden = topic !== 'money';
   $('#set-message').textContent = wrapped ? 'Set explored! Let’s look again.' : 'Look. Say it. Take your time.';
 }
 
@@ -112,7 +117,55 @@ function nextCard() {
   save();
   index = (index + 1) % deck.length;
   renderCard(index === 0);
+  rememberRoute(true);
 }
+
+// A history entry represents a topic, not every tap of Next. Keep the latest
+// card in that entry so Forward returns to the same word, picture, or number.
+function currentRoute() {
+  return view === 'cards' ? { view, topic, selection: selections[topic], index } : { view: 'home' };
+}
+
+function routeHash(route) {
+  return route.view === 'cards' ? `#${route.topic}/${encodeURIComponent(route.selection)}` : '#home';
+}
+
+function rememberRoute(replace = false) {
+  if (restoringNavigation) return;
+  const route = currentRoute();
+  const hash = routeHash(route);
+  const method = replace || location.hash === hash ? 'replaceState' : 'pushState';
+  history[method]({ grade1: route }, '', hash);
+}
+
+function restoreRoute() {
+  restoringNavigation = true;
+  try {
+    let route = history.state?.grade1;
+    if (!route || routeHash(route) !== location.hash) {
+      const [nextTopic, selection] = location.hash.slice(1).split('/');
+      let decoded = 'all';
+      try { decoded = selection ? decodeURIComponent(selection) : selections[nextTopic] || 'all'; } catch { /* Invalid links return home. */ }
+      route = { view: 'cards', topic: nextTopic, selection: decoded, index: 0 };
+    }
+    const cards = route.view === 'cards' && TOPICS.some(({ id }) => id === route.topic)
+      ? makeDeck({ topic: route.topic, selection: route.selection }) : [];
+    if (cards.length) {
+      topic = route.topic;
+      lastTopicButton = topic;
+      selections[topic] = route.selection;
+      deck = cards;
+      index = Number.isSafeInteger(route.index) ? Math.max(0, Math.min(deck.length - 1, route.index)) : 0;
+      renderSelection();
+      showView('cards');
+      renderCard();
+      $('#lesson-title').focus({ preventScroll: true });
+    } else showView('home');
+  } finally { restoringNavigation = false; }
+  rememberRoute(true);
+}
+
+window.addEventListener('popstate', restoreRoute);
 
 document.addEventListener('click', event => {
   const button = event.target.closest('button');
@@ -127,6 +180,6 @@ $('#deck-selection').addEventListener('change', () => {
   startDeck();
 });
 $('#next-card').addEventListener('click', nextCard);
-renderHome();
+restoreRoute();
 save();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => { /* Cards still work online. */ });

@@ -9,12 +9,12 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const baseTopics = [
   { title: 'Multiplication', icon: '×', description: 'Picture the groups. Learn a trick. Make it stick.', color: 'yellow', action: 'data-view="home"', tag: 'MATH · 1 TO 10' },
   { title: 'Capital cities', icon: '🌎', description: 'Canada’s provinces and a trip around the world.', color: 'mint', action: 'data-start-facts="geography"', tag: 'GEOGRAPHY' },
-  { title: 'Canadian history', icon: '🍁', description: 'First peoples, Confederation, and Canada through time.', color: 'peach', action: 'data-start-facts="history"', tag: 'OUR PAST' },
+  { title: 'Canadian history', icon: '🍁', description: 'First peoples, Confederation, and Canada through time.', color: 'peach', action: 'data-start-facts="history"', tag: 'EXPLORE MORE · HISTORY' },
   { title: 'Everyday science', icon: '🔬', description: 'Get curious about space and the world around you.', color: 'lilac', action: 'data-start-facts="science"', tag: 'BIG QUESTIONS' },
 ];
 const colors = ['mint', 'lilac', 'peach', 'yellow', 'blue', 'mint'];
 
-export function createExtraApp({ showView, readSaved, save }) {
+export function createExtraApp({ showView, readSaved, save, onStart }) {
   let progress = normalizeExtraProgress(readSaved(KEY));
   let session = null;
   let timer = null;
@@ -26,6 +26,8 @@ export function createExtraApp({ showView, readSaved, save }) {
     const extraTopics = EXTRA_TOPICS.map((topic, index) => ({ ...topic, color: colors[index], action: `data-extra-topic="${esc(topic.id)}"`, tag: topic.id === 'reading' ? 'READ & THINK' : 'LOOK · LEARN · TRY' }));
     const topics = [baseTopics[0], ...extraTopics.slice(0, 3), ...extraTopics.slice(3, 5), baseTopics[1], baseTopics[2], baseTopics[3], ...extraTopics.slice(5)];
     $('#lesson-hub').innerHTML = topics.map((topic) => `<button class="hub-tile ${topic.color}" ${topic.action}><span class="hub-tile-top"><span class="hub-icon" aria-hidden="true">${esc(topic.icon)}</span><span aria-hidden="true">↗</span></span><span class="eyebrow">${esc(topic.tag)}</span><strong>${esc(topic.title)}</strong><span class="hub-description">${esc(topic.description)}</span><span class="hub-bottom">${topic.id ? 'A short lesson, then a little practice' : topic.title === 'Multiplication' ? 'Learn 3 facts at a time' : '10 questions with helpful hints'}<span aria-hidden="true">→</span></span></button>`).join('');
+    $('#lesson-hub').insertAdjacentHTML('beforeend', `<a class="hub-tile yellow" href="../games/#multiplication-pairs"><span class="hub-tile-top"><img src="../games/images/star.svg" width="56" height="56" alt="" loading="lazy"><span aria-hidden="true">↗</span></span><span class="eyebrow">PLAY & REMEMBER</span><strong>Times table pairs</strong><span class="hub-description">Turn over a fact. Remember where its answer hides.</span><span class="hub-bottom">4 pairs · No timer <span aria-hidden="true">→</span></span></a><a class="hub-tile peach" href="../games/#capital-pairs"><span class="hub-tile-top"><img src="../games/images/leaf.svg" width="56" height="56" alt="" loading="lazy"><span aria-hidden="true">↗</span></span><span class="eyebrow">PLAY & EXPLORE</span><strong>Capital city pairs</strong><span class="hub-description">Match Canadian provinces with their capital cities.</span><span class="hub-bottom">4 pairs · No timer <span aria-hidden="true">→</span></span></a>`);
+
   }
   function renderProgress() {
     $('#extra-progress-grid').innerHTML = EXTRA_TOPICS.map((topic, i) => {
@@ -73,6 +75,7 @@ export function createExtraApp({ showView, readSaved, save }) {
   function start(topic, ids = null) {
     const lesson = makeExtraLesson(topic, { reviewIds: ids });
     if (!lesson.cards.length) return;
+    onStart(topic);
     pause();
     window.speechSynthesis?.cancel();
     currentTopic = topic;
@@ -85,7 +88,7 @@ export function createExtraApp({ showView, readSaved, save }) {
     session.index = 0;
     render();
   }
-  function render() {
+  function render({ restore = false } = {}) {
     pause();
     window.speechSynthesis?.cancel();
     const card = session.cards[session.index];
@@ -124,7 +127,7 @@ export function createExtraApp({ showView, readSaved, save }) {
       $('.extra-copy').append(listen);
     }
     if (!study) {
-      Object.assign(session, { solved: false, assisted: false, hintShown: false, misses: 0, scored: false, elapsed: 0, started: null, announced: false, points: 100, reading: Boolean(card.passage) });
+      if (!restore) Object.assign(session, { solved: false, assisted: false, hintShown: false, misses: 0, scored: false, elapsed: 0, started: null, announced: false, points: 100, reading: Boolean(card.passage), wrongChoices: [] });
       $('#extra-choices').innerHTML = card.choices.map((choice, i) => `<button class="extra-choice" data-extra-choice="${i}"><span>${i + 1}</span>${esc(choice)}<b aria-hidden="true"></b></button>`).join('');
       $('#extra-choices').hidden = session.reading;
       $('#extra-hint').textContent = session.reading ? 'Read at your own pace. Tap “I’m ready” when you want to answer.' : 'A hint will be here if you need one.';
@@ -138,6 +141,14 @@ export function createExtraApp({ showView, readSaved, save }) {
       $('#extra-pacing').textContent = session.reading ? 'No timer while you read' : 'Hint at 10s · answer appears at 20s';
       $('#extra-next').hidden = !session.reading;
       $('#extra-next').textContent = session.reading ? 'I’m ready →' : 'Next question →';
+      if (restore) {
+        for (const index of session.wrongChoices || []) {
+          const button = $(`[data-extra-choice="${index}"]`);
+          button.disabled = true; button.classList.add('wrong'); button.querySelector('b').textContent = '×';
+        }
+        if (session.solved) return renderSolved();
+        if (session.hintShown) hint();
+      }
       resume();
     }
     $('#extra-question').focus({ preventScroll: true });
@@ -156,6 +167,7 @@ export function createExtraApp({ showView, readSaved, save }) {
     }
     if (!correct) {
       session.misses += 1;
+      session.wrongChoices.push(index);
       button.disabled = true; button.classList.add('wrong'); button.querySelector('b').textContent = '×';
       $('#extra-feedback').textContent = 'Not quite yet. Try the hint — you can do this.';
       hint(); tick(); return;
@@ -165,6 +177,11 @@ export function createExtraApp({ showView, readSaved, save }) {
     session.results.push({ id: card.id, points: session.points, clean });
     progress.totalPoints = Math.min(Number.MAX_SAFE_INTEGER, progress.totalPoints + session.points);
     persist();
+    renderSolved();
+  }
+  function renderSolved() {
+    const card = session.cards[session.index];
+    const { clean } = session.results.at(-1);
     $('#extra-choices').querySelectorAll('button').forEach((item, i) => { item.disabled = true; if (card.choices[i] === card.answer) { item.classList.add('correct'); item.querySelector('b').textContent = '✓'; } });
     $('#extra-feedback').textContent = `${clean ? 'You’ve got it!' : 'You stuck with it!'} +${session.points} points.`;
     $('#extra-points').textContent = `+${session.points} points!`;
@@ -178,16 +195,20 @@ export function createExtraApp({ showView, readSaved, save }) {
     $('#extra-next').textContent = session.index + 1 === session.cards.length ? 'See how you did →' : 'Next question →';
     $('#extra-next').focus({ preventScroll: true });
   }
-  function finish() {
+  function finish({ restore = false } = {}) {
     pause(); session.mode = 'results';
     const clean = session.results.filter((item) => item.clean).length;
     const points = session.results.reduce((sum, item) => sum + item.points, 0);
     reviewIds = session.results.filter((item) => !item.clean).map((item) => item.id);
-    progress.completedLessons += 1; persist(); renderProgress();
+    if (!restore) { progress.completedLessons += 1; persist(); }
+    renderProgress();
+    $('#extra-title').textContent = session.topic.title;
+    $('#extra-view').classList.remove('is-studying', 'is-reading');
     $('#extra-card').hidden = true; $('#extra-practice').hidden = true; $('.extra-actions').hidden = true;
     $('#extra-results').hidden = false;
     $('#extra-count').textContent = 'Lesson complete ✦';
-    $('#extra-track').querySelectorAll('span').forEach((el) => { el.className = 'done'; });
+    $('#extra-track').innerHTML = session.cards.map(() => '<span class="done"></span>').join('');
+    $('#extra-track').setAttribute('aria-label', `${session.cards.length} of ${session.cards.length} completed`);
     $('#extra-result-message').textContent = `You explored ${session.cards.length} little ideas in ${session.topic.title.toLowerCase()}. Come back another day to help them stick!`;
     $('#extra-result-stats').innerHTML = `<div><strong>${points}</strong><span>points earned</span></div><div><strong>${clean} / ${session.cards.length}</strong><span>on your own</span></div>`;
     $('#extra-review').hidden = !reviewIds.length;
@@ -226,7 +247,14 @@ export function createExtraApp({ showView, readSaved, save }) {
     if (/^[1-4]$/.test(event.key) && session?.mode === 'practice') { event.preventDefault(); answer(Number(event.key) - 1); }
   });
   renderHub(); renderProgress();
-  return { pause, resume, leave, renderProgress, isPracticing: () => visible && session?.mode === 'practice',
-    onView(name) { visible = name === 'extra'; if (!visible) { pause(); window.speechSynthesis?.cancel(); } else resume(); },
+  return { pause, resume, leave, renderProgress, start,
+    hasTopic: id => EXTRA_TOPICS.some(topic => topic.id === id),
+    capture: () => ({ session, currentTopic, reviewIds }),
+    restore(saved) {
+      pause(); ({ session, currentTopic, reviewIds } = saved);
+      if (session.mode === 'results') finish({ restore: true }); else render({ restore: true });
+    },
+    isPracticing: () => visible && session?.mode === 'practice',
+    onView(name, shouldResume = true) { visible = name === 'extra'; if (!visible) { pause(); window.speechSynthesis?.cancel(); } else if (shouldResume) resume(); },
     reset() { leave(); progress = createExtraProgress(); persist(); renderProgress(); } };
 }
