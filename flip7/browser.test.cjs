@@ -111,29 +111,38 @@ const app = `${base}/flip7/`;
   assert.deepEqual(await page.locator('.player-card h2').allTextContents(), names);
   console.log('PASS winner timing, 200-point ties, trailing player winning, undoing a win and rematch');
 
-  for (const [width,height] of [[1024,768],[768,1024],[820,1180],[390,844],[320,568]]) {
+  for (const [width,height] of [[1024,768],[768,1024],[820,1180],[390,844],[375,667],[320,568]]) {
     await page.setViewportSize({width,height});
     await page.evaluate(() => window.scrollTo(0,0));
     await fits('.player-card, #round-bar');
-    if (width>=700) await fits('#scoreboard, #save-round', true);
+    await fits('#scoreboard, #save-round', true);
     await page.screenshot({ path:`/private/tmp/flip7-board-${width}.png`, fullPage:true });
     await page.locator('[data-score="p1"]').click();
     await fits('#score-dialog, .keypad button');
+    await fits('#use-score, #mark-bust', true);
     await page.locator('[data-mode="cards"]').click();
     await fits('#score-dialog, .number-cards, .modifier-cards');
-    if (width>=700) {
-      await fits('#use-score', true);
-      const small=await page.locator('#score-dialog button').evaluateAll(buttons=>buttons.filter(b=>{const r=b.getBoundingClientRect();return r.width>0 && (r.width<44||r.height<44);}).map(b=>b.textContent));
-      assert.deepEqual(small, [], 'iPad score buttons have 44px touch targets');
-    }
+    await fits('#use-score, #mark-bust', true);
+    const small=await page.locator('#score-dialog button').evaluateAll(buttons=>buttons.filter(b=>{const r=b.getBoundingClientRect();return r.width>0 && (r.width<44||r.height<44);}).map(b=>b.textContent));
+    assert.deepEqual(small, [], 'score buttons have 44px touch targets');
     await page.screenshot({ path:`/private/tmp/flip7-cards-${width}.png` });
     await page.locator('#score-dialog [data-close]').click(); await route('#game');
     await page.locator('#new-game').click(); await route('#setup');
+    await page.evaluate(() => window.scrollTo(0,0));
     await fits('#setup-view, .player-field, .stepper');
+    await fits('#start-game', true);
     await page.locator('[data-emoji="0"]').click(); await fits('#emoji-dialog, #emoji-grid');
     await page.locator('#emoji-dialog [data-close]').click(); await route('#setup');
     await page.locator('#resume-game').click(); await route('#game');
   }
+  await page.locator('[data-score="p3"]').click();
+  await page.locator('#mark-bust').click(); await route('#game');
+  assert.match(await page.locator('[data-score="p3"]').textContent(), /Bust/);
+  await page.setViewportSize({width:667,height:375});
+  await page.locator('[data-score="p1"]').click();
+  await page.locator('[data-mode="cards"]').click();
+  await fits('#score-dialog, #mark-bust, #use-score', true);
+  await page.locator('#score-dialog [data-close]').click(); await route('#game');
   console.log('PASS iPad portrait/landscape and phone layouts, scoring controls and emoji picker');
 
   await page.setViewportSize({width:1024,height:768});
@@ -141,9 +150,11 @@ const app = `${base}/flip7/`;
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.reload();
   await context.setOffline(true); await page.reload();
+  assert.ok(await page.locator('.brand img').evaluate(img => img.complete && img.naturalWidth > 0), 'logo loads offline');
   assert.match(await page.locator('[data-score="p1"]').textContent(), /37/);
+  assert.match(await page.locator('[data-score="p3"]').textContent(), /Bust/);
   await manual('p2', 22);
-  await page.locator('[data-bust="p3"]').click(); await page.locator('[data-bust="p4"]').click();
+  await page.locator('[data-bust="p4"]').click();
   await page.locator('#save-round').click();
   await page.reload(); assert.deepEqual(await scores(), [37,22,0,0]);
   await context.setOffline(false);

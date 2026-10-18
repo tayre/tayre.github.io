@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="44" fill="#194d44"/><g transform="rotate(9 96 96)"><rect x="45" y="27" width="103" height="138" rx="18" fill="#f5cc59"/><path d="M65 57h64v17l-36 65H70l36-64H65z" fill="#194d44"/><path d="m127 127 3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#194d44"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs><path id="seven" d="M61 54h71v22l-38 64H70l39-65H61z"/></defs>
+  <rect width="192" height="192" rx="34" fill="#0b4c5a"/>
+  <rect x="12" y="12" width="168" height="168" rx="23" fill="none" stroke="#e8bd44" stroke-width="3"/>
+  <g transform="rotate(-8 96 96)" stroke-linejoin="round" fill="#efc447">
+    <rect x="37" y="31" width="118" height="130" rx="3" fill="#f7efd1" stroke="#20223d" stroke-width="5"/>
+    <rect x="43" y="37" width="106" height="118" rx="1" fill="none" stroke="#56838d" stroke-width="2"/>
+    <use href="#seven" stroke="#20223d" stroke-width="9"/>
+    <use href="#seven" stroke="#b33d44" stroke-width="4"/>
+    <use href="#seven" stroke="none"/>
+  </g>
+</svg>

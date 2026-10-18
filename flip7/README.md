@@ -2,11 +2,13 @@
 
 A buildless, touch-friendly scorekeeper at `/flip7/`. Choose 1–18 players, enter names, and tap a profile to choose from 24 emojis. Blank names become “Player 1”, etc. The player order stays stable while totals and leader labels update after each round.
 
+The box-inspired design uses teal, gold, cream banners and outlined lettering. Phones get compact player rows and a sticky Save round bar; four players and Save round fit at 320 × 568. iPads use larger cards in two columns. The score editor keeps its action buttons visible while the card picker scrolls on short screens.
+
 ## At the table
 
 - Tap **Add score** and enter the final round total with the large keypad or a physical keyboard. Manual scores accept whole numbers from 0 to 999.
 - **Count my cards** adds unique number cards from 0–12, optional +2/+4/+6/+8/+10 modifiers, ×2, and the automatic seven-card bonus. Tap a selected card again to remove it. Zero counts toward seven cards.
-- **Bust** records zero. An entered score stays editable until the round is saved.
+- **Bust** records zero. On phones, tap **Score** to find it in the editor. An entered score stays editable until the round is saved.
 - **Save round** waits for an explicit score or bust for every player. Totals and the winner are calculated together at the end of the round.
 - **Undo last round** reopens its scores for correction. If a new round already has entries, a confirmation protects those entries. New games and rematches also confirm before replacing scores.
 - A tied lead at 200 or more keeps every player in for another round. A unique high score at or above 200 ends the game.
