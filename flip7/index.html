@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#194d44">
+  <meta name="description" content="A simple Flip 7 scorekeeper for game night. Add players, pick an emoji, and keep every round in one place.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Flip 7 · Game night scorekeeper</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="masthead">
+      <a class="brand" href="#game" aria-label="Flip 7 scorekeeper"><span class="brand-card" aria-hidden="true">7</span><span>flip <b>7</b><small>THE SCOREKEEPER</small></span></a>
+      <div class="header-actions"><span id="save-status" class="save-status"><i></i>On this device</span><a class="quiet-button" href="#rules">How to score <span aria-hidden="true">↗</span></a></div>
+    </header>
+    <p id="storage-warning" class="notice warning" role="alert" hidden></p>
+    <main>
+      <section id="setup-view" aria-labelledby="setup-title">
+        <div class="setup-hero">
+          <div><p class="eyebrow">GOOD COMPANY. ONE MORE CARD.</p><h1 id="setup-title">Who’s at<br>the table<span>?</span></h1><p class="intro">Pick your people. Pick your lucky emoji.<br>We’ll keep score.</p></div>
+          <div class="card-fan" aria-hidden="true"><span class="fan-card fan-coral"><small>FLIP</small><b>5</b><i>✦</i></span><span class="fan-card fan-gold"><small>FLIP</small><b>2</b><i>✦</i></span><span class="fan-card fan-green"><small>FLIP</small><b>7</b><i>✦</i></span><span class="fan-spark">✧</span></div>
+        </div>
+        <form id="setup-form" class="setup-panel">
+          <div class="section-heading player-count-row"><div><h2>Your players</h2><p>Tap an emoji to make it yours.</p></div><div class="stepper" role="group" aria-label="Number of players"><button id="fewer-players" type="button" aria-label="Fewer players">−</button><output id="player-count" aria-live="polite">4</output><button id="more-players" type="button" aria-label="More players">+</button></div></div>
+          <div id="player-fields" class="player-fields"></div>
+          <div class="setup-bottom"><p><span aria-hidden="true">⚑</span> First to <strong>200</strong>. Highest score wins.</p><button id="start-game" class="button primary" type="submit">Let’s play <span aria-hidden="true">→</span></button></div>
+          <button id="resume-game" class="text-button resume-button" type="button" hidden>← Back to the current game</button>
+        </form>
+        <p class="setup-note">1–18 players · No accounts · Saved on this device</p>
+      </section>
+      <section id="game-view" aria-labelledby="game-title" hidden>
+        <div class="game-heading"><div><p id="game-eyebrow" class="eyebrow">THE RACE TO 200</p><h1 id="game-title" tabindex="-1">Round 1<span>.</span></h1></div><button id="new-game" class="quiet-button">New game <span aria-hidden="true">↗</span></button></div>
+        <div id="result-banner" class="result-banner" role="status" hidden></div>
+        <div class="board-caption"><p id="round-instruction">Tap a player to add their round score.</p><span id="recorded-count" class="small-pill">0 / 4 ready</span></div>
+        <div id="scoreboard" class="scoreboard"></div>
+        <div id="round-bar" class="round-bar"><div><strong id="round-bar-title">Everyone in?</strong><p id="round-bar-note">Enter a score or mark a bust for each player.</p></div><button id="save-round" class="button primary" disabled>Save round <span aria-hidden="true">→</span></button><button id="play-again" class="button primary" hidden>Same players, again <span aria-hidden="true">↗</span></button></div>
+        <section class="history-section"><div class="section-heading"><div><p class="eyebrow">THE STORY SO FAR</p><h2>Round history</h2></div><button id="undo-round" class="quiet-button" disabled>↶ Undo last round</button></div><div id="round-history"></div></section>
+      </section>
+    </main>
+    <footer><span id="offline-status">Made for your game table.</span><span>Unofficial companion · <a href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Official rules ↗</a></span></footer>
+  </div>
+
+  <dialog id="emoji-dialog" aria-labelledby="emoji-title"><div class="dialog-heading"><div><p class="eyebrow">YOUR LUCKY CHARM</p><h2 id="emoji-title">Pick a profile</h2></div><button class="close-button" data-close aria-label="Close emoji picker">×</button></div><div id="emoji-grid" class="emoji-grid"></div></dialog>
+
+  <dialog id="score-dialog" class="score-dialog" aria-labelledby="score-title">
+    <div class="dialog-heading"><div class="score-person"><span id="score-emoji" class="avatar" aria-hidden="true"></span><div><p id="score-round-label" class="eyebrow"></p><h2 id="score-title"></h2></div></div><button class="close-button" data-close aria-label="Cancel score entry">×</button></div>
+    <div class="entry-tabs" role="group" aria-label="Score entry method"><button data-mode="manual" aria-pressed="true">Enter score</button><button data-mode="cards" aria-pressed="false">Count my cards</button></div>
+    <div id="manual-entry"><label for="manual-score" class="score-label">POINTS THIS ROUND</label><input id="manual-score" class="manual-score" inputmode="none" readonly placeholder="—" aria-describedby="manual-hint"><p id="manual-hint" class="entry-hint">Your final total, including any bonuses.</p><div class="keypad" aria-label="Score keypad"></div></div>
+    <div id="cards-entry" hidden><div class="card-picker-heading"><strong>Number cards</strong><span id="number-count">0 of 7</span></div><div id="number-cards" class="number-cards" role="group" aria-label="Number cards"></div><div class="card-picker-heading"><strong>Modifier cards</strong><span>Tap to add</span></div><div id="modifier-cards" class="modifier-cards" role="group" aria-label="Modifier cards"></div><div id="flip-bonus" class="flip-bonus">Seven different numbers = 15 extra points.</div><div class="calculated-total"><div><span class="score-label">ROUND TOTAL</span><p id="score-equation"></p></div><output id="card-total" aria-live="polite">0</output></div></div>
+    <p id="score-error" class="error" role="alert" hidden></p><div class="score-footer"><button id="mark-bust" class="button bust-button">Bust <span>0 points</span></button><button id="use-score" class="button primary" disabled>Use score <span aria-hidden="true">✓</span></button></div>
+  </dialog>
+
+  <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-title"><div class="dialog-heading"><div><p class="eyebrow">A QUICK REMINDER</p><h2 id="rules-title">Make it count.</h2></div><button class="close-button" data-close aria-label="Close scoring rules">×</button></div><ol class="rules-list"><li><strong>Add your number cards.</strong><p>The 0 card counts toward seven cards, but adds no points.</p></li><li><strong>Have ×2? Double that sum.</strong><p>Only the number cards get doubled.</p></li><li><strong>Add your bonus cards.</strong><p>Add any +2, +4, +6, +8, and +10 modifiers.</p></li><li><strong>Flipped seven? Add 15.</strong><p>Seven different number cards end the round for everyone.</p></li></ol><div class="rules-note"><p><strong>Busted?</strong> That round is worth zero.</p><p><strong>Reaching 200:</strong> finish recording everyone’s round scores. The highest total wins. A tie at the top means everyone plays another round.</p></div><a class="quiet-button" href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Read the official FAQ ↗</a></dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title"></h2><button class="close-button" data-dismiss aria-label="Cancel">×</button></div><p id="confirm-message" class="confirm-message"></p><div class="confirm-actions"><button class="button secondary" data-dismiss>Keep playing</button><button id="confirm-action" class="button primary"></button></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript><p class="notice">Please enable JavaScript to keep score.</p></noscript>
+</body>
+</html>
