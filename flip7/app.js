@@ -3,6 +3,7 @@ import { TARGET, MAX_PLAYERS, MODIFIERS, PROFILES, validEmoji, createGame, score
 const $ = selector => document.querySelector(selector);
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const STORAGE_KEY = 'flip7.scorekeeper.v1';
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const defaultPlayers = () => Array.from({ length: MAX_PLAYERS }, (_, i) => ({ name: '', emoji: PROFILES[i][0] }));
 let setup = { count: 4, players: defaultPlayers() };
 let game = null;
@@ -11,6 +12,10 @@ let emojiIndex = null;
 let currentRoute = '';
 let confirmAction = null;
 let toastTimer;
+let renderedGame;
+let renderedRounds;
+let confettiLayer;
+let confettiAnimations = [];
 
 function storageWarning(message) {
   $('#storage-warning').textContent = message;
@@ -52,6 +57,41 @@ function toast(message) {
   toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 3500);
 }
 
+function stopConfetti() {
+  confettiAnimations.forEach(animation => animation.cancel());
+  confettiAnimations = [];
+  confettiLayer?.remove();
+  confettiLayer = null;
+}
+
+function celebrateWin() {
+  stopConfetti();
+  if (motionPreference.matches || document.hidden || !Element.prototype.animate) return;
+  const layer = document.createElement('div');
+  layer.id = 'win-confetti';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.append(layer);
+  confettiLayer = layer;
+  const colors = ['#3b8068', '#e8b74f', '#d77869', '#7294bd'];
+  for (let i = 0; i < 40; i++) {
+    const piece = document.createElement('i');
+    piece.style.left = `${(i + Math.random()) / 40 * 100}%`;
+    piece.style.backgroundColor = colors[i % colors.length];
+    layer.append(piece);
+    confettiAnimations.push(piece.animate([
+      { transform: 'translate3d(0,-24px,0) rotate(0deg)', opacity: 1 },
+      { transform: `translate3d(${Math.random() * 140 - 70}px,${innerHeight + 30}px,0) rotate(${360 + Math.random() * 540}deg)`, opacity: 0 }
+    ], { duration: 1900 + Math.random() * 500, delay: Math.random() * 150, easing: 'cubic-bezier(.2,.55,.65,1)', fill: 'both' }));
+  }
+  Promise.all(confettiAnimations.map(animation => animation.finished)).then(() => {
+    if (confettiLayer === layer) stopConfetti();
+  }).catch(() => { /* Navigation or reduced motion cancelled the celebration. */ });
+}
+
+motionPreference.addEventListener('change', event => { if (event.matches) stopConfetti(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopConfetti(); });
+window.addEventListener('pagehide', stopConfetti);
+
 function navigate(hash, replace = false) {
   if (hash === currentRoute) return;
   const overlay = /^#(score\/|emoji\/|rules)/.test(hash);
@@ -76,6 +116,7 @@ function renderRoute() {
   if (route !== location.hash) history.replaceState({ flip7: true, overlay: false }, '', route);
   const previous = currentRoute;
   currentRoute = route;
+  if (route !== '#game') stopConfetti();
   if ($('#confirm-dialog').open) { $('#confirm-dialog').close(); confirmAction = null; }
   const setupVisible = route === '#setup' || route.startsWith('#emoji/') || (route === '#rules' && (history.state?.returnHash === '#setup' || !game));
   $('#setup-view').hidden = !setupVisible;
@@ -112,33 +153,35 @@ function renderEmojiPicker() {
 }
 
 function renderGame() {
-  if (!game) return;
+  if (!game || renderedGame === game) return;
+  renderedGame = game;
   const scores = totals(game);
   const result = outcome(game);
   const won = result.type === 'won';
+  if (!won) stopConfetti();
   const ready = game.draft.filter(entry => entry !== null).length;
   const round = game.rounds.length + 1;
-  $('#game-title').innerHTML = `${won ? 'What a game' : `Round ${round}`}<span>.</span>`;
-  $('#game-eyebrow').textContent = won ? `${game.rounds.length} ROUNDS · ONE GREAT TABLE` : 'THE RACE TO 200';
+  $('#game-title').innerHTML = won ? 'Final scores' : `Round ${round}`;
+  $('#game-eyebrow').textContent = won ? `${game.rounds.length} ROUNDS PLAYED` : 'FIRST TO 200';
   $('#recorded-count').textContent = won ? 'Final scores' : `${ready} / ${game.players.length} ready`;
-  $('#round-instruction').textContent = won ? 'The scores are in. Time for a rematch?' : 'Tap a player to add their round score.';
+  $('#round-instruction').textContent = won ? 'The scores are in. Time for a rematch?' : 'Bust or count your points.';
   $('#scoreboard').innerHTML = game.players.map((p, i) => {
     const entry = game.draft[i];
     const rank = scores.filter(score => score > scores[i]).length + 1;
     const leading = game.rounds.length > 0 && result.leaders.includes(i);
     const entryScore = entry === null ? null : scoreEntry(entry);
-    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : 'LET’S GO'}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>total points</span></div><div class="race-track" aria-hidden="true"><i style="width:${Math.min(100, scores[i] / TARGET * 100)}%"></i></div><div class="card-score-actions">${won ? `<span class="final-label">${leading ? '✦ Nicely played.' : 'Thanks for a great game.'}</span>` : `<button class="round-score${entry !== null ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null ? 'Edit' : 'Add'} round score for ${escapeHTML(p.name)}">${entry?.kind === 'bust' ? '<span>Bust <small>0 pts</small></span><span aria-hidden="true">↗</span>' : entry !== null ? `<span>+${entryScore} <small>this round</small></span><span aria-hidden="true">↗</span>` : '<span><span class="wide-label">Add </span>score</span><span aria-hidden="true">+</span>'}</button>${entry === null ? `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted">Bust</button>` : ''}`}</div></article>`;
+    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : ''}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>total</span></div><div class="card-score-actions">${won ? `<span class="final-label">${leading ? 'Winner ✨' : 'Well played'}</span>` : `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted" aria-pressed="${entry?.kind === 'bust'}">Bust</button><button class="round-score${entry !== null && entry.kind !== 'bust' ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null && entry.kind !== 'bust' ? 'Edit round score' : 'Count points'} for ${escapeHTML(p.name)}">${entry !== null && entry.kind !== 'bust' ? `<span>+${entryScore}</span><small>Edit points</small>` : '<span>Count</span><span>points</span>'}</button>`}</div></article>`;
   }).join('');
   $('#save-round').hidden = won;
   $('#save-round').disabled = ready !== game.players.length;
   $('#play-again').hidden = !won;
-  $('#round-bar-title').textContent = won ? 'Another round of rivalry?' : ready === game.players.length ? 'All scores are in.' : `${game.players.length - ready} ${game.players.length - ready === 1 ? 'player' : 'players'} to go.`;
+  $('#round-bar-title').textContent = won ? 'Play again?' : ready === game.players.length ? 'All scores are in.' : `${game.players.length - ready} ${game.players.length - ready === 1 ? 'player' : 'players'} to go.`;
   $('#round-bar-note').textContent = won ? 'Start fresh with the same names and emojis.' : ready === game.players.length ? 'Save them together and deal the next round.' : 'Enter a score or mark a bust for each player.';
   $('#undo-round').disabled = game.rounds.length === 0;
   $('#result-banner').hidden = result.type === 'playing';
   if (won) {
     const winner = game.players[result.leaders[0]];
-    $('#result-banner').innerHTML = `<span class="result-spark" aria-hidden="true">✦</span><div><p class="eyebrow">WINNER, WINNER</p><strong>${escapeHTML(winner.name)} takes the table!</strong><p>${result.top} points. A little luck, a lot to celebrate.</p></div><span class="winner-emoji" aria-hidden="true">${winner.emoji}</span>`;
+    $('#result-banner').innerHTML = `<span class="result-spark" aria-hidden="true">✦</span><div><p class="eyebrow">WINNER</p><strong>${escapeHTML(winner.name)} takes the table!</strong><p>${result.top} points. Well played!</p></div><span class="winner-emoji" aria-hidden="true">${winner.emoji}</span>`;
   } else if (result.type === 'tie') {
     $('#result-banner').innerHTML = `<span class="result-spark" aria-hidden="true">=</span><div><strong>It’s a tie at ${result.top}!</strong><p>Everyone plays another round to find a winner.</p></div>`;
   }
@@ -146,6 +189,9 @@ function renderGame() {
 }
 
 function renderHistory(scores) {
+  // Draft edits and dialog navigation do not change saved rounds.
+  if (renderedRounds === game.rounds) return;
+  renderedRounds = game.rounds;
   if (!game.rounds.length) {
     $('#round-history').innerHTML = '<p class="empty-history"><span aria-hidden="true">↗</span> Your first round is waiting to happen.</p>';
     return;
@@ -156,7 +202,7 @@ function renderHistory(scores) {
 function beginScore(index) {
   const entry = game.draft[index];
   scoreEdit = {
-    index, mode: entry?.kind === 'cards' ? 'cards' : 'manual',
+    index, mode: entry?.kind === 'manual' ? 'manual' : 'cards',
     manual: entry === null ? '' : String(scoreEntry(entry)),
     numbers: entry?.kind === 'cards' ? [...entry.numbers] : [],
     modifiers: entry?.kind === 'cards' ? [...entry.modifiers] : [],
@@ -184,8 +230,13 @@ function renderScoreEditor() {
   $('#manual-score').value = edit.manual;
   $('#use-score').disabled = edit.mode === 'manual' && edit.manual === '';
   if (edit.mode !== 'cards') return;
-  $('#number-cards').innerHTML = Array.from({ length: 13 }, (_, n) => `<button class="number-card" data-number="${n}" aria-label="Number ${n}" aria-pressed="${edit.numbers.includes(n)}" ${edit.numbers.length === 7 && !edit.numbers.includes(n) ? 'disabled' : ''}>${n}</button>`).join('');
-  $('#modifier-cards').innerHTML = MODIFIERS.map(n => `<button data-modifier="${n}" aria-pressed="${edit.modifiers.includes(n)}">+${n}</button>`).join('') + `<button class="double-card" data-double aria-pressed="${edit.double}">×2</button>`;
+  numberButtons.forEach((button, n) => {
+    const selected = edit.numbers.includes(n);
+    button.setAttribute('aria-pressed', String(selected));
+    button.disabled = edit.numbers.length === 7 && !selected;
+  });
+  modifierButtons.forEach(button => button.setAttribute('aria-pressed', String(edit.modifiers.includes(Number(button.dataset.modifier)))));
+  doubleButton.setAttribute('aria-pressed', String(edit.double));
   $('#number-count').textContent = `${edit.numbers.length} of 7`;
   $('#flip-bonus').classList.toggle('earned', edit.numbers.length === 7);
   $('#flip-bonus').textContent = edit.numbers.length === 7 ? '✦ Flip 7! You earned 15 bonus points.' : 'Seven different numbers = 15 extra points.';
@@ -261,8 +312,10 @@ $('#save-round').addEventListener('click', () => {
   try {
     const round = game.rounds.length + 1;
     game = commitRound(game); save(); renderGame();
-    toast(`Round ${round} saved. ${outcome(game).type === 'won' ? 'We have a winner!' : 'Deal the next round.'}`);
-    window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    const won = outcome(game).type === 'won';
+    toast(`Round ${round} saved. ${won ? 'We have a winner!' : 'Deal the next round.'}`);
+    if (won) celebrateWin();
+    window.scrollTo({ top: 0, behavior: motionPreference.matches ? 'instant' : 'smooth' });
     $('#game-title').focus({ preventScroll: true });
   } catch (error) { toast(error.message); }
 });
@@ -297,19 +350,26 @@ document.addEventListener('click', event => {
   else if (button.hasAttribute('data-bust')) {
     const index = game.players.findIndex(p => p.id === button.dataset.bust);
     game = setDraft(game, index, { kind: 'bust' }); save(); renderGame();
-    toast(`${game.players[index].name}: bust, 0 points. Tap the score to change it.`);
+    document.querySelector(`[data-bust="${button.dataset.bust}"]`)?.focus({ preventScroll: true });
+    toast(`${game.players[index].name}: bust, 0 points. Count points to change it.`);
   } else if (button.hasAttribute('data-mode')) { scoreEdit.mode = button.dataset.mode; renderScoreEditor(); }
   else if (button.hasAttribute('data-key')) keypress(button.dataset.key);
   else if (button.hasAttribute('data-number')) {
     const number = Number(button.dataset.number);
     scoreEdit.numbers = scoreEdit.numbers.includes(number) ? scoreEdit.numbers.filter(n => n !== number) : scoreEdit.numbers.length < 7 ? [...scoreEdit.numbers, number] : scoreEdit.numbers;
-    renderScoreEditor(); $('#number-cards').querySelector(`[data-number="${number}"]`)?.focus({ preventScroll: true });
+    renderScoreEditor();
   } else if (button.hasAttribute('data-modifier')) {
     const number = Number(button.dataset.modifier);
     scoreEdit.modifiers = scoreEdit.modifiers.includes(number) ? scoreEdit.modifiers.filter(n => n !== number) : [...scoreEdit.modifiers, number];
-    renderScoreEditor(); $('#modifier-cards').querySelector(`[data-modifier="${number}"]`)?.focus({ preventScroll: true });
-  } else if (button.hasAttribute('data-double')) { scoreEdit.double = !scoreEdit.double; renderScoreEditor(); $('[data-double]').focus({ preventScroll: true }); }
+    renderScoreEditor();
+  } else if (button.hasAttribute('data-double')) { scoreEdit.double = !scoreEdit.double; renderScoreEditor(); }
 });
+// Keep card controls mounted so taps update state without rebuilding the picker.
+$('#number-cards').innerHTML = Array.from({ length: 13 }, (_, n) => `<button data-number="${n}" aria-label="Number ${n}" aria-pressed="false">${n}</button>`).join('');
+$('#modifier-cards').innerHTML = MODIFIERS.map(n => `<button data-modifier="${n}" aria-pressed="false">+${n}</button>`).join('') + '<button class="double-card" data-double aria-pressed="false">×2</button>';
+const numberButtons = [...document.querySelectorAll('[data-number]')];
+const modifierButtons = [...document.querySelectorAll('[data-modifier]')];
+const doubleButton = $('[data-double]');
 window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', () => { if (location.hash !== currentRoute) renderRoute(); });
 renderRoute();

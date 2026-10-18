@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <defs><path id="seven" d="M61 54h71v22l-38 64H70l39-65H61z"/></defs>
-  <rect width="192" height="192" rx="34" fill="#0b4c5a"/>
-  <rect x="12" y="12" width="168" height="168" rx="23" fill="none" stroke="#e8bd44" stroke-width="3"/>
-  <g transform="rotate(-8 96 96)" stroke-linejoin="round" fill="#efc447">
-    <rect x="37" y="31" width="118" height="130" rx="3" fill="#f7efd1" stroke="#20223d" stroke-width="5"/>
-    <rect x="43" y="37" width="106" height="118" rx="1" fill="none" stroke="#56838d" stroke-width="2"/>
-    <use href="#seven" stroke="#20223d" stroke-width="9"/>
-    <use href="#seven" stroke="#b33d44" stroke-width="4"/>
-    <use href="#seven" stroke="none"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="42" fill="#285a49"/><path d="M57 49h81v22l-43 73H68l44-73H57z" fill="#fff"/></svg>

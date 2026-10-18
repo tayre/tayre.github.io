@@ -1,7 +1,7 @@
 const CACHE_PREFIX = 'flip7-';
-const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const CACHE_NAME = `${CACHE_PREFIX}v3`;
 const ROOT = new URL('./', self.registration.scope);
-const ASSETS = ['index.html', 'styles.css', 'app.js', 'engine.js', 'icon.svg', 'logo.svg', 'manifest.webmanifest'].map(file => new URL(file, ROOT).href);
+const ASSETS = ['index.html', 'styles.css', 'app.js', 'engine.js', 'icon.svg', 'manifest.webmanifest'].map(file => new URL(file, ROOT).href);
 const INDEX = ASSETS[0];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS.map(url => new Request(url, { cache: 'reload' })))));
