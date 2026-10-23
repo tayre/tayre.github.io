@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <meta name="description" content="A quieter way to fly. One-hour chapters, gentle thoughts, and a little room to breathe. Works offline.">
+  <title>Still · A quiet flight companion</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./still.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#journey">Skip to your journey</a>
+  <div class="page-shell">
+    <header class="masthead">
+      <a href="./" class="brand" aria-label="Still home"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M33 10C21 4 8 14 10 27c2 13 19 18 28 7 6-8 3-17-2-21"/></svg><span>still<span class="brand-dot">.</span></span></a>
+      <span class="brand-note">A QUIET FLIGHT COMPANION</span>
+      <div class="header-actions"><button id="theme-toggle" class="icon-button" aria-label="Switch to night palette" title="Night palette"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.3A8.6 8.6 0 0 1 9.7 4a8.6 8.6 0 1 0 10.3 10.3Z"/></svg></button><button id="settings-open" class="button button-outline">Your flight <span aria-hidden="true">↗</span></button></div>
+    </header>
+
+    <main id="journey">
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">A LITTLE CLOSER, ONE HOUR AT A TIME</p><h1 id="page-title">You only need to be <em>here.</em></h1><p class="intro-copy">Let the journey unfold. This moment is enough.</p></div>
+        <div class="route-switch" role="group" aria-label="Choose your journey"><button data-route="outbound" aria-pressed="true">YYZ <span>→</span> SFO</button><button data-route="return" aria-pressed="false">SFO <span>→</span> YYZ</button></div>
+      </section>
+
+      <div class="dashboard">
+        <div class="journey-column">
+          <section class="landscape-card" aria-label="A quiet landscape and your estimated journey">
+            <div class="landscape-top"><span class="small-label" id="landscape-label">A LITTLE SPACE ABOVE IT ALL</span><span class="landscape-stamp"><span class="tiny-circle"></span> TAKE YOUR TIME</span></div>
+            <svg class="landscape" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="landscape-title">
+              <title id="landscape-title">A soft sun above layers of quiet mountains</title>
+              <defs><linearGradient id="sky" x2="0" y2="1"><stop class="sky-top"/><stop offset="1" class="sky-bottom"/></linearGradient><linearGradient id="mist" x2="0" y2="1"><stop stop-color="var(--mist)" stop-opacity="0"/><stop offset="1" stop-color="var(--mist)" stop-opacity=".8"/></linearGradient></defs>
+              <path fill="url(#sky)" d="M0 0h1000v480H0z"/>
+              <circle class="sun-halo" cx="724" cy="143" r="87"/><circle class="sun" cx="724" cy="143" r="57"/>
+              <path class="mountain far" d="M-20 306C74 309 128 256 208 260S333 294 410 248 507 205 588 226 678 302 760 286 886 232 1020 259V490H-20Z"/>
+              <path class="mountain middle" d="M-20 335C62 328 113 297 195 323S308 376 402 340 522 264 611 286 739 372 823 347 942 319 1020 351V490H-20Z"/>
+              <path class="mountain near" d="M-20 413C88 348 170 370 248 387S377 417 456 394 571 354 661 381 778 427 878 390 973 394 1020 411V490H-20Z"/>
+              <path fill="url(#mist)" d="M0 310h1000v170H0z"/>
+            </svg>
+            <svg class="route-illustration" viewBox="0 0 1000 320" preserveAspectRatio="none" aria-hidden="true">
+              <g class="flight-path"><path d="M142 231Q500 72 858 231" pathLength="100" class="path-track"/><path id="path-progress" d="M142 231Q500 72 858 231" pathLength="100" class="path-progress"/>
+                <circle cx="142" cy="231" r="4"/><circle cx="858" cy="231" r="4"/>
+
+              </g>
+            </svg>
+            <span id="plane-marker" class="plane-marker" aria-hidden="true"><svg viewBox="-22 -22 44 44"><circle r="20" class="plane-halo"/><path d="m-10 1 8-3 1-8 3-1 2 8 9 4-1 3-10-1-4 5-2-1 1-6-7 2Z" class="plane-icon"/></svg></span><div class="landscape-bottom"><div class="airport"><strong id="origin-code">YYZ</strong><span id="origin-name">Toronto</span></div><div class="route-caption"><span id="route-status">A journey to look forward to</span><small>Illustrated route · time-based progress</small></div><div class="airport airport-end"><strong id="destination-code">SFO</strong><span id="destination-name">San Francisco</span></div></div>
+          </section>
+
+          <section class="progress-card" aria-labelledby="chapters-heading">
+            <div class="section-heading"><div><p class="eyebrow" id="chapter-eyebrow">YOUR JOURNEY, IN SMALL CHAPTERS</p><h2 id="chapters-heading">Just this hour.</h2></div><div class="time-summary"><strong id="time-remaining">5h 30m</strong><span id="time-caption">planned flight time</span></div></div>
+            <div id="chapters" class="chapters" aria-label="One-hour flight chapters"></div>
+            <div class="chapter-detail"><span class="chapter-number" id="chapter-number">01</span><div><h3 id="chapter-title">Settle in</h3><p id="chapter-thought">Find a little comfort. Let your shoulders soften.</p></div><span id="chapter-time" class="chapter-time">FIRST HOUR</span></div>
+            <div class="flight-actions"><button id="start-flight" class="button button-primary">I’m flying now <span aria-hidden="true">→</span></button><button id="edit-time" class="text-button">Already in the air?</button><button id="landed" class="text-button" hidden>I’ve landed</button><span id="progress-note" class="muted">Starts your timer from this moment.</span></div>
+          </section>
+
+          <section class="arrival-card" aria-labelledby="arrival-heading">
+            <div class="arrival-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="29" cy="17" r="7"/><path d="M29 4v-3m13 16h3M39 7l3-3M14 35h21a7 7 0 0 0 0-14 10 10 0 0 0-19-1 8 8 0 0 0-2 15Z"/></svg></div>
+            <div class="arrival-content"><p class="eyebrow">ON THE OTHER SIDE</p><h2 id="arrival-heading">San Francisco awaits.</h2><p id="weather-summary">A small glimpse of the weather when you arrive.</p><p id="weather-meta" class="fine-print">Forecast near the airport · not a prediction of the ride</p></div>
+            <button id="weather-refresh" class="button button-outline">Arrival weather <span aria-hidden="true">↗</span></button>
+          </section>
+        </div>
+
+        <aside class="quiet-column" aria-label="A little peace of mind">
+          <section class="thought-card" aria-labelledby="thought-heading"><div class="card-label"><h2 id="thought-heading" class="eyebrow">ONE SMALL THOUGHT</h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V10m0 5C3 15 4 5 4 5s9 0 8 10Zm0-3c0-8 8-9 8-9s2 9-8 9Z"/></svg></div><div class="thought-content" aria-live="polite"><p id="thought-text">You don’t have to carry<br>the whole journey.<br>Just this moment.</p><p id="thought-credit">A GENTLE REMINDER</p></div><div class="thought-footer"><span id="thought-count">01 / 12</span><button id="next-thought" class="text-button">Another thought <span aria-hidden="true">→</span></button></div></section>
+
+          <section class="breath-card"><div class="breath-orbit" aria-hidden="true"><div class="breath-circle"></div></div><h2>A little room to breathe.</h2><p>Nothing to do. Nowhere else to be.</p><button id="breathe-open" class="text-button">Take a quiet minute <span aria-hidden="true">↗</span></button></section>
+
+          <button id="bumpy-open" class="bumpy-button"><span class="wave-icon" aria-hidden="true">≈</span><span>A bumpy moment?<small>Come back to something steady.</small></span><span aria-hidden="true">↗</span></button>
+        </aside>
+      </div>
+
+      <details class="flight-details"><summary><span>A little more about your journey</span><span class="details-plus" aria-hidden="true">+</span></summary><div class="details-grid"><section><h3>One hour at a time</h3><p>Tap “I’m flying now” to start your timer. If you’re already partway through the flight, enter the minutes since takeoff in Your flight.</p><p>Your progress follows your timer and planned flight length. It keeps its place when you close the page, and works offline.</p></section><section><h3>A note on the air</h3><p>Night can bring less surface-heating turbulence near the ground. Conditions at cruising altitude are different, so night alone doesn’t promise a smoother ride.</p><p>Public forecasts can’t tell us exactly when your bumps will end. The crew has the most relevant information for your flight.</p><a href="https://www.weather.gov/zme/safety_turb" target="_blank" rel="noopener noreferrer" class="source-link">About turbulence · National Weather Service ↗</a></section></div></details>
+    </main>
+
+    <footer><span class="footer-message">A little less looking ahead. A little more being here.</span><div><span id="offline-status"><span class="status-dot"></span> Preparing for offline</span><button id="about-open" class="text-button">About & sources</button></div></footer>
+    <noscript><p class="noscript">Enable JavaScript for saved progress and weather. For now: let your shoulders soften. You only need to be here.</p></noscript>
+    <p id="app-message" class="app-message" role="status"></p>
+  </div>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title"><form id="flight-form"><div class="dialog-heading"><p class="eyebrow">MAKE YOURSELF AT HOME</p><button type="button" class="close-button" data-close aria-label="Close flight settings">×</button></div><h2 id="settings-title">Your flight.</h2><p class="dialog-intro" id="settings-route">Toronto to San Francisco</p><div class="form-row"><div><label for="flight-number">Flight number</label><input id="flight-number" maxlength="12" placeholder="e.g. AC 743" autocomplete="off"></div><div><label for="flight-date">Flight date</label><input id="flight-date" type="date" required></div></div><label for="departure-time">Departure time <span class="optional">optional</span></label><input id="departure-time" type="time"><p class="field-hint" id="departure-hint">Use the local time at your departure airport.</p><div class="form-row"><div><label for="duration-hours">Planned hours</label><input id="duration-hours" type="number" min="0" max="15" required></div><div><label for="duration-minutes">Minutes</label><input id="duration-minutes" type="number" min="0" max="59" required></div></div><p class="field-hint">These are starting estimates. Use the flight time announced by your crew. You can adjust it anytime.</p><label for="elapsed-minutes">Already flying? Minutes since takeoff</label><input id="elapsed-minutes" type="number" min="0" max="1440" placeholder="Leave empty until takeoff"><p class="field-hint">Your timer keeps its place when you close this page.</p><p id="settings-error" class="form-error" role="alert"></p><div class="dialog-actions"><button type="submit" class="button button-primary">Save my flight <span aria-hidden="true">→</span></button><button type="button" id="reset-flight" class="text-button">Reset this journey</button></div></form></dialog>
+
+  <dialog id="calm-dialog" class="calm-dialog" aria-labelledby="calm-title"><button class="close-button" data-close aria-label="Close quiet moment">×</button><p class="eyebrow" id="calm-eyebrow">A MOMENT JUST FOR YOU</p><h2 id="calm-title">Let the next breath be easy.</h2><p id="calm-intro">Follow the circle, if it feels comfortable. Your own pace is fine.</p><div class="calm-switch" role="group" aria-label="Choose a quiet exercise"><button data-calm-mode="breathe" aria-pressed="true">Breathe</button><button data-calm-mode="ground" aria-pressed="false">Feel grounded</button></div>
+<div id="grounding-panel" hidden>
+  <svg class="steady-plane" viewBox="0 0 440 190" role="img" aria-labelledby="steady-title"><title id="steady-title">A steady aircraft held in a soft, open sky. A calming illustration.</title><circle cx="220" cy="95" r="85" fill="var(--soft)"/><path d="M35 115Q120 87 215 114T405 115M55 135Q140 107 235 134T385 135M85 155Q160 131 245 154T355 155" fill="none" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/><path d="m111 89 59 2 34-35 16 1-13 34 76 2 16-9 8 2-8 15-20 6-84-1-8 21-10-1 1-22-51-3-16-5Z" fill="var(--surface)" stroke="var(--olive)" stroke-width="1.7" stroke-linejoin="round"/><path d="m119 89-13-25 11 1 24 25m124 4 10 1m-26-1h3m-15 0h3m-15 0h3" fill="none" stroke="var(--olive)" stroke-width="1.7" stroke-linecap="round"/></svg>
+  <p class="grounding-mantra">The crew has the flying.<br>You have this one small moment.</p>
+  <div class="grounding-steps" role="group" aria-label="Grounding anchors"><button data-anchor="0" aria-pressed="true">Feel the seat</button><button data-anchor="1" aria-pressed="false">Rest your feet</button><button data-anchor="2" aria-pressed="false">Soften your hands</button></div>
+  <p id="grounding-prompt" aria-live="polite">Notice where the seat meets your back. Let it take a little more of your weight.</p><p class="fine-print">A calming illustration, not live flight information.</p>
+</div><div id="breathing-panel"><div class="guided-breath" id="guided-breath"><div class="guided-circle"></div><span id="breath-label">Breathe in</span></div><p class="calm-anchor" id="calm-anchor">Soften your shoulders. Unclench your jaw.</p><p class="fine-print" id="breath-progress">One quiet minute</p><button id="breath-toggle" class="button button-outline">Pause breathing guide</button></div><div class="bumpy-notes" id="bumpy-notes" hidden><p>Feel the seat beneath you. Keep your seat belt comfortably fastened and follow your crew’s guidance.</p><p>You can feel unsettled and still take this one moment at a time.</p></div></dialog>
+
+  <nav class="quiet-dock" aria-label="Quick calming exercises"><button id="dock-breathe" aria-label="Open breathing guide"><span aria-hidden="true">◯</span> Breathe</button><button id="dock-ground" aria-label="Open grounding exercise"><span aria-hidden="true">≈</span> Feel grounded</button></nav>
+
+  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><p class="eyebrow">MADE FOR THE IN-BETWEEN</p><button class="close-button" data-close aria-label="Close about">×</button></div><h2 id="about-title">A quieter way to fly.</h2><p>Still breaks your flight into small, manageable chapters. Progress uses your takeoff time and planned duration. It doesn’t confirm takeoff, landing, or your actual route.</p><p>Once “Ready for offline” appears, the page and quiet moments are saved on this device. Open it before boarding. Weather uses the internet only when you request it. Your timer and calming exercises work offline.</p><h3>A little honesty about data</h3><p>Arrival weather is a model forecast near the destination airport, for the hour closest to your estimated arrival. It cannot predict turbulence or landing conditions for a particular aircraft.</p><h3>Sources & acknowledgments</h3><ul class="sources"><li><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather by Open-Meteo</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li><li><a href="https://www.faa.gov/travelers/fly_safe/turbulence" target="_blank" rel="noopener noreferrer">FAA · Turbulence guidance</a></li><li><a href="https://www.weather.gov/zme/safety_turb" target="_blank" rel="noopener noreferrer">National Weather Service · Causes of turbulence</a></li><li><a href="https://classics.mit.edu/Antoninus/meditations.7.seven.html" target="_blank" rel="noopener noreferrer">Marcus Aurelius · Meditations, Book VII</a>, translated by George Long. Other thoughts are original or labeled as inspired by Stoic ideas.</li></ul><p class="fine-print">No account. No analytics. Your flight settings stay in this browser. Weather requests go directly to the weather service.</p></dialog>
+</body>
+</html>
