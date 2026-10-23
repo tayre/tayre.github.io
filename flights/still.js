@@ -123,6 +123,35 @@ let weatherCache = {};
 try { weatherCache = JSON.parse(localStorage.getItem('still-weather-v1')) || {}; } catch {}
 let theme = stored?.theme === 'night' ? 'night' : 'day';
 let storageFailed = false;
+let liveBusy = false;
+const liveResults = new Map();
+const liveKey = () => `${routeKey}:${flights[routeKey].number}:${flights[routeKey].date}`;
+
+function renderLive() {
+  const result = liveResults.get(liveKey());
+  $('live-refresh').disabled = liveBusy;
+  $('live-refresh').textContent = liveBusy ? 'Checking…' : 'Check flight status';
+  $('live-summary').textContent = result?.flight ? `${result.flight.number || flights[routeKey].number} · ${result.flight.status}` : result?.message || 'Check your flight’s latest reported status when connected.';
+  const f = result?.flight, route = ROUTES[routeKey];
+  $('live-details').textContent = f ? [f.departure && `${f.departureKind}: ${localTime(Date.parse(f.departure), route.originZone, true)}`, f.arrival && `${f.arrivalKind}: ${localTime(Date.parse(f.arrival), route.zone, true)}`, f.gate && `Arrival gate ${f.gate}`].filter(Boolean).join(' · ') : '';
+  $('live-meta').textContent = result?.checkedAt ? `${result.source} · checked ${localTime(Date.parse(result.checkedAt), route.originZone, true)} · updates may be delayed` : 'Updates on request · your timer runs independently';
+}
+
+$('live-refresh').addEventListener('click', async () => {
+  if (liveBusy) return;
+  const key = liveKey(), previous = liveResults.get(key);
+  if (previous?.checkedAt && Date.now() - Date.parse(previous.checkedAt) < 5 * MINUTE) { toast('This update was checked less than five minutes ago.'); return; }
+  const params = new URLSearchParams({ route: routeKey, number: flights[routeKey].number, date: flights[routeKey].date });
+  liveBusy = true; renderLive();
+  try {
+    const response = await fetch(new URL(`./api/status?${params}`, location.href), { cache: 'no-store', signal: AbortSignal.timeout(12000) });
+    if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Unavailable');
+    const result = await response.json();
+    if (!result || (!result.message && !result.flight)) throw new Error('Invalid response');
+    liveResults.set(key, result);
+  } catch { liveResults.set(key, { message: 'Live status is unavailable here. Check your connection or try the Cloudflare site. Your timer still works.' }); }
+  finally { liveBusy = false; renderLive(); }
+});
 
 function toast(message) {
   $('app-message').textContent = message;
@@ -206,6 +235,7 @@ function render() {
   $('path-progress').style.strokeDasharray = `${fraction * 100} 100`;
   renderChapters(p);
   renderWeather();
+  renderLive();
 }
 
 function openSettings() {

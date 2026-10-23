@@ -1,3 +1,6 @@
 # Finder metadata
 .DS_Store
 .ds_store
+dist/
+.dev.vars
+.wrangler/
