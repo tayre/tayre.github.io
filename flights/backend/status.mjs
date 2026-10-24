@@ -33,7 +33,7 @@ export async function onRequest({ request, env, waitUntil }, deps = {}) {
   const start = zonedTimestamp(date, '00:00', route.originZone);
   if (start > now + 48 * 3600000 || start < now - 7 * 86400000) return json({ message: 'Check again within two days of departure. Live status is available around your travel date.' });
   const cache = deps.cache ?? globalThis.caches?.default;
-  const cacheKey = new Request(`${url.origin}/flights/api/status?route=${key}&date=${date}&provider=${source}`);
+  const cacheKey = new Request(`${url.origin}/flights/api/status?v=2&route=${key}&date=${date}&provider=${source}`);
   const cached = await cache?.match(cacheKey);
   if (cached) return json(await cached.json());
   const ident = env[key === 'return' ? 'RETURN_FLIGHT_IDENT' : 'OUTBOUND_FLIGHT_IDENT'] || number;
@@ -51,10 +51,15 @@ export async function onRequest({ request, env, waitUntil }, deps = {}) {
     if (freeProvider) {
       if (data.error || !Array.isArray(data.data)) throw new Error('Provider unavailable');
       data.flights = data.data.filter(f => f.flight_date === date).map(f => ({
-        ident_iata: f.flight?.iata, origin: { code_iata: f.departure?.iata }, destination: { code_iata: f.arrival?.iata },
+        ident_iata: f.flight?.iata, origin: { code_iata: f.departure?.iata, name: f.departure?.airport }, destination: { code_iata: f.arrival?.iata, name: f.arrival?.airport },
         scheduled_out: f.departure?.scheduled, estimated_out: f.departure?.estimated, actual_out: f.departure?.actual,
         scheduled_in: f.arrival?.scheduled, estimated_in: f.arrival?.estimated, actual_in: f.arrival?.actual,
-        status: f.flight_status, cancelled: f.flight_status === 'cancelled', diverted: f.flight_status === 'diverted', gate_destination: f.arrival?.gate
+        status: f.flight_status, cancelled: f.flight_status === 'cancelled', diverted: f.flight_status === 'diverted',
+        gate_origin: f.departure?.gate, terminal_origin: f.departure?.terminal,
+        gate_destination: f.arrival?.gate, terminal_destination: f.arrival?.terminal, baggage_claim: f.arrival?.baggage,
+        airline_name: f.airline?.name, operating_ident: f.flight?.codeshared?.flight_iata,
+        operating_airline: f.flight?.codeshared?.airline_name,
+        aircraft_type: f.aircraft?.icao || f.aircraft?.iata, registration: f.aircraft?.registration
       }));
     }
     if (!Array.isArray(data.flights)) throw new Error('Invalid provider response');
@@ -66,7 +71,13 @@ export async function onRequest({ request, env, waitUntil }, deps = {}) {
         departureKind: f.actual_out ? 'Departed gate' : f.estimated_out ? 'Estimated departure' : 'Scheduled departure',
         arrival: stamp(f.actual_in) || stamp(f.estimated_in) || stamp(f.scheduled_in),
         arrivalKind: f.actual_in ? 'Arrived at gate' : f.estimated_in ? 'Estimated arrival' : 'Scheduled arrival',
-        gate: label(f.gate_destination) }
+        gate: label(f.gate_destination),
+        airline: label(f.airline_name || f.operator), operatingNumber: label(f.operating_ident), operatingAirline: label(f.operating_airline),
+        aircraft: label(f.aircraft_type), registration: label(f.registration),
+        departureInfo: { code: route.from, name: label(f.origin?.name), terminal: label(f.terminal_origin), gate: label(f.gate_origin),
+          scheduled: stamp(f.scheduled_out), estimated: stamp(f.estimated_out), actual: stamp(f.actual_out) },
+        arrivalInfo: { code: route.to, name: label(f.destination?.name), terminal: label(f.terminal_destination), gate: label(f.gate_destination), baggage: label(f.baggage_claim),
+          scheduled: stamp(f.scheduled_in), estimated: stamp(f.estimated_in), actual: stamp(f.actual_in) } }
     } : { message: matches.length > 1 ? 'Multiple matching flights were returned. Check with your airline.' : 'No matching flight yet. Try closer to departure; codeshares may need the operating flight number.' }) };
     if (cache) {
       const write = cache.put(cacheKey, Response.json(body, { headers: { 'Cache-Control': 'public, max-age=300' } }));

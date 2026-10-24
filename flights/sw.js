@@ -1,4 +1,4 @@
-const CACHE = 'still-shell-33911e9baf9b';
+const CACHE = 'still-shell-85916d4dc015';
 const FILES = ['./', './index.html', './style.css', './still.js', './icon.svg', './manifest.webmanifest'];
 const root = new URL('./', self.location).href;
 const allowed = new Set(FILES.map(file => new URL(file, root).href));

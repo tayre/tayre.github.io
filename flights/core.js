@@ -1,3 +1,5 @@
+import { AIRPORTS } from './airports.js';
+
 export const MINUTE = 60_000;
 export const ROUTES = {
   outbound: { from: 'YYZ', to: 'SFO', origin: 'Toronto', destination: 'San Francisco', lat: 37.62, lon: -122.38, zone: 'America/Los_Angeles', originZone: 'America/Toronto', duration: 330, number: 'AC 743', date: '2026-10-25', operator: 'Air Canada' },
@@ -66,6 +68,47 @@ export function weatherAtArrival(data, arrival) {
   const temperature = hourly.temperature_2m?.[best], wind = hourly.wind_speed_10m?.[best], code = hourly.weather_code?.[best];
   if (![temperature, wind, code].every(Number.isFinite) || wind < 0) return null;
   return { time: hourly.time[best] * 1000, temperature, wind, code };
+}
+
+export function localDate(time, zone) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(time).map(p => [p.type, p.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+export function weatherForDate(data, date, zone) {
+  const daily = data?.daily;
+  const index = daily?.time?.findIndex(time => Number.isFinite(time) && localDate(time * 1000, zone) === date) ?? -1;
+  if (index < 0) return null;
+  const low = daily.temperature_2m_min?.[index], high = daily.temperature_2m_max?.[index], code = daily.weather_code?.[index];
+  const wind = daily.wind_speed_10m_max?.[index], rain = daily.precipitation_probability_max?.[index];
+  if (![low, high, code, wind, rain].every(Number.isFinite)) return null;
+  return { low, high, code, wind, rain };
+}
+
+const radians = degrees => degrees * Math.PI / 180;
+const degrees = angle => angle * 180 / Math.PI;
+export function distanceKm(a, b) {
+  const dLat = radians(b.lat - a.lat), dLon = radians(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(radians(a.lat)) * Math.cos(radians(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(Math.min(1, h)), Math.sqrt(Math.max(0, 1 - h)));
+}
+
+export function routePosition(route, fraction) {
+  const a = AIRPORTS.find(airport => airport.code === route.from), b = AIRPORTS.find(airport => airport.code === route.to);
+  if (!a || !b) return null;
+  const f = Math.min(1, Math.max(0, fraction));
+  const angle = distanceKm(a, b) / 6371;
+  const vector = point => [Math.cos(radians(point.lat)) * Math.cos(radians(point.lon)), Math.cos(radians(point.lat)) * Math.sin(radians(point.lon)), Math.sin(radians(point.lat))];
+  const av = vector(a), bv = vector(b);
+  const blend = angle < 1e-10 ? av : av.map((v, i) => (Math.sin((1 - f) * angle) * v + Math.sin(f * angle) * bv[i]) / Math.sin(angle));
+  return { lat: degrees(Math.atan2(blend[2], Math.hypot(blend[0], blend[1]))), lon: degrees(Math.atan2(blend[1], blend[0])) };
+}
+
+export function nearbyAirports(route, fraction) {
+  const position = routePosition(route, fraction);
+  if (!position) return null;
+  const nearest = AIRPORTS.map(airport => ({ ...airport, distance: distanceKm(position, airport) })).sort((a, b) => a.distance - b.distance).slice(0, 3);
+  return { position, nearest };
 }
 
 export function weatherDescription(code) {

@@ -60,13 +60,23 @@ test('free Aviationstack uses real-time endpoint and normalizes matching flights
     assert.equal(url.searchParams.get('flight_iata'), 'AC743');
     assert.equal(url.searchParams.has('flight_date'), false);
     assert.equal(options.headers['x-apikey'], undefined);
-    const f = { flight_date: '2026-10-25', flight: { iata: 'AC743' }, flight_status: 'active', departure: { iata: 'YYZ', scheduled: fixture.scheduled_out }, arrival: { iata: 'SFO', estimated: fixture.estimated_in, gate: 'G2' } };
+    const f = { flight_date: '2026-10-25', flight: { iata: 'AC743', codeshared: { flight_iata: 'UA999', airline_name: 'United' } }, airline: { name: 'Air Canada' }, aircraft: { icao: 'A320', registration: 'C-TEST' }, flight_status: 'active', departure: { iata: 'YYZ', airport: 'Toronto Pearson', scheduled: fixture.scheduled_out, terminal: '1', gate: 'F60' }, arrival: { iata: 'SFO', airport: 'San Francisco International', estimated: fixture.estimated_in, gate: 'G2', terminal: 'I', baggage: '4' } };
     return Response.json({ data: [f, { ...f, flight_date: '2026-10-24' }] });
   } });
   const body = await result.json();
   assert.equal(body.source, 'Aviationstack');
   assert.equal(body.flight.status, 'active');
   assert.equal(body.flight.gate, 'G2');
+  assert.equal(body.flight.departureInfo.terminal, '1');
+  assert.equal(body.flight.departureInfo.gate, 'F60');
+  assert.equal(body.flight.departureInfo.scheduled, fixture.scheduled_out);
+  assert.equal(body.flight.arrivalInfo.name, 'San Francisco International');
+  assert.equal(body.flight.arrivalInfo.terminal, 'I');
+  assert.equal(body.flight.arrivalInfo.baggage, '4');
+  assert.equal(body.flight.airline, 'Air Canada');
+  assert.equal(body.flight.operatingNumber, 'UA999');
+  assert.equal(body.flight.aircraft, 'A320');
+  assert.equal(body.flight.registration, 'C-TEST');
   assert.doesNotMatch(JSON.stringify(body), /free-secret/);
 });
 test('free plan quota errors do not become flight results', async () => {

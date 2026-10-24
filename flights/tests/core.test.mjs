@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ROUTES, newFlight, cleanFlight, progress, arrivalTime, zonedTimestamp, weatherAtArrival, MINUTE } from '../core.js';
+import { ROUTES, newFlight, cleanFlight, progress, arrivalTime, zonedTimestamp, weatherAtArrival, weatherForDate, localDate, routePosition, nearbyAirports, distanceKm, MINUTE } from '../core.js';
 
 const now = Date.UTC(2026, 9, 25, 18);
 test('outbound and United codeshare return have separate identities', () => {
@@ -46,4 +46,32 @@ test('forecast selects only a nearby hour and rejects missing data', () => {
   data.hourly.temperature_2m[1] = null;
   assert.equal(weatherAtArrival(data, now + 60 * MINUTE), null);
   assert.equal(weatherAtArrival({}, now), null);
+});
+
+test('daily forecast matches destination date even across UTC midnight', () => {
+  const time = Date.parse('2026-10-26T07:00:00Z') / 1000;
+  const data = { daily: { time: [time], temperature_2m_min: [11], temperature_2m_max: [19], weather_code: [2], wind_speed_10m_max: [22], precipitation_probability_max: [15] } };
+  assert.equal(localDate(time * 1000 - 60000, 'America/Los_Angeles'), '2026-10-25');
+  assert.deepEqual(weatherForDate(data, '2026-10-26', 'America/Los_Angeles'), { low: 11, high: 19, code: 2, wind: 22, rain: 15 });
+  assert.equal(weatherForDate(data, '2026-10-25', 'America/Los_Angeles'), null);
+  data.daily.temperature_2m_min[0] = null;
+  assert.equal(weatherForDate(data, '2026-10-26', 'America/Los_Angeles'), null);
+  assert.equal(weatherForDate({}, '2026-10-26', 'America/Los_Angeles'), null);
+});
+
+test('airport estimates include exact endpoints and reverse the same great-circle path', () => {
+  assert.equal(nearbyAirports(ROUTES.outbound, 0).nearest[0].code, 'YYZ');
+  assert.equal(nearbyAirports(ROUTES.outbound, 1).nearest[0].code, 'SFO');
+  assert.equal(nearbyAirports(ROUTES.return, 0).nearest[0].code, 'SFO');
+  assert.equal(nearbyAirports(ROUTES.return, 1).nearest[0].code, 'YYZ');
+  for (const f of [0, .1, .5, .8, 1]) {
+    const outbound = routePosition(ROUTES.outbound, f), inbound = routePosition(ROUTES.return, 1 - f);
+    assert.ok(distanceKm(outbound, inbound) < .001);
+    const result = nearbyAirports(ROUTES.outbound, f);
+    assert.equal(result.nearest.length, 3);
+    assert.ok(result.nearest.every(airport => Number.isFinite(airport.distance)));
+    assert.ok(result.nearest[0].distance <= result.nearest[1].distance);
+  }
+  assert.deepEqual(routePosition(ROUTES.outbound, 2), routePosition(ROUTES.outbound, 1));
+  assert.equal(routePosition({ from: 'FAKE', to: 'SFO' }, .5), null);
 });

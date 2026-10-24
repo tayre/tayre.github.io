@@ -1,4 +1,4 @@
-import { ROUTES, MINUTE, cleanFlight, progress, durationText, arrivalTime, zonedTimestamp, weatherAtArrival, weatherDescription, CHAPTERS, THOUGHTS } from './core.js';
+import { ROUTES, MINUTE, cleanFlight, progress, durationText, arrivalTime, zonedTimestamp, weatherAtArrival, weatherForDate, localDate, nearbyAirports, weatherDescription, CHAPTERS, THOUGHTS } from './core.js';
 
 const $ = id => document.getElementById(id);
 const STORAGE = 'still-flight-v1';
@@ -6,40 +6,77 @@ let stored;
 try { stored = JSON.parse(localStorage.getItem(STORAGE)); } catch {}
 let routeKey = stored?.route === 'return' ? 'return' : 'outbound';
 const flights = Object.fromEntries(Object.entries(ROUTES).map(([key, route]) => [key, cleanFlight(stored?.flights?.[key], route)]));
-let thoughtIndex = 0, selectedChapter = null, toastTimer, initialElapsed, weatherBusy = false;
+let thoughtIndex = 0, selectedChapter = null, toastTimer, initialElapsed, airportPreview = null;
 let weatherCache = {};
-try { weatherCache = JSON.parse(localStorage.getItem('still-weather-v1')) || {}; } catch {}
+try { weatherCache = JSON.parse(localStorage.getItem('still-weather-v2')) || {}; } catch {}
+if (typeof weatherCache !== 'object' || Array.isArray(weatherCache)) weatherCache = {};
 let theme = stored?.theme === 'night' ? 'night' : 'day';
 let storageFailed = false;
-let liveBusy = false;
-const liveResults = new Map();
+const liveBusy = new Set(), weatherBusy = new Set(), automaticLookups = new Set(), weatherErrors = new Map();
+let savedLive;
+try { savedLive = JSON.parse(localStorage.getItem('still-live-v2')); } catch {}
+const liveResults = new Map(savedLive && typeof savedLive === 'object' && !Array.isArray(savedLive) ? Object.entries(savedLive) : []);
 const liveKey = () => `${routeKey}:${flights[routeKey].number}:${flights[routeKey].date}`;
+
+function detailRow(container, title, value) {
+  if (!value) return;
+  const row = document.createElement('div'), term = document.createElement('dt'), description = document.createElement('dd');
+  term.textContent = title; description.textContent = value;
+  row.append(term, description); container.append(row);
+}
 
 function renderLive() {
   const result = liveResults.get(liveKey());
-  $('live-refresh').disabled = liveBusy;
-  $('live-refresh').textContent = liveBusy ? 'Checking…' : 'Check flight status';
-  $('live-summary').textContent = result?.flight ? `${result.flight.number || flights[routeKey].number} · ${result.flight.status}` : result?.message || 'Check your flight’s latest reported status when connected.';
+  const busy = liveBusy.has(liveKey());
+  $('live-refresh').disabled = busy;
+  $('live-refresh').textContent = busy ? 'Looking up flight…' : 'Refresh flight details';
+  $('live-heading').textContent = `${flights[routeKey].number} · ${ROUTES[routeKey].from} → ${ROUTES[routeKey].to}`;
+  $('live-summary').textContent = result?.flight ? result.flight.status : result?.message || (busy ? 'Checking the latest flight details…' : 'Flight details will appear when connected.');
   const f = result?.flight, route = ROUTES[routeKey];
-  $('live-details').textContent = f ? [f.departure && `${f.departureKind}: ${localTime(Date.parse(f.departure), route.originZone, true)}`, f.arrival && `${f.arrivalKind}: ${localTime(Date.parse(f.arrival), route.zone, true)}`, f.gate && `Arrival gate ${f.gate}`].filter(Boolean).join(' · ') : '';
-  $('live-meta').textContent = result?.checkedAt ? `${result.source} · checked ${localTime(Date.parse(result.checkedAt), route.originZone, true)} · updates may be delayed` : 'Updates on request · your timer runs independently';
+  const details = $('live-details'); details.replaceChildren();
+  if (f) {
+    detailRow(details, 'Airline', [f.airline, f.operatingAirline && `operated by ${f.operatingAirline}`, f.operatingNumber].filter(Boolean).join(' · '));
+    for (const [label, info, zone] of [['Departure', f.departureInfo, route.originZone], ['Arrival', f.arrivalInfo, route.zone]]) {
+      if (!info) continue;
+      detailRow(details, `${label} airport`, info.name || info.code);
+      for (const [kind, time] of [['Scheduled', info.scheduled], ['Estimated', info.estimated], ['Actual', info.actual]]) {
+        if (time) detailRow(details, `${kind} ${label.toLowerCase()}`, localTime(Date.parse(time), zone, true));
+      }
+      detailRow(details, `${label} terminal / gate`, [info.terminal && `Terminal ${info.terminal}`, info.gate && `Gate ${info.gate}`].filter(Boolean).join(' · '));
+    }
+    detailRow(details, 'Baggage claim', f.arrivalInfo?.baggage);
+    detailRow(details, 'Aircraft', [f.aircraft, f.registration].filter(Boolean).join(' · '));
+    if (!f.departureInfo) detailRow(details, f.departureKind, f.departure && localTime(Date.parse(f.departure), route.originZone, true));
+    if (!f.arrivalInfo) detailRow(details, f.arrivalKind, f.arrival && localTime(Date.parse(f.arrival), route.zone, true));
+  }
+  const checked = Date.parse(result?.checkedAt), stale = Number.isFinite(checked) && Date.now() - checked >= 5 * MINUTE;
+  $('live-meta').textContent = Number.isFinite(checked) ? `${stale || !navigator.onLine ? 'Saved update' : result.source} · checked ${localTime(checked, route.originZone, true)} · ${result?.flight && result.message ? result.message : 'updates may be delayed'}` : 'Connect to look up status, times, gates, and aircraft when available.';
 }
 
-$('live-refresh').addEventListener('click', async () => {
-  if (liveBusy) return;
+async function lookupFlight(manual = false) {
+  if (liveBusy.has(liveKey())) return;
   const key = liveKey(), previous = liveResults.get(key);
-  if (previous?.checkedAt && Date.now() - Date.parse(previous.checkedAt) < 5 * MINUTE) { toast('This update was checked less than five minutes ago.'); return; }
+  if (previous?.checkedAt && Date.now() - Date.parse(previous.checkedAt) < 5 * MINUTE) { if (manual) toast('This update was checked less than five minutes ago.'); return; }
+  if (!navigator.onLine) { if (manual) toast('You’re offline. Showing the last saved flight update.'); return; }
   const params = new URLSearchParams({ route: routeKey, number: flights[routeKey].number, date: flights[routeKey].date });
-  liveBusy = true; renderLive();
+  liveBusy.add(key); renderLive();
   try {
     const response = await fetch(new URL(`./api/status?${params}`, location.href), { cache: 'no-store', signal: AbortSignal.timeout(12000) });
     if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Unavailable');
     const result = await response.json();
     if (!result || (!result.message && !result.flight)) throw new Error('Invalid response');
-    liveResults.set(key, result);
-  } catch { liveResults.set(key, { message: 'Live status is unavailable here. Check your connection or try the Cloudflare site. Your timer still works.' }); }
-  finally { liveBusy = false; renderLive(); }
-});
+    liveResults.set(key, response.ok ? result : { ...previous, message: result.message });
+    try { localStorage.setItem('still-live-v2', JSON.stringify(Object.fromEntries(liveResults))); } catch {}
+  } catch { liveResults.set(key, { ...previous, message: 'Could not refresh flight details. Try again when connected.' }); }
+  finally { liveBusy.delete(key); renderLive(); renderWeather(); if (key === liveKey()) loadWeather(); }
+}
+$('live-refresh').addEventListener('click', () => lookupFlight(true));
+
+function loadJourneyUpdates() {
+  const key = liveKey();
+  if (!automaticLookups.has(key)) { automaticLookups.add(key); lookupFlight(); }
+  loadWeather();
+}
 
 function toast(message) {
   $('app-message').textContent = message;
@@ -106,7 +143,6 @@ function render() {
   $('destination-code').textContent = route.to;
   $('destination-name').textContent = route.destination;
   $('landscape-label').textContent = [flight.number, dateLabel(flight.date), route.operator === 'United Airlines' ? 'OPERATED BY UNITED' : 'AIR CANADA'].filter(Boolean).join(' · ');
-  $('arrival-heading').textContent = `${route.destination} awaits.`;
   $('time-remaining').textContent = p.landed ? 'You’re here.' : p.overtime ? 'Take your time.' : durationText(p.started ? p.remaining : flight.duration);
   $('time-caption').textContent = p.landed ? 'journey complete' : p.overtime ? 'planned time has passed' : p.started ? 'estimated time left' : 'planned flight time';
   $('chapter-eyebrow').textContent = p.started && !p.landed ? `YOUR JOURNEY · ${durationText(Math.floor(p.elapsed))} BEHIND YOU` : 'YOUR JOURNEY, IN SMALL CHAPTERS';
@@ -127,6 +163,7 @@ function render() {
   renderChapters(p);
   renderWeather();
   renderLive();
+  renderAirports();
 }
 
 function openSettings() {
@@ -159,6 +196,7 @@ $('flight-form').addEventListener('submit', event => {
     landedAt: changedElapsed ? null : previous.landedAt };
   selectedChapter = null;
   save(); render(); $('settings-dialog').close();
+  loadJourneyUpdates();
   if (!storageFailed) toast('Your flight is saved. One small chapter at a time.');
 });
 
@@ -169,14 +207,14 @@ $('reset-flight').addEventListener('click', () => {
     return;
   }
   flights[routeKey] = { ...flights[routeKey], startedAt: null, landedAt: null };
-  selectedChapter = null; save(); render(); $('settings-dialog').close(); toast('A fresh start. Your flight details are still here.');
+  selectedChapter = null; airportPreview = null; save(); render(); loadWeather(); $('settings-dialog').close(); toast('A fresh start. Your flight details are still here.');
 });
 $('settings-open').addEventListener('click', openSettings);
 $('edit-time').addEventListener('click', openSettings);
-$('start-flight').addEventListener('click', () => { if (progress(flights[routeKey]).started) return; flights[routeKey].startedAt = Date.now(); flights[routeKey].landedAt = null; selectedChapter = null; save(); render(); if (!storageFailed) toast('Your timer has started. Just this hour.'); });
+$('start-flight').addEventListener('click', () => { if (progress(flights[routeKey]).started) return; flights[routeKey].startedAt = Date.now(); flights[routeKey].landedAt = null; selectedChapter = null; airportPreview = null; save(); render(); loadWeather(); if (!storageFailed) toast('Your timer has started. Just this hour.'); });
 $('landed').addEventListener('click', () => { flights[routeKey].landedAt = Date.now(); save(); render(); toast('Welcome to the other side.'); });
 $('theme-toggle').addEventListener('click', () => { theme = theme === 'day' ? 'night' : 'day'; setTheme(); save(); });
-document.querySelectorAll('[data-route]').forEach(button => button.addEventListener('click', () => { routeKey = button.dataset.route; selectedChapter = null; save(); render(); }));
+document.querySelectorAll('[data-route]').forEach(button => button.addEventListener('click', () => { routeKey = button.dataset.route; selectedChapter = null; airportPreview = null; save(); render(); loadJourneyUpdates(); }));
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
 document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } }));
 $('about-open').addEventListener('click', () => $('about-dialog').showModal());
@@ -198,49 +236,92 @@ async function fetchJSON(url) {
   } finally { clearTimeout(timeout); }
 }
 
-function renderWeather() {
+function weatherContext() {
   const flight = flights[routeKey], route = ROUTES[routeKey], p = progress(flight);
-  $('weather-refresh').disabled = weatherBusy;
-  $('weather-refresh').textContent = weatherBusy ? 'A moment…' : weatherCache[routeKey] ? 'Refresh weather ↗' : 'Arrival weather ↗';
-  const cache = weatherCache[routeKey];
-  const target = arrivalTime(flight, Date.now(), route);
-  const result = weatherAtArrival(cache?.data, target);
-  if (!p.started && !flight.departureTime) {
-    $('weather-summary').textContent = 'Add your departure time for a glimpse of arrival weather.';
-    $('weather-meta').textContent = 'Or check back after takeoff · forecast near the airport';
-    return;
+  const reportedArrival = Date.parse(liveResults.get(liveKey())?.flight?.arrival);
+  let arrival = null;
+  if (!p.overtime && !p.landed) {
+    if (p.started || flight.departureTime) arrival = arrivalTime(flight, Date.now(), route);
+    else if (Number.isFinite(reportedArrival)) arrival = reportedArrival;
   }
-  if (!result || p.overtime || p.landed) {
-    $('weather-summary').textContent = p.landed ? 'A new place. A fresh moment.' : p.overtime ? 'Adjust your flight time for a new arrival forecast.' : cache ? 'No saved forecast for this arrival time. Refresh when you’re connected.' : 'A small glimpse of the weather when you arrive.';
-    $('weather-meta').textContent = 'Forecast near the airport · not a prediction of the ride';
-    return;
-  }
-  const age = Math.max(0, Math.floor((Date.now() - cache.fetchedAt) / MINUTE));
-  const stale = age >= 60;
-  $('weather-summary').textContent = `${Math.round(result.temperature)}°C · ${weatherDescription(result.code)} · Surface wind ${Math.round(result.wind)} km/h`;
-  $('weather-meta').textContent = `${stale ? 'Older saved forecast' : 'Forecast'} · ${localTime(result.time, route.zone, true)} · retrieved ${age < 1 ? 'just now' : durationText(age) + ' ago'} · Open-Meteo`;
+  const date = p.landed ? localDate(flight.landedAt, route.zone) : arrival === null ? flight.date : localDate(arrival, route.zone);
+  return { route, arrival, date, key: `${routeKey}:${date}` };
 }
 
-$('weather-refresh').addEventListener('click', async () => {
-  if (weatherBusy) return;
-  const key = routeKey, flight = flights[key], route = ROUTES[key], p = progress(flight);
-  if (!p.started && !flight.departureTime) { openSettings(); $('departure-time').focus(); toast('Add your local departure time, or check weather after takeoff.'); return; }
-  if (p.overtime) { toast('Adjust your planned flight time to check weather for your new arrival.'); return; }
-  if (p.landed) { toast('This journey is complete. Switch flights or reset it to plan another arrival.'); return; }
-  const arrival = arrivalTime(flight, Date.now(), route);
-  if (arrival < Date.now() - 30 * MINUTE || arrival > Date.now() + 15 * 24 * 60 * MINUTE) { toast('Arrival forecasts are available for the next 15 days. Check your date and departure time.'); return; }
-  if (weatherCache[key]?.fetchedAt > Date.now() - 5 * MINUTE && weatherAtArrival(weatherCache[key].data, arrival)) { toast('Your saved forecast was retrieved less than five minutes ago.'); return; }
-  weatherBusy = true; renderWeather();
-  const params = new URLSearchParams({ latitude: route.lat, longitude: route.lon, hourly: 'temperature_2m,weather_code,wind_speed_10m', start_date: new Date(arrival).toISOString().slice(0, 10), end_date: new Date(arrival + 60 * MINUTE).toISOString().slice(0, 10), timeformat: 'unixtime', timezone: 'GMT', wind_speed_unit: 'kmh' });
+function renderWeather() {
+  const { route, arrival, date, key } = weatherContext();
+  const cache = weatherCache[key], busy = weatherBusy.has(key), error = weatherErrors.get(key);
+  const hourly = arrival === null ? null : weatherAtArrival(cache?.data, arrival);
+  const daily = weatherForDate(cache?.data, date, route.zone);
+  $('arrival-heading').textContent = `${route.destination} weather`;
+  $('weather-refresh').disabled = busy;
+  $('weather-refresh').textContent = busy ? 'Checking weather…' : 'Refresh weather';
+  $('weather-value').textContent = hourly ? `${Math.round(hourly.temperature)}°C` : daily ? `${Math.round(daily.low)}–${Math.round(daily.high)}°C` : '—';
+  $('weather-summary').textContent = hourly || daily ? weatherDescription((hourly || daily).code) : error || (busy ? 'Loading your destination forecast…' : 'Connect for your destination forecast.');
+  const details = $('weather-details'); details.replaceChildren();
+  if (hourly) detailRow(details, 'Surface wind', `${Math.round(hourly.wind)} km/h`);
+  if (daily) {
+    detailRow(details, 'Daily low / high', `${Math.round(daily.low)}° / ${Math.round(daily.high)}°C`);
+    detailRow(details, 'Chance of precipitation', `${Math.round(daily.rain)}%`);
+    detailRow(details, 'Daily maximum surface wind', `${Math.round(daily.wind)} km/h`);
+  }
+  const age = cache ? Math.max(0, Math.floor((Date.now() - cache.fetchedAt) / MINUTE)) : 0;
+  const targetLabel = hourly ? `Arrival forecast · ${localTime(hourly.time, route.zone, true)}` : `Travel-day forecast · ${dateLabel(date)}`;
+  $('weather-meta').textContent = `${targetLabel}${cache && (hourly || daily) ? ` · ${!navigator.onLine || age >= 60 ? 'saved ' : 'retrieved '}${age < 1 ? 'just now' : durationText(age) + ' ago'}` : ''}${error && (hourly || daily) ? ' · refresh unavailable' : ''} · Open-Meteo`;
+}
+
+async function loadWeather(manual = false) {
+  const { route, date, key } = weatherContext();
+  if (weatherBusy.has(key)) return;
+  if (!navigator.onLine) { if (manual) toast('You’re offline. Showing any saved forecast.'); return; }
+  const today = localDate(Date.now(), route.zone), lastDay = localDate(Date.now() + 15 * 86400000, route.zone);
+  if (date < today || date > lastDay) {
+    weatherErrors.set(key, 'Forecasts are available from today through the next 15 days.'); renderWeather(); return;
+  }
+  const cache = weatherCache[key];
+  if (cache?.fetchedAt > Date.now() - 5 * MINUTE && weatherForDate(cache.data, date, route.zone)) {
+    if (manual) toast('This forecast was retrieved less than five minutes ago.'); return;
+  }
+  weatherBusy.add(key); weatherErrors.delete(key); renderWeather();
+  const params = new URLSearchParams({ latitude: route.lat, longitude: route.lon,
+    hourly: 'temperature_2m,weather_code,wind_speed_10m',
+    daily: 'temperature_2m_min,temperature_2m_max,weather_code,precipitation_probability_max,wind_speed_10m_max',
+    start_date: date, end_date: date, timeformat: 'unixtime', timezone: route.zone, wind_speed_unit: 'kmh' });
   try {
     const data = await fetchJSON(`https://api.open-meteo.com/v1/forecast?${params}`);
-    if (!weatherAtArrival(data, arrival)) throw new Error('No matching forecast');
+    if (!weatherForDate(data, date, route.zone)) throw new Error('No matching forecast');
     weatherCache[key] = { data, fetchedAt: Date.now() };
-    try { localStorage.setItem('still-weather-v1', JSON.stringify(weatherCache)); } catch {}
-    if (routeKey === key) toast('A little glimpse of the other side. Forecast saved for offline viewing.');
-  } catch { toast('Weather couldn’t be refreshed. Your saved journey is still here.'); }
-  finally { weatherBusy = false; renderWeather(); }
-});
+    try { localStorage.setItem('still-weather-v2', JSON.stringify(weatherCache)); } catch {}
+    if (manual && weatherContext().key === key) toast('Forecast saved for offline viewing.');
+  } catch { weatherErrors.set(key, 'Weather couldn’t be refreshed. Try again when connected.'); }
+  finally { weatherBusy.delete(key); renderWeather(); }
+}
+$('weather-refresh').addEventListener('click', () => loadWeather(true));
+
+function renderAirports() {
+  const flight = flights[routeKey], route = ROUTES[routeKey], p = progress(flight);
+  const minutes = airportPreview ?? Math.min(flight.duration, p.elapsed);
+  const estimate = nearbyAirports(route, minutes / flight.duration);
+  $('airport-time').max = flight.duration;
+  $('airport-time').value = Math.round(minutes);
+  $('airport-time-label').textContent = `${durationText(minutes)} into ${durationText(flight.duration)}`;
+  $('airport-follow').hidden = airportPreview === null;
+  $('airport-mode').textContent = airportPreview !== null ? 'Previewing a point in your journey' : p.landed ? 'Journey complete · destination area' : p.overtime ? 'Planned arrival point · adjust your timer if needed' : p.started ? 'Following your flight timer' : 'At departure · start your timer or explore below';
+  const list = $('airport-list'); list.replaceChildren();
+  if (!estimate) return;
+  for (const airport of estimate.nearest) {
+    const item = document.createElement('li'), heading = document.createElement('strong'), name = document.createElement('span'), detail = document.createElement('small'), link = document.createElement('a');
+    heading.textContent = `${airport.code} · about ${Math.round(airport.distance)} km away`;
+    name.textContent = airport.name;
+    detail.textContent = [airport.city, airport.region].filter(Boolean).join(' · ');
+    link.textContent = 'Airport details ↗'; link.className = 'source-link';
+    link.href = `https://ourairports.com/airports/${encodeURIComponent(airport.ident)}/`; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    item.append(heading, name, detail, link); list.append(item);
+  }
+  $('airport-position').textContent = `Estimated position ${estimate.position.lat.toFixed(1)}°N, ${Math.abs(estimate.position.lon).toFixed(1)}°W · straight-line distance to each airport`;
+}
+$('airport-time').addEventListener('input', () => { airportPreview = Number($('airport-time').value); renderAirports(); });
+$('airport-follow').addEventListener('click', () => { airportPreview = null; renderAirports(); });
 
 let breathInterval, breathStart, breathElapsed = 0, breathPaused = false;
 function updateBreath() {
@@ -320,8 +401,8 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
   }).catch(renderOffline);
   navigator.serviceWorker.addEventListener('message', event => { if (event.data?.type === 'OFFLINE_READY') { offlineReady = true; renderOffline(); } });
 } else renderOffline();
-window.addEventListener('online', renderOffline);
-window.addEventListener('offline', renderOffline);
+window.addEventListener('online', () => { renderOffline(); lookupFlight(); loadWeather(); });
+window.addEventListener('offline', () => { renderOffline(); renderWeather(); renderLive(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { render(); if ($('calm-dialog').open && !breathPaused) startBreath(); } });
 setInterval(() => { if (!document.hidden) render(); }, 15_000);
-setTheme(); render();
+setTheme(); render(); loadJourneyUpdates();

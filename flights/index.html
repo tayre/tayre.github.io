@@ -28,6 +28,20 @@
 
       <div class="dashboard">
         <div class="journey-column">
+          <div class="travel-updates" aria-label="Flight details and destination weather">
+            <section class="update-card" aria-labelledby="live-heading">
+              <p class="eyebrow">FLIGHT STATUS & DETAILS</p><h2 id="live-heading">AC 743 · YYZ → SFO</h2>
+              <div aria-live="polite"><p id="live-summary" class="update-summary">Looking up your flight…</p><dl id="live-details" class="update-details"></dl><p id="live-meta" class="fine-print">Status, times, gates, and aircraft when available.</p></div>
+              <button id="live-refresh" class="button button-outline">Refresh flight details</button>
+              <p class="fine-print">Your flight timer runs independently. <a class="source-link" href="https://aviationstack.com/" target="_blank" rel="noopener noreferrer">Aviationstack ↗</a> / <a class="source-link" href="https://www.flightaware.com/" target="_blank" rel="noopener noreferrer">FlightAware ↗</a></p>
+            </section>
+            <section class="update-card weather-card" aria-labelledby="arrival-heading">
+              <p class="eyebrow">ON THE OTHER SIDE</p><h2 id="arrival-heading">San Francisco weather</h2>
+              <div aria-live="polite"><p id="weather-value" class="weather-value">—</p><p id="weather-summary" class="update-summary">Loading your destination forecast…</p><dl id="weather-details" class="update-details"></dl><p id="weather-meta" class="fine-print">Forecast near the airport · Open-Meteo</p></div>
+              <button id="weather-refresh" class="button button-outline">Refresh weather</button>
+              <p class="fine-print">Travel-day overview, or arrival-hour weather when an arrival time is available.</p>
+            </section>
+          </div>
           <section class="landscape-card" aria-label="A quiet landscape and your estimated journey">
             <div class="landscape-top"><span class="small-label" id="landscape-label">A LITTLE SPACE ABOVE IT ALL</span><span class="landscape-stamp"><span class="tiny-circle"></span> TAKE YOUR TIME</span></div>
             <svg class="landscape" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="landscape-title">
@@ -68,15 +82,13 @@
             <div class="flight-actions"><button id="start-flight" class="button button-primary">I’m flying now <span aria-hidden="true">→</span></button><button id="edit-time" class="text-button">Already in the air?</button><button id="landed" class="text-button" hidden>I’ve landed</button><span id="progress-note" class="muted">Starts your timer from this moment.</span></div>
           </section>
 
-          <section class="arrival-card" aria-labelledby="live-heading">
-            <div class="arrival-content"><p class="eyebrow">YOUR FLIGHT</p><h2 id="live-heading">A little update.</h2><div aria-live="polite"><p id="live-summary">Check your flight’s latest reported status when connected.</p><p id="live-details"></p><p id="live-meta" class="fine-print">Updates on request · your timer runs independently</p></div><a class="source-link" href="https://www.flightaware.com/" target="_blank" rel="noopener noreferrer">FlightAware ↗</a> · <a class="source-link" href="https://aviationstack.com/" target="_blank" rel="noopener noreferrer">Aviationstack ↗</a></div>
-            <button id="live-refresh" class="button button-outline">Check flight status</button>
-          </section>
-
-          <section class="arrival-card" aria-labelledby="arrival-heading">
-            <div class="arrival-symbol" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="29" cy="17" r="7"/><path d="M29 4v-3m13 16h3M39 7l3-3M14 35h21a7 7 0 0 0 0-14 10 10 0 0 0-19-1 8 8 0 0 0-2 15Z"/></svg></div>
-            <div class="arrival-content"><p class="eyebrow">ON THE OTHER SIDE</p><h2 id="arrival-heading">San Francisco awaits.</h2><p id="weather-summary">A small glimpse of the weather when you arrive.</p><p id="weather-meta" class="fine-print">Forecast near the airport · not a prediction of the ride</p></div>
-            <button id="weather-refresh" class="button button-outline">Arrival weather <span aria-hidden="true">↗</span></button>
+          <section class="airport-card" aria-labelledby="airport-heading">
+            <div class="section-heading"><div><p class="eyebrow">ALONG YOUR JOURNEY</p><h2 id="airport-heading">Airports nearby.</h2></div><span class="estimate-badge">TIMER ESTIMATE</span></div>
+            <p id="airport-mode" class="muted">At departure · start your timer or explore below</p>
+            <ol id="airport-list" class="airport-list"></ol>
+            <div class="airport-explore"><label for="airport-time">Explore any point <output id="airport-time-label" for="airport-time">0m into 5h 30m</output></label><input id="airport-time" type="range" min="0" max="330" value="0" step="1"><button id="airport-follow" class="text-button" hidden>Follow my timer again ↗</button></div>
+            <p id="airport-position" class="fine-print"></p>
+            <p class="fine-print">Estimated along the shortest route between your airports, using elapsed time. Actual position and route may differ. Nearest listed large or medium airports; this does not assess landing suitability. <a class="source-link" href="https://ourairports.com/data/" target="_blank" rel="noopener noreferrer">OurAirports · Oct 24, 2026 snapshot ↗</a></p>
           </section>
         </div>
 
@@ -150,6 +162,6 @@
 
   <nav class="quiet-dock" aria-label="Quick calming exercises"><button id="dock-breathe" aria-label="Open breathing guide"><span aria-hidden="true">◯</span> Breathe</button><button id="dock-ground" aria-label="Open grounding exercise"><span aria-hidden="true">≈</span> Feel grounded</button></nav>
 
-  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><p class="eyebrow">MADE FOR THE IN-BETWEEN</p><button class="close-button" data-close aria-label="Close about">×</button></div><h2 id="about-title">A quieter way to fly.</h2><p>Still breaks your flight into small, manageable chapters. Progress uses your takeoff time and planned duration. It doesn’t confirm takeoff, landing, or your actual route.</p><p>Once “Ready for offline” appears, the page and quiet moments are saved on this device. Open it before boarding. Weather and flight status use the internet only when you request them. Your timer and calming exercises work offline.</p><h3>A little honesty about data</h3><p>Arrival weather is a model forecast near the destination airport, for the hour closest to your estimated arrival. It cannot predict turbulence or landing conditions for a particular aircraft.</p><h3>Sources & acknowledgments</h3><ul class="sources"><li><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather by Open-Meteo</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li><li><a href="https://www.faa.gov/travelers/fly_safe/turbulence" target="_blank" rel="noopener noreferrer">FAA · Turbulence guidance</a></li><li><a href="https://www.weather.gov/zme/safety_turb" target="_blank" rel="noopener noreferrer">National Weather Service · Causes of turbulence</a></li><li><a href="https://classics.mit.edu/Antoninus/meditations.7.seven.html" target="_blank" rel="noopener noreferrer">Marcus Aurelius · Meditations, Book VII</a>, translated by George Long. Other thoughts are original or labeled as inspired by Stoic ideas.</li></ul><p class="fine-print">No account. No analytics. Your flight settings stay in this browser. Weather requests go directly to the weather service. Flight-status requests go through this site’s server to its configured flight-data provider.</p></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-heading"><p class="eyebrow">MADE FOR THE IN-BETWEEN</p><button class="close-button" data-close aria-label="Close about">×</button></div><h2 id="about-title">A quieter way to fly.</h2><p>Still breaks your flight into small, manageable chapters. Progress uses your takeoff time and planned duration. It doesn’t confirm takeoff, landing, or your actual route.</p><p>Once “Ready for offline” appears, the page and quiet moments are saved on this device. Open it before boarding. Weather and flight details load when you open or switch journeys, and when you refresh them. No background polling runs. Your timer and calming exercises work offline.</p><h3>A little honesty about data</h3><p>Weather shows a travel-day forecast near the destination airport, or the hour closest to your arrival when a reported or estimated arrival time is available. It cannot predict turbulence or landing conditions for a particular aircraft.</p><h3>Sources & acknowledgments</h3><ul class="sources"><li><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather by Open-Meteo</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></li><li><a href="https://ourairports.com/data/" target="_blank" rel="noopener noreferrer">Airport data by OurAirports</a> · public domain, Oct 24, 2026 snapshot. Large and medium airports with IATA codes in the route region.</li><li><a href="https://www.faa.gov/travelers/fly_safe/turbulence" target="_blank" rel="noopener noreferrer">FAA · Turbulence guidance</a></li><li><a href="https://www.weather.gov/zme/safety_turb" target="_blank" rel="noopener noreferrer">National Weather Service · Causes of turbulence</a></li><li><a href="https://classics.mit.edu/Antoninus/meditations.7.seven.html" target="_blank" rel="noopener noreferrer">Marcus Aurelius · Meditations, Book VII</a>, translated by George Long. Other thoughts are original or labeled as inspired by Stoic ideas.</li></ul><p class="fine-print">No account. No analytics. Your flight settings stay in this browser. Weather requests go directly to the weather service. Flight-status requests go through this site’s server to its configured flight-data provider.</p></dialog>
 </body>
 </html>

@@ -21,11 +21,15 @@ HTTPS enables offline caching. Open the page on the device you’ll use before d
 
 ## Weather
 
-Arrival weather is fetched directly from [Open-Meteo](https://open-meteo.com/en/docs), only when you tap the weather button. It needs internet access; the last retrieved forecast is saved for offline viewing and labeled with its age.
+Destination weather and flight details appear together at the top of the main page. Weather is fetched directly from [Open-Meteo](https://open-meteo.com/en/docs) on opening or switching journeys, on reconnection, and when you tap Refresh weather. Recent forecasts are reused for five minutes; the last retrieved forecast is saved for offline viewing and labeled with its age. No background polling runs.
 
-Before takeoff, optionally enter your departure time using the departure airport’s local time. After you tap **I’m flying now**, your timer determines the estimated arrival. Overnight flights and the destination time zone are handled automatically. Weather uses the nearest forecast hour to that arrival, rather than silently substituting another date.
+Without an arrival time, weather shows the destination’s daily low/high, conditions, precipitation chance, and maximum surface wind for your travel date. A reported API arrival, an optional local departure time, or your running flight timer enables an arrival-hour forecast. Your timer takes precedence once started. Overnight flights and the destination time zone are handled automatically.
 
 This is a model forecast near the airport, not a prediction of turbulence or an assessment of landing safety. There is no turbulence score or countdown. Follow crew guidance and keep your seat belt fastened while seated.
+
+## Nearby airports
+
+The main page estimates your position along the great-circle path between YYZ and SFO using the flight timer. It lists the three nearest airports from a bundled [OurAirports](https://ourairports.com/data/) public-domain snapshot (2026-10-24), including names, codes, locations, approximate distances, and source links. The snapshot includes large and medium airports with IATA codes in the US/Canada route region (30–55°N, 130–65°W). The slider previews any point in either direction; Follow my timer returns to the current estimate. This feature works offline. Actual flight routes and speeds vary; this does not assess airport landing suitability.
 
 ## Local preview and editing
 
@@ -73,9 +77,14 @@ then add `AVIATIONSTACK_KEY` as a **secret** in the Pages project's Variables an
 Secrets settings and redeploy. Never put the key in frontend code or commit it.
 Only add it to Preview if you also want previews to use your quota.
 
-Tap **Check flight status** to retrieve status, departure/arrival times, and arrival
-gate when supplied. No background polling runs. Results are cached at the edge for
-five minutes; the browser also prevents repeated checks within five minutes.
+The page looks up flight details once when opened or switched to a journey and on
+reconnection. **Refresh flight details** checks again on demand. It shows status,
+scheduled/estimated/actual gate times, terminals, gates, baggage claim, airline,
+codeshare operator, aircraft type code, and registration when the provider supplies
+them. Missing fields are omitted. No background polling runs. Results are cached
+at the edge for five minutes; the browser saves results locally and prevents
+repeated checks within five minutes, including across reloads. Saved updates remain
+available offline and are labeled with their original check time.
 The cache is per Cloudflare location, not a global monthly quota: public visitors
 can consume requests too. Check your provider usage dashboard.
 
