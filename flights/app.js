@@ -120,6 +120,9 @@ function render() {
   const x = 142 + 716 * fraction, y = 231 - 318 * fraction * (1 - fraction);
   $('plane-marker').style.left = `${x / 10}%`;
   $('plane-marker').style.top = `${7 + y / 320 * 73}%`;
+  const landscape = $('plane-marker').parentElement;
+  const heading = Math.atan2(-318 * (1 - 2 * fraction) * landscape.clientHeight * .73 / 320, 716 * landscape.clientWidth / 1000) * 180 / Math.PI;
+  $('route-plane').setAttribute('transform', `rotate(${heading})`);
   $('path-progress').style.strokeDasharray = `${fraction * 100} 100`;
   renderChapters(p);
   renderWeather();

@@ -46,7 +46,19 @@
 
               </g>
             </svg>
-            <span id="plane-marker" class="plane-marker" aria-hidden="true"><svg viewBox="-22 -22 44 44"><circle r="20" class="plane-halo"/><path d="m-10 1 8-3 1-8 3-1 2 8 9 4-1 3-10-1-4 5-2-1 1-6-7 2Z" class="plane-icon"/></svg></span><div class="landscape-bottom"><div class="airport"><strong id="origin-code">YYZ</strong><span id="origin-name">Toronto</span></div><div class="route-caption"><span id="route-status">A journey to look forward to</span><small>Illustrated route · time-based progress</small></div><div class="airport airport-end"><strong id="destination-code">SFO</strong><span id="destination-name">San Francisco</span></div></div>
+            <span id="plane-marker" class="plane-marker" aria-hidden="true">
+              <svg viewBox="-32 -32 64 64">
+                <circle r="30" class="plane-halo"/>
+                <g id="route-plane" class="route-plane">
+                  <path class="plane-wing" d="m-4-3-12-20h-5l7 22v2l-7 22h5L-4 3Z"/>
+                  <path class="plane-engine" d="M-9-15h7a2 2 0 0 1 0 5h-7ZM-9 10h7a2 2 0 0 1 0 5h-7Z"/>
+                  <path class="plane-wing" d="m-18-2-5-8h-4l2 10-2 10h4l5-8Z"/>
+                  <path class="plane-fuselage" d="M24 0c-2-4-7-5-13-5H-8l-17 3v4l17 3h19c6 0 11-1 13-5Z"/>
+                  <path class="plane-cockpit" d="m15-3 4 1v4l-4 1 1-3Z"/>
+                  <path class="plane-seam" d="M-22 0H10"/>
+                </g>
+              </svg>
+            </span><div class="landscape-bottom"><div class="airport"><strong id="origin-code">YYZ</strong><span id="origin-name">Toronto</span></div><div class="route-caption"><span id="route-status">A journey to look forward to</span><small>Illustrated route · time-based progress</small></div><div class="airport airport-end"><strong id="destination-code">SFO</strong><span id="destination-name">San Francisco</span></div></div>
           </section>
 
           <section class="progress-card" aria-labelledby="chapters-heading">
@@ -89,7 +101,48 @@
 
   <dialog id="calm-dialog" class="calm-dialog" aria-labelledby="calm-title"><button class="close-button" data-close aria-label="Close quiet moment">×</button><p class="eyebrow" id="calm-eyebrow">A MOMENT JUST FOR YOU</p><h2 id="calm-title">Let the next breath be easy.</h2><p id="calm-intro">Follow the circle, if it feels comfortable. Your own pace is fine.</p><div class="calm-switch" role="group" aria-label="Choose a quiet exercise"><button data-calm-mode="breathe" aria-pressed="true">Breathe</button><button data-calm-mode="ground" aria-pressed="false">Feel grounded</button></div>
 <div id="grounding-panel" hidden>
-  <svg class="steady-plane" viewBox="0 0 440 190" role="img" aria-labelledby="steady-title"><title id="steady-title">A steady aircraft held in a soft, open sky. A calming illustration.</title><circle cx="220" cy="95" r="85" fill="var(--soft)"/><path d="M35 115Q120 87 215 114T405 115M55 135Q140 107 235 134T385 135M85 155Q160 131 245 154T355 155" fill="none" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/><path d="m111 89 59 2 34-35 16 1-13 34 76 2 16-9 8 2-8 15-20 6-84-1-8 21-10-1 1-22-51-3-16-5Z" fill="var(--surface)" stroke="var(--olive)" stroke-width="1.7" stroke-linejoin="round"/><path d="m119 89-13-25 11 1 24 25m124 4 10 1m-26-1h3m-15 0h3m-15 0h3" fill="none" stroke="var(--olive)" stroke-width="1.7" stroke-linecap="round"/></svg>
+  <svg class="steady-plane" viewBox="0 0 480 220" role="img" aria-labelledby="steady-title steady-description">
+    <title id="steady-title">A passenger jet in a quiet sky</title>
+    <desc id="steady-description">An illustrated passenger aircraft with swept wings, two engines, and a green tail, above soft layers of cloud.</desc>
+    <defs>
+      <linearGradient id="aircraft-body" x1="0" y1="0" x2="0" y2="1"><stop class="aircraft-body-light"/><stop offset=".55" class="aircraft-body-mid"/><stop offset="1" class="aircraft-body-shade"/></linearGradient>
+      <linearGradient id="aircraft-wing" x1="0" y1="0" x2="0" y2="1"><stop class="aircraft-wing-light"/><stop offset="1" class="aircraft-wing-shade"/></linearGradient>
+      <linearGradient id="aircraft-engine" x1="0" y1="0" x2="0" y2="1"><stop class="aircraft-body-light"/><stop offset="1" class="aircraft-wing-shade"/></linearGradient>
+    </defs>
+    <circle class="aircraft-sky" cx="244" cy="106" r="94"/>
+    <circle class="aircraft-sun" cx="329" cy="58" r="23"/>
+    <g class="aircraft-clouds">
+      <path d="M28 89h41c-2-10-17-14-23-6-8-4-16-1-18 6ZM354 127h91c-3-12-17-17-27-10-4-19-32-22-40-5-11-3-21 4-24 15Z"/>
+      <path d="M65 181c49-17 97-17 145-4s96 16 151-1 77-15 95-10v22H65Z"/>
+    </g>
+    <path class="aircraft-cloud-line" d="M35 194c68-21 111-17 172-4s121 9 171-5M62 204c63-13 107-9 146-2s77 8 116 2"/>
+    <g class="aircraft-drawing" stroke-linejoin="round" stroke-linecap="round">
+      <!-- Far wing and engine sit behind the fuselage. -->
+      <path class="aircraft-wing" d="m206 103 67-53 15 1-36 58Z"/>
+      <path class="aircraft-panel" d="m248 92 25-29"/>
+      <path class="aircraft-engine" d="m253 88 18 2c8 1 10 14 1 16l-18-2c-8-1-8-15-1-16Z"/>
+      <ellipse class="aircraft-intake" cx="272" cy="98" rx="4" ry="6"/>
+      <!-- Tail, body, and a soft underside give the airframe its shape. -->
+      <path class="aircraft-tail" d="m112 107-13-51 13 1 35 49Z"/>
+      <path class="aircraft-tail-mark" d="m108 69 15 19-11-6Z"/>
+      <path class="aircraft-body" d="m83 103 241-5c19 0 35 6 49 16l14 8c5 3 3 7-3 9l-26 6c-15 3-31 3-47 3l-190-9c-18-1-30-11-38-28Z"/>
+      <path class="aircraft-belly" d="M95 118c60 11 128 13 216 14 29 1 51 0 76-7-2 4-13 8-29 12-15 3-31 3-47 3l-190-9c-11-1-20-6-26-13Z"/>
+      <path class="aircraft-stripe" d="m119 119 200 5"/>
+      <path class="aircraft-cockpit" d="m345 108 14 6 7 6-18-2-5-7Zm-7-1 3 10-7-1-3-9Z"/>
+      <path class="aircraft-windows" d="m154 111 154 4" pathLength="100"/>
+      <path class="aircraft-panel" d="m140 110 1 11m179-9 1 11"/>
+      <path class="aircraft-wing" d="m107 115-26 17-16-1 26-22Z"/>
+      <!-- Near wing has a swept tip and a separate engine nacelle. -->
+      <path class="aircraft-wing" d="m236 121-70 67-22-1 42-70Z"/>
+      <path class="aircraft-panel" d="m221 129-56 52m-9-2 7 1m3-20 17 2"/>
+      <path class="aircraft-winglet" d="m144 187-3-17 5-2 7 19Z"/>
+      <path class="aircraft-engine" d="m218 145 28 2c13 1 16 24 2 27l-29-3c-13-2-13-24-1-26Z"/>
+      <ellipse class="aircraft-intake-rim" cx="248" cy="160" rx="8" ry="13"/>
+      <ellipse class="aircraft-intake" cx="249" cy="160" rx="5" ry="9"/>
+      <path class="aircraft-fan" d="m248 154 2 6-2 6m-3-7 4 1 3 3"/>
+      <path class="aircraft-panel" d="m220 151 15 1"/>
+    </g>
+  </svg>
   <p class="grounding-mantra">The crew has the flying.<br>You have this one small moment.</p>
   <div class="grounding-steps" role="group" aria-label="Grounding anchors"><button data-anchor="0" aria-pressed="true">Feel the seat</button><button data-anchor="1" aria-pressed="false">Rest your feet</button><button data-anchor="2" aria-pressed="false">Soften your hands</button></div>
   <p id="grounding-prompt" aria-live="polite">Notice where the seat meets your back. Let it take a little more of your weight.</p><p class="fine-print">A calming illustration, not live flight information.</p>
