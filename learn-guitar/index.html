@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f1e8">
+  <meta name="description" content="A guitar songbook with readable tab, repeat hints, and gentle practice playback.">
+  <title>Learn Guitar</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="songs/catalog.js" defer></script>
+  <script src="song-model.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1 id="song-title" class="print-title">Guitar tab</h1>
+    <section class="practice-toolbar" aria-label="Song and practice controls">
+      <div class="transport">
+        <label for="song-select" class="sr-only">Song</label><select id="song-select" aria-label="Song"></select>
+        <button id="play" class="play-button" type="button" disabled><span aria-hidden="true">▶</span> Play</button>
+        <label class="tempo-label" for="tempo"><span><b id="tempo-value">72</b> BPM</span><input id="tempo" type="range" min="40" max="140" value="72" step="1" disabled></label>
+        <details id="player-settings" class="player-settings">
+          <summary>Options</summary>
+          <div class="options">
+        <label><input id="loop" type="checkbox"> Loop</label>
+        <label><input id="click" type="checkbox"> Click track</label>
+        <label><input id="show-chords" type="checkbox" checked> Chords</label>
+        <label for="section-select" class="sr-only">Playback range</label><select id="section-select" disabled><option value="all">Whole song</option></select>
+        <button id="reset" class="text-button" type="button" disabled>↺ Start over</button>
+        <button id="print" type="button" class="text-button" disabled>Print tab ↗</button>
+          </div>
+        </details>
+      </div>
+    </section>
+    <p id="play-status" class="sr-only" aria-live="polite">Loading song.</p>
+    <p id="song-error" class="error" role="alert" hidden></p>
+    <div id="score" aria-busy="true"></div>
+    <details class="extra-help">
+      <summary>Tab help, repeat hints & chords</summary>
+      <p id="song-facts" class="song-facts"></p>
+      <p id="repeat-summary"></p>
+      <div class="guide-grid">
+        <p><b>Lines are strings.</b> Thin high e is at the top; thick low E is at the bottom. Read left to right, then move to the next line.</p>
+        <p><b>Numbers are frets.</b> 0 = an open string. A small line means let it ring; an arc joins tied notes—don’t pick the second one.</p>
+        <p><b>Follow the count.</b> “&” is halfway between beats. “rest” means stop playing. A small “= 1” beside a bar number means its melody repeats bar 1.</p>
+      </div>
+      <section id="play-together" class="duet">
+        <div><h2>Play together</h2><p>Let one guitar take the melody. On the second, try a gentle down-strum at the beginning of each bar.</p><p id="accompaniment-note"></p></div>
+        <div><div id="chord-library" class="chord-library"></div><p class="chord-key">Shapes run from thick E → thin e. × = skip; ○ = open.</p></div>
+      </section>
+      <div id="practice-notes" class="practice-notes"></div>
+    </details>
+    <details id="source" class="source" hidden>
+      <summary>Original sheet & transcription notes</summary>
+      <p id="source-description"></p>
+      <a id="source-link" target="_blank" rel="noopener">Open the original sheet ↗</a>
+      <img id="source-image" alt="" loading="lazy">
+    </details>
+    <noscript><p>JavaScript is needed to display the songbook. <a href="assets/original-tab.jpg">View the original Jingle Bell Rock sheet.</a></p></noscript>
+  </main>
+</body>
+</html>
