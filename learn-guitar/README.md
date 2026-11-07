@@ -2,7 +2,8 @@
 
 A build-free HTML/CSS/JavaScript songbook. Open `index.html` directly, or serve this
 folder with a static web server. The player loads local song scripts on demand;
-there are no package dependencies or external audio assets.
+there are no package dependencies. Acoustic-guitar samples are bundled locally.
+Audio requires HTTP(S); use a static server for local playback instead of a file URL.
 
 ## Add a song
 
@@ -19,7 +20,7 @@ also switches songs. Files and source-image paths are relative to `index.html`.
 
 ## Song format
 
-Required fields: `id`, `title`, `tempo` (40–140 quarter-note BPM), `beatsPerBar`
+Required fields: `id`, `title`, `tempo` (40–200 quarter-note BPM), `beatsPerBar`
 (1–6 quarter beats), `tuning` (six MIDI pitches, thin e to thick E), `capo` (0–12),
 and `rawBars`. Standard tuning is `[64,59,55,50,45,40]`; the player adds the capo
 offset. Tab frets and chord shapes are relative to the capo.
@@ -59,3 +60,19 @@ polyphonic tab, and movable chord diagrams are not supported yet.
 `script.js` owns playback and UI, `song-model.js` validates transcription data,
 `styles.css` controls the screen/print layouts, and `songs/` contains the catalog
 and individual songs. Musical data never belongs in the player or HTML.
+
+
+## Audio and tempo
+
+The BPM number and slider work before and during playback (40–200 BPM). Tempo
+changes preserve beat position and retime queued notes, the click track, highlights,
+and sustained-note releases without changing sample pitch. Volume is in Options.
+Settings are saved per song.
+
+`acoustic-guitar.js` loads only the recordings needed by the selected passage,
+then caches the decoded samples for the session. `playback.js` owns the beat clock,
+look-ahead scheduling, ties, and live tempo changes. The audio remains mostly dry,
+with light room ambience, gentle EQ/compression, and smooth note releases.
+Sample sources and licensing are in `assets/audio/acoustic-guitar/CREDITS.txt`.
+
+Run the timing regression checks with `node learn-guitar/tests/playback.test.cjs`.

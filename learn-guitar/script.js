@@ -5,8 +5,7 @@ let currentSong, bars = [], sections = [], chordShapes = [], midiOpen = [];
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const $ = id => document.getElementById(id);
 let selected = 'all';
-let audio, timer, nextTime, eventIndex, playing = false, runId = 0, uiTimers = [];
-let events = [], activeVoices = new Set();
+let audio, instrument, transport, playing = false, starting = false, runId = 0;
 function tabSVG(bar) {
   const x = beat => 38 + beat * (244/currentSong.beatsPerBar);
   const y = string => 31 + (string-1)*18;
@@ -42,59 +41,8 @@ function chooseSection(value){
   $('play-status').textContent=value==='all'?`All ${bars.length} bars are on the sheet.`:`Playback: bars ${sections[Number(value)].start}–${sections[Number(value)].end}. The complete sheet stays visible. Turn on Loop to repeat this passage.`;
   saveSettings();
 }
-function saveSettings(){try{localStorage.setItem(`learn-guitar:${currentSong.id}:settings`,JSON.stringify({tempo:$('tempo').value,chords:$('show-chords').checked,loop:$('loop').checked,click:$('click').checked,section:selected}));}catch{ /* Practice works when browser storage is unavailable. */ }}
-function restoreSettings(){try{const s=JSON.parse(localStorage.getItem(`learn-guitar:${currentSong.id}:settings`)||'null');if(!s)return;if(Number(s.tempo)>=40&&Number(s.tempo)<=140)$('tempo').value=s.tempo;for(const [key,id] of [['chords','show-chords'],['loop','loop'],['click','click']])if(typeof s[key]==='boolean')$(id).checked=s[key];if((s.section==='all'||sections.some((_,i)=>String(i)===s.section)))chooseSection(s.section);}catch{}}
-function buildEvents(){
-  const range=selected==='all'?{start:1,end:bars.length}:sections[Number(selected)];
-  const list=[];
-  bars.slice(range.start-1,range.end).forEach(bar=>bar.notes.forEach((note,i)=>list.push({...note,bar:bar.number,index:i,at:(bar.number-range.start)*currentSong.beatsPerBar+note.beat})));
-  return {list,length:(range.end-range.start+1)*currentSong.beatsPerBar,range};
-}
-let instrumentBus;
-function setupInstrument(){
-  if(instrumentBus)return;
-  instrumentBus=audio.createGain();instrumentBus.gain.value=.8;
-  const warmth=audio.createBiquadFilter();warmth.type='lowpass';warmth.frequency.value=3600;warmth.Q.value=.5;
-  const compressor=audio.createDynamicsCompressor();compressor.threshold.value=-14;compressor.ratio.value=3;
-  instrumentBus.connect(warmth);warmth.connect(compressor);compressor.connect(audio.destination);
-  // A quiet, short room reflection gives the pluck space without blurring the tab.
-  const room=audio.createConvolver(),wet=audio.createGain();wet.gain.value=.10;
-  const impulse=audio.createBuffer(2,Math.ceil(audio.sampleRate*.24),audio.sampleRate);
-  for(let c=0;c<2;c++){const channel=impulse.getChannelData(c);for(let i=0;i<channel.length;i++)channel[i]=(Math.random()*2-1)*Math.pow(1-i/channel.length,3);}
-  room.buffer=impulse;warmth.connect(room);room.connect(wet);wet.connect(compressor);
-}
-function pluckedSamples(frequency,duration,sampleRate){
-  const samples=new Float32Array(Math.ceil(sampleRate*(duration+.08)));
-  // Karplus–Strong string: a gently excited delay line loses its bright harmonics
-  // naturally. Fractional delay compensates for the averaging filter's half sample.
-  const delay=sampleRate/frequency-.5,size=Math.ceil(delay)+2,line=new Float32Array(size);
-  let seed=137,previous=0;
-  for(let i=0;i<size;i++){seed=(seed*16807)%2147483647;line[i]=(seed/2147483647*2-1)*.7;}
-  for(let i=0;i<samples.length;i++){
-    const write=i%size,position=(write-delay+size)%size,lo=Math.floor(position),fraction=position-lo;
-    const current=line[lo]*(1-fraction)+line[(lo+1)%size]*fraction;
-    line[write]=.996*(current+previous)*.5;previous=current;
-    const attack=Math.min(1,i/(sampleRate*.006));
-    const release=Math.min(1,Math.max(0,(duration+.06-i/sampleRate)/.06));
-    samples[i]=current*attack*release;
-  }
-  return samples;
-}
-function tone(frequency,start,duration,volume=.65,click=false){
-  setupInstrument();
-  const gain=audio.createGain();let voice;
-  if(click){
-    voice=audio.createOscillator();voice.type='sine';voice.frequency.setValueAtTime(frequency*.65,start);
-    voice.frequency.exponentialRampToValueAtTime(frequency*.35,start+.025);
-    gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(volume*.5,start+.003);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);
-  }else{
-    voice=audio.createBufferSource();const samples=pluckedSamples(frequency,duration,audio.sampleRate);
-    const buffer=audio.createBuffer(1,samples.length,audio.sampleRate);buffer.copyToChannel(samples,0);voice.buffer=buffer;gain.gain.value=volume;
-  }
-  voice.envelope=gain;voice.connect(gain);gain.connect(instrumentBus);voice.start(start);voice.stop(start+duration+.08);activeVoices.add(voice);
-  voice.onended=()=>{activeVoices.delete(voice);voice.disconnect();gain.disconnect();};
-}
-function scheduleUI(fn,time){const id=setTimeout(()=>{uiTimers=uiTimers.filter(item=>item!==id);fn();},Math.max(0,(time-audio.currentTime)*1000));uiTimers.push(id);}
+function saveSettings(){try{localStorage.setItem(`learn-guitar:${currentSong.id}:settings`,JSON.stringify({tempo:$('tempo').value,volume:$('volume').value,chords:$('show-chords').checked,loop:$('loop').checked,click:$('click').checked,section:selected}));}catch{ /* Practice works when browser storage is unavailable. */ }}
+function restoreSettings(){try{const s=JSON.parse(localStorage.getItem(`learn-guitar:${currentSong.id}:settings`)||'null');if(!s)return;if(Number(s.tempo)>=40&&Number(s.tempo)<=200)$('tempo').value=s.tempo;if(Number(s.volume)>=0&&Number(s.volume)<=100)$('volume').value=s.volume;for(const [key,id] of [['chords','show-chords'],['loop','loop'],['click','click']])if(typeof s[key]==='boolean')$(id).checked=s[key];if((s.section==='all'||sections.some((_,i)=>String(i)===s.section)))chooseSection(s.section);}catch{}}
 function keepBarVisible(el) {
   const rect=el.getBoundingClientRect();
   const toolbar=document.querySelector('.practice-toolbar').getBoundingClientRect();
@@ -116,71 +64,78 @@ function highlight(event){
     $('play-status').textContent=`Playing bar ${event.bar} of ${bars.length} · ${$('tempo').value} BPM`;
   }
 }
-function scheduleCycle(){
-  const seconds=60/Number($('tempo').value);
-  const currentRun=runId;
-  while(eventIndex<events.length&&nextTime+events[eventIndex].at*seconds<audio.currentTime+.15){
-    const event=events[eventIndex],at=nextTime+event.at*seconds;
-    // Re-articulate a tie only when practice starts in the middle of it.
-    if(!event.rest&&(!event.tied||eventIndex===0)){
-      let beats=event.duration;
-      for(let j=eventIndex+1;j<events.length&&events[j].tied;j++)beats+=events[j].duration;
-      tone(440*Math.pow(2,(midiOpen[event.string-1]+event.fret-69)/12),at,beats*seconds*.96);
-    }
-    if($('click').checked&&event.click)tone(event.downbeat?1100:800,at,.035,.07,true);
-    if(!event.clickOnly)scheduleUI(()=>{if(playing&&runId===currentRun)highlight(event);},at);
-    eventIndex++;
-  }
-  if(eventIndex===events.length){
-    clearInterval(timer);const end=nextTime+buildEvents().length*seconds;
-    scheduleUI(()=>{if(!playing||currentRun!==runId)return;if($('loop').checked){nextTime=end;eventIndex=0;timer=setInterval(scheduleCycle,25);scheduleCycle();}else{stop();$('play-status').textContent='Nicely done. Try it again, or choose a smaller section.';}},end);
-  }
-}
 async function start(){
-  if(playing){stop();return;}
+  if(playing || starting){stop();return;}
   const request=++runId;
-  $('player-settings').open=false;
-  $('song-error').hidden=true;
+  starting=true;$('player-settings').open=false;$('song-error').hidden=true;
+  $('play').innerHTML='<span aria-hidden="true">■</span> Loading';
+  $('play').setAttribute('aria-pressed','true');
   try{
-    const AudioClass=window.AudioContext||window.webkitAudioContext;if(!AudioClass)throw new Error('No audio support');
+    const AudioClass=window.AudioContext||window.webkitAudioContext;
+    if(!AudioClass)throw new Error('Web Audio is not available.');
     if(!audio || audio.state==='closed') {
-      audio=new AudioClass();instrumentBus=undefined;
+      audio=new AudioClass();instrument=new AcousticGuitar(audio);
+      transport=new PracticeTransport(instrument,{
+        onEvent:highlight,
+        onEnd:()=>{stop();$('play-status').textContent='Finished. Tap Play to practise again.';}
+      });
       audio.addEventListener('statechange',()=>{
-        if(playing && audio.state!=='running') {
+        if(playing && audio.state!=='running'){
           stop();$('play-status').textContent='Audio paused. Tap Play to start again.';
         }
       });
     }
+    // Resume synchronously from the tap, before awaiting sample downloads (iOS).
     await audio.resume();if(request!==runId)return;
-    const data=buildEvents();events=data.list;
-    // Add a click at every quarter beat without changing the melody's event times.
-    for(let beat=0;beat<data.length;beat++){
-      const match=events.find(e=>e.at===beat);
-      if(match){match.click=true;match.downbeat=beat%currentSong.beatsPerBar===0;}
-      else events.push({at:beat,click:true,clickOnly:true,rest:true,downbeat:beat%currentSong.beatsPerBar===0});
-    }
-    events.sort((a,b)=>a.at-b.at);playing=true;eventIndex=0;nextTime=audio.currentTime+.08;
-    $('play').innerHTML='<span aria-hidden="true">■</span> Stop';$('play').setAttribute('aria-pressed','true');
-    $('tempo').disabled=true;
-    timer=setInterval(scheduleCycle,25);scheduleCycle();
-  }catch{stop();$('song-error').textContent='Audio could not start. Tap Play to try again.';$('song-error').hidden=false;}
+    const range=selected==='all'?{start:1,end:bars.length}:sections[Number(selected)];
+    const timeline=buildTimeline(bars,range,currentSong.beatsPerBar,midiOpen);
+    $('play-status').textContent='Loading acoustic guitar.';
+    await instrument.prepare(timeline.events.filter(event=>event.midi!==undefined).map(event=>event.midi));
+    if(request!==runId)return;
+    instrument.setVolume(Number($('volume').value)/100);
+    starting=false;playing=true;
+    $('play').innerHTML='<span aria-hidden="true">■</span> Stop';
+    transport.start(timeline,Number($('tempo').value),{loop:$('loop').checked,click:$('click').checked});
+  }catch(error){
+    if(request!==runId)return;
+    stop();$('song-error').textContent='Could not load the guitar audio. Check your connection and tap Play to retry.';$('song-error').hidden=false;
+  }
 }
 function stop(){
-  playing=false;runId++;clearInterval(timer);uiTimers.forEach(clearTimeout);uiTimers=[];
-  activeVoices.forEach(voice=>{try{voice.envelope.gain.cancelScheduledValues(audio.currentTime);voice.envelope.gain.setTargetAtTime(0,audio.currentTime,.008);voice.stop(audio.currentTime+.04);}catch{}});activeVoices.clear();
-  document.querySelector('.note.playing')?.classList.remove('playing');document.querySelector('.bar.active')?.classList.remove('active');
-  $('play').innerHTML='<span aria-hidden="true">▶</span> Play';$('play').setAttribute('aria-pressed','false');$('tempo').disabled=false;
+  playing=false;starting=false;runId++;transport?.stop();
+  document.querySelector('.note.playing')?.classList.remove('playing');
+  document.querySelector('.bar.active')?.classList.remove('active');
+  $('play').innerHTML='<span aria-hidden="true">▶</span> Play';
+  $('play').setAttribute('aria-pressed','false');
   $('play-status').textContent='Stopped. Play starts this selection from the beginning.';
+}
+function setTempo(value){
+  const bpm=Math.max(40,Math.min(200,Math.round(Number(value))));
+  if(!Number.isFinite(bpm))return;
+  $('tempo').value=bpm;$('tempo-number').value=bpm;
+  transport?.setTempo(bpm);
+  if(playing)$('play-status').textContent=`Tempo changed to ${bpm} BPM. Playback continues.`;
+  saveSettings();
 }
 
 $('play').addEventListener('click',start);
 $('section-select').addEventListener('change',e=>chooseSection(e.target.value));
 $('reset').addEventListener('click',()=>{stop();$('play-status').textContent='Back to the beginning of this selection. Ready when you are.';});
-$('tempo').addEventListener('input',()=>{$('tempo-value').textContent=$('tempo').value;saveSettings();});
-for(const id of ['loop','click','show-chords'])$(id).addEventListener('change',()=>{document.body.classList.toggle('hide-chords',!$('show-chords').checked);saveSettings();});
+$('tempo').addEventListener('input',()=>setTempo($('tempo').value));
+$('tempo-number').addEventListener('input',()=>{
+  const value=Number($('tempo-number').value);
+  if($('tempo-number').value!=='' && value>=40 && value<=200)setTempo(value);
+});
+$('tempo-number').addEventListener('change',()=>setTempo($('tempo-number').value || $('tempo').value));
+$('tempo-number').addEventListener('keydown',event=>{if(event.key==='Enter')$('tempo-number').blur();});
+$('volume').addEventListener('input',()=>{
+  $('volume-value').textContent=`${$('volume').value}%`;
+  instrument?.setVolume(Number($('volume').value)/100);saveSettings();
+});
+for(const id of ['loop','click','show-chords'])$(id).addEventListener('change',()=>{document.body.classList.toggle('hide-chords',!$('show-chords').checked);transport?.setOptions({loop:$('loop').checked,click:$('click').checked});saveSettings();});
 $('print').addEventListener('click',()=>{stop();window.print();});
 window.addEventListener('pagehide',stop);
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)stop();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&(playing||starting))stop();});
 
 const catalog = window.GuitarSongbook.catalog;
 const songLoads = new Map();
@@ -203,7 +158,7 @@ function readSong(entry) {
   return songLoads.get(entry.id);
 }
 function setReady(ready) {
-  for (const id of ['play','tempo','section-select','reset','print']) $(id).disabled=!ready;
+  for (const id of ['play','tempo','tempo-number','section-select','reset','print']) $(id).disabled=!ready;
   $('score').setAttribute('aria-busy',String(!ready));
 }
 function drawSongDetails() {
@@ -246,9 +201,9 @@ async function loadSong(id, historyMode='push') {
     if(request!==songRequest)return;
     currentSong=song;bars=parsed;sections=song.sections||[];chordShapes=song.chordShapes||[];
     midiOpen=song.tuning.map(pitch=>pitch+song.capo);selected='all';
-    $('tempo').value=song.tempo;$('loop').checked=false;$('click').checked=false;$('show-chords').checked=true;
+    $('tempo').value=song.tempo;$('volume').value=75;$('loop').checked=false;$('click').checked=false;$('show-chords').checked=true;
     drawSongDetails();render();drawChords();restoreSettings();
-    $('tempo-value').textContent=$('tempo').value;
+    $('tempo-number').value=$('tempo').value;$('volume-value').textContent=`${$('volume').value}%`;
     document.body.classList.toggle('hide-chords',!$('show-chords').checked);
     $('play-status').textContent=`${song.title} ready. ${bars.length} bars.`;
     try {

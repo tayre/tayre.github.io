@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="styles.css">
   <script src="songs/catalog.js" defer></script>
   <script src="song-model.js" defer></script>
+  <script src="playback.js" defer></script>
+  <script src="acoustic-guitar.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -18,13 +20,17 @@
       <div class="transport">
         <label for="song-select" class="sr-only">Song</label><select id="song-select" aria-label="Song"></select>
         <button id="play" class="play-button" type="button" disabled><span aria-hidden="true">▶</span> Play</button>
-        <label class="tempo-label" for="tempo"><span><b id="tempo-value">72</b> BPM</span><input id="tempo" type="range" min="40" max="140" value="72" step="1" disabled></label>
+        <div class="tempo-control" role="group" aria-label="Tempo">
+          <label class="bpm-field"><input id="tempo-number" type="number" inputmode="numeric" min="40" max="200" step="1" value="72" aria-label="Tempo in beats per minute" disabled><span>BPM</span></label>
+          <input id="tempo" type="range" min="40" max="200" value="72" step="1" aria-label="Tempo slider" disabled>
+        </div>
         <details id="player-settings" class="player-settings">
           <summary>Options</summary>
           <div class="options">
         <label><input id="loop" type="checkbox"> Loop</label>
         <label><input id="click" type="checkbox"> Click track</label>
         <label><input id="show-chords" type="checkbox" checked> Chords</label>
+        <label class="volume-control" for="volume">Volume <input id="volume" type="range" min="0" max="100" step="1" value="75"><output id="volume-value" for="volume">75%</output></label>
         <label for="section-select" class="sr-only">Playback range</label><select id="section-select" disabled><option value="all">Whole song</option></select>
         <button id="reset" class="text-button" type="button" disabled>↺ Start over</button>
         <button id="print" type="button" class="text-button" disabled>Print tab ↗</button>
@@ -49,6 +55,7 @@
         <div><div id="chord-library" class="chord-library"></div><p class="chord-key">Shapes run from thick E → thin e. × = skip; ○ = open.</p></div>
       </section>
       <div id="practice-notes" class="practice-notes"></div>
+      <p class="audio-credit">Acoustic-guitar recordings from the University of Iowa, edited by <a href="https://github.com/nbrosowsky/tonejs-instruments">Nicholaus P. Brosowsky / tonejs-instruments</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. <a href="assets/audio/acoustic-guitar/CREDITS.txt">Sample details</a>.</p>
     </details>
     <details id="source" class="source" hidden>
       <summary>Original sheet & transcription notes</summary>

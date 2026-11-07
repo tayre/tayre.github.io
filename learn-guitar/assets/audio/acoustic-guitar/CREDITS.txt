@@ -1,0 +1,28 @@
+ACOUSTIC GUITAR SAMPLES
+
+Original recordings: University of Iowa Electronic Music Studios,
+Musical Instrument Samples (acoustic guitar).
+https://theremin.music.uiowa.edu/
+
+Edited sample library: Nicholaus P. Brosowsky / tonejs-instruments.
+https://github.com/nbrosowsky/tonejs-instruments
+
+License for these samples: Creative Commons Attribution 3.0 Unported (CC BY 3.0).
+https://creativecommons.org/licenses/by/3.0/
+https://creativecommons.org/licenses/by/3.0/legalcode
+
+Upstream identifies the acoustic guitar source as "Iowa" in sample-source-info.txt
+and releases its edited samples under CC BY 3.0 in LICENSE.md and README.md.
+
+Pinned upstream revision: 622c2f1c32c8cfce4158ddc3eb26e518ddef37e5
+Source directory:
+https://github.com/nbrosowsky/tonejs-instruments/tree/622c2f1c32c8cfce4158ddc3eb26e518ddef37e5/samples/guitar-acoustic
+
+Files retained, unmodified:
+E2.mp3, G2.mp3, A2.mp3, C3.mp3, D3.mp3, E3.mp3, F3.mp3, G3.mp3,
+Gs3.mp3, A3.mp3, B3.mp3, C4.mp3, D4.mp3, E4.mp3, G4.mp3, B4.mp3, D5.mp3.
+
+The songbook adjusts playback gain, skips initial near-silence, adds a short room
+ambience, and transposes the nearest sample when an exact note is unavailable.
+All notes in the supplied Jingle Bell Rock tab have exact-pitch recordings.
+No Tone.js or upstream loader code is included.

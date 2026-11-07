@@ -7,7 +7,7 @@ function compileSong(song) {
   if (!Number.isInteger(song.beatsPerBar) || song.beatsPerBar < 1 || song.beatsPerBar > 6) fail('Use 1–6 quarter beats per bar.');
   if (!Array.isArray(song.tuning) || song.tuning.length !== 6 || song.tuning.some(n => !Number.isInteger(n) || n < 20 || n > 100)) fail('Provide six open-string MIDI pitches, high to low.');
   if (!Number.isInteger(song.capo) || song.capo < 0 || song.capo > 12) fail('Capo must be a fret from 0 to 12.');
-  if (!Number.isFinite(song.tempo) || song.tempo < 40 || song.tempo > 140) fail('Tempo must be 40–140 BPM.');
+  if (!Number.isFinite(song.tempo) || song.tempo < 40 || song.tempo > 200) fail('Tempo must be 40–200 BPM.');
   if (!Array.isArray(song.rawBars) || !song.rawBars.length) fail('At least one bar is required.');
   const bars = [];
   let previous;
