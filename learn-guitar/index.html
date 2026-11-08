@@ -19,7 +19,7 @@
     <section class="practice-toolbar" aria-label="Song and practice controls">
       <div class="transport">
         <label for="song-select" class="sr-only">Song</label><select id="song-select" aria-label="Song"></select>
-        <button id="play" class="play-button" type="button" disabled><span aria-hidden="true">▶</span> Play</button>
+        <button id="play" class="play-button" type="button" title="Play or pause; you can also tap the sheet" disabled><span aria-hidden="true">▶</span> Play</button>
         <div class="tempo-control" role="group" aria-label="Tempo">
           <label class="bpm-field"><input id="tempo-number" type="number" inputmode="numeric" min="40" max="200" step="1" value="72" aria-label="Tempo in beats per minute" disabled><span>BPM</span></label>
           <input id="tempo" type="range" min="40" max="200" value="72" step="1" aria-label="Tempo slider" disabled>
@@ -43,6 +43,7 @@
     <div id="score" aria-busy="true"></div>
     <details class="extra-help">
       <summary>Tab help, repeat hints & chords</summary>
+      <p>Tap the sheet to play or pause. Tap again to resume from the same spot. Scrolling and the controls won’t toggle playback.</p>
       <p id="song-facts" class="song-facts"></p>
       <p id="repeat-summary"></p>
       <div class="guide-grid">

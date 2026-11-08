@@ -76,3 +76,9 @@ with light room ambience, gentle EQ/compression, and smooth note releases.
 Sample sources and licensing are in `assets/audio/acoustic-guitar/CREDITS.txt`.
 
 Run the timing regression checks with `node learn-guitar/tests/playback.test.cjs`.
+
+
+Tap the sheet or page background to play/pause; the main button uses the same
+behavior. Pause preserves the beat and sample offset, including inside tied notes.
+Resume continues from that spot; Start over resets the selection. Scrolling, drags,
+long presses, text selection, and interactive controls do not toggle playback.

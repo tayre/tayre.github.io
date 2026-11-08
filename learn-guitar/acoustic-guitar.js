@@ -64,7 +64,7 @@ class AcousticGuitar {
       this.buffers.set(root,sample);
     }));
   }
-  playNote(midi,when,end,velocity=.8) {
+  playNote(midi,when,end,velocity=.8,elapsed=0) {
     const [root]=this.sampleFor(midi),sample=this.buffers.get(root);
     const source=this.context.createBufferSource();source.buffer=sample.buffer;
     source.playbackRate.value=Math.pow(2,(midi-root)/12);
@@ -73,7 +73,12 @@ class AcousticGuitar {
     envelope.gain.setValueAtTime(0,start);
     envelope.gain.linearRampToValueAtTime(level,start+.004);
     source.connect(envelope);envelope.connect(this.input);
-    source.start(start,sample.offset);
+    const offset=sample.offset+elapsed*source.playbackRate.value;
+    if(offset>=sample.buffer.duration) {
+      source.disconnect();envelope.disconnect();
+      return {when:start,ended:true,releaseAt(){},cancel(){}};
+    }
+    source.start(start,offset);
     const voice=this.voice(source,envelope,start,level);
     voice.releaseAt(end);
     return voice;

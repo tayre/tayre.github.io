@@ -65,7 +65,8 @@ function highlight(event){
   }
 }
 async function start(){
-  if(playing || starting){stop();return;}
+  if(playing){pause();return;}
+  if(starting){stop();return;}
   const request=++runId;
   starting=true;$('player-settings').open=false;$('song-error').hidden=true;
   $('play').innerHTML='<span aria-hidden="true">■</span> Loading';
@@ -81,12 +82,23 @@ async function start(){
       });
       audio.addEventListener('statechange',()=>{
         if(playing && audio.state!=='running'){
-          stop();$('play-status').textContent='Audio paused. Tap Play to start again.';
+          pause();$('play-status').textContent='Audio paused. Tap to resume.';
         }
       });
     }
     // Resume synchronously from the tap, before awaiting sample downloads (iOS).
     await audio.resume();if(request!==runId)return;
+    if(transport.paused) {
+      instrument.setVolume(Number($('volume').value)/100);
+      starting=false;playing=true;
+      document.body.classList.remove('is-paused');
+      $('play').innerHTML='<span aria-hidden="true">Ⅱ</span> Pause';
+      transport.resume(Number($('tempo').value),{loop:$('loop').checked,click:$('click').checked});
+      const active=document.querySelector('.bar.active');
+      if(active)keepBarVisible(active);
+      $('play-status').textContent='Playback resumed.';
+      return;
+    }
     const range=selected==='all'?{start:1,end:bars.length}:sections[Number(selected)];
     const timeline=buildTimeline(bars,range,currentSong.beatsPerBar,midiOpen);
     $('play-status').textContent='Loading acoustic guitar.';
@@ -94,14 +106,24 @@ async function start(){
     if(request!==runId)return;
     instrument.setVolume(Number($('volume').value)/100);
     starting=false;playing=true;
-    $('play').innerHTML='<span aria-hidden="true">■</span> Stop';
+    document.body.classList.remove('is-paused');
+    $('play').innerHTML='<span aria-hidden="true">Ⅱ</span> Pause';
     transport.start(timeline,Number($('tempo').value),{loop:$('loop').checked,click:$('click').checked});
   }catch(error){
     if(request!==runId)return;
     stop();$('song-error').textContent='Could not load the guitar audio. Check your connection and tap Play to retry.';$('song-error').hidden=false;
   }
 }
+function pause(){
+  if(!playing)return;
+  transport.pause();playing=false;runId++;
+  document.body.classList.add('is-paused');
+  $('play').innerHTML='<span aria-hidden="true">▶</span> Resume';
+  $('play').setAttribute('aria-pressed','false');
+  $('play-status').textContent='Paused. Tap the sheet or Resume to continue from here.';
+}
 function stop(){
+  document.body.classList.remove('is-paused');
   playing=false;starting=false;runId++;transport?.stop();
   document.querySelector('.note.playing')?.classList.remove('playing');
   document.querySelector('.bar.active')?.classList.remove('active');
@@ -135,7 +157,7 @@ $('volume').addEventListener('input',()=>{
 for(const id of ['loop','click','show-chords'])$(id).addEventListener('change',()=>{document.body.classList.toggle('hide-chords',!$('show-chords').checked);transport?.setOptions({loop:$('loop').checked,click:$('click').checked});saveSettings();});
 $('print').addEventListener('click',()=>{stop();window.print();});
 window.addEventListener('pagehide',stop);
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&(playing||starting))stop();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(playing)pause();else if(starting)stop();}});
 
 const catalog = window.GuitarSongbook.catalog;
 const songLoads = new Map();
@@ -233,8 +255,25 @@ window.addEventListener('resize',()=>{
     if(playing&&active)keepBarVisible(active);
   });
 });
+// Only a short, still tap toggles playback. Scrolling, pinching, text selection,
+// controls, and the tap that dismisses the options menu keep their usual behavior.
+const interactiveTarget=target=>target.closest('button,input,select,textarea,label,a,summary,[role="button"],[contenteditable],.practice-toolbar');
+let sheetTap;
 document.addEventListener('pointerdown',event=>{
+  const optionsOpen=$('player-settings').open;
+  if(!event.isPrimary || event.button!==0){sheetTap=null;return;}
+  sheetTap={id:event.pointerId,x:event.clientX,y:event.clientY,scrollX:window.scrollX,scrollY:window.scrollY,time:event.timeStamp,blocked:optionsOpen||Boolean(interactiveTarget(event.target))};
   if(!$('player-settings').contains(event.target))$('player-settings').open=false;
+});
+document.addEventListener('pointermove',event=>{
+  if(sheetTap&&event.pointerId===sheetTap.id&&Math.hypot(event.clientX-sheetTap.x,event.clientY-sheetTap.y)>10)sheetTap.blocked=true;
+},{passive:true});
+document.addEventListener('pointercancel',()=>{sheetTap=null;});
+document.addEventListener('click',event=>{
+  const tap=sheetTap;sheetTap=null;
+  if(event.defaultPrevented||$('play').disabled||interactiveTarget(event.target)||window.getSelection()?.toString())return;
+  if(event.detail!==0&&(!tap||tap.blocked||event.timeStamp-tap.time>500||Math.hypot(window.scrollX-tap.scrollX,window.scrollY-tap.scrollY)>3))return;
+  start();
 });
 document.addEventListener('keydown',event=>{
   if(event.key==='Escape'&&$('player-settings').open){

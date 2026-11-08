@@ -36,12 +36,40 @@ class PracticeTransport {
   constructor(instrument,{onEvent=()=>{},onEnd=()=>{}}={}) {
     this.instrument=instrument;this.context=instrument.context;
     this.onEvent=onEvent;this.onEnd=onEnd;this.queued=[];this.voices=new Set();
-    this.running=false;this.loop=false;this.click=false;
+    this.running=false;this.paused=false;this.loop=false;this.click=false;
   }
   start(timeline,bpm,{loop=false,click=false}={}) {
     this.stop();this.timeline=timeline;this.loop=loop;this.click=click;
     this.clock=new BeatClock(this.context.currentTime+.06,bpm);
     this.cursor=0;this.finishing=false;this.running=true;
+    this.interval=setInterval(()=>this.schedule(),20);this.schedule();
+  }
+  pause() {
+    if(!this.running)return;
+    const now=this.context.currentTime;
+    this.pausedBeat=Math.max(0,this.clock.anchorBeat,this.clock.beatAt(now));
+    this.sustained=[...this.voices].filter(item=>
+      !item.voice.ended && (item.voice.when<=now || item.continuation) && item.endBeat>this.pausedBeat
+    ).map(item=>({...item,elapsed:(item.elapsed||0)+Math.max(0,now-item.voice.when)})).filter(item=>item.elapsed>1e-6);
+    this.running=false;this.paused=true;this.clearScheduled();
+  }
+  resume(bpm,{loop=this.loop,click=this.click}={}) {
+    if(!this.paused)return;
+    this.loop=loop;this.click=click;
+    this.clock=new BeatClock(this.context.currentTime+.04,bpm);
+    this.clock.anchorBeat=this.pausedBeat;
+    const {events,length}=this.timeline;
+    const cycle=Math.floor(this.pausedBeat/length);
+    const offset=this.pausedBeat-cycle*length;
+    this.cursor=cycle*events.length+events.findIndex(event=>event.at>=offset);
+    this.finishing=false;this.running=true;this.paused=false;
+    // Continue the existing sample from its paused offset, without a new pick attack.
+    for(const item of this.sustained) {
+      const when=this.clock.timeAt(this.pausedBeat);
+      const voice=this.instrument.playNote(item.midi,when,this.clock.timeAt(item.endBeat),item.velocity,item.elapsed);
+      this.voices.add({...item,voice,continuation:true});
+    }
+    this.sustained=[];
     this.interval=setInterval(()=>this.schedule(),20);this.schedule();
   }
   setTempo(bpm) {
@@ -103,16 +131,19 @@ class PracticeTransport {
         if(event.midi!==undefined) {
           const endBeat=beat+event.hold;
           const voice=this.instrument.playNote(event.midi,time,this.clock.timeAt(endBeat),event.velocity);
-          record.voices.push(voice);this.voices.add({voice,endBeat});
+          record.voices.push(voice);this.voices.add({voice,endBeat,midi:event.midi,velocity:event.velocity,elapsed:0});
         }
         record.timer=setTimeout(()=>{if(this.running)this.onEvent(event);},Math.max(0,(time-this.context.currentTime)*1000));
       }
     }
   }
-  stop() {
-    this.running=false;clearInterval(this.interval);
+  clearScheduled() {
+    clearInterval(this.interval);
     for(const item of this.queued)clearTimeout(item.timer);
     for(const {voice} of this.voices)voice.cancel();
     this.voices.clear();this.queued=[];
+  }
+  stop() {
+    this.running=false;this.paused=false;this.sustained=[];this.clearScheduled();
   }
 }

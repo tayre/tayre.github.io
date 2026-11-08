@@ -26,8 +26,8 @@ function advance(time){
 }
 function close(actual,expected){assert.ok(Math.abs(actual-expected)<1e-6,`${actual} != ${expected}`);}
 const instrument={context,
-  playNote(midi,when,end,velocity){
-    const voice={midi,when,end,velocity,ended:false,cancelled:false,releaseAt(time){this.end=time;},cancel(){this.cancelled=true;this.ended=true;}};
+  playNote(midi,when,end,velocity,elapsed=0){
+    const voice={midi,when,end,velocity,elapsed,ended:false,cancelled:false,releaseAt(time){this.end=time;},cancel(){this.cancelled=true;this.ended=true;}};
     sounds.push(voice);return voice;
   },
   click(when){const voice={when,ended:false,cancel(){this.ended=true;}};return voice;}
@@ -69,3 +69,25 @@ assert.ok(sounds.some(v=>v.midi===60&&v.when>2));
 player.setTempo(60);player.setOptions({loop:false});advance(7);
 assert.equal(finished,1);assert.equal(player.running,false);
 console.log('PASS: live tempo continuity, rescheduled future attacks, unchanged pitches, tied releases, stop, and loop boundaries.');
+
+// Pause freezes beat position and UI callbacks, then resumes within the same sample.
+now=0;jobs.clear();sounds.length=0;highlights.length=0;
+player.start(timeline,120);advance(.56);player.pause();
+assert.equal(player.paused,true);assert.equal(player.running,false);close(player.pausedBeat,1);
+const count=highlights.length;advance(5);assert.equal(highlights.length,count);
+player.resume(60);assert.equal(player.running,true);assert.equal(player.paused,false);
+const continued=sounds[sounds.length-1];assert.equal(continued.midi,60);close(continued.elapsed,.5);
+close(continued.when,5.04);close(continued.end,6.04);
+advance(6.1);assert.equal(highlights.at(-1),59);
+player.stop();assert.equal(player.paused,false);
+// A rapid second pause before the resume pre-roll must not lose the held sample.
+now=0;jobs.clear();sounds.length=0;
+player.start(timeline,120);advance(.56);player.pause();advance(1);
+player.resume(120);advance(1.01);player.pause();close(player.pausedBeat,1);
+advance(2);player.resume(120);close(sounds.at(-1).elapsed,.5);assert.equal(sounds.at(-1).midi,60);player.stop();
+// Resting bars remain silent when resumed mid-rest.
+now=0;jobs.clear();sounds.length=0;
+const restTimeline=buildTimeline([{number:1,notes:[{beat:0,rest:true,duration:2},{beat:2,string:2,fret:1,duration:2}]}],{start:1,end:1},4,song.tuning);
+player.start(restTimeline,120);advance(.56);player.pause();advance(3);player.resume(120);
+assert.equal(sounds.filter(s=>!s.cancelled).length,0);advance(3.6);assert.equal(sounds.filter(s=>!s.cancelled).length,1);player.stop();
+console.log('PASS: pause/resume preserves position and sample offset, rapid toggles, and silence during rests.');
