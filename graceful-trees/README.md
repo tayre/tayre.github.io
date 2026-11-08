@@ -22,6 +22,12 @@ validate the implementation; they do not improve that bound. Read the
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
+Selected mathematical safeguards now have [Lean proofs](formal/README.md), checked
+in CI with a pinned toolchain and an audit of their assumptions. These cover the
+complement symmetry reduction, difference-sum constraint, a restricted negative
+control, and the local arithmetic of the caterpillar construction. They do not
+formalize the whole Python program or prove the conjecture.
+
 Every run also produces an **offline visual progress report** (`report.html`),
 SVG charts, a PNG overview, and audited chart data (`progress.json`). It shows
 cumulative progress across resumed runs and clearly distinguishes verified
@@ -376,6 +382,8 @@ checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.
 `progress.py` derives visual data from the ledger; `visuals.py` renders the offline
 report and Matplotlib figures.
+`formal/` contains Lean model lemmas; `scripts/check_proofs.py` rebuilds them and
+saves a versioned axiom-audit report. Research source snapshots include the proofs.
 `findings.py` identifies conservative review candidates; `scripts/notify_findings.py`
 validates the exported artifact and deduplicates GitHub notifications.
 The small scripts under `scripts/` adapt the same CLI to GitHub.

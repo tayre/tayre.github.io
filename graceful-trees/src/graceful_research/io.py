@@ -46,11 +46,12 @@ def provenance(output):
     )
     source_hashes = {}
     # Snapshot actual code, including uncommitted changes; Git SHA alone is insufficient.
-    for directory in ("src", "configs", "docs", "scripts", "tests", "examples"):
+    for directory in ("src", "configs", "docs", "scripts", "tests", "examples", "formal"):
         for path in sorted((project / directory).rglob("*")):
             if (
                 not path.is_file()
                 or "__pycache__" in path.parts
+                or ".lake" in path.parts
                 or path.suffix == ".pyc"
                 or any(part.endswith(".egg-info") for part in path.parts)
                 or path.suffix in {".zip", ".sqlite"}

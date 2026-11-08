@@ -36,6 +36,11 @@ be confused with the universal conjecture.
 
 ## Exact model and safe optimizations
 
+The [Lean library](../formal/README.md) checks the complement and sum arguments
+below, the four-vertex path control, and the construction's local arithmetic.
+Its coverage table states the unformalized parts explicitly; a checked model
+lemma is not automatically a proof of the Python implementation.
+
 For each vertex, `0 <= x[v] <= n-1`; all `x` are distinct. For each edge `uv`,
 `1 <= d[uv] <= n-1` and `d[uv] = abs(x[u]-x[v])`; all `d` are distinct.
 There are exactly `n-1` such differences, so they exhaust the required range.

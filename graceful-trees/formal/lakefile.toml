@@ -1,0 +1,7 @@
+name = "graceful_proofs"
+version = "0.1.0"
+defaultTargets = ["Graceful"]
+
+[[lean_lib]]
+name = "Graceful"
+moreLeanArgs = ["-DwarningAsError=true"]

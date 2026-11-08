@@ -14,7 +14,7 @@ import pytest
 from graceful_research.analysis import summarize
 from graceful_research.audit import audit_run
 from graceful_research.config import Config
-from graceful_research.io import write_checksums
+from graceful_research.io import provenance, write_checksums
 from graceful_research.runner import run
 from graceful_research.storage import Store
 from graceful_research.worker import Supervisor
@@ -46,6 +46,14 @@ def small_config(**kwargs):
         probe_max_attempts=6,
     )
     return Config(**{**defaults, **kwargs}).validate()
+
+
+def test_provenance_includes_proof_sources_without_build_cache(tmp_path):
+    saved = provenance(tmp_path)
+    assert "formal/Graceful/Complement.lean" in saved["source_hashes"]
+    assert "formal/Audit.lean" in saved["source_hashes"]
+    assert "formal/lean-toolchain" in saved["source_hashes"]
+    assert not any(".lake/" in name for name in saved["source_hashes"])
 
 
 @pytest.mark.parametrize(

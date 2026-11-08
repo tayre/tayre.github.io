@@ -1,5 +1,26 @@
 # Initial validation record
 
+## Lean proof checks — 8 November 2026
+
+Lean 4.24.0 compiled **17 named lemmas and theorems**. The transitive axiom audit
+checked all **50 declarations** from the project modules, including **37 theorem
+declarations** when generated helpers are counted. Only Lean's standard logical
+axioms were used. The checked scope and exclusions are in
+[formal/README.md](../formal/README.md).
+
+All **327 Python tests** passed with `GRACEFUL_LAKE` set to the pinned compiler,
+including real rejection tests for an unfinished proof, an arbitrary axiom,
+`native_decide`, and a false theorem. The 19 dashboard tests also passed.
+The separate formal CI job performs these Lean-dependent tests; ordinary Python
+test runs skip those four checks if no compiler is configured.
+
+A fresh 25-tree experiment and independent archive audit passed, checking 47
+positive witnesses. Its source snapshot includes the Lean files, toolchain pin
+and build configuration, with generated `.lake` files excluded. This preserves
+the mathematical sources without claiming a Lean certificate for each runtime
+result. Local reports are retained in `results/lean-final/` and
+`results/lean-source-validation/`.
+
 ## Processing optimization — 8 November 2026
 
 The optimization pass passed **319 Python tests and 19 dashboard tests**, including
