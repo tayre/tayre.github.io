@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGame, scoreEntry, setDraft, commitRound, undoRound, totals, outcome, restoreGame } from './engine.js';
+import { createGame, firstRecipient, scoreEntry, setDraft, commitRound, undoRound, totals, outcome, restoreGame, restoreGameRecord, updateGameHistory } from './engine.js';
 
 const players = [{ name: 'Alex', emoji: '🦊' }, { name: 'Sam', emoji: '🐼' }, { name: 'Riley', emoji: '🐸' }];
 const manual = value => ({ kind: 'manual', value });
@@ -91,4 +91,86 @@ test('valid saved games restore exactly; partial, corrupt and post-win rounds fa
   const won = round(createGame(players), [200,100,0]);
   assert.deepEqual(restoreGame(won), won);
   assert.equal(restoreGame({ ...won, draft:[manual(1),null,null] }), null);
+});
+
+test('the first recipient rotates in seating order, wraps, survives reload and follows undo', () => {
+  let game = createGame(players);
+  for (const name of ['Alex', 'Sam', 'Riley', 'Alex', 'Sam']) {
+    assert.equal(firstRecipient(game).name, name);
+    assert.equal(firstRecipient(setDraft(game, 0, manual(0))).name, name, 'draft edits do not rotate');
+    game = round(game, [0, 0, 0]);
+    game = restoreGame(JSON.parse(JSON.stringify(game)));
+  }
+  assert.equal(firstRecipient(undoRound(game)).name, 'Sam');
+  assert.equal(firstRecipient(createGame(game.players)).name, 'Alex', 'new games restart with the first player');
+  const solo = round(createGame([players[0]]), [0]);
+  assert.equal(firstRecipient(solo).name, 'Alex');
+  const fullTable = createGame(Array.from({ length: 18 }, (_, i) => ({ name: `Player ${i + 1}`, emoji: '🐉' })));
+  assert.equal(firstRecipient(fullTable, 17).name, 'Player 18');
+  assert.equal(firstRecipient(fullTable, 18).name, 'Player 1');
+  const tie = round(createGame(players), [200, 200, 0]);
+  assert.equal(firstRecipient(tie).name, 'Sam', 'tie-break rounds use the same rotation');
+});
+
+test('completed history stays distinct across rematches and follows corrected winning rounds', () => {
+  let game = round(createGame(players), [200, 150, 120]);
+  const finishedAt = '2026-11-07T19:00:00.000Z';
+  let records = updateGameHistory([], game, false, finishedAt);
+  assert.equal(records.length, 1);
+  assert.deepEqual(totals(records[0].game), [200, 150, 120]);
+  records = updateGameHistory(records, game, true, '2026-11-07T20:00:00.000Z');
+  assert.equal(records.length, 1, 'archiving the finished current game does not duplicate it');
+  assert.equal(records[0].savedAt, finishedAt, 'rematches preserve the completion date');
+  game = undoRound(game);
+  records = updateGameHistory(records, game);
+  assert.equal(records.length, 0, 'undo removes the obsolete result');
+  game = commitRound(setDraft(game, 1, manual(220)));
+  records = updateGameHistory(records, game);
+  assert.equal(records.length, 1);
+  assert.equal(outcome(records[0].game).leaders[0], 1, 'corrected winner is saved');
+  const rematch = round(createGame(players), [200, 150, 120]);
+  records = updateGameHistory(records, rematch);
+  assert.equal(records.length, 2, 'identical players and scores still represent different games');
+  assert.notEqual(records[0].game.id, records[1].game.id);
+  assert.deepEqual(records.map(restoreGameRecord), records);
+});
+
+test('replaced unfinished games retain saved rounds and drafts, but empty games are skipped', () => {
+  const empty = createGame(players);
+  assert.deepEqual(updateGameHistory([], empty, true), []);
+  const draft = setDraft(empty, 1, { kind: 'bust' });
+  assert.equal(updateGameHistory([], draft, true).length, 1, 'a bust is an entered score');
+  const playing = setDraft(round(empty, [12, 20, 30]), 0, cards([4, 9], [10], true));
+  assert.deepEqual(updateGameHistory([], playing), [], 'active unfinished games stay in the score table');
+  const [record] = updateGameHistory([], playing, true);
+  assert.deepEqual(totals(record.game), [12, 20, 30]);
+  assert.deepEqual(record.game.draft, playing.draft);
+  playing.draft[0].numbers.push(8);
+  assert.deepEqual(record.game.draft[0].numbers, [4, 9], 'archived card detail is a separate snapshot');
+  assert.deepEqual(restoreGameRecord(JSON.parse(JSON.stringify(record))), record);
+});
+
+test('legacy games migrate without changing scores; damaged history records are rejected', () => {
+  const original = setDraft(round(createGame(players), [40, 25, 0]), 2, manual(12));
+  const { id, startedAt, ...legacy } = original;
+  const migrated = restoreGame(legacy);
+  assert.ok(migrated.id);
+  assert.ok(migrated.startedAt);
+  assert.deepEqual(migrated.players, legacy.players);
+  assert.deepEqual(migrated.rounds, legacy.rounds);
+  assert.deepEqual(migrated.draft, legacy.draft);
+  assert.equal(firstRecipient(migrated).name, 'Sam');
+  const [record] = updateGameHistory([], original, true);
+  for (const invalid of [null, {}, { ...record, savedAt: 'bad' }, { ...record, game: legacy }, { ...record, game: { ...original, draft: [] } }]) {
+    assert.equal(restoreGameRecord(invalid), null);
+  }
+  assert.equal(restoreGame({ ...original, id: '' }), null);
+  assert.equal(restoreGame({ ...original, startedAt: 'bad' }), null);
+});
+
+test('every requested animal profile survives setup, saving and restoration', () => {
+  const animals = ['🐉', '🦡', '🐍', '🦅', '🐢', '🦂'];
+  const game = createGame(animals.map(emoji => ({ name: '', emoji })));
+  assert.deepEqual(game.players.map(player => player.emoji), animals);
+  assert.deepEqual(restoreGame(game).players.map(player => player.emoji), animals);
 });

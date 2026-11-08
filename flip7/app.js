@@ -1,4 +1,4 @@
-import { TARGET, MAX_PLAYERS, MODIFIERS, PROFILES, validEmoji, createGame, scoreEntry, totals, outcome, setDraft, commitRound, undoRound, restoreGame } from './engine.js';
+import { TARGET, MAX_PLAYERS, MODIFIERS, PROFILES, validEmoji, createGame, firstRecipient, scoreEntry, totals, outcome, setDraft, commitRound, undoRound, restoreGame, restoreGameRecord, updateGameHistory } from './engine.js';
 
 const $ = selector => document.querySelector(selector);
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -7,6 +7,7 @@ const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const defaultPlayers = () => Array.from({ length: MAX_PLAYERS }, (_, i) => ({ name: '', emoji: PROFILES[i][0] }));
 let setup = { count: 4, players: defaultPlayers() };
 let game = null;
+let gameHistory = [];
 let scoreEdit = null;
 let emojiIndex = null;
 let currentRoute = '';
@@ -14,6 +15,7 @@ let confirmAction = null;
 let toastTimer;
 let renderedGame;
 let renderedRounds;
+let renderedGameHistory;
 let confettiLayer;
 let confettiAnimations = [];
 
@@ -27,14 +29,26 @@ try {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     const saved = JSON.parse(raw);
-    if (saved.version !== 1) throw new Error('Unknown save version');
+    if (![1, 2].includes(saved.version)) throw new Error('Unknown save version');
     if (saved.setup && Number.isInteger(saved.setup.count) && saved.setup.count >= 1 && saved.setup.count <= MAX_PLAYERS && Array.isArray(saved.setup.players)) {
       setup.count = saved.setup.count;
       setup.players = setup.players.map((p, i) => ({ name: typeof saved.setup.players[i]?.name === 'string' ? saved.setup.players[i].name.slice(0, 24) : p.name, emoji: validEmoji(saved.setup.players[i]?.emoji) ? saved.setup.players[i].emoji : p.emoji }));
     }
+    const records = Array.isArray(saved.history) ? saved.history : [];
+    const seen = new Set();
+    gameHistory = records.map(restoreGameRecord).filter(record => {
+      if (!record || seen.has(record.game.id)) return false;
+      seen.add(record.game.id);
+      return true;
+    });
+    const historyDamaged = (saved.history !== undefined && !Array.isArray(saved.history)) || gameHistory.length !== records.length;
     game = saved.game ? restoreGame(saved.game) : null;
     if (saved.game && !game) throw new Error('Invalid saved game');
+    const missingResult = game && outcome(game).type === 'won' && !gameHistory.some(record => record.game.id === game.id);
+    if (missingResult) gameHistory = updateGameHistory(gameHistory, game);
     $('#save-status').innerHTML = '<i></i>Saved on this device';
+    if (historyDamaged) storageWarning('Some game history could not be opened. Your current game and readable history are still available.');
+    else if (saved.version === 1 || (game && !saved.game.id) || missingResult) save();
   }
 } catch {
   storageWarning('The saved game could not be opened. You can still start a new game.');
@@ -42,7 +56,7 @@ try {
 
 function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, setup, game }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, setup, game, history: gameHistory }));
     $('#save-status').innerHTML = '<i></i>Saved on this device';
     $('#storage-warning').hidden = true;
   } catch {
@@ -95,7 +109,7 @@ window.addEventListener('pagehide', stopConfetti);
 function navigate(hash, replace = false) {
   if (hash === currentRoute) return;
   const overlay = /^#(score\/|emoji\/|rules)/.test(hash);
-  const returnHash = hash.startsWith('#emoji/') ? '#setup' : hash.startsWith('#score/') ? '#game' : currentRoute === '#setup' ? '#setup' : game ? '#game' : '#setup';
+  const returnHash = hash.startsWith('#emoji/') ? '#setup' : hash.startsWith('#score/') ? '#game' : ['#setup', '#game', '#history'].includes(currentRoute) ? currentRoute : history.state?.returnHash || (game ? '#game' : '#setup');
   history[replace ? 'replaceState' : 'pushState']({ flip7: true, overlay: overlay && !replace, returnHash }, '', hash);
   renderRoute();
 }
@@ -112,16 +126,19 @@ function renderRoute() {
   if ((route === '#game' || scoreId) && !game) route = '#setup';
   if (scoreId && game && (!game.players.some(p => p.id === scoreId) || outcome(game).type === 'won')) route = '#game';
   if (pickerIndex !== undefined && Number(pickerIndex) >= setup.count) route = '#setup';
-  if (!['#setup', '#game', '#rules'].includes(route) && !/^#score\/p\d+$/.test(route) && !/^#emoji\/\d+$/.test(route)) route = game ? '#game' : '#setup';
+  if (!['#setup', '#game', '#history', '#rules'].includes(route) && !/^#score\/p\d+$/.test(route) && !/^#emoji\/\d+$/.test(route)) route = game ? '#game' : '#setup';
   if (route !== location.hash) history.replaceState({ flip7: true, overlay: false }, '', route);
   const previous = currentRoute;
   currentRoute = route;
   if (route !== '#game') stopConfetti();
   if ($('#confirm-dialog').open) { $('#confirm-dialog').close(); confirmAction = null; }
-  const setupVisible = route === '#setup' || route.startsWith('#emoji/') || (route === '#rules' && (history.state?.returnHash === '#setup' || !game));
-  $('#setup-view').hidden = !setupVisible;
-  $('#game-view').hidden = setupVisible;
-  if (setupVisible) renderSetup(); else renderGame();
+  const baseRoute = route === '#rules' ? history.state?.returnHash || (game ? '#game' : '#setup') : route.startsWith('#emoji/') ? '#setup' : route.startsWith('#score/') ? '#game' : route;
+  $('#setup-view').hidden = baseRoute !== '#setup';
+  $('#game-view').hidden = baseRoute !== '#game';
+  $('#history-view').hidden = baseRoute !== '#history';
+  if (baseRoute === '#setup') renderSetup();
+  else if (baseRoute === '#history') renderGameHistory();
+  else renderGame();
   const dialogId = route.startsWith('#score/') ? 'score-dialog' : route.startsWith('#emoji/') ? 'emoji-dialog' : route === '#rules' ? 'rules-dialog' : null;
   for (const dialog of document.querySelectorAll('dialog[open]')) if (dialog.id !== dialogId) dialog.close();
   if (dialogId === 'score-dialog') {
@@ -165,12 +182,19 @@ function renderGame() {
   $('#game-eyebrow').textContent = won ? `${game.rounds.length} ROUNDS PLAYED` : 'FIRST TO 200';
   $('#recorded-count').textContent = won ? 'Final scores' : `${ready} / ${game.players.length} ready`;
   $('#round-instruction').textContent = won ? 'The scores are in. Time for a rematch?' : 'Bust or count your points.';
+  $('#deal-order').hidden = won;
+  if (!won) {
+    const first = firstRecipient(game);
+    const next = firstRecipient(game, round);
+    $('#first-recipient').textContent = `${first.emoji} ${first.name}`;
+    $('#next-recipient').textContent = `${next.emoji} ${next.name}`;
+  }
   $('#scoreboard').innerHTML = game.players.map((p, i) => {
     const entry = game.draft[i];
     const rank = scores.filter(score => score > scores[i]).length + 1;
     const leading = game.rounds.length > 0 && result.leaders.includes(i);
     const entryScore = entry === null ? null : scoreEntry(entry);
-    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : ''}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>total</span></div><div class="card-score-actions">${won ? `<span class="final-label">${leading ? 'Winner ✨' : 'Well played'}</span>` : `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted" aria-pressed="${entry?.kind === 'bust'}">Bust</button><button class="round-score${entry !== null && entry.kind !== 'bust' ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null && entry.kind !== 'bust' ? 'Edit round score' : 'Count points'} for ${escapeHTML(p.name)}">${entry !== null && entry.kind !== 'bust' ? `<span>+${entryScore}</span><small>Edit points</small>` : '<span>Count</span><span>points</span>'}</button>`}</div></article>`;
+    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : ''}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>of ${TARGET}</span></div><progress class="score-progress" max="${TARGET}" value="${Math.min(scores[i], TARGET)}" aria-label="${escapeHTML(p.name)}’s progress to ${TARGET} points" aria-valuetext="${scores[i]} points out of ${TARGET}">${scores[i]} / ${TARGET}</progress><div class="card-score-actions">${won ? `<span class="final-label">${leading ? 'Winner ✨' : 'Well played'}</span>` : `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted" aria-pressed="${entry?.kind === 'bust'}">Bust</button><button class="round-score${entry !== null && entry.kind !== 'bust' ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null && entry.kind !== 'bust' ? 'Edit round score' : 'Count points'} for ${escapeHTML(p.name)}">${entry !== null && entry.kind !== 'bust' ? `<span>+${entryScore}</span><small>Edit points</small>` : '<span>Count</span><span>points</span>'}</button>`}</div></article>`;
   }).join('');
   $('#save-round').hidden = won;
   $('#save-round').disabled = ready !== game.players.length;
@@ -196,7 +220,30 @@ function renderHistory(scores) {
     $('#round-history').innerHTML = '<p class="empty-history"><span aria-hidden="true">↗</span> Your first round is waiting to happen.</p>';
     return;
   }
-  $('#round-history').innerHTML = `<div class="history-scroll" role="region" aria-label="Round scores, scroll sideways for more players" tabindex="0"><table><caption class="sr-only">Saved round scores for every player</caption><thead><tr><th scope="col">Round</th>${game.players.map(p => `<th scope="col"><span aria-hidden="true">${p.emoji}</span> ${escapeHTML(p.name)}</th>`).join('')}</tr></thead><tbody>${game.rounds.map((round, index) => ({ round, index })).reverse().map(({ round, index }) => `<tr><th scope="row">${String(index + 1).padStart(2, '0')}</th>${round.map(entry => `<td>${entry.kind === 'bust' ? '<span class="history-bust">Bust · 0</span>' : `${scoreEntry(entry)}${entry.kind === 'cards' && entry.numbers.length === 7 ? '<small class="history-seven">FLIP 7</small>' : ''}`}</td>`).join('')}</tr>`).join('')}</tbody><tfoot><tr><th scope="row">Total</th>${scores.map(score => `<td>${score}</td>`).join('')}</tr></tfoot></table></div>`;
+  $('#round-history').innerHTML = roundTable(game, scores);
+}
+
+function roundTable(savedGame, scores = totals(savedGame)) {
+  return `<div class="history-scroll" role="region" aria-label="Round scores, scroll sideways for more players" tabindex="0"><table><caption class="sr-only">Saved round scores for every player</caption><thead><tr><th scope="col">Round</th>${savedGame.players.map(p => `<th scope="col"><span aria-hidden="true">${p.emoji}</span> ${escapeHTML(p.name)}</th>`).join('')}</tr></thead><tbody>${savedGame.rounds.map((round, index) => ({ round, index })).reverse().map(({ round, index }) => `<tr><th scope="row">${String(index + 1).padStart(2, '0')}<small class="history-first">First: ${escapeHTML(firstRecipient(savedGame, index).name)}</small></th>${round.map(entry => `<td>${entry.kind === 'bust' ? '<span class="history-bust">Bust · 0</span>' : `${scoreEntry(entry)}${entry.kind === 'cards' && entry.numbers.length === 7 ? '<small class="history-seven">FLIP 7</small>' : ''}`}</td>`).join('')}</tr>`).join('')}</tbody><tfoot><tr><th scope="row">Total</th>${scores.map(score => `<td>${score}</td>`).join('')}</tr></tfoot></table></div>`;
+}
+
+function renderGameHistory() {
+  $('#history-return').href = game ? '#game' : '#setup';
+  $('#history-return').textContent = game ? '← Current game' : '← Player setup';
+  if (renderedGameHistory === gameHistory) return;
+  renderedGameHistory = gameHistory;
+  if (!gameHistory.length) {
+    $('#game-history').innerHTML = '<p class="empty-history">Your games will appear here when they finish or you start a new one.</p>';
+    return;
+  }
+  const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  $('#game-history').innerHTML = gameHistory.map(({ game: savedGame, savedAt }) => {
+    const result = outcome(savedGame);
+    const winner = result.type === 'won' ? savedGame.players[result.leaders[0]] : null;
+    const scores = totals(savedGame);
+    const pending = savedGame.draft.some(entry => entry !== null);
+    return `<details class="saved-game"><summary><span class="saved-game-heading"><strong>${winner ? `${winner.emoji} ${escapeHTML(winner.name)} won · ${result.top} points` : 'Unfinished game'}</strong><span>${escapeHTML(dateFormat.format(new Date(savedAt)))} · ${savedGame.rounds.length} ${savedGame.rounds.length === 1 ? 'round' : 'rounds'} · ${savedGame.players.length} ${savedGame.players.length === 1 ? 'player' : 'players'}</span></span><span class="history-toggle" aria-hidden="true">⌄</span></summary><div class="saved-game-body"><ul class="saved-game-scores">${savedGame.players.map((player, i) => `<li><span>${player.emoji} ${escapeHTML(player.name)}${winner?.id === player.id ? '<small>Winner</small>' : ''}</span><strong>${scores[i]}</strong></li>`).join('')}</ul>${savedGame.rounds.length ? roundTable(savedGame, scores) : '<p class="history-note">No rounds were saved.</p>'}${pending ? `<div class="unfinished-round"><h3>Round ${savedGame.rounds.length + 1} was in progress</h3><p class="history-note">These entries are not included in the totals.</p><ul class="saved-game-scores">${savedGame.players.map((player, i) => `<li><span>${player.emoji} ${escapeHTML(player.name)}</span><strong>${savedGame.draft[i] === null ? 'Not entered' : savedGame.draft[i].kind === 'bust' ? 'Bust · 0' : scoreEntry(savedGame.draft[i])}</strong></li>`).join('')}</ul></div>` : ''}</div></details>`;
+  }).join('');
 }
 
 function beginScore(index) {
@@ -281,6 +328,7 @@ function confirmChange(title, message, label, action) {
 
 function startGame() {
   clearTimeout(toastTimer); $('#toast').hidden = true;
+  if (game) gameHistory = updateGameHistory(gameHistory, game, true);
   game = createGame(setup.players.slice(0, setup.count));
   save();
   navigate('#game');
@@ -290,7 +338,7 @@ function startGame() {
 
 $('#setup-form').addEventListener('submit', event => {
   event.preventDefault();
-  if (game && (game.rounds.length || game.draft.some(Boolean))) confirmChange('A fresh start?', 'Starting this game replaces the current scores. Your chosen names and emojis are ready to go.', 'Start new game', startGame);
+  if (game && (game.rounds.length || game.draft.some(Boolean))) confirmChange('A fresh start?', 'This game will stay in Game history. Your chosen names and emojis are ready for a new game, starting with the first player.', 'Start new game', startGame);
   else startGame();
 });
 $('#player-fields').addEventListener('input', event => {
@@ -304,23 +352,26 @@ $('#new-game').addEventListener('click', () => {
   game.players.forEach((p, i) => { setup.players[i] = { name: p.name, emoji: p.emoji }; });
   save(); navigate('#setup'); window.scrollTo(0, 0);
 });
-$('#play-again').addEventListener('click', () => confirmChange('Run it back?', 'Start a fresh game with the same players. This game’s scores will be replaced.', 'Play again', () => {
+$('#play-again').addEventListener('click', () => confirmChange('Run it back?', 'Start a fresh game with the same players, dealing to the first player first. This game’s scores will stay in Game history.', 'Play again', () => {
   clearTimeout(toastTimer); $('#toast').hidden = true;
+  gameHistory = updateGameHistory(gameHistory, game, true);
   game = createGame(game.players); save(); renderGame(); window.scrollTo(0, 0); $('#game-title').focus({ preventScroll: true });
 }));
 $('#save-round').addEventListener('click', () => {
   try {
     const round = game.rounds.length + 1;
-    game = commitRound(game); save(); renderGame();
+    game = commitRound(game);
+    gameHistory = updateGameHistory(gameHistory, game);
+    save(); renderGame();
     const won = outcome(game).type === 'won';
-    toast(`Round ${round} saved. ${won ? 'We have a winner!' : 'Deal the next round.'}`);
+    toast(`Round ${round} saved. ${won ? 'We have a winner!' : `Deal to ${firstRecipient(game).name} first.`}`);
     if (won) celebrateWin();
     window.scrollTo({ top: 0, behavior: motionPreference.matches ? 'instant' : 'smooth' });
     $('#game-title').focus({ preventScroll: true });
   } catch (error) { toast(error.message); }
 });
 $('#undo-round').addEventListener('click', () => {
-  const undo = () => { game = undoRound(game); save(); renderGame(); toast('Round reopened. Edit the scores, then save again.'); window.scrollTo(0, 0); };
+  const undo = () => { game = undoRound(game); gameHistory = updateGameHistory(gameHistory, game); save(); renderGame(); toast('Round reopened. Edit the scores, then save again.'); window.scrollTo(0, 0); };
   if (game.draft.some(Boolean)) confirmChange('Reopen the last round?', 'The scores entered for this new round will be replaced by the last saved round, ready to edit.', 'Reopen round', undo);
   else undo();
 });

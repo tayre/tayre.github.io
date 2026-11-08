@@ -8,10 +8,12 @@ export const PROFILES = [
   ['🚀', 'Rocket'], ['🍀', 'Clover'], ['🌈', 'Rainbow'], ['⚡', 'Lightning'],
   ['🍓', 'Strawberry'], ['🍕', 'Pizza'], ['🌻', 'Sunflower'], ['🌵', 'Cactus'],
   ['👾', 'Alien'], ['🤖', 'Robot'], ['🐈', 'Cat'], ['🐶', 'Dog'],
+  ['🐉', 'Dragon'], ['🦡', 'Badger'], ['🐍', 'Snake'], ['🦅', 'Eagle'], ['🦂', 'Scorpion'],
 ];
 
 const copy = value => JSON.parse(JSON.stringify(value));
 const fail = message => { throw new Error(message); };
+const validDate = value => typeof value === 'string' && Number.isFinite(Date.parse(value));
 export const validEmoji = emoji => PROFILES.some(([value]) => value === emoji);
 export const cleanName = (name, index) => (typeof name === 'string' ? name.trim().slice(0, 24) : '') || `Player ${index + 1}`;
 
@@ -33,10 +35,18 @@ export function scoreEntry(entry) {
 export function createGame(players) {
   if (!Array.isArray(players) || players.length < 1 || players.length > MAX_PLAYERS) return fail(`Choose 1–${MAX_PLAYERS} players.`);
   return {
+    id: globalThis.crypto?.randomUUID?.() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`,
+    startedAt: new Date().toISOString(),
     players: players.map((p, i) => ({ id: `p${i + 1}`, name: cleanName(p.name, i), emoji: validEmoji(p.emoji) ? p.emoji : PROFILES[i % PROFILES.length][0] })),
     rounds: [],
     draft: players.map(() => null),
   };
+}
+
+// Only the first recipient rotates; the dealer and seating order stay the same.
+// Deriving it from saved rounds also handles reloads, ties and undo.
+export function firstRecipient(game, roundIndex = game.rounds.length) {
+  return game.players[roundIndex % game.players.length];
 }
 
 export function totals(game) {
@@ -74,6 +84,12 @@ export function restoreGame(value) {
   try {
     if (!value || !Array.isArray(value.players) || !Array.isArray(value.rounds) || !Array.isArray(value.draft)) return null;
     const game = createGame(value.players);
+    // Older saves have no identity or date. Give them one during migration.
+    if (value.id !== undefined || value.startedAt !== undefined) {
+      if (typeof value.id !== 'string' || !value.id.length || value.id.length > 100 || !validDate(value.startedAt)) return null;
+      game.id = value.id;
+      game.startedAt = value.startedAt;
+    }
     if (value.players.some((p, i) => p.id !== game.players[i].id || typeof p.name !== 'string' || !validEmoji(p.emoji))) return null;
     if (value.draft.length !== game.players.length) return null;
     let restored = game;
@@ -85,4 +101,22 @@ export function restoreGame(value) {
     if (outcome(restored).type === 'won' && value.draft.some(entry => entry !== null)) return null;
     return { ...restored, draft: copy(value.draft) };
   } catch { return null; }
+}
+
+export function restoreGameRecord(value) {
+  if (!value || !validDate(value.savedAt) || !value.game?.id || !value.game?.startedAt) return null;
+  const game = restoreGame(value.game);
+  if (!game || (!game.rounds.length && !game.draft.some(entry => entry !== null))) return null;
+  return { savedAt: value.savedAt, game };
+}
+
+// Keep one snapshot per game. Undoing a win removes its old result until the
+// corrected game is finished (or deliberately replaced with a new game).
+export function updateGameHistory(records, game, archive = false, savedAt = new Date().toISOString()) {
+  // Starting a rematch must keep the original completion date.
+  if (archive && outcome(game).type === 'won' && records.some(record => record.game.id === game.id)) return records;
+  const others = records.filter(record => record.game.id !== game.id);
+  const hasScores = game.rounds.length > 0 || game.draft.some(entry => entry !== null);
+  if (outcome(game).type !== 'won' && (!archive || !hasScores)) return others;
+  return [{ savedAt, game: copy(game) }, ...others];
 }

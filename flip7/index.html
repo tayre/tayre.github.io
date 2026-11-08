@@ -16,7 +16,7 @@
   <div class="app-shell">
     <header class="masthead">
       <a class="brand" href="#game" aria-label="Flip 7 scorekeeper"><span class="brand-mark" aria-hidden="true">7</span><span>Flip 7<small>Scorekeeper</small></span></a>
-      <div class="header-actions"><span id="save-status" class="save-status"><i></i>On this device</span><a class="quiet-button" href="#rules">How to score <span aria-hidden="true">↗</span></a></div>
+      <div class="header-actions"><span id="save-status" class="save-status"><i></i>On this device</span><a class="quiet-button" href="#history" aria-label="Game history">History</a><a class="quiet-button" href="#rules">How to score <span aria-hidden="true">↗</span></a></div>
     </header>
     <p id="storage-warning" class="notice warning" role="alert" hidden></p>
     <main>
@@ -35,10 +35,15 @@
       <section id="game-view" aria-labelledby="game-title" hidden>
         <div class="game-heading"><div><p id="game-eyebrow" class="eyebrow">FIRST TO 200</p><h1 id="game-title" tabindex="-1">Round 1</h1></div><button id="new-game" class="quiet-button">New game <span aria-hidden="true">↗</span></button></div>
         <div id="result-banner" class="result-banner" role="status" hidden></div>
-        <div class="board-caption"><p id="round-instruction">Bust or count your points.</p><span id="recorded-count" class="small-pill">0 / 4 ready</span></div>
+        <div class="board-caption"><div><div id="deal-order" class="deal-order" aria-live="polite"><p>First card: <strong id="first-recipient"></strong></p><p class="next-deal">Next round: <span id="next-recipient"></span></p></div><p id="round-instruction" class="sr-only">Bust or count your points.</p></div><span id="recorded-count" class="small-pill">0 / 4 ready</span></div>
         <div id="scoreboard" class="scoreboard"></div>
         <div id="round-bar" class="round-bar"><div><strong id="round-bar-title">Everyone in?</strong><p id="round-bar-note">Enter a score or mark a bust for each player.</p></div><button id="save-round" class="button primary" disabled>Save round <span aria-hidden="true">→</span></button><button id="play-again" class="button primary" hidden>Same players, again <span aria-hidden="true">↗</span></button></div>
         <section class="history-section"><div class="section-heading"><div><p class="eyebrow">SAVED ROUNDS</p><h2>Round history</h2></div><button id="undo-round" class="quiet-button" disabled>↶ Undo last round</button></div><div id="round-history"></div></section>
+      </section>
+      <section id="history-view" aria-labelledby="history-title" hidden>
+        <div class="game-heading"><h1 id="history-title">Game history</h1><a id="history-return" class="quiet-button" href="#setup">← Player setup</a></div>
+        <p class="history-intro">Saved on this device. Open a game to see its scores and rounds.</p>
+        <div id="game-history" class="game-history"></div>
       </section>
     </main>
     <footer><span id="offline-status">Made for your game table.</span><span>Unofficial companion · <a href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Official rules ↗</a></span></footer>
@@ -56,7 +61,7 @@
     </div><div class="score-footer"><button id="mark-bust" class="button bust-button">Bust <span>0 points</span></button><button id="use-score" class="button primary" disabled>Use score <span aria-hidden="true">✓</span></button></div>
   </dialog>
 
-  <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-title"><div class="dialog-heading"><div><p class="eyebrow">A QUICK REMINDER</p><h2 id="rules-title">Make it count.</h2></div><button class="close-button" data-close aria-label="Close scoring rules">×</button></div><ol class="rules-list"><li><strong>Add your number cards.</strong><p>The 0 card counts toward seven cards, but adds no points.</p></li><li><strong>Have ×2? Double that sum.</strong><p>Only the number cards get doubled.</p></li><li><strong>Add your bonus cards.</strong><p>Add any +2, +4, +6, +8, and +10 modifiers.</p></li><li><strong>Flipped seven? Add 15.</strong><p>Seven different number cards end the round for everyone.</p></li></ol><div class="rules-note"><p><strong>Busted?</strong> That round is worth zero.</p><p><strong>Reaching 200:</strong> finish recording everyone’s round scores. The highest total wins. A tie at the top means everyone plays another round.</p></div><a class="quiet-button" href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Read the official FAQ ↗</a></dialog>
+  <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-title"><div class="dialog-heading"><div><p class="eyebrow">A QUICK REMINDER</p><h2 id="rules-title">Make it count.</h2></div><button class="close-button" data-close aria-label="Close scoring rules">×</button></div><ol class="rules-list"><li><strong>Add your number cards.</strong><p>The 0 card counts toward seven cards, but adds no points.</p></li><li><strong>Have ×2? Double that sum.</strong><p>Only the number cards get doubled.</p></li><li><strong>Add your bonus cards.</strong><p>Add any +2, +4, +6, +8, and +10 modifiers.</p></li><li><strong>Flipped seven? Add 15.</strong><p>Seven different number cards end the round for everyone.</p></li></ol><div class="rules-note"><p><strong>Your house rule:</strong> Keep the same dealer. Deal the first card to Player 1 in round 1, then the next player each round, wrapping back to the first. New games start with Player 1 again.</p><p><strong>Busted?</strong> That round is worth zero.</p><p><strong>Reaching 200:</strong> finish recording everyone’s round scores. The highest total wins. A tie at the top means everyone plays another round.</p></div><a class="quiet-button" href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Read the official FAQ ↗</a></dialog>
 
   <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title"></h2><button class="close-button" data-dismiss aria-label="Cancel">×</button></div><p id="confirm-message" class="confirm-message"></p><div class="confirm-actions"><button class="button secondary" data-dismiss>Keep playing</button><button id="confirm-action" class="button primary"></button></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
