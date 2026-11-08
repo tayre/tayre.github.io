@@ -6,7 +6,7 @@ window.GuitarSongbook = {
   {
     "id": "jingle-bell-rock",
     "title": "Jingle Bell Rock",
-    "file": "songs/jingle-bell-rock.js?v=315074246a3d4f81"
+    "file": "songs/jingle-bell-rock.js?v=2078d22237479734"
   }
 ],
   songs: Object.create(null)

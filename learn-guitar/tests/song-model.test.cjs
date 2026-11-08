@@ -17,6 +17,7 @@ for(const entry of catalog){
   assert.ok(bars.length);
   if(entry.id==='jingle-bell-rock'){
     assert.equal(bars.length,32);
+    assert.equal(JSON.stringify(song.layout.rows),JSON.stringify([5,6,5,6,5,5]),'Preserve the six rows of the source photo');
     for(const [copy,original] of [[9,1],[10,2],[11,3],[12,4],[13,5],[14,6],[21,17],[25,1],[26,2],[27,3]])assert.equal(JSON.stringify(bars[copy-1].notes),JSON.stringify(bars[original-1].notes));
   }
 }
@@ -31,4 +32,9 @@ assert.throws(()=>context.compileSong({...future,rawBars:[['1:0:2']]}),/expected
 assert.throws(()=>context.compileSong({...future,rawBars:[['1:0:3:t']]}),/Tie/);
 assert.throws(()=>context.compileSong({...future,rawBars:[['7:0:3']]}),/Invalid token/);
 assert.throws(()=>context.compileSong({...future,sections:[{name:'Bad',start:1,end:6}]}),/range/);
+assert.throws(()=>context.compileSong({...future,layout:{rows:[2,2]}}),/covering the whole song/);
+assert.throws(()=>context.compileSong({...future,layout:{rows:[0,5]}}),/positive bar counts/);
+assert.throws(()=>context.compileSong({...future,layout:{rows:[2,3],widths:[[1,1],[1,1]]}}),/positive width/);
+assert.throws(()=>context.compileSong({...future,layout:{rows:[2,3],widths:[[1,1],[1,-1,1]]}}),/positive width/);
+assert.equal(context.compileSong({...future,layout:{rows:[2,3]}}).length,5,'Photo row breaks can omit custom widths');
 console.log(`PASS: ${catalog.length} catalog song(s), exact repeat mappings, future-song meter/length, and invalid transcription checks.`);

@@ -9,7 +9,7 @@ const {compileSong} = require('../song-model.js');
 const defaultRoot = path.resolve(__dirname, '..');
 const hash = data => createHash('sha256').update(data).digest('hex').slice(0, 16);
 const json = value => JSON.stringify(value, null, 2) + '\n';
-const fields = new Set(['schemaVersion','id','title','tempo','beatsPerBar','tuning','tuningLabel','capo','rawBars','sections','chordShapes','repeatSummary','accompaniment','tips','source','transcription']);
+const fields = new Set(['schemaVersion','id','title','tempo','beatsPerBar','tuning','tuningLabel','capo','rawBars','sections','chordShapes','repeatSummary','accompaniment','tips','source','transcription','layout']);
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const isText = value => typeof value === 'string' && value.trim().length > 0;
 const readJSON = file => {

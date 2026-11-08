@@ -6,28 +6,49 @@ const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&
 const $ = id => document.getElementById(id);
 let selected = 'all';
 let audio, instrument, transport, playing = false, starting = false, runId = 0;
-function tabSVG(bar) {
-  const x = beat => 38 + beat * (244/currentSong.beatsPerBar);
-  const y = string => 31 + (string-1)*18;
+const photoLayoutMedia = window.matchMedia('(min-width:700px)');
+function tabSVG(bar, width = 292, photoLayout = false, rowStart = false) {
+  const left = photoLayout ? (rowStart ? 62 : 28) : 38;
+  const right = photoLayout ? width-20 : 282;
+  const x = beat => left + beat * ((right-left)/currentSong.beatsPerBar);
+  const y = string => (photoLayout ? 40 : 31) + (string-1)*(photoLayout ? 26 : 18);
+  const noteWidth = photoLayout ? 32 : 18;
+  const noteHeight = photoLayout ? 38 : 22;
   const spoken = bar.notes.map(n => n.rest ? `rest ${n.duration} beats` : `${n.tied ? 'hold tied' : 'play'} ${stringNames[n.string-1]} string fret ${n.fret} for ${n.duration} beats`).join('; ');
-  let svg = `<svg class="tab-svg" viewBox="0 0 292 155" role="img" aria-label="Bar ${bar.number}: ${spoken}">`;
+  let svg = `<svg class="tab-svg" viewBox="0 0 ${width} ${photoLayout ? 220 : 155}" role="img" aria-label="Bar ${bar.number}: ${spoken}">`;
   stringNames.forEach((name,i) => {
-    svg += `<line class="string-line ${!bars.some(b=>b.notes.some(n=>n.string===i+1))?'unused-string':''}" x1="0" x2="292" y1="${y(i+1)}" y2="${y(i+1)}"/><g class="string-label"><rect class="fret-bg" x="0" y="${y(i+1)-9}" width="25" height="18"/><text class="string-name" x="8" y="${y(i+1)+3}">${name}</text></g>`;
+    svg += `<line class="string-line ${!bars.some(b=>b.notes.some(n=>n.string===i+1))?'unused-string':''}" x1="0" x2="${width}" y1="${y(i+1)}" y2="${y(i+1)}"/><g class="string-label"><rect class="fret-bg" x="0" y="${y(i+1)-(photoLayout ? 13 : 9)}" width="${photoLayout ? 36 : 25}" height="${photoLayout ? 26 : 18}"/><text class="string-name" x="8" y="${y(i+1)+(photoLayout ? 6 : 3)}">${name}</text></g>`;
   });
-  for(let beat=0;beat<currentSong.beatsPerBar;beat+=.5) svg += `<text class="beat" text-anchor="middle" x="${x(beat)}" y="145">${Number.isInteger(beat)?beat+1:'&'}</text>`;
+  for(let beat=0;beat<currentSong.beatsPerBar;beat+=.5) svg += `<text class="beat" text-anchor="middle" x="${x(beat)}" y="${photoLayout ? 212 : 145}">${Number.isInteger(beat)?beat+1:'&'}</text>`;
   bar.notes.forEach((n,i) => {
     const nx=x(n.beat);
-    if(n.rest){svg+=`<g class="note" id="note-${bar.number}-${i}"><text class="rest" text-anchor="middle" x="${nx}" y="17">rest</text><line class="note-held" x1="${nx}" x2="${Math.min(280,x(n.beat+n.duration)-10)}" y1="22" y2="22"/></g>`;return;}
+    if(n.rest){svg+=`<g class="note" id="note-${bar.number}-${i}"><text class="rest" text-anchor="middle" x="${nx}" y="${photoLayout ? 20 : 17}">rest</text><line class="note-held" x1="${nx}" x2="${Math.min(width-12,x(n.beat+n.duration)-10)}" y1="${photoLayout ? 26 : 22}" y2="${photoLayout ? 26 : 22}"/></g>`;return;}
     const ny=y(n.string);
-    if(n.duration>0.5) svg+=`<line class="note-held" x1="${nx+10}" x2="${Math.min(280,x(n.beat+n.duration)-10)}" y1="${ny}" y2="${ny}"/>`;
-    if(n.tied){const prev=bar.notes[i-1];const start=prev?x(prev.beat):25;svg+=`<path class="tie" d="M ${start} ${ny-11} Q ${(start+nx)/2} ${ny-25} ${nx} ${ny-11}"/>`;}
-    svg+=`<g class="note" id="note-${bar.number}-${i}"><rect class="fret-bg" x="${nx-9}" y="${ny-11}" width="18" height="22" rx="5"/><text class="fret" text-anchor="middle" x="${nx}" y="${ny+6}">${n.fret}</text></g>`;
+    if(n.duration>0.5) svg+=`<line class="note-held" x1="${nx+noteWidth/2+1}" x2="${Math.min(width-12,x(n.beat+n.duration)-10)}" y1="${ny}" y2="${ny}"/>`;
+    if(n.tied){const prev=bar.notes[i-1];const start=prev?x(prev.beat):photoLayout ? 0 : 25;const lift=photoLayout ? 20 : 11;svg+=`<path class="tie" d="M ${start} ${ny-lift} Q ${(start+nx)/2} ${ny-lift-14} ${nx} ${ny-lift}"/>`;}
+    svg+=`<g class="note" id="note-${bar.number}-${i}"><rect class="fret-bg" x="${nx-noteWidth/2}" y="${ny-noteHeight/2}" width="${noteWidth}" height="${noteHeight}" rx="5"/><text class="fret" text-anchor="middle" x="${nx}" y="${ny+(photoLayout ? 10 : 6)}">${n.fret}</text></g>`;
   });
   return svg+'</svg>';
 }
 function render(){
-  $('score').innerHTML = `<div class="sheet-scroll"><div class="tab-sheet">${Array.from({length:Math.ceil(bars.length/4)},(_,row)=>`<div class="sheet-row">${bars.slice(row*4,row*4+4).map(b=>`<article class="bar" id="bar-${b.number}" title="${escapeHTML(b.hint)}"><div class="bar-header"><span class="bar-number">${b.number}${b.repeat?` <span class="repeat-ref">= ${b.repeat}</span>`:''}</span><span class="chord-label" title="Suggested accompaniment">${escapeHTML(b.chord)}</span></div>${tabSVG(b)}</article>`).join('')}</div>`).join('')}</div></div>`;
+  const activeId = document.querySelector('.bar.active')?.id;
+  const playingId = document.querySelector('.note.playing')?.id;
+  const photoLayout = photoLayoutMedia.matches && Boolean(currentSong.layout);
+  const rowCounts = photoLayout ? currentSong.layout.rows : Array.from({length:Math.ceil(bars.length/4)},(_,row)=>Math.min(4,bars.length-row*4));
+  let start = 0;
+  const rows = rowCounts.map((count,row) => {
+    const rowBars = bars.slice(start,start+count);
+    start += count;
+    const weights = photoLayout ? currentSong.layout.widths?.[row] || Array(count).fill(1) : Array(count).fill(1);
+    const total = weights.reduce((sum,width)=>sum+width,0);
+    const columns = weights.map(width=>`minmax(0,${width}fr)`).join(' ');
+    return `<div class="sheet-row" style="--row-columns:${columns}">${rowBars.map((b,i)=>`<article class="bar" id="bar-${b.number}" title="${escapeHTML(b.hint)}"><div class="bar-header"><span class="bar-number">${b.number}${b.repeat?` <span class="repeat-ref">= ${b.repeat}</span>`:''}</span><span class="chord-label" title="Suggested accompaniment">${escapeHTML(b.chord)}</span></div>${tabSVG(b,photoLayout ? 1752*weights[i]/total : 292,photoLayout,i===0)}</article>`).join('')}</div>`;
+  });
+  $('score').innerHTML = `<div class="sheet-scroll${photoLayout ? ' photo-layout' : ''}"><div class="tab-sheet">${rows.join('')}</div></div>`;
+  if(activeId)$(activeId)?.classList.add('active');
+  if(playingId)$(playingId)?.classList.add('playing');
 }
+photoLayoutMedia.addEventListener('change',()=>{if(currentSong)render();});
 function drawChords(){
   $('chord-library').innerHTML=chordShapes.map(([name,shape])=>{
     let svg=`<svg viewBox="0 0 90 100" role="img" aria-label="${escapeHTML(name)}: ${shape.map((f,i)=>`${['low E','A','D','G','B','high e'][i]} ${f<0?'muted':f===0?'open':`fret ${f}`}`).join(', ')}">`;

@@ -95,6 +95,12 @@ Optional fields:
 - `tuningLabel`, `repeatSummary`, `accompaniment`: plain text.
 - `tips`: arrays of `[heading, body]`, plain text.
 - `source.image`: a local path under `assets/`; the importer sets it with `--photo`.
+- `layout`: preserve the photographed sheet's row breaks on iPad and larger
+  screens. `rows` lists the number of bars per row and must cover the whole song.
+  Optional `widths` gives relative bar widths for each row. For example,
+  `{"rows":[2,3],"widths":[[1,2],[1,1,1]]}` gives five bars in two rows, with
+  the second bar of the first row twice as wide as the first. The default is equal
+  widths. Jingle Bell Rock uses the photo's six rows: 5, 6, 5, 6, 5, 5 bars.
 
 Required transcription context:
 
@@ -108,11 +114,17 @@ Required transcription context:
 Number bars in playback order. Expand printed repeat signs and alternate endings,
 and describe that in the source notes. Do not use ties for hammer-ons or pull-offs.
 
-The renderer lays out any number of bars in one continuous sheet: one bar per
-row on phones, two on tablets (including iPad split view), and four on wide screens.
+The renderer lays out any number of bars in one continuous sheet. At widths of
+700px and up, songs with `layout` retain the photo's rows and relative bar widths,
+including on portrait and landscape iPad. String lines align across each row;
+note sizes stay consistent even when bar widths differ. Narrow windows use the
+readable fallback: one bar per row through 600px, then two. Songs without a saved
+layout keep the original responsive grid (up to four bars per row).
 String labels follow each new row. Rotation reflows the sheet without restarting
-playback. Touch controls are at least 44px tall; extra controls live under Options.
-Print always uses four bars per row, including incomplete final rows. Printing excludes controls and help. Jingle Bell Rock fits on one sheet;
+playback or losing the active note. Touch controls are at least 44px tall; extra
+controls live under Options. Print preserves the displayed photo layout, or uses
+four bars per row in the fallback layout. Printing excludes controls and help.
+Jingle Bell Rock fits on one sheet;
 longer future songs may span multiple printed pages. Compound/mixed meters,
 triplets, sixteenth notes, pickup bars, polyphonic tab, slides/bends/hammer-ons,
 and movable chord diagrams are not supported yet. Extend the shared model/player

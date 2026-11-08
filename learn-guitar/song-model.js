@@ -45,6 +45,11 @@ function compileSong(song) {
   for (const [name, shape] of song.chordShapes || []) {
     if (!name || !Array.isArray(shape) || shape.length !== 6 || shape.some(f => !Number.isInteger(f) || f < -1 || f > 4)) fail('Chord diagrams need six frets (-1 for muted, 0–4 supported).');
   }
+  if (song.layout !== undefined) {
+    const layout = song.layout;
+    if (!layout || !Array.isArray(layout.rows) || !layout.rows.length || layout.rows.some(count => !Number.isInteger(count) || count < 1) || layout.rows.reduce((sum,count) => sum+count,0) !== bars.length) fail('Layout rows must contain positive bar counts covering the whole song.');
+    if (layout.widths !== undefined && (!Array.isArray(layout.widths) || layout.widths.length !== layout.rows.length || layout.widths.some((row,index) => !Array.isArray(row) || row.length !== layout.rows[index] || row.some(width => !Number.isFinite(width) || width <= 0)))) fail('Layout widths must provide a positive width for every bar in each row.');
+  }
   return bars;
 }
 
