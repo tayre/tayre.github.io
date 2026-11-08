@@ -1,5 +1,31 @@
 # Initial validation record
 
+## Processing optimization — 8 November 2026
+
+The optimization pass passed **319 Python tests and 19 dashboard tests**, including
+construction and exact-diameter checks on every non-isomorphic tree through order
+10, larger relabeled inputs, restricted negative controls, legacy request replay,
+checkpoint continuation, and independent verification of constructed witnesses.
+
+A complete `configs/smoke.json` run investigated **100 unrestricted trees** and
+verified all 100. Its 25 restricted probes produced 21 positive witnesses and four
+solver-infeasible results. The independent archive audit accepted all **121 positive
+certificates**, with no errors or unrestricted infeasibility. Evidence is retained
+locally in `results/optimization-smoke/`.
+
+A second run resumed the existing `nightly-resume` checkpoint. It preserved both
+historical progress rows exactly, verified 20 unrestricted inputs and 40 restricted
+probes, and resolved the three previously unresolved trees in that local campaign.
+Its audit checked all **221 cumulative positive labelings**. The continued campaign
+contains 108 distinct trees, all verified; this is a local validation result, not
+the live cloud campaign. Evidence is in `results/optimization-resume/`.
+
+Three paired repetitions of a fixed 20-tree capped workload measured **2.20× faster
+processing** and 15 verified trees per repetition versus nine with CP-SAT alone.
+Diameter calculation alone was **56.6× faster**. These are measured workload results,
+not universal speedup claims. See [performance.md](performance.md) for exact inputs,
+versions, raw totals, caveats and the reproduction command.
+
 ## Public homepage validation — 8 November 2026
 
 The public dashboard addition passed **249 Python tests** and **19 Node tests**.

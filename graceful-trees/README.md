@@ -84,6 +84,12 @@ Generation settings, the NetworkX version and the master seed must match a resto
 the campaign and start fresh when changing the generator's input space. Solver
 budgets, retry quotas and probe settings may change on resume.
 
+`constructive_search` (default `true`) labels caterpillars directly using a known
+construction, then falls back to CP-SAT for other trees. All restricted edge
+experiments use CP-SAT. Set it to `false` for comparisons of the exact solver alone;
+this setting may change on resume without resetting the campaign. Each attempt
+records its method. Old saved requests without the option replay CP-SAT as before.
+
 ## Mathematical model and verification
 
 For each vertex `v`, CP-SAT assigns `x[v]` in `0..n-1`. All vertex labels are
@@ -96,6 +102,10 @@ and choosing `x[0] < x[1]` from each complement pair. The proof and the scope of
 this symmetry reduction are in [research.md](docs/research.md). No arbitrary
 root-zero or extreme-edge location restriction is added to the main experiment.
 The solver uses one search worker, a logged seed, and `symmetry_level=0`.
+The direct caterpillar construction and its invariant are documented in the same
+research note. Its witnesses undergo the same checks as solver-produced witnesses;
+it never reports infeasibility. Solver time and branch medians exclude constructed
+witnesses, whose total processing time is recorded separately in `wall_seconds`.
 
 Every returned labeling is checked in the worker **and again in the parent** by
 [`verify.py`](src/graceful_research/verify.py). It uses only the Python standard
@@ -126,6 +136,19 @@ The secondary experiment computes partial information about
 One representative per exact edge orbit is tested. An infeasible prescribed edge
 does not imply an infeasible tree. The central edge of the four-vertex path is an
 intentional negative control, not a discovery or a counterexample to the conjecture.
+
+For reproducible performance comparisons, run:
+
+```sh
+python scripts/benchmark.py --output results/benchmark --attempt-seconds 1 --repeats 3
+```
+
+This compares direct construction plus exact fallback with CP-SAT alone on the
+same saved inputs and seeds, alternates execution order, and independently checks
+every positive result. It also compares two-sweep and all-pairs diameters. The
+output retains requests, witnesses, source snapshots and exact versions. These
+are bounded benchmark results, not a campaign checkpoint; unknowns remain
+censored observations. See the [optimization measurements](docs/performance.md).
 
 ## Cloud execution
 
@@ -337,7 +360,7 @@ Publish a counterexample claim only after independent mathematical investigation
 ```text
 configs → TreeStream → exact deduplication → SQLite inputs/cursors
                          ↓                       ↑
-                   budgeted scheduler → isolated CP-SAT worker
+                   budgeted scheduler → isolated witness/CP-SAT worker
                          ↓                       ↓
                    parent verifier ← positive witness
                          ↓
@@ -347,7 +370,8 @@ configs → TreeStream → exact deduplication → SQLite inputs/cursors
 ```
 
 `config.py` validates experiments; `trees.py` generates and identifies trees;
-`solver.py` owns the model; `worker.py` enforces process deadlines; `verify.py`
+`constructive.py` implements known-family witnesses; `solver.py` owns the exact
+model and fallback; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.
 `progress.py` derives visual data from the ledger; `visuals.py` renders the offline

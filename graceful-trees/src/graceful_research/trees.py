@@ -83,6 +83,7 @@ def edge_orbits(graph):
 
 
 def features(graph):
+    """Structural features of an unweighted tree (the generator's validated domain)."""
     n = len(graph)
     degrees = [d for _, d in graph.degree]
     core = graph.copy()
@@ -97,7 +98,7 @@ def features(graph):
     mean = sum(degrees) / n
     return {
         "n": n,
-        "diameter": nx.diameter(graph),
+        "diameter": tree_diameter(graph),
         "leaves": leaf_count,
         "leaf_fraction": leaf_count / n,
         "max_degree": max(degrees),
@@ -110,6 +111,15 @@ def features(graph):
             (sum(graph.degree(v) == 1 for v in graph[u]) for u in graph), default=0
         ),
     }
+
+
+def tree_diameter(graph):
+    """Two breadth-first sweeps give the exact diameter of an unweighted tree."""
+    if not nx.is_tree(graph):
+        raise ValueError("tree_diameter requires a tree")
+    distances = nx.single_source_shortest_path_length(graph, next(iter(graph)))
+    endpoint = max(distances, key=distances.get)
+    return max(nx.single_source_shortest_path_length(graph, endpoint).values())
 
 
 def generate_family(family, n, seed):

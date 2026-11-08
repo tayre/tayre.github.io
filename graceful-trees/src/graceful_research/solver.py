@@ -1,16 +1,17 @@
-"""Exact CP-SAT backend. This module is only imported inside a disposable worker."""
+"""Known-family witnesses followed by exact CP-SAT, inside a disposable worker."""
 
 import hashlib
 import time
 from pathlib import Path
 
-from google.protobuf import text_format
-from ortools.sat.python import cp_model
-
+from .constructive import caterpillar_labeling
+from .io import write_json
 from .verify import verify_labeling, verify_tree
 
 
 def build_model(n, edges, *, complement_break=True, redundant_sum=True, restriction=None):
+    from ortools.sat.python import cp_model
+
     errors = verify_tree(n, edges)
     if errors:
         raise ValueError(f"invalid tree input: {errors}")
@@ -44,6 +45,34 @@ def build_model(n, edges, *, complement_break=True, redundant_sum=True, restrict
 def solve(request):
     started = time.monotonic()
     data = request["input"]
+    directory = Path(request["directory"])
+    directory.mkdir(parents=True, exist_ok=True)
+    # An old saved request without this option must replay the original CP-SAT path.
+    # Restricted probes always use the exact model, including negative controls.
+    if request.get("constructive_search", False) and request["restriction"] is None:
+        labels = caterpillar_labeling(data["n"], data["edges"])
+        if labels is not None:
+            if request["complement_break"] and len(labels) > 1 and labels[0] > labels[1]:
+                labels = [data["n"] - 1 - value for value in labels]
+            verification = verify_labeling(data["n"], data["edges"], labels)
+            write_json(directory / "construction.json", {"algorithm": "caterpillar-v1"})
+            return {
+                "status": "verified_graceful" if verification["valid"] else "invalid_solution",
+                "raw_status": "CONSTRUCTED_WITNESS",
+                "search_method": "caterpillar-construction",
+                "labels": labels,
+                "verification": verification,
+                "proof_certificate_verified": False,
+                "proof_certificate": None,
+                "termination": "constructed_witness",
+                "timed_out": False,
+                "wall_seconds": time.monotonic() - started,
+            }
+
+    # Avoid loading the solver and its dependencies for construction-only workers.
+    from google.protobuf import text_format
+    from ortools.sat.python import cp_model
+
     model, variables = build_model(
         data["n"],
         data["edges"],
@@ -51,8 +80,6 @@ def solve(request):
         redundant_sum=request["redundant_sum"],
         restriction=request["restriction"],
     )
-    directory = Path(request["directory"])
-    directory.mkdir(parents=True, exist_ok=True)
     model_text = text_format.MessageToString(model.proto)
     (directory / "model.pbtxt").write_text(model_text)
     solver = cp_model.CpSolver()
@@ -68,6 +95,7 @@ def solve(request):
     if validation_error:
         return {
             "status": "model_invalid",
+            "search_method": "cp-sat",
             "error": validation_error,
             "wall_seconds": time.monotonic() - started,
             "labels": None,
@@ -98,6 +126,7 @@ def solve(request):
     timed_out = status == cp_model.UNKNOWN and solver.wall_time >= request["solver_seconds"] * 0.95
     return {
         "status": outcome,
+        "search_method": "cp-sat",
         "raw_status": raw_status,
         "labels": labels,
         "verification": verification,

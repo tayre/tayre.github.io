@@ -97,6 +97,7 @@ def run(config, output, resume=None, cancelled=lambda: False):
             "directory": str(directory),
             "complement_break": config.complement_break and not investigate_infeasible,
             "redundant_sum": config.redundant_sum and not investigate_infeasible,
+            "constructive_search": config.constructive_search,
         }
         write_json(directory / "request.json", request)
         write_json(output / "inputs" / f"{case['tree_id']}.json", case)

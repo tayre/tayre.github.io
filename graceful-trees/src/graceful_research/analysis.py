@@ -25,14 +25,15 @@ class RuleBasedHypotheses:
         suggestions = [
             {
                 "kind": "hypothesis",
-                "id": "pendant-extreme-support",
+                "id": "pendant-extreme-support-lobsters",
                 "statement": (
-                    "For every caterpillar T with at least two vertices, there is a graceful "
+                    "For every lobster T that is not a caterpillar, there is a graceful "
                     "labeling whose edge of difference |V(T)|-1 is incident to a leaf."
                 ),
                 "status": "candidate question; truth and novelty not asserted",
                 "test": (
-                    "Enumerate caterpillars at a declared order; test every pendant edge orbit. "
+                    "Enumerate non-caterpillar lobsters at a declared order; test every pendant "
+                    "edge orbit. Caterpillars already satisfy this by the known construction. "
                     "One verified pendant witness establishes the property for that tree. "
                     "Excluding all pendant orbits requires independently checked UNSAT evidence."
                 ),
@@ -102,12 +103,19 @@ def summarize(records):
         )
     by_size = defaultdict(list)
     for record in final:
-        if record["status"] == "verified_graceful":
+        if (
+            record["status"] == "verified_graceful"
+            and record.get("search_method", "cp-sat") == "cp-sat"
+        ):
             by_size[record["input"]["n"]].append(record.get("branches", 0))
     outliers = []
     for record in final:
         peers = by_size[record["input"]["n"]]
-        if len(peers) >= 5 and record.get("branches", 0) > max(50, 3 * statistics.median(peers)):
+        if (
+            record.get("search_method", "cp-sat") == "cp-sat"
+            and len(peers) >= 5
+            and record.get("branches", 0) > max(50, 3 * statistics.median(peers))
+        ):
             outliers.append(record["tree_id"])
     rank = {
         "solver_infeasible": 0,
@@ -134,6 +142,9 @@ def summarize(records):
         "attempts": len(records),
         "unrestricted_attempts": len(main),
         "restricted_attempts": len(records) - len(main),
+        "search_methods": dict(
+            sorted(Counter(r.get("search_method", "unrecorded") for r in records).items())
+        ),
         "size_distribution": dict(sorted(Counter(r["input"]["n"] for r in final).items())),
         "verified_graceful": counts["verified_graceful"],
         "unknown": counts["unknown"],
@@ -211,6 +222,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "n",
         "seed",
         "status",
+        "search_method",
         "termination",
         "wall_seconds",
         "solver_wall_seconds",
@@ -252,6 +264,9 @@ def write_reports(output, manifest, records, profiles, provider=None):
         f"- Unknown attempts: **{summary['unknown_attempts']}**; observed timeouts: **{summary['timeout_attempts']}**.",
         f"- Verified labeling certificates: **{summary['verified_certificates']}**; errors: **{summary['errors']}**.",
         f"- Restricted solver-infeasible attempts: **{summary['restricted_solver_infeasible']}**, kept separate from the main search.",
+        "- Attempts by method: "
+        + "; ".join(f"{method}: **{count}**" for method, count in summary["search_methods"].items())
+        + ". Unrecorded includes attempts interrupted before the worker returned a method.",
         "",
         "A timeout is unresolved. A CP-SAT INFEASIBLE result is a solver conclusion, not an",
         "independently checked proof certificate. No counterexample is declared automatically.",
@@ -268,7 +283,8 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "## Performance by input family and size",
         "",
         "Family is the first generator that introduced a tree, not an exclusive mathematical classification.",
-        "Medians include solved cases only. Unknowns are censored; different sizes, budgets, hardware",
+        "Medians use solved CP-SAT cases only; constructed witnesses have no solver time or branch count.",
+        "Unknowns are censored; different sizes, budgets, hardware",
         "or successful subsets are not controlled comparisons.",
         "",
         "| Family | n | Trees | Verified | Unknown | Infeasible | Solved median s | Median branches |",
@@ -301,7 +317,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         )
     lines += [
         "",
-        f"Branch-count outliers (>3× same-order solved median, ≥5 peers, >50 branches): {len(summary['outliers'])}.",
+        f"Branch-count outliers (>3× same-order solved CP-SAT median, ≥5 CP-SAT peers, >50 branches): {len(summary['outliers'])}.",
         "This is a triage rule, not a statistical significance test.",
         "",
         "## Extreme-edge observations",

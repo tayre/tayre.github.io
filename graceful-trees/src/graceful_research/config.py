@@ -44,6 +44,7 @@ class Config:
     probe_max_attempts: int = 40
     complement_break: bool = True
     redundant_sum: bool = True
+    constructive_search: bool = True
 
     def validate(self):
         for name, low, high in (
@@ -94,7 +95,7 @@ class Config:
             raise ValueError(f"families must be drawn from {FAMILIES}")
         if len(set(self.families)) != len(self.families):
             raise ValueError("families must not repeat")
-        for name in ("complement_break", "redundant_sum"):
+        for name in ("complement_break", "redundant_sum", "constructive_search"):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"{name} must be boolean")
         if not self.exhaustive_sizes and not (self.sample_sizes and self.families):

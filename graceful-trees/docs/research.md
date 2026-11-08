@@ -57,6 +57,50 @@ We do not choose its location in the main search. CP-SAT's built-in symmetry lev
 is explicitly set to 0 so the documented complement reduction is the only enabled
 symmetry reduction. Standard solver presolve remains enabled.
 
+### Direct witnesses for caterpillars
+
+The optional `constructive_search` prepass implements the known alternating-extremes
+caterpillar construction (described in [8], §2, and attributed there to Rosa).
+This is an implementation optimization, not a new gracefulness result. It applies
+to the tree's structure, regardless of which generator introduced it; paths, stars,
+brooms and double stars are included. Other trees and **all restricted probes**
+continue to the same exact CP-SAT model.
+
+Here is the invariant for the implementation in `constructive.py`. For `n > 2`,
+delete the leaves; proceed only if the remaining connected tree is a path or a
+singleton. Start at an endpoint of that spine with label 0. The unused labels
+form an interval `[L,H]`. At each step the current spine vertex has label `L-1`
+or `H+1`. Assign its still-unlabeled leaf neighbors from the opposite end of the
+interval, then assign the next spine vertex **last**, using the same end.
+After `k` assignments, the next spine vertex lies just outside the new interval
+on the opposite side, preserving the invariant.
+
+Each assignment decreases the next edge difference by exactly one. Initially the
+first difference is `n-1`; a spine transition also decreases it by one, because
+the next spine label was the last label consumed. Every vertex is assigned once
+and every edge occurs in one such assignment, so the differences are precisely
+`n-1,...,1` and the labels exhaust `0,...,n-1`. The one- and two-vertex trees are
+handled directly. Complementing the completed labeling, if needed, satisfies
+`x[0] < x[1]` without changing differences. This chooses a witness without adding
+a restriction to the search model.
+
+The first assigned neighbor is a leaf, so this also establishes the pendant
+maximum-difference property for caterpillars (the two-vertex case is immediate).
+The rule-based question therefore now targets non-caterpillar lobsters instead;
+its truth and novelty remain unasserted. Every constructed witness still passes
+the independent worker, parent and archive verifiers. Failure of the construction
+to apply is never an infeasibility result.
+
+### Structural preprocessing
+
+An unweighted tree's diameter is found by two breadth-first searches: find a
+farthest vertex from any vertex, then the greatest distance from that endpoint.
+The farthest-vertex endpoint property of trees makes this exact, in `O(n)` time.
+The former all-pairs distance computation took `O(n²)` on trees. Tree validation
+precedes the optimized calculation; it is not used on arbitrary graphs.
+Canonical encodings, input order, generators and campaign fingerprints are
+unchanged. NetworkX 3.5 already specializes its center calculation for trees.
+
 ## Secondary experiment: extreme-edge support
 
 Define `E_max(T) = {uv in E(T) : some graceful labeling has |x[u]-x[v]| = n-1}`.
@@ -94,3 +138,6 @@ seed and machine, not evidence that a tree is nongraceful.
 5. Microsoft, [Z3 Python guide source](https://github.com/microsoft/z3guide/blob/main/website/docs-programming/02%20-%20Z3%20Python/01%20-%20Introduction.md).
 6. Marijn Heule et al., [DRAT-trim proof checker](https://www.cs.utexas.edu/~marijn/drat-trim/).
 7. NetworkX, [nonisomorphic tree generation](https://networkx.org/documentation/stable/reference/generated/networkx.generators.nonisomorphic_trees.nonisomorphic_trees.html).
+8. M. F. Hossain, M. M. Al Aziz and M. Kaykobad, *New Classes of Graceful Trees*,
+   Journal of Discrete Mathematics (2014), article 194759, §2.
+   [Paper and description of the standard caterpillar construction](https://doi.org/10.1155/2014/194759).

@@ -41,6 +41,7 @@ def compact_record(record):
         "scope",
         "family",
         "status",
+        "search_method",
         "features",
         "branches",
         "deterministic_time",

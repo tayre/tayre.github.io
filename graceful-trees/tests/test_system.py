@@ -57,6 +57,7 @@ def small_config(**kwargs):
         ("seed", -1),
         ("max_cases", True),
         ("complement_break", 1),
+        ("constructive_search", "true"),
         ("exhaustive_sizes", [17]),
         ("sample_sizes", [257]),
         ("exhaustive_sizes", [2, 2]),
