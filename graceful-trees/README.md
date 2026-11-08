@@ -13,6 +13,11 @@ validate the implementation; they do not improve that bound. Read the
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
+Cloud execution is active in [GitHub Actions](https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml).
+The [first hosted research run](https://github.com/tayre/tayre.github.io/actions/runs/42497916313)
+completed successfully, including independent auditing and checkpoint/report uploads.
+Nightly runs use a 30-minute budget; configuration pushes run a two-minute check.
+
 ## Quick start
 
 Use **CPython 3.12.14**, matching the cloud workflow. Python 3.11–3.13 is allowed by

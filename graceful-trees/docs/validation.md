@@ -52,12 +52,24 @@ run; source hashes can differ as operational audit checks were strengthened duri
 development. All archived positive witnesses pass the final independent audit.
 Archives are not substitutes for a literature review or independent UNSAT proofs.
 
-## Cloud validation boundary
+## Cloud validation
 
 The initial implementation was pushed to `master` as `0a68430`. The hosted
 [GitHub test run](https://github.com/tayre/tayre.github.io/actions/runs/42496989161)
 passed on Ubuntu, including the installed-CLI experiment and artifact upload.
-The nightly schedule is now on the default branch. A two-minute research run is
-also triggered when its workflow or nightly configuration changes, allowing the
-complete checkpoint/report pipeline to be validated without a personal API key.
+
+After adding push-triggered validation and checkpoint support for those runs, the
+expanded suite passed **213 tests** locally. The first complete
+[hosted research run](https://github.com/tayre/tayre.github.io/actions/runs/42497916313)
+at commit `185630a` then completed successfully on 8 November 2026 at 16:05 UTC.
+It ran the tests, performed a two-minute bounded experiment, independently audited
+the results, and uploaded these non-expired artifacts, confirmed through GitHub's API:
+
+- `graceful-checkpoint-nightly-v1` — cumulative ledger and integrity metadata.
+- `graceful-results-42497916313-1` — reports, verified witnesses, models and provenance.
+
+The workflow is active on the default branch. Nightly runs at **06:23 UTC** use the
+default **30-minute** compute budget and can restore the successful initial
+checkpoint. Changes to the workflow or nightly configuration on `master` also
+trigger a two-minute check. No personal API key or local computer is required.
 See [README](../README.md#cloud-execution) for execution and artifact retention.
