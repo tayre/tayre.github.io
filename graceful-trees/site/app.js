@@ -1,4 +1,4 @@
-import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName } from './data.mjs';
+import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName } from './data.mjs?v=2';
 
 const $ = id => document.getElementById(id);
 const number = n => new Intl.NumberFormat('en').format(n);
