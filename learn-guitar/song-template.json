@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "new-song",
+  "title": "New song",
+  "tempo": 72,
+  "beatsPerBar": 4,
+  "tuning": [64, 59, 55, 50, 45, 40],
+  "tuningLabel": "Standard tuning",
+  "capo": 0,
+  "rawBars": [],
+  "sections": [],
+  "chordShapes": [],
+  "tips": [],
+  "accompaniment": "",
+  "source": {
+    "description": "Describe the photographed sheet and any assumptions about rhythm, tuning, capo, or tempo."
+  },
+  "transcription": {
+    "rhythm": "interpreted",
+    "chords": "none",
+    "unresolved": ["Transcribe the sheet and resolve unclear notes or rhythm before importing."]
+  }
+}

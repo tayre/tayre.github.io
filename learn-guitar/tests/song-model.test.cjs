@@ -9,7 +9,7 @@ run('songs/catalog.js');run('song-model.js');
 const catalog = context.window.GuitarSongbook.catalog;
 assert.equal(new Set(catalog.map(s=>s.id)).size,catalog.length,'Catalog IDs must be unique');
 for(const entry of catalog){
-  run(entry.file);
+  run(entry.file.split('?')[0]);
   const song = context.window.GuitarSongbook.songs[entry.id];
   assert.equal(song.id,entry.id);
   assert.equal(song.title,entry.title);

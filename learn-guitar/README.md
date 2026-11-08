@@ -1,35 +1,80 @@
 # Learn Guitar
 
-A build-free HTML/CSS/JavaScript songbook. Open `index.html` directly, or serve this
-folder with a static web server. The player loads local song scripts on demand;
-there are no package dependencies. Acoustic-guitar samples are bundled locally.
-Audio requires HTTP(S); use a static server for local playback instead of a file URL.
+A static HTML/CSS/JavaScript songbook with no package dependencies. Serve this
+folder over HTTP(S) for playback; the browser loads local song scripts and bundled
+acoustic-guitar recordings. Node is needed only to import/check songs, not to host
+or use the player.
 
 ## Add a song
 
-1. Copy `songs/jingle-bell-rock.js` to a new file in `songs/`.
-2. Set a unique URL-safe `id` in both the registry assignment and song object.
-3. Replace the title, notes, chords, sections, tips, and source information.
-4. Add `{id, title, file}` to `songs/catalog.js`. No player or HTML edits are needed.
-5. Run `node learn-guitar/tests/song-model.test.cjs` from the repository root.
+Attach a clear photo of the whole sheet in this project's chat and say:
 
-The selector lists catalog entries in order. `?song=jingle-bell-rock` links directly
+> Add this to my Learn Guitar songbook.
+
+The project instructions route the assistant to the versioned
+[photo-to-song skill](skills/add-guitar-tab/SKILL.md). It handles transcription,
+repeated phrases, suggested play-along chords, import, and verification. Blurry
+notes or missing rhythm get specific questions rather than silent guesses.
+
+For a separate ChatGPT chat, attach the photo and
+[this portable transcription prompt](photo-to-song-prompt.txt). Bring its JSON
+and the original photo back to the chat connected to this repository. The prompt
+does not connect an unrelated chat to GitHub or automatically publish anything.
+
+### Import commands
+
+Start from [song-template.json](song-template.json), or use the existing song's
+JSON as a complete example. The starter intentionally fails validation until its
+notes and outstanding question have been replaced. From the repository root:
+
+```sh
+node learn-guitar/tools/songbook.cjs validate /tmp/new-song.json
+node learn-guitar/tools/songbook.cjs import /tmp/new-song.json --photo /path/to/tab.jpg
+node learn-guitar/tests/run.cjs
+```
+
+Import validates the whole library before writing, copies a JPG/PNG/WebP photo
+to a content-versioned path under `assets/sheets/`, saves the JSON, discovers exact
+repeated melodies, and regenerates the song files and menu. It refuses duplicate
+IDs, unresolved transcription questions, unsafe image paths, malformed tokens,
+incorrect bar totals, and invalid ties/ranges. A passing check does not establish
+that the photo was read correctly; visually compare the notes and listen too.
+
+For a correction to the same arrangement, pass `--replace`. Use a different ID for
+a different arrangement. Do not change IDs after sharing links. Omit `--photo`
+when keeping an existing image or adding an original exercise without a photo.
+
+`songs/data/<id>.json` is the source of truth. To edit it directly, then rebuild:
+
+```sh
+node learn-guitar/tools/songbook.cjs build
+node learn-guitar/tools/songbook.cjs build --check
+```
+
+`songs/<id>.js` and `songs/catalog.js` are generated. Do not edit them by hand.
+Commit the JSON, photo, generated scripts, and `index.html` together. Publication
+uses this repository's existing GitHub Pages workflow and authorization.
+
+The selector lists songs by title. `?song=jingle-bell-rock` links directly
 to a song. Switching songs stops playback and restores that song’s tempo, playback
 range, and toggle settings when browser storage is available. Back/forward navigation
 also switches songs. Files and source-image paths are relative to `index.html`.
 
 ## Song format
 
-Required fields: `id`, `title`, `tempo` (40–200 quarter-note BPM), `beatsPerBar`
+The JSON envelope requires `schemaVersion: 1`, `source`, and `transcription` plus
+the musical fields: `id`, `title`, `tempo` (40–200 quarter-note BPM), `beatsPerBar`
 (1–6 quarter beats), `tuning` (six MIDI pitches, thin e to thick E), `capo` (0–12),
 and `rawBars`. Standard tuning is `[64,59,55,50,45,40]`; the player adds the capo
 offset. Tab frets and chord shapes are relative to the capo.
 
 Each bar is `[notesOrRepeat, chordLabel, optionalHint]`:
 
-```js
-['2:1:.5 2:1:.5 2:1:1 2:0:2', 'C', 'Let the last note ring.'],
-[1, 'C'] // Repeat the melody of bar 1; keep this bar’s own chord label.
+```json
+[
+  ["2:1:.5 2:1:.5 2:1:1 2:0:2", "C", "Let the last note ring."],
+  [1, "C"]
+]
 ```
 
 - `string:fret:duration`: strings 1–6, frets 0–24, duration in quarter beats.
@@ -38,6 +83,8 @@ Each bar is `[notesOrRepeat, chordLabel, optionalHint]`:
   including across a bar line. A tied note is not picked again.
 - Durations use half-beat increments; each bar must total `beatsPerBar`.
 - A repeat references an earlier bar; repeating a repeat is supported.
+- The importer also converts exact repeated melodies to references, preserving
+  each bar's chord and custom hint. If `repeatSummary` is omitted it is generated.
 - Chord labels are displayed verbatim. They do not trigger chord audio.
 
 Optional fields:
@@ -47,15 +94,29 @@ Optional fields:
   frets 1–4 supported by the open-position diagrams.
 - `tuningLabel`, `repeatSummary`, `accompaniment`: plain text.
 - `tips`: arrays of `[heading, body]`, plain text.
-- `source`: `{image, description}`; omit it for songs without a source photo.
+- `source.image`: a local path under `assets/`; the importer sets it with `--photo`.
+
+Required transcription context:
+
+- `source.description`: describe the supplied source and any rhythm, tuning,
+  capo, or practice-tempo assumptions. Visible below the sheet.
+- `transcription.rhythm`: `from-photo`, `interpreted`, or `user-specified`.
+- `transcription.chords`: `from-photo`, `suggested`, or `none`. Chords need an
+  `accompaniment` explanation; suggested chords must be labeled as suggestions.
+- `transcription.unresolved`: questions as strings. Must be `[]` before import.
+
+Number bars in playback order. Expand printed repeat signs and alternate endings,
+and describe that in the source notes. Do not use ties for hammer-ons or pull-offs.
 
 The renderer lays out any number of bars in one continuous sheet: one bar per
 row on phones, two on tablets (including iPad split view), and four on wide screens.
 String labels follow each new row. Rotation reflows the sheet without restarting
 playback. Touch controls are at least 44px tall; extra controls live under Options.
 Print always uses four bars per row, including incomplete final rows. Printing excludes controls and help. Jingle Bell Rock fits on one sheet;
-longer future songs may span multiple printed pages. Compound meters, triplets,
-polyphonic tab, and movable chord diagrams are not supported yet.
+longer future songs may span multiple printed pages. Compound/mixed meters,
+triplets, sixteenth notes, pickup bars, polyphonic tab, slides/bends/hammer-ons,
+and movable chord diagrams are not supported yet. Extend the shared model/player
+or obtain an explicit choice of simplification before importing those features.
 
 `script.js` owns playback and UI, `song-model.js` validates transcription data,
 `styles.css` controls the screen/print layouts, and `songs/` contains the catalog
@@ -83,5 +144,8 @@ behavior. Pause preserves the beat and sample offset, including inside tied note
 Resume continues from that spot; Start over resets the selection. Scrolling, drags,
 long presses, text selection, and interactive controls do not toggle playback.
 
-When changing player code or CSS, bump their `?v=` asset revisions in `index.html`
-so existing browser tabs load matching files after a deployment.
+Run `node learn-guitar/tools/songbook.cjs build` after changing player code or CSS.
+It assigns content hashes to the player assets, catalog, and individual song URLs
+so a deployment refreshes cached files automatically. No handwritten cache token
+is needed. `node learn-guitar/tests/run.cjs` checks generated-file freshness as well
+as import, transcription-model, and playback behavior.

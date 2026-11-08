@@ -3,7 +3,7 @@
 // Pure transcription validation, shared by the player and the data tests.
 function compileSong(song) {
   const fail = message => { throw new Error(`${song?.id || 'Song'}: ${message}`); };
-  if (!song || !song.id || !song.title) fail('id and title are required.');
+  if (!song || typeof song.id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(song.id) || typeof song.title !== 'string' || !song.title.trim()) fail('A URL-safe id and a title are required.');
   if (!Number.isInteger(song.beatsPerBar) || song.beatsPerBar < 1 || song.beatsPerBar > 6) fail('Use 1–6 quarter beats per bar.');
   if (!Array.isArray(song.tuning) || song.tuning.length !== 6 || song.tuning.some(n => !Number.isInteger(n) || n < 20 || n > 100)) fail('Provide six open-string MIDI pitches, high to low.');
   if (!Number.isInteger(song.capo) || song.capo < 0 || song.capo > 12) fail('Capo must be a fret from 0 to 12.');
@@ -12,7 +12,7 @@ function compileSong(song) {
   const bars = [];
   let previous;
   song.rawBars.forEach((raw, index) => {
-    if (!Array.isArray(raw)) fail(`Bar ${index + 1} must be an array.`);
+    if (!Array.isArray(raw) || raw.length < 1 || raw.length > 3 || raw.slice(1).some(value => typeof value !== 'string')) fail(`Bar ${index + 1} must be [notesOrRepeat, optionalChord, optionalHint].`);
     const repeat = typeof raw[0] === 'number' ? raw[0] : null;
     if (repeat !== null && (!Number.isInteger(repeat) || repeat < 1 || repeat > index)) fail(`Bar ${index + 1} must repeat an earlier bar.`);
     let beat = 0;
@@ -37,7 +37,7 @@ function compileSong(song) {
       if (note.tied && (!previous || previous.rest || previous.string !== note.string || previous.fret !== note.fret)) fail(`Tie in bar ${index + 1} must continue the preceding pitch.`);
       previous = note;
     });
-    bars.push({number:index+1, notes, chord:raw[1]||'', repeat, hint:repeat?`Same melody as bar ${repeat}`:(raw[2]||'')});
+    bars.push({number:index+1, notes, chord:raw[1]||'', repeat, hint:raw[2] || (repeat?`Same melody as bar ${repeat}`:'')});
   });
   for (const section of song.sections || []) {
     if (!section.name || !Number.isInteger(section.start) || !Number.isInteger(section.end) || section.start < 1 || section.end < section.start || section.end > bars.length) fail('A playback section has an invalid range.');
@@ -47,3 +47,5 @@ function compileSong(song) {
   }
   return bars;
 }
+
+if (typeof module !== 'undefined' && module.exports) module.exports = {compileSong};
