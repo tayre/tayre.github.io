@@ -1,0 +1,14 @@
+{
+  "campaign": "exhaustive-small-v1",
+  "budget_seconds": 120,
+  "finalize_reserve_seconds": 5,
+  "attempt_seconds": 2,
+  "retry_seconds": 5,
+  "max_cases": 1000,
+  "max_generated": 1000,
+  "exhaustive_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "sample_sizes": [],
+  "families": [],
+  "probe_max_n": 7,
+  "probe_max_attempts": 60
+}

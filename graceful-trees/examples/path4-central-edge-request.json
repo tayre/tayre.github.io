@@ -1,0 +1,9 @@
+{
+  "input": {"n": 4, "edges": [[0, 1], [1, 2], [2, 3]]},
+  "restriction": {"kind": "extreme_edge", "edge": [1, 2]},
+  "seed": 17,
+  "solver_seconds": 5,
+  "directory": "",
+  "complement_break": true,
+  "redundant_sum": true
+}

@@ -1,0 +1,35 @@
+{
+  "exhaustive-validation.zip": {
+    "audit": {
+      "certificates_checked": 150,
+      "cumulative_labelings_checked": 150,
+      "errors": [],
+      "infeasibility_proofs_checked": 0,
+      "valid": true
+    },
+    "bytes": 824578,
+    "sha256": "bbd263dcb5d16060b3cffb128ce4fcb5aabbc9bad02648f3d3f4bb8a6b283f88"
+  },
+  "nightly-pilot.zip": {
+    "audit": {
+      "certificates_checked": 106,
+      "cumulative_labelings_checked": 106,
+      "errors": [],
+      "infeasibility_proofs_checked": 0,
+      "valid": true
+    },
+    "bytes": 727710,
+    "sha256": "9b1faeae4cb9b6681029cb7fcfbb607f11a94e3a9906bd979218d8643547d83b"
+  },
+  "nightly-resume.zip": {
+    "audit": {
+      "certificates_checked": 55,
+      "cumulative_labelings_checked": 161,
+      "errors": [],
+      "infeasibility_proofs_checked": 0,
+      "valid": true
+    },
+    "bytes": 445317,
+    "sha256": "ee9494bbb62ca77f6ed8beb8ae0e8277f8b04bd7959b34d7f8d96f7643944d9c"
+  }
+}

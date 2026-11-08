@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "graceful-tree-research"
+version = "0.1.0"
+description = "Reproducible, budgeted experiments on graceful tree labelings"
+requires-python = ">=3.11,<3.14"
+dependencies = ["networkx==3.5", "ortools==9.14.6206"]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2", "ruff==0.14.3", "PyYAML==6.0.3"]
+
+[project.scripts]
+graceful-research = "graceful_research.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
