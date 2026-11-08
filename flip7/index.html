@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f6f3">
+  <meta name="theme-color" content="#f7f4ed">
   <meta name="description" content="A simple Flip 7 scorekeeper for game night. Add players, pick an emoji, and keep every round in one place.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Flip 7 · Game night scorekeeper</title>
@@ -16,7 +16,7 @@
   <div class="app-shell">
     <header class="masthead">
       <a class="brand" href="#game" aria-label="Flip 7 scorekeeper"><span class="brand-mark" aria-hidden="true">7</span><span>Flip 7<small>Scorekeeper</small></span></a>
-      <div class="header-actions"><span id="save-status" class="save-status"><i></i>On this device</span><a class="quiet-button" href="#history" aria-label="Game history">History</a><a class="quiet-button" href="#rules">How to score <span aria-hidden="true">↗</span></a></div>
+      <div class="header-actions"><span id="save-status" class="save-status"><i></i>On this device</span><a class="quiet-button" href="#history" aria-label="Game history">History</a><a class="quiet-button" href="#rules">How to score</a></div>
     </header>
     <p id="storage-warning" class="notice warning" role="alert" hidden></p>
     <main>
@@ -30,15 +30,15 @@
           <div class="setup-bottom"><p><span aria-hidden="true">⚑</span> First to <strong>200</strong>. Highest score wins.</p><button id="start-game" class="button primary" type="submit">Let’s play <span aria-hidden="true">→</span></button></div>
           <button id="resume-game" class="text-button resume-button" type="button" hidden>← Back to the current game</button>
         </form>
-        <p class="setup-note">No accounts · Saved on this device</p>
+        <p class="setup-note">Scores are saved on this device.</p>
       </section>
       <section id="game-view" aria-labelledby="game-title" hidden>
-        <div class="game-heading"><div><p id="game-eyebrow" class="eyebrow">FIRST TO 200</p><h1 id="game-title" tabindex="-1">Round 1</h1></div><button id="new-game" class="quiet-button">New game <span aria-hidden="true">↗</span></button></div>
+        <div class="game-heading"><div><p id="game-eyebrow" class="eyebrow">FIRST TO 200</p><h1 id="game-title" tabindex="-1">Round 1</h1></div><button id="new-game" class="quiet-button">New game</button></div>
         <div id="result-banner" class="result-banner" role="status" hidden></div>
         <div class="board-caption"><p id="round-instruction">Bust or count your points.</p><span id="recorded-count" class="small-pill">0 / 4 ready</span></div>
         <div id="scoreboard" class="scoreboard"></div>
         <div id="round-bar" class="round-bar"><div><strong id="round-bar-title">Everyone in?</strong><p id="round-bar-note">Enter a score or mark a bust for each player.</p></div><button id="save-round" class="button primary" disabled>Save round <span aria-hidden="true">→</span></button><button id="play-again" class="button primary" hidden>Same players, again <span aria-hidden="true">↗</span></button></div>
-        <section class="history-section"><div class="section-heading"><div><p class="eyebrow">SAVED ROUNDS</p><h2>Round history</h2></div><button id="undo-round" class="quiet-button" disabled>↶ Undo last round</button></div><div id="round-history"></div></section>
+        <section class="history-section"><div class="section-heading"><div><h2>Round history</h2></div><button id="undo-round" class="quiet-button" disabled>↶ Undo last round</button></div><div id="round-history"></div></section>
       </section>
       <section id="history-view" aria-labelledby="history-title" hidden>
         <div class="game-heading"><h1 id="history-title">Game history</h1><a id="history-return" class="quiet-button" href="#setup">← Player setup</a></div>
@@ -49,7 +49,7 @@
     <footer><span id="offline-status">Made for your game table.</span><span>Unofficial companion · <a href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Official rules ↗</a></span><button class="quiet-button sound-toggle" data-sound-toggle aria-label="Applause sound" aria-pressed="true">Applause on</button></footer>
   </div>
 
-  <dialog id="emoji-dialog" aria-labelledby="emoji-title"><div class="dialog-heading"><div><p class="eyebrow">YOUR LUCKY CHARM</p><h2 id="emoji-title">Pick a profile</h2></div><button class="close-button" data-close aria-label="Close emoji picker">×</button></div><div id="emoji-grid" class="emoji-grid"></div></dialog>
+  <dialog id="emoji-dialog" aria-labelledby="emoji-title"><div class="dialog-heading"><div><h2 id="emoji-title">Pick a profile</h2></div><button class="close-button" data-close aria-label="Close emoji picker">×</button></div><div id="emoji-grid" class="emoji-grid"></div></dialog>
 
   <dialog id="score-dialog" class="score-dialog" aria-labelledby="score-title">
     <div class="dialog-heading"><div class="score-person"><span id="score-emoji" class="avatar" aria-hidden="true"></span><div><p id="score-round-label" class="eyebrow"></p><h2 id="score-title"></h2></div></div><button class="close-button" data-close aria-label="Cancel score entry">×</button></div>
@@ -61,7 +61,7 @@
     </div><div class="score-footer"><button id="mark-bust" class="button bust-button">Bust <span>0 points</span></button><button id="use-score" class="button primary" disabled>Use score <span aria-hidden="true">✓</span></button></div>
   </dialog>
 
-  <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-title"><div class="dialog-heading"><div><p class="eyebrow">A QUICK REMINDER</p><h2 id="rules-title">Make it count.</h2></div><button class="close-button" data-close aria-label="Close scoring rules">×</button></div><ol class="rules-list"><li><strong>Add your number cards.</strong><p>The 0 card counts toward seven cards, but adds no points.</p></li><li><strong>Have ×2? Double that sum.</strong><p>Only the number cards get doubled.</p></li><li><strong>Add your bonus cards.</strong><p>Add any +2, +4, +6, +8, and +10 modifiers.</p></li><li><strong>Flipped seven? Add 15.</strong><p>Seven different number cards end the round for everyone.</p></li></ol><div class="rules-note"><p><strong>How many players?</strong> This app supports <strong>1–18 players</strong>. Standard Flip 7 is for 3 or more; the <a href="https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2025/12/FLIP_7-RULES.pdf" target="_blank" rel="noopener noreferrer">official rules</a> recommend a second deck above 18. For 1–2 players, try reaching 200 in as few rounds as possible.</p><p><strong>Your house rule:</strong> Keep the same dealer. Deal the first card to Player 1 in round 1, then the next player each round, wrapping back to the first. New games start with Player 1 again.</p><p><strong>Busted?</strong> That round is worth zero.</p><p><strong>Reaching 200:</strong> finish recording everyone’s round scores. The highest total wins. A tie at the top means everyone plays another round.</p></div><a class="quiet-button" href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Read the official FAQ ↗</a></dialog>
+  <dialog id="rules-dialog" class="rules-dialog" aria-labelledby="rules-title"><div class="dialog-heading"><div><h2 id="rules-title">How to score</h2></div><button class="close-button" data-close aria-label="Close scoring rules">×</button></div><ol class="rules-list"><li><strong>Add your number cards.</strong><p>The 0 card counts toward seven cards, but adds no points.</p></li><li><strong>Have ×2? Double that sum.</strong><p>Only the number cards get doubled.</p></li><li><strong>Add your bonus cards.</strong><p>Add any +2, +4, +6, +8, and +10 modifiers.</p></li><li><strong>Flipped seven? Add 15.</strong><p>Seven different number cards end the round for everyone.</p></li></ol><div class="rules-note"><p><strong>How many players?</strong> This app supports <strong>1–18 players</strong>. Standard Flip 7 is for 3 or more; the <a href="https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2025/12/FLIP_7-RULES.pdf" target="_blank" rel="noopener noreferrer">official rules</a> recommend a second deck above 18. For 1–2 players, try reaching 200 in as few rounds as possible.</p><p><strong>Your house rule:</strong> Keep the same dealer. Deal the first card to Player 1 in round 1, then the next player each round, wrapping back to the first. New games start with Player 1 again.</p><p><strong>Busted?</strong> That round is worth zero.</p><p><strong>Reaching 200:</strong> finish recording everyone’s round scores. The highest total wins. A tie at the top means everyone plays another round.</p></div><a class="quiet-button" href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Read the official FAQ ↗</a></dialog>
 
   <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title"></h2><button class="close-button" data-dismiss aria-label="Cancel">×</button></div><p id="confirm-message" class="confirm-message"></p><div class="confirm-actions"><button class="button secondary" data-dismiss>Keep playing</button><button id="confirm-action" class="button primary"></button></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>

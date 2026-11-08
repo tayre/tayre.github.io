@@ -275,7 +275,7 @@ function renderHistory(scores) {
   if (renderedRounds === game.rounds) return;
   renderedRounds = game.rounds;
   if (!game.rounds.length) {
-    $('#round-history').innerHTML = '<p class="empty-history"><span aria-hidden="true">↗</span> Your first round is waiting to happen.</p>';
+    $('#round-history').innerHTML = '<p class="empty-history">No rounds saved yet.</p>';
     return;
   }
   $('#round-history').innerHTML = roundTable(game, scores);
@@ -494,6 +494,6 @@ renderRoute();
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').then(() => navigator.serviceWorker.ready).then(() => {
-    $('#offline-status').textContent = 'Ready for offline game nights.';
+    $('#offline-status').textContent = 'Available offline.';
   }).catch(() => { /* The scorekeeper still works online. */ });
 }
