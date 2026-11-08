@@ -101,7 +101,7 @@ def restore(repository, branch, campaign, current_run, token, destination, fetch
                 str(run["id"]) == str(current_run)
                 or run["head_branch"] != branch
                 or run["conclusion"] != "success"
-                or run["event"] not in {"schedule", "workflow_dispatch"}
+                or run["event"] not in {"schedule", "workflow_dispatch", "push"}
             ):
                 continue
             artifacts = fetch(f"{base}/actions/runs/{run['id']}/artifacts?per_page=100", token)[

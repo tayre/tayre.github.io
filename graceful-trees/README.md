@@ -103,15 +103,19 @@ The workflows live at the repository root:
 
 - [graceful-research.yml](../.github/workflows/graceful-research.yml): nightly at
   **06:23 UTC**, plus manual **Run workflow** with experiment and budget inputs.
+  Changes to this workflow or `configs/nightly.json` on `master` also start a
+  **two-minute** validation run using the nightly campaign and its checkpoint.
 - [graceful-ci.yml](../.github/workflows/graceful-ci.yml): tests on changes to this
   project and its workflows, including an installed-CLI experiment and audit.
 
 To activate the configured workflow, put these files and this project on the
 repository's **default branch**, enable GitHub Actions under **Settings → Actions**,
 and allow the pinned official `actions/checkout`, `setup-python`, and
-`upload-artifact` actions. Then open **Actions → Graceful tree research → Run
-workflow** for the first cloud run. Local creation of these files does not activate
-the schedule; a pushed default-branch workflow is required.
+`upload-artifact` actions. The initial push to `master` starts the two-minute
+validation run automatically. **Actions → Graceful tree research → Run workflow**
+can start another run with the selected budget. Local creation of these files does
+not activate the schedule; a pushed default-branch workflow is required. If using
+a default branch other than `master`, update the push branch filter as well.
 
 Each job uses a standard `ubuntu-24.04` CPU runner, installs exact dependencies,
 runs the tests, restores the latest successful checkpoint for that campaign and
@@ -124,7 +128,9 @@ branch, performs the experiment, audits the evidence, and uploads:
 
 The automatic short-lived `GITHUB_TOKEN` is used only to read previous artifacts;
 no secret setup or personal access token is needed. Permissions are `contents: read`
-and `actions: read`. Research runs for the same branch are serialized. Dispatch
+and `actions: read`. Successful push-triggered checkpoints are eligible for the
+next nightly run, so initial progress is retained. Research runs for the same
+branch are serialized. Dispatch
 values are validated as data, not interpolated into shell commands. Workflow inputs
 allow 1–30 compute minutes; the enclosing job limit is 45 minutes to allow setup,
 tests, finalization and artifact uploads. The 30-minute research budget includes

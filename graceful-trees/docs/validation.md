@@ -54,10 +54,10 @@ Archives are not substitutes for a literature review or independent UNSAT proofs
 
 ## Cloud validation boundary
 
-The workflow files and restoration/upload contracts have been tested locally. The
-pinned official action tags and Python 3.12.14 distribution tag were checked against
-their GitHub repositories. A hosted GitHub job has **not** been launched in this
-session, and the changes have **not** been committed or pushed. Activating the
-schedule requires these files on the repository's default branch with Actions
-enabled. See [README](../README.md#cloud-execution) for the precise steps and artifact
-retention behavior.
+The initial implementation was pushed to `master` as `0a68430`. The hosted
+[GitHub test run](https://github.com/tayre/tayre.github.io/actions/runs/42496989161)
+passed on Ubuntu, including the installed-CLI experiment and artifact upload.
+The nightly schedule is now on the default branch. A two-minute research run is
+also triggered when its workflow or nightly configuration changes, allowing the
+complete checkpoint/report pipeline to be validated without a personal API key.
+See [README](../README.md#cloud-execution) for execution and artifact retention.

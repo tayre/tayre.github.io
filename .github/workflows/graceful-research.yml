@@ -1,6 +1,11 @@
 name: Graceful tree research
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/graceful-research.yml'
+      - 'graceful-trees/configs/nightly.json'
   schedule:
     - cron: '23 6 * * *'
   workflow_dispatch:
@@ -35,7 +40,7 @@ jobs:
       OMP_NUM_THREADS: '1'
       OPENBLAS_NUM_THREADS: '1'
       EXPERIMENT: ${{ inputs.experiment || 'nightly' }}
-      MINUTES: ${{ inputs.budget_minutes }}
+      MINUTES: ${{ github.event_name == 'push' && '2' || inputs.budget_minutes }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:

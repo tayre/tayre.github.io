@@ -44,7 +44,8 @@ def archive_bytes(tmp_path, campaign="test"):
     return result.getvalue()
 
 
-def test_restore_matching_artifact_and_ignore_other_branches(tmp_path):
+@pytest.mark.parametrize("event", ["schedule", "workflow_dispatch", "push"])
+def test_restore_matching_artifact_and_ignore_other_branches(tmp_path, event):
     data = archive_bytes(tmp_path)
     calls = []
 
@@ -70,7 +71,7 @@ def test_restore_matching_artifact_and_ignore_other_branches(tmp_path):
                         "id": 1,
                         "head_branch": "master",
                         "conclusion": "success",
-                        "event": "schedule",
+                        "event": event,
                     },
                 ]
             }
@@ -156,11 +157,20 @@ def test_example_configs_and_workflow_contracts():
         path = PROJECT / "workflows/graceful-research.yml"  # Standalone source snapshot.
     workflow = yaml.load(path.read_text(), Loader=yaml.BaseLoader)
     assert workflow["on"]["schedule"][0]["cron"] == "23 6 * * *"
+    assert workflow["on"]["push"]["branches"] == ["master"]
+    assert workflow["on"]["push"]["paths"] == [
+        ".github/workflows/graceful-research.yml",
+        "graceful-trees/configs/nightly.json",
+    ]
     assert workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"] == "30"
     assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     job = workflow["jobs"]["research"]
     assert int(job["timeout-minutes"]) > 30
     assert job["runs-on"] == "ubuntu-24.04"
+    assert (
+        job["env"]["MINUTES"]
+        == "${{ github.event_name == 'push' && '2' || inputs.budget_minutes }}"
+    )
     upload_steps = [s for s in job["steps"] if "upload-artifact@" in s.get("uses", "")]
     assert len(upload_steps) == 2
     assert any(s.get("if") == "always()" for s in upload_steps)
