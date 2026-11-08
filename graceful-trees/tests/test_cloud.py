@@ -171,6 +171,13 @@ def test_example_configs_and_workflow_contracts():
     ]
     assert workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"] == "30"
     assert workflow["permissions"] == {"contents": "read", "actions": "read"}
+    dashboard = workflow["jobs"]["dashboard"]
+    assert dashboard["needs"] == "research" and dashboard["continue-on-error"] == "true"
+    assert dashboard["permissions"] == {"contents": "write", "actions": "read"}
+    assert "audit_outcome == 'success'" in dashboard["if"]
+    assert "campaign == 'nightly-v1'" in dashboard["if"]
+    assert "refs/heads/master" in dashboard["if"]
+    assert dashboard["steps"][-1]["run"] == "python3 scripts/publish_dashboard.py"
     notify = workflow["jobs"]["notify"]
     assert notify["needs"] == "research" and notify["if"] == "always()"
     assert notify["continue-on-error"] == "true"

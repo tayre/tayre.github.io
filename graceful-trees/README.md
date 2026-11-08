@@ -5,6 +5,15 @@ and independently verifies positive labeling witnesses, keeps inconclusive searc
 unresolved, and carries a cumulative research ledger between nightly GitHub Actions
 runs. No LLM, personal API key, or paid compute service is required.
 
+**[Watch the public research dashboard →](https://tayre.github.io/)**
+
+The homepage shows the nightly campaign's cumulative progress, run history,
+coverage by family and size, notable review items, and the latest evidence download.
+It explains the conjecture and the project's goals, including the limits of numerical
+evidence. Data updates automatically after a successful cloud audit. See
+[how the public dashboard works](docs/public-dashboard.md) for publication,
+maintenance, and browser checks.
+
 This is research software, not a proof of the conjecture. The literature already
 reports exhaustive verification through 35 vertices. Our small exhaustive runs
 validate the implementation; they do not improve that bound. Read the
@@ -148,10 +157,13 @@ branch, performs the experiment, audits the evidence, and uploads:
 - `graceful-checkpoint-CAMPAIGN`: ledger and checksum metadata, uploaded only after
   successful execution and audit. The next run restores it automatically.
 
-The automatic short-lived `GITHUB_TOKEN` is used only to read previous artifacts;
+The automatic short-lived `GITHUB_TOKEN` reads previous artifacts;
 no secret setup or personal access token is needed. Permissions are `contents: read`
 and `actions: read` for the research job. A separate notification job also has
 `issues: write`, solely to report new review items to the repository owner.
+A separate publication job has `contents: write` to update JSON statistics on the
+`graceful-progress` data branch after a successful nightly-campaign audit. It does
+not modify `master`, trigger extra research runs, or require another credential.
 Successful push-triggered checkpoints are eligible for the
 next nightly run, so initial progress is retained. Research runs for the same
 branch are serialized. Dispatch
@@ -173,7 +185,8 @@ are not permanent storage. Monitor artifact size and account quotas as the ledge
 GitHub may delay scheduled jobs and [disable public-repository schedules after
 60 days without repository activity](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 Enable the workflow again if that occurs. A nightly schedule is not a guarantee
-that a job ran; check Actions history. There are no automatic code commits.
+that a job ran; check Actions history. Automatic commits contain public summary
+data only, on the separate `graceful-progress` branch. Code is never rewritten by a run.
 
 ## Scheduled notifications
 

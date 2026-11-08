@@ -2,9 +2,9 @@ name: Graceful tree tests
 
 on:
   push:
-    paths: ['graceful-trees/**', '.github/workflows/graceful-*.yml']
+    paths: ['index.html', 'graceful-trees/**', '.github/workflows/graceful-*.yml']
   pull_request:
-    paths: ['graceful-trees/**', '.github/workflows/graceful-*.yml']
+    paths: ['index.html', 'graceful-trees/**', '.github/workflows/graceful-*.yml']
   workflow_dispatch:
 
 permissions:
@@ -37,6 +37,8 @@ jobs:
       - run: python -m ruff check src tests scripts
       - run: python -m ruff format --check src tests scripts
       - run: python -m pytest -q
+      - name: Check public dashboard data and mathematical example
+        run: node --test site/test/data.test.mjs
       - name: Exercise the installed CLI
         run: |
           graceful-research run --config configs/exhaustive-small.json --output results/ci --budget-seconds 20 --max-cases 25

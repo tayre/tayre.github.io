@@ -105,6 +105,29 @@ jobs:
           RESULTS_ARTIFACT_URL: ${{ steps.results.outputs.artifact-url }}
         run: python scripts/publish_summary.py
 
+  dashboard:
+    name: Publish public progress
+    needs: research
+    if: needs.research.result == 'success' && needs.research.outputs.audit_outcome == 'success' && needs.research.outputs.campaign == 'nightly-v1' && github.ref == 'refs/heads/master'
+    # Publishing must not invalidate an audited checkpoint if GitHub is unavailable.
+    continue-on-error: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Publish audited statistics to the data branch
+        working-directory: graceful-trees
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RESULTS_ARTIFACT_ID: ${{ needs.research.outputs.artifact_id }}
+          AUDIT_OUTCOME: ${{ needs.research.outputs.audit_outcome }}
+        run: python3 scripts/publish_dashboard.py
+
   notify:
     name: Review notable findings
     needs: research

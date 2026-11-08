@@ -1,5 +1,27 @@
 # Initial validation record
 
+## Public homepage validation — 8 November 2026
+
+The public dashboard addition passed **249 Python tests** and **19 Node tests**.
+The new Python integration fixture executes five real unrestricted tree searches,
+independently audits their evidence, and exports the audited statistics through
+the same function used by the cloud publisher. All five witnesses passed.
+Publication tests reject altered statistics, failed audits, wrong workflow
+provenance, public-history rewrites, and unsafe Git ref updates.
+
+Headless Chromium checks passed at desktop, tablet, and 390/320-pixel mobile widths:
+no page overflow, working history slider and range controls, family/size grouping,
+CSV download, the graceful-label complement demonstration, single-run history,
+stale timestamps, offline cache, empty error state, safe text rendering, and a
+JavaScript-free explanation. Browser scenarios use explicitly synthetic fixtures;
+those numbers are never published as experimental results. The actual hosted feed
+is supplied only by a successful cloud evidence audit.
+
+Ruff lint and formatting checks passed. See [public-dashboard.md](public-dashboard.md)
+for the data flow and commands to reproduce these checks.
+
+## Original research-system validation
+
 Local validation performed on 8 November 2026 using macOS ARM64, CPython 3.12.14,
 NetworkX 3.5 and OR-Tools 9.14.6206. Exact environment details, source snapshots,
 model parameters, input edge lists and seeds are in the run archives.
