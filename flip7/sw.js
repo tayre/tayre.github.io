@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'flip7-';
-const CACHE_NAME = `${CACHE_PREFIX}v8`;
+const CACHE_NAME = `${CACHE_PREFIX}v9`;
 const ROOT = new URL('./', self.registration.scope);
 const ASSETS = ['index.html', 'styles.css', 'app.js', 'engine.js', 'icon.svg', 'manifest.webmanifest', 'applause.mp3'].map(file => new URL(file, ROOT).href);
 const INDEX = ASSETS[0];
