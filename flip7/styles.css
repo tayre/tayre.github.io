@@ -95,6 +95,7 @@ h1 { font-family: Georgia, "Times New Roman", serif; font-size: 38px; font-weigh
 .history-section .section-heading { margin-bottom: 14px; }
 .history-section h2 { margin-top: 5px; }
 .history-section .eyebrow { font-size: 9px; }
+.mobile-round-history { display: none; }
 .history-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 5px; background: var(--white); }
 table { width: 100%; border-spacing: 0; white-space: nowrap; font-size: 14px; text-align: center; }
 th, td { padding: 12px 16px; border-bottom: 1px solid var(--line); }
@@ -271,6 +272,20 @@ dialog::backdrop { background: #172b2599; }
   .round-bar p { display: none; }
   .round-bar .button { min-width: 134px; min-height: 46px; padding: 9px 12px; font-size: 14px; gap: 12px; border-radius: 5px; }
   #play-again { min-width: 0; max-width: 204px; }
+  .mobile-round-history { display: grid; gap: 16px; }
+  .mobile-round-history + .history-scroll { display: none; }
+  .round-summary { border: 1px solid var(--line); border-radius: 5px; background: var(--white); overflow: hidden; }
+  .round-summary header { padding: 12px 14px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .round-summary h3 { font-size: 16px; }
+  .round-summary header p { margin-top: 4px; font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+  .round-summary ul { list-style: none; padding: 0 14px; margin: 0; }
+  .round-summary li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 11px 0; font-size: 16px; line-height: 1.4; }
+  .round-summary li + li { border-top: 1px solid var(--line); }
+  .round-summary li > span { min-width: 0; overflow-wrap: anywhere; }
+  .round-summary li > strong { flex-shrink: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .round-summary .history-bust { font-size: 14px; }
+  .round-summary .history-seven { font-size: 11px; }
+  .round-summary-total header { background: var(--soft-green); }
   .history-section { margin-top: 24px; }
   .history-section h2 { font-size: 20px; }
   .history-section .eyebrow { font-size: 8px; }
