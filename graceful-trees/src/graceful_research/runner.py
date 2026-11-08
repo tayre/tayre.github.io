@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from .analysis import extreme_profiles, write_reports
+from .findings import build_findings
 from .io import provenance, sha256, utc_now, write_checksums, write_json
 from .progress import build_progress
 from .storage import ERROR_STATUSES, Store
@@ -272,6 +273,9 @@ def run(config, output, resume=None, cancelled=lambda: False):
                 }
             )
         profiles = extreme_profiles(store, config.probe_max_n)
+        findings = build_findings(store.connection, manifest)
+        manifest["findings_schema_version"] = 1
+        write_json(output / "findings.json", findings)
         summary = write_reports(output, manifest, records, profiles)
         manifest["summary"] = {
             k: v for k, v in summary.items() if k not in {"difficult", "families"}

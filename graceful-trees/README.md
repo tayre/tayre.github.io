@@ -150,7 +150,9 @@ branch, performs the experiment, audits the evidence, and uploads:
 
 The automatic short-lived `GITHUB_TOKEN` is used only to read previous artifacts;
 no secret setup or personal access token is needed. Permissions are `contents: read`
-and `actions: read`. Successful push-triggered checkpoints are eligible for the
+and `actions: read` for the research job. A separate notification job also has
+`issues: write`, solely to report new review items to the repository owner.
+Successful push-triggered checkpoints are eligible for the
 next nightly run, so initial progress is retained. Research runs for the same
 branch are serialized. Dispatch
 values are validated as data, not interpolated into shell commands. Workflow inputs
@@ -171,7 +173,43 @@ are not permanent storage. Monitor artifact size and account quotas as the ledge
 GitHub may delay scheduled jobs and [disable public-repository schedules after
 60 days without repository activity](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 Enable the workflow again if that occurs. A nightly schedule is not a guarantee
-that a job ran; check Actions history. There is no automatic commit or issue posting.
+that a job ran; check Actions history. There are no automatic code commits.
+
+## Scheduled notifications
+
+After each research run, including the nightly **06:23 UTC** schedule, a separate
+cloud job reviews the audited artifact and opens a GitHub issue mentioning the
+repository owner only when it finds an unreported item worth attention. For this
+repository the recipient is **@tayre**. Alerts link to the run, the visual report,
+and reproducible evidence. Your computer can be off. Email and push delivery follow
+your GitHub notification settings.
+
+The initial deterministic rules report:
+
+- Unrestricted CP-SAT infeasibility, explicitly labeled an uncertified result
+  requiring independent investigation, never a confirmed counterexample.
+- A valid labeling for a tree of at least 20 vertices after at least three
+  inconclusive unrestricted attempts spanning at least two runs. This is an
+  algorithm-performance observation, not a claim of mathematical novelty.
+- A new completed exhaustive validation milestone through at least order 10,
+  requiring contiguous exhausted orders with matching enumeration and witness
+  counts. These are implementation milestones, not new literature bounds.
+- Failed evidence audits or failed research runs, clearly labeled operational
+  problems rather than mathematical findings.
+
+Ordinary timeouts, restricted-edge infeasibility, and repeated stock hypotheses
+do not trigger alerts. Previously reported items are suppressed using markers in
+bot-created issues, including closed issues. Keep those issues and their markers
+for reliable deduplication. Up to 100 new items are grouped per issue. Findings
+retained in successful checkpoints remain eligible for delivery on later runs if
+a notification request fails. Notification problems do not invalidate a valid
+research checkpoint; their status is visible under **Review notable findings**.
+
+No personal token or LLM is required. The isolated notification job uses GitHub's
+automatic token and the standard library. Set the repository Actions variable
+`GRACEFUL_ALERT_RECIPIENT` to a different GitHub username if needed; otherwise it
+uses the repository owner. The existing research schedule and budget are unchanged.
+To disable these alerts, remove or disable the workflow's `notify` job.
 
 ## How budgets, progress and priorities work
 
@@ -239,6 +277,7 @@ Useful files in every run:
 | --- | --- |
 | `report.html` | Offline visual report with embedded charts and family/size filters |
 | `progress.json` | Audited cumulative counts, run history, chart series and current-run runtime points |
+| `findings.json` | Cumulative deterministic review candidates; independently reconstructed from the ledger by the run audit |
 | `figures/*.svg`, `figures/overview.png` | Standalone exportable charts and a combined PNG overview |
 | `manifest.json`, `config.json`, `dependencies.txt` | Exact Python/dependency versions, OS/CPU, Git revision and dirty status, actual source hashes, configuration, seeds and cursors |
 | `inputs/ID.json` | Original numbered edge list, exact isomorphism encoding, generator index/seed and structural features |
@@ -300,6 +339,8 @@ checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.
 `progress.py` derives visual data from the ledger; `visuals.py` renders the offline
 report and Matplotlib figures.
+`findings.py` identifies conservative review candidates; `scripts/notify_findings.py`
+validates the exported artifact and deduplicates GitHub notifications.
 The small scripts under `scripts/` adapt the same CLI to GitHub.
 
 `HypothesisProvider` is a typed interface for future optional LLM assistance. Such a

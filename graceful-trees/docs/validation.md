@@ -105,3 +105,24 @@ horizontal overflow, no browser errors, and no external network requests.
 The GitHub workflow now links the complete artifact from its run summary; figures
 are downloaded with the report rather than embedded as broken relative URLs in
 GitHub's job-summary page.
+
+## Scheduled finding review
+
+The notification extension passed **232 automated tests** on 8 November 2026.
+Coverage includes ordinary-timeout suppression, restricted-infeasibility
+suppression, repeat-difficulty thresholds, independent validation of a recovered
+witness, contiguous coverage milestones, reconstruction of alert candidates during
+the audit, artifact identity/checksums, closed-issue deduplication, and ambiguous
+delivery where GitHub accepts an issue but the response is lost.
+
+A local bounded trial investigated 20 unrestricted trees and verified all 20.
+It also made 25 restricted attempts, including three solver-infeasible restricted
+cases. The independent audit verified 42 certificates. Its finding list was empty,
+and a notification dry run made **no network calls and created no issues**. Synthetic
+exceptional-result tests used mock GitHub APIs; they did not post pretend discoveries
+or test messages to the live repository.
+
+The cloud workflow's separate **Review notable findings** job uses an automatic
+GitHub token with issue-write permission. The compute job retains read-only GitHub
+permissions. Notification setup or delivery errors cannot invalidate a successfully
+audited research checkpoint. See the [notification rules](../README.md#scheduled-notifications).

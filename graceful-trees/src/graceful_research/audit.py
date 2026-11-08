@@ -5,6 +5,7 @@ import sqlite3
 from pathlib import Path
 
 from .analysis import summarize
+from .findings import build_findings
 from .io import sha256
 from .progress import REPORT_FILES, build_progress
 from .trees import canonical_code, to_graph, tree_id
@@ -96,6 +97,8 @@ def audit_run(output):
         }
         if manifest.get("visual_report_schema_version") == 1:
             required.update(REPORT_FILES)
+        if manifest.get("findings_schema_version") == 1:
+            required.add("findings.json")
         if not required <= checksums.keys():
             errors.append("required files absent from checksum manifest")
         for relative, expected in checksums.items():
@@ -174,6 +177,10 @@ def audit_run(output):
                 errors.append("JSONL attempts differ from cumulative ledger")
             ledger_checked, ledger_errors = audit_ledger(database)
             errors.extend(ledger_errors)
+            if manifest.get("findings_schema_version") == 1:
+                findings = json.loads((output / "findings.json").read_text())
+                if findings != build_findings(database, manifest):
+                    errors.append("notable findings differ from cumulative ledger")
             if manifest.get("visual_report_schema_version") == 1:
                 progress = json.loads((output / "progress.json").read_text())
                 if progress != build_progress(database, manifest):

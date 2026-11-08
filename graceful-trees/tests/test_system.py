@@ -167,6 +167,20 @@ def test_visual_counts_checked_against_ledger_even_after_rehash(experiment, tmp_
     assert "visual progress data differs from cumulative ledger" in result["errors"]
 
 
+def test_fabricated_alert_cannot_pass_audit(experiment, tmp_path):
+    import shutil
+
+    original, _ = experiment
+    output = tmp_path / "fabricated-finding"
+    shutil.copytree(original, output)
+    data = json.loads((output / "findings.json").read_text())
+    assert data["findings"] == []
+    data["findings"] = [{"kind": "unrestricted_infeasibility", "key": "invented"}]
+    (output / "findings.json").write_text(json.dumps(data))
+    write_checksums(output)
+    assert "notable findings differ from cumulative ledger" in audit_run(output)["errors"]
+
+
 def test_plot_failure_preserves_verified_evidence(tmp_path, monkeypatch):
     def broken_plot(*args, **kwargs):
         raise RuntimeError("plot backend unavailable")

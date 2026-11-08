@@ -2,6 +2,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import sys
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -18,13 +19,18 @@ PROJECT = Path(__file__).resolve().parents[1]
 def load_script(name):
     spec = importlib.util.spec_from_file_location(name, PROJECT / "scripts" / f"{name}.py")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    sys.path.insert(0, str(PROJECT / "scripts"))
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.path.pop(0)
     return module
 
 
 restore = load_script("restore_checkpoint")
 cloud = load_script("cloud_run")
 publish = load_script("publish_summary")
+notifier = load_script("notify_findings")
 
 
 def archive_bytes(tmp_path, campaign="test"):
@@ -165,6 +171,12 @@ def test_example_configs_and_workflow_contracts():
     ]
     assert workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"] == "30"
     assert workflow["permissions"] == {"contents": "read", "actions": "read"}
+    notify = workflow["jobs"]["notify"]
+    assert notify["needs"] == "research" and notify["if"] == "always()"
+    assert notify["continue-on-error"] == "true"
+    assert notify["permissions"] == {"contents": "read", "actions": "read", "issues": "write"}
+    assert notify["steps"][-1]["continue-on-error"] == "true"
+    assert notify["steps"][-1]["run"] == "python3 scripts/notify_findings.py"
     job = workflow["jobs"]["research"]
     assert int(job["timeout-minutes"]) > 30
     assert job["runs-on"] == "ubuntu-24.04"
@@ -206,6 +218,135 @@ def test_workflow_summary_links_artifact_without_broken_local_figures():
     assert "A timeout is unresolved." in rendered
     assert "javascript:" not in publish.workflow_summary(report, "javascript:alert(1)")
     assert "Artifacts" in publish.workflow_summary(report)
+
+
+def test_notifications_are_quiet_without_findings_and_deduplicate_closed_issues():
+    issues = []
+    requests = []
+
+    def fetch(url, token, **kwargs):
+        requests.append(url)
+        assert "state=all" in url
+        return issues
+
+    def create(url, token, payload):
+        assert url == "https://api.github.com/repos/owner/repo/issues"
+        assert "@owner" in payload["body"]
+        issues.append({**payload, "state": "closed", "user": {"login": "github-actions[bot]"}})
+        return {"html_url": "https://github.com/owner/repo/issues/1"}
+
+    empty = notifier.publish("owner/repo", "master", "owner", "t", [], 1, 2, fetch, create)
+    assert empty["new_findings"] == 0 and requests == []
+    finding = notifier.operational_finding("test", "rev", "Audit failed.")
+    first = notifier.publish("owner/repo", "master", "owner", "t", [finding], 1, 2, fetch, create)
+    assert first["new_findings"] == 1
+    assert "current/report.html" in issues[0]["body"]
+    assert "not a mathematical finding" in issues[0]["body"]
+    again = notifier.publish("owner/repo", "master", "owner", "t", [finding], 3, 4, fetch, create)
+    assert again["issues_created"] == []
+    assert len(issues) == 1
+
+
+def test_notification_read_failure_cannot_silently_spam_duplicates():
+    def fetch(*args, **kwargs):
+        raise OSError("offline")
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("must not post when history cannot be read")
+
+    with pytest.raises(OSError):
+        notifier.publish(
+            "owner/repo",
+            "master",
+            "owner",
+            "t",
+            [notifier.operational_finding("c", "rev", "Audit failed.")],
+            1,
+            2,
+            fetch,
+            forbidden,
+        )
+
+
+def test_ambiguous_delivery_is_deduplicated_on_next_review():
+    issues = []
+    finding = notifier.operational_finding("test", "rev", "Audit failed.")
+
+    def created_but_response_lost(url, token, payload):
+        issues.append({**payload, "user": {"login": "github-actions[bot]"}})
+        raise TimeoutError("response lost")
+
+    def fetch(*args, **kwargs):
+        return issues
+
+    with pytest.raises(TimeoutError):
+        notifier.publish(
+            "owner/repo", "master", "owner", "t", [finding], 1, 2, fetch, created_but_response_lost
+        )
+    result = notifier.publish(
+        "owner/repo", "master", "owner", "t", [finding], 3, 4, fetch, created_but_response_lost
+    )
+    assert result["new_findings"] == 0 and len(issues) == 1
+
+
+def test_notification_artifact_requires_matching_run_checksums_and_audit():
+    def archive(run="5", valid=True, corrupt=False):
+        contents = {
+            "manifest.json": json.dumps(
+                {
+                    "run_id": "r",
+                    "config": {"campaign": "c"},
+                    "provenance": {"github": {"GITHUB_RUN_ID": run}},
+                }
+            ).encode(),
+            "findings.json": json.dumps(
+                {"schema_version": 1, "run_id": "r", "campaign": "c", "findings": []}
+            ).encode(),
+            "audit.json": json.dumps({"valid": valid}).encode(),
+        }
+        contents["checksums.json"] = json.dumps(
+            {k: hashlib.sha256(v).hexdigest() for k, v in contents.items()}
+        ).encode()
+        if corrupt:
+            contents["findings.json"] += b" "
+        stream = io.BytesIO()
+        with zipfile.ZipFile(stream, "w") as bundle:
+            for name, data in contents.items():
+                bundle.writestr("current/" + name, data)
+        return stream.getvalue()
+
+    assert notifier.read_evidence(archive(), 5)["findings"] == []
+    for data, message in [
+        (archive(run="6"), "another workflow"),
+        (archive(valid=False), "audit failed"),
+        (archive(corrupt=True), "checksum mismatch"),
+    ]:
+        with pytest.raises(ValueError, match=message):
+            notifier.read_evidence(data, 5)
+
+
+def test_failed_audit_reports_operations_without_claiming_a_discovery():
+    payloads = []
+    env = {
+        "GITHUB_REPOSITORY": "owner/repo",
+        "GITHUB_TOKEN": "t",
+        "GITHUB_RUN_ID": "5",
+        "GITHUB_SHA": "revision",
+        "GITHUB_REF_NAME": "master",
+        "CAMPAIGN": "c",
+        "ALERT_RECIPIENT": "owner",
+        "AUDIT_OUTCOME": "failure",
+        "RESEARCH_OUTCOME": "failure",
+    }
+
+    def create(url, token, payload):
+        payloads.append(payload)
+        return {"html_url": "https://github.com/owner/repo/issues/1"}
+
+    result = notifier.review(env, lambda *args, **kwargs: [], create)
+    assert result["new_findings"] == 1
+    assert "operational alert" in payloads[0]["body"]
+    assert "audit failed" in payloads[0]["body"]
 
 
 def test_expired_checkpoint_does_not_silently_restart(tmp_path):

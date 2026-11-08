@@ -32,6 +32,10 @@ jobs:
   research:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    outputs:
+      campaign: ${{ steps.parameters.outputs.campaign }}
+      artifact_id: ${{ steps.results.outputs.artifact-id }}
+      audit_outcome: ${{ steps.audit.outcome }}
     defaults:
       run:
         working-directory: graceful-trees
@@ -100,3 +104,31 @@ jobs:
         env:
           RESULTS_ARTIFACT_URL: ${{ steps.results.outputs.artifact-url }}
         run: python scripts/publish_summary.py
+
+  notify:
+    name: Review notable findings
+    needs: research
+    if: always()
+    continue-on-error: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      issues: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Report new findings to the repository owner
+        # Delivery trouble must not invalidate a successfully audited checkpoint.
+        continue-on-error: true
+        working-directory: graceful-trees
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ALERT_RECIPIENT: ${{ vars.GRACEFUL_ALERT_RECIPIENT || github.repository_owner }}
+          CAMPAIGN: ${{ needs.research.outputs.campaign }}
+          RESULTS_ARTIFACT_ID: ${{ needs.research.outputs.artifact_id }}
+          AUDIT_OUTCOME: ${{ needs.research.outputs.audit_outcome }}
+          RESEARCH_OUTCOME: ${{ needs.research.result }}
+        run: python3 scripts/notify_findings.py

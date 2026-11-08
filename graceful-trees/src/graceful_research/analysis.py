@@ -235,7 +235,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         f"Started {manifest['started_at']}; stopped for **{manifest['stop_reason']}**.",
         f"Elapsed {manifest['elapsed_seconds']:.3f}s; configured budget {manifest['config']['budget_seconds']}s.",
         "",
-        "[Open the offline visual progress report](report.html) · [Chart data](progress.json)",
+        "[Open the offline visual progress report](report.html) · [Chart data](progress.json) · [Notable review candidates](findings.json)",
         "",
         "Download and extract the complete run artifact to open the HTML report and its evidence links.",
         "The charts combine cumulative checkpoint history with this run's search effort.",
