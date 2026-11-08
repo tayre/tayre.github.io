@@ -82,3 +82,6 @@ Tap the sheet or page background to play/pause; the main button uses the same
 behavior. Pause preserves the beat and sample offset, including inside tied notes.
 Resume continues from that spot; Start over resets the selection. Scrolling, drags,
 long presses, text selection, and interactive controls do not toggle playback.
+
+When changing player code or CSS, bump their `?v=` asset revisions in `index.html`
+so existing browser tabs load matching files after a deployment.
