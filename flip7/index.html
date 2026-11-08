@@ -46,7 +46,7 @@
         <div id="game-history" class="game-history"></div>
       </section>
     </main>
-    <footer><span id="offline-status">Made for your game table.</span><span>Unofficial companion · <a href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Official rules ↗</a></span></footer>
+    <footer><span id="offline-status">Made for your game table.</span><span>Unofficial companion · <a href="https://theop.games/pages/flip-7-faqs" target="_blank" rel="noopener noreferrer">Official rules ↗</a></span><button class="quiet-button sound-toggle" data-sound-toggle aria-label="Applause sound" aria-pressed="true">Applause on</button></footer>
   </div>
 
   <dialog id="emoji-dialog" aria-labelledby="emoji-title"><div class="dialog-heading"><div><p class="eyebrow">YOUR LUCKY CHARM</p><h2 id="emoji-title">Pick a profile</h2></div><button class="close-button" data-close aria-label="Close emoji picker">×</button></div><div id="emoji-grid" class="emoji-grid"></div></dialog>
@@ -65,6 +65,7 @@
 
   <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title"></h2><button class="close-button" data-dismiss aria-label="Cancel">×</button></div><p id="confirm-message" class="confirm-message"></p><div class="confirm-actions"><button class="button secondary" data-dismiss>Keep playing</button><button id="confirm-action" class="button primary"></button></div></dialog>
   <div id="toast" class="toast" role="status" hidden></div>
+  <audio id="win-applause" src="./applause.mp3" preload="auto"></audio>
   <noscript><p class="notice">Please enable JavaScript to keep score.</p></noscript>
 </body>
 </html>

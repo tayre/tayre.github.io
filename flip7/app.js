@@ -8,6 +8,7 @@ const defaultPlayers = () => Array.from({ length: MAX_PLAYERS }, (_, i) => ({ na
 let setup = { count: 4, players: defaultPlayers() };
 let game = null;
 let gameHistory = [];
+let preferences = { applause: true };
 let scoreEdit = null;
 let emojiIndex = null;
 let currentRoute = '';
@@ -30,6 +31,7 @@ try {
   if (raw) {
     const saved = JSON.parse(raw);
     if (![1, 2].includes(saved.version)) throw new Error('Unknown save version');
+    if (typeof saved.preferences?.applause === 'boolean') preferences.applause = saved.preferences.applause;
     if (saved.setup && Number.isInteger(saved.setup.count) && saved.setup.count >= 1 && saved.setup.count <= MAX_PLAYERS && Array.isArray(saved.setup.players)) {
       setup.count = saved.setup.count;
       setup.players = setup.players.map((p, i) => ({ name: typeof saved.setup.players[i]?.name === 'string' ? saved.setup.players[i].name.slice(0, 24) : p.name, emoji: validEmoji(saved.setup.players[i]?.emoji) ? saved.setup.players[i].emoji : p.emoji }));
@@ -56,7 +58,7 @@ try {
 
 function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, setup, game, history: gameHistory }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, setup, game, history: gameHistory, preferences }));
     $('#save-status').innerHTML = '<i></i>Saved on this device';
     $('#storage-warning').hidden = true;
   } catch {
@@ -78,33 +80,92 @@ function stopConfetti() {
   confettiLayer = null;
 }
 
-function celebrateWin() {
+function renderSoundPreference() {
+  document.querySelectorAll('[data-sound-toggle]').forEach(button => {
+    button.setAttribute('aria-pressed', String(preferences.applause));
+    button.title = preferences.applause ? 'Mute applause' : 'Enable applause';
+    button.innerHTML = `<span aria-hidden="true">${preferences.applause ? '🔊' : '🔇'}</span> Applause ${preferences.applause ? 'on' : 'off'}`;
+  });
+}
+
+function stopApplause() {
+  const audio = $('#win-applause');
+  audio.pause();
+  audio.currentTime = 0;
+}
+
+function stopCelebration() {
   stopConfetti();
-  if (motionPreference.matches || document.hidden || !Element.prototype.animate) return;
+  stopApplause();
+}
+
+function playApplause() {
+  $('#applause-hint').hidden = true;
+  if (!preferences.applause) return;
+  const audio = $('#win-applause');
+  audio.volume = 0.6;
+  // Called directly from Save round or Celebrate again so mobile browsers can
+  // use the tap to allow sound. A blocked sound never interrupts scoring.
+  audio.play()?.catch(error => {
+    if (error.name === 'AbortError' || !preferences.applause || document.hidden || currentRoute !== '#game' || !audio.paused) return;
+    const hint = $('#applause-hint');
+    if (hint) {
+      hint.textContent = 'Tap Celebrate again to hear the applause.';
+      hint.hidden = false;
+    }
+  });
+}
+
+function celebrateWin() {
+  stopCelebration();
+  if (document.hidden || !game || outcome(game).type !== 'won') return;
+  playApplause();
+  if (motionPreference.matches || !Element.prototype.animate) return;
   const layer = document.createElement('div');
   layer.id = 'win-confetti';
   layer.setAttribute('aria-hidden', 'true');
   document.body.append(layer);
   confettiLayer = layer;
-  const colors = ['#3b8068', '#e8b74f', '#d77869', '#7294bd'];
-  for (let i = 0; i < 40; i++) {
+  const colors = ['#3b8068', '#e8b74f', '#d77869', '#7294bd', '#b68ac2', '#71b9ad'];
+  // Three waves from both sides, with only transforms and opacity animated.
+  for (let i = 0; i < 120; i++) {
     const piece = document.createElement('i');
-    piece.style.left = `${(i + Math.random()) / 40 * 100}%`;
+    const fromLeft = i % 2 === 0;
+    const startY = innerHeight * (0.55 + Math.random() * 0.2);
+    const travelX = (fromLeft ? 1 : -1) * innerWidth * (0.25 + Math.random() * 0.7);
+    const rise = innerHeight * (0.35 + Math.random() * 0.35);
+    const rotation = (fromLeft ? 1 : -1) * (360 + Math.random() * 720);
+    piece.style.left = `${fromLeft ? -12 : innerWidth + 12}px`;
+    piece.style.top = `${startY}px`;
+    piece.style.width = `${6 + Math.random() * 6}px`;
+    piece.style.height = `${9 + Math.random() * 8}px`;
+    piece.style.borderRadius = i % 4 === 0 ? '50%' : '2px';
     piece.style.backgroundColor = colors[i % colors.length];
     layer.append(piece);
     confettiAnimations.push(piece.animate([
-      { transform: 'translate3d(0,-24px,0) rotate(0deg)', opacity: 1 },
-      { transform: `translate3d(${Math.random() * 140 - 70}px,${innerHeight + 30}px,0) rotate(${360 + Math.random() * 540}deg)`, opacity: 0 }
-    ], { duration: 1900 + Math.random() * 500, delay: Math.random() * 150, easing: 'cubic-bezier(.2,.55,.65,1)', fill: 'both' }));
+      { transform: 'translate3d(0,0,0) rotate(0deg)', opacity: 0, offset: 0 },
+      { transform: `translate3d(${travelX * 0.65}px,${-rise}px,0) rotate(${rotation * 0.35}deg)`, opacity: 1, offset: 0.32, easing: 'cubic-bezier(.4,0,.8,.7)' },
+      { transform: `translate3d(${travelX}px,${innerHeight - startY + 30}px,0) rotate(${rotation}deg)`, opacity: 0, offset: 1 }
+    ], { duration: 3300 + Math.random() * 800, delay: Math.floor(i / 40) * 300 + Math.random() * 120, easing: 'cubic-bezier(.15,.6,.3,1)' }));
   }
+  confettiAnimations.push($('#result-banner').animate([
+    { transform: 'scale(.96)', opacity: 0.65 },
+    { transform: 'scale(1.015)', opacity: 1, offset: 0.6 },
+    { transform: 'scale(1)', opacity: 1 }
+  ], { duration: 650, easing: 'ease-out' }));
+  confettiAnimations.push($('.winner-emoji').animate([
+    { transform: 'translateY(0) rotate(-8deg)' },
+    { transform: 'translateY(-10px) rotate(8deg)', offset: 0.45 },
+    { transform: 'translateY(0) rotate(0deg)' }
+  ], { duration: 900, easing: 'ease-out' }));
   Promise.all(confettiAnimations.map(animation => animation.finished)).then(() => {
     if (confettiLayer === layer) stopConfetti();
   }).catch(() => { /* Navigation or reduced motion cancelled the celebration. */ });
 }
 
 motionPreference.addEventListener('change', event => { if (event.matches) stopConfetti(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) stopConfetti(); });
-window.addEventListener('pagehide', stopConfetti);
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopCelebration(); });
+window.addEventListener('pagehide', stopCelebration);
 
 function navigate(hash, replace = false) {
   if (hash === currentRoute) return;
@@ -130,7 +191,7 @@ function renderRoute() {
   if (route !== location.hash) history.replaceState({ flip7: true, overlay: false }, '', route);
   const previous = currentRoute;
   currentRoute = route;
-  if (route !== '#game') stopConfetti();
+  if (route !== '#game') stopCelebration();
   if ($('#confirm-dialog').open) { $('#confirm-dialog').close(); confirmAction = null; }
   const baseRoute = route === '#rules' ? history.state?.returnHash || (game ? '#game' : '#setup') : route.startsWith('#emoji/') ? '#setup' : route.startsWith('#score/') ? '#game' : route;
   $('#setup-view').hidden = baseRoute !== '#setup';
@@ -175,7 +236,7 @@ function renderGame() {
   const scores = totals(game);
   const result = outcome(game);
   const won = result.type === 'won';
-  if (!won) stopConfetti();
+  if (!won) stopCelebration();
   const ready = game.draft.filter(entry => entry !== null).length;
   const round = game.rounds.length + 1;
   $('#game-title').innerHTML = won ? 'Final scores' : `Round ${round}`;
@@ -193,13 +254,16 @@ function renderGame() {
   $('#save-round').hidden = won;
   $('#save-round').disabled = ready !== game.players.length;
   $('#play-again').hidden = !won;
+  $('#round-bar').classList.toggle('is-final', won);
   $('#round-bar-title').textContent = won ? 'Play again?' : ready === game.players.length ? 'All scores are in.' : `${game.players.length - ready} ${game.players.length - ready === 1 ? 'player' : 'players'} to go.`;
   $('#round-bar-note').textContent = won ? 'Start fresh with the same names and emojis.' : ready === game.players.length ? 'Save them together and deal the next round.' : 'Enter a score or mark a bust for each player.';
   $('#undo-round').disabled = game.rounds.length === 0;
   $('#result-banner').hidden = result.type === 'playing';
+  $('#result-banner').classList.toggle('is-win', won);
   if (won) {
     const winner = game.players[result.leaders[0]];
-    $('#result-banner').innerHTML = `<span class="result-spark" aria-hidden="true">✦</span><div><p class="eyebrow">WINNER</p><strong>${escapeHTML(winner.name)} takes the table!</strong><p>${result.top} points. Well played!</p></div><span class="winner-emoji" aria-hidden="true">${winner.emoji}</span>`;
+    $('#result-banner').innerHTML = `<div class="winner-crown" aria-hidden="true">🏆</div><span class="winner-emoji" aria-hidden="true">${winner.emoji}</span><div class="winner-message"><p class="eyebrow">WE HAVE A WINNER!</p><strong>${escapeHTML(winner.name)} takes the table!</strong><p><b>${result.top} points</b> · ${game.rounds.length} ${game.rounds.length === 1 ? 'round' : 'rounds'} · What a game!</p></div><div class="winner-actions"><button class="quiet-button" data-celebrate><span aria-hidden="true">🎉</span> Celebrate again</button><button class="quiet-button sound-toggle" data-sound-toggle aria-label="Applause sound" aria-pressed="true">Applause on</button></div><p id="applause-hint" class="applause-hint" role="status" hidden></p>`;
+    renderSoundPreference();
   } else if (result.type === 'tie') {
     $('#result-banner').innerHTML = `<span class="result-spark" aria-hidden="true">=</span><div><strong>It’s a tie at ${result.top}!</strong><p>Everyone plays another round to find a winner.</p></div>`;
   }
@@ -389,6 +453,14 @@ document.addEventListener('click', event => {
   if (!button) return;
   if (button.matches('a[href^="#"]')) { event.preventDefault(); navigate(button.hash); }
   else if (button.hasAttribute('data-close')) closeOverlay();
+  else if (button.hasAttribute('data-celebrate')) celebrateWin();
+  else if (button.hasAttribute('data-sound-toggle')) {
+    preferences.applause = !preferences.applause;
+    if (!preferences.applause) stopApplause();
+    const hint = $('#applause-hint');
+    if (hint) hint.hidden = true;
+    save(); renderSoundPreference();
+  }
   else if (button.hasAttribute('data-emoji')) navigate(`#emoji/${button.dataset.emoji}`);
   else if (button.hasAttribute('data-profile')) { setup.players[emojiIndex].emoji = button.dataset.profile; save(); closeOverlay(); }
   else if (button.hasAttribute('data-score')) navigate(`#score/${button.dataset.score}`);
@@ -417,6 +489,7 @@ const modifierButtons = [...document.querySelectorAll('[data-modifier]')];
 const doubleButton = $('[data-double]');
 window.addEventListener('popstate', renderRoute);
 window.addEventListener('hashchange', () => { if (location.hash !== currentRoute) renderRoute(); });
+renderSoundPreference();
 renderRoute();
 
 if ('serviceWorker' in navigator) {
