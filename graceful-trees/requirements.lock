@@ -1,16 +1,23 @@
 # Exact versions tested with CPython 3.12.14. Includes runtime, build and test tools.
 # Regenerate in an isolated environment; run tests before accepting an upgrade.
 absl-py==2.5.1
+contourpy==1.4.0
+cycler==0.12.1
+fonttools==4.68.0
 immutabledict==4.3.1
 iniconfig==2.3.1
+kiwisolver==1.5.1
+matplotlib==3.10.7
 networkx==3.5
 numpy==2.5.4
 ortools==9.14.6206
 packaging==26.3
 pandas==3.1.1
+pillow==13.0.0
 pluggy==1.7.0
 protobuf==6.31.1
 Pygments==2.21.0
+pyparsing==3.3.3
 pytest==8.4.2
 python-dateutil==4.0.0
 PyYAML==6.0.3

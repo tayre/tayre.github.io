@@ -31,5 +31,16 @@
     },
     "bytes": 445317,
     "sha256": "ee9494bbb62ca77f6ed8beb8ae0e8277f8b04bd7959b34d7f8d96f7643944d9c"
+  },
+  "visual-progress.zip": {
+    "audit": {
+      "certificates_checked": 51,
+      "cumulative_labelings_checked": 212,
+      "errors": [],
+      "infeasibility_proofs_checked": 0,
+      "valid": true
+    },
+    "bytes": 626515,
+    "sha256": "8b17ecf977bf5771921746c1cca126646057d9532828f292ba892363a7fa78f3"
   }
 }

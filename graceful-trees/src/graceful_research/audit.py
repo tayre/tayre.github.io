@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .analysis import summarize
 from .io import sha256
+from .progress import REPORT_FILES, build_progress
 from .trees import canonical_code, to_graph, tree_id
 from .verify import verify_certificate, verify_labeling, verify_tree
 
@@ -93,6 +94,8 @@ def audit_run(output):
             "config.json",
             "analysis.json",
         }
+        if manifest.get("visual_report_schema_version") == 1:
+            required.update(REPORT_FILES)
         if not required <= checksums.keys():
             errors.append("required files absent from checksum manifest")
         for relative, expected in checksums.items():
@@ -171,6 +174,10 @@ def audit_run(output):
                 errors.append("JSONL attempts differ from cumulative ledger")
             ledger_checked, ledger_errors = audit_ledger(database)
             errors.extend(ledger_errors)
+            if manifest.get("visual_report_schema_version") == 1:
+                progress = json.loads((output / "progress.json").read_text())
+                if progress != build_progress(database, manifest):
+                    errors.append("visual progress data differs from cumulative ledger")
         summary = summarize(records)
         for key, value in manifest["summary"].items():
             # JSON converts integer size keys to strings.

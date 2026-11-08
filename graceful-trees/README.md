@@ -13,10 +13,26 @@ validate the implementation; they do not improve that bound. Read the
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
+Every run also produces an **offline visual progress report** (`report.html`),
+SVG charts, a PNG overview, and audited chart data (`progress.json`). It shows
+cumulative progress across resumed runs and clearly distinguishes verified
+labelings from unresolved searches and uncertified solver conclusions.
+
+[Download an audited example visual report](examples/visual-progress.zip) and open
+`report.html` after extraction. This is a saved local validation campaign, not a
+live display of the cloud campaign.
+
+![Example: cumulative research progress and search outcomes](examples/visual-progress.png)
+
 Cloud execution is active in [GitHub Actions](https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml).
 The [first hosted research run](https://github.com/tayre/tayre.github.io/actions/runs/42497916313)
 completed successfully, including independent auditing and checkpoint/report uploads.
 Nightly runs use a 30-minute budget; configuration pushes run a two-minute check.
+
+**Usage review:** Technical activation does not establish GitHub approval of an
+ongoing mathematical discovery campaign. Before increasing hosted research runs,
+see the [GitHub Actions purpose and usage review](docs/github-actions-usage.md).
+Software CI and sustained discovery compute have different purposes.
 
 ## Quick start
 
@@ -127,7 +143,8 @@ runs the tests, restores the latest successful checkpoint for that campaign and
 branch, performs the experiment, audits the evidence, and uploads:
 
 - `graceful-results-RUN_ID-ATTEMPT`: complete report, current-run evidence, source
-  snapshot, metadata, and cumulative SQLite ledger. Attempted even after failure.
+  snapshot, metadata, cumulative SQLite ledger, and offline visual report with
+  exportable figures. Attempted even after failure.
 - `graceful-checkpoint-CAMPAIGN`: ledger and checksum metadata, uploaded only after
   successful execution and audit. The next run restores it automatically.
 
@@ -188,7 +205,29 @@ even though each individual generated input and solver seed is reproducible.
 
 ## Reviewing and reproducing evidence
 
-Start with `report.md`, then `analysis.json`. The latter explicitly separates
+In the Actions run summary, use **Download the complete results artifact**, extract
+the ZIP, and open **`report.html`** in a browser. It works offline without a server,
+API key, CDN, or external font. A snapshot is generated after each run; it is not a
+live view of a running solver. Keep the extracted files together to follow links to
+the audit, inputs, CSV, and written report.
+
+The visual report includes:
+
+- Cumulative distinct trees and verified witnesses across the checkpoint's runs.
+- Stacked outcomes by tree size and first introducing generator.
+- Every unrestricted attempt's observed runtime in the current run, including
+  unresolved observations and retries.
+- A family-and-size filter for the cumulative comparison table, difficult current
+  cases, and exact run-history counts.
+
+Retries do not count as new trees. A verified witness is retained if a later retry
+is unresolved. Restricted probes stay separate from unrestricted tree outcomes.
+There is no percentage-complete indicator for an infinite conjecture. The audit
+reconstructs `progress.json` directly from the cumulative ledger, and checksums
+cover the HTML and figures. Matplotlib renders CPU-only SVG and PNG files with no
+GUI. A reusable temporary font cache avoids rescanning fonts during shutdown.
+
+Read `report.md`, then `analysis.json` for the full scientific context. The latter explicitly separates
 observations, proposed experiments/hypotheses, and mathematical proofs (none are
 generated). The rule-based analyzer groups by family **and order**, flags large
 branch-count outliers within an order, and exposes censored searches. Its solved-only
@@ -198,6 +237,9 @@ Useful files in every run:
 
 | File | Contents |
 | --- | --- |
+| `report.html` | Offline visual report with embedded charts and family/size filters |
+| `progress.json` | Audited cumulative counts, run history, chart series and current-run runtime points |
+| `figures/*.svg`, `figures/overview.png` | Standalone exportable charts and a combined PNG overview |
 | `manifest.json`, `config.json`, `dependencies.txt` | Exact Python/dependency versions, OS/CPU, Git revision and dirty status, actual source hashes, configuration, seeds and cursors |
 | `inputs/ID.json` | Original numbered edge list, exact isomorphism encoding, generator index/seed and structural features |
 | `attempts.jsonl`, `attempts.csv` | All attempts in this run, scope, seeds, model options, results, runtime, branches/conflicts and verifier output |
@@ -256,6 +298,8 @@ configs → TreeStream → exact deduplication → SQLite inputs/cursors
 `solver.py` owns the model; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.
+`progress.py` derives visual data from the ledger; `visuals.py` renders the offline
+report and Matplotlib figures.
 The small scripts under `scripts/` adapt the same CLI to GitHub.
 
 `HypothesisProvider` is a typed interface for future optional LLM assistance. Such a

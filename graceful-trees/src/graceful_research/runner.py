@@ -12,9 +12,11 @@ from pathlib import Path
 
 from .analysis import extreme_profiles, write_reports
 from .io import provenance, sha256, utc_now, write_checksums, write_json
+from .progress import build_progress
 from .storage import ERROR_STATUSES, Store
 from .trees import TreeStream, derived_seed, edge_orbits, to_graph
 from .verify import verify_labeling
+from .visuals import write_visual_report
 from .worker import Supervisor
 
 
@@ -274,6 +276,18 @@ def run(config, output, resume=None, cancelled=lambda: False):
         manifest["summary"] = {
             k: v for k, v in summary.items() if k not in {"difficult", "families"}
         }
+        manifest["visual_report_schema_version"] = 1
+        try:
+            progress = build_progress(store.connection, manifest)
+            write_visual_report(output, manifest, progress, summary)
+        except Exception:
+            # A renderer failure must not discard verified solver evidence or
+            # leave SQLite open. Fail the run so a partial report is not promoted.
+            failed = True
+            manifest["stop_reason"] = "report_error"
+            manifest["visual_report_error"] = traceback.format_exc()
+            manifest["error"] = manifest.get("error", "") + manifest["visual_report_error"]
+            write_reports(output, manifest, records, profiles)
         manifest["elapsed_seconds"] = time.monotonic() - started
         store.save_run(run_id, manifest)
         store.close()

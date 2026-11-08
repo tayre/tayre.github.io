@@ -123,6 +123,11 @@ def test_end_to_end_certificates_and_independent_cli(experiment):
     assert json.loads(result.stdout)["valid"]
     report = (output / "report.md").read_text()
     assert "not an" in report and "independently checked proof certificate" in report
+    assert "report.html" in report and "figures/overview.png" in report
+    progress = json.loads((output / "progress.json").read_text())
+    assert progress["current_run"]["verified_graceful"] == 10
+    assert progress["cumulative"]["verified_graceful"] == 10
+    assert "report.html" in json.loads((output / "checksums.json").read_text())
 
 
 def test_resume_progresses_and_preserves_ledger(experiment, tmp_path):
@@ -134,6 +139,10 @@ def test_resume_progresses_and_preserves_ledger(experiment, tmp_path):
     assert manifest["cumulative_cases"] == 14
     assert manifest["cumulative_attempts"] > prior_manifest["cumulative_attempts"]
     assert audit_run(output)["valid"]
+    progress = json.loads((output / "progress.json").read_text())
+    assert progress["cumulative"]["trees"] == 14
+    assert progress["current_run"]["trees"] == 4
+    assert [r["trees"] for r in progress["history"]] == [10, 14]
     with sqlite3.connect(output / "research.sqlite") as db:
         assert db.execute("SELECT count(*) FROM runs").fetchone()[0] == 2
         all_base = db.execute(
@@ -141,6 +150,39 @@ def test_resume_progresses_and_preserves_ledger(experiment, tmp_path):
         ).fetchall()
         assert len(all_base) == 14
         assert all(count == 1 for _, count in all_base)
+
+
+def test_visual_counts_checked_against_ledger_even_after_rehash(experiment, tmp_path):
+    import shutil
+
+    original, _ = experiment
+    output = tmp_path / "wrong-chart-counts"
+    shutil.copytree(original, output)
+    data = json.loads((output / "progress.json").read_text())
+    data["cumulative"]["verified_graceful"] += 1000
+    (output / "progress.json").write_text(json.dumps(data))
+    write_checksums(output)
+    result = audit_run(output)
+    assert not result["valid"]
+    assert "visual progress data differs from cumulative ledger" in result["errors"]
+
+
+def test_plot_failure_preserves_verified_evidence(tmp_path, monkeypatch):
+    def broken_plot(*args, **kwargs):
+        raise RuntimeError("plot backend unavailable")
+
+    monkeypatch.setattr("graceful_research.runner.write_visual_report", broken_plot)
+    output = tmp_path / "failed-plot"
+    manifest, code = run(small_config(max_cases=1, probe_max_attempts=0), output)
+    assert code == 1
+    assert manifest["stop_reason"] == "report_error"
+    assert manifest["summary"]["verified_graceful"] == 1
+    assert "plot backend unavailable" in (output / "report.md").read_text()
+    assert (output / "checksums.json").is_file()
+    assert (output / "checkpoint.json").is_file()
+    with sqlite3.connect(output / "research.sqlite") as database:
+        assert database.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+    assert not audit_run(output)["valid"]  # Incomplete visuals must not pass audit.
 
 
 def test_checkpoint_config_mismatch_rejected(experiment, tmp_path):

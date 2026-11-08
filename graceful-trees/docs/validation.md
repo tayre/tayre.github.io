@@ -73,3 +73,35 @@ default **30-minute** compute budget and can restore the successful initial
 checkpoint. Changes to the workflow or nightly configuration on `master` also
 trigger a two-minute check. No personal API key or local computer is required.
 See [README](../README.md#cloud-execution) for execution and artifact retention.
+
+## Visual progress reports
+
+On 8 November 2026, the reporting extension passed **219 automated tests** plus
+Ruff lint and formatting checks. Tests cover cumulative accounting, repeated
+attempts, preservation of positive witnesses after unknown retries, restricted
+probe separation, empty charts, escaped HTML data, chart-count tampering after
+rehashing, and preservation of solver evidence after a plotting failure. Existing
+short-budget and SIGTERM finalization tests continue to pass.
+
+An additional local run resumed the saved 91-tree pilot checkpoint with a
+20-second budget and a limit of 12 unrestricted attempts. It made 52 attempts:
+12 unrestricted and 40 restricted. It verified 11 of those 12 unrestricted
+trees; the remaining tree was unresolved. The cumulative checkpoint now has
+**102 distinct investigated trees, 99 verified graceful trees, 3 unresolved trees,
+and 226 attempts across three runs**. No unrestricted solver infeasibility was
+reported. The audit checked 51 current-run certificates and **212 cumulative
+positive labelings**, and independently reconstructed the plotted counts.
+
+The [complete visual report archive](../examples/visual-progress.zip) includes
+`report.html`, chart data, SVG/PNG figures, the ledger, and all current-run evidence.
+Its transport checksum is recorded in [archives.json](../examples/archives.json).
+The [PNG overview](../examples/visual-progress.png) is a convenient static preview.
+These examples describe this local validation campaign, not live cloud totals.
+
+Headless Chromium checks at desktop (1440 pixels) and mobile (390 pixels) widths
+confirmed four rendered charts, working family/size filters and empty states,
+matching embedded chart data, 17 valid evidence/download links, no page-level
+horizontal overflow, no browser errors, and no external network requests.
+The GitHub workflow now links the complete artifact from its run summary; figures
+are downloaded with the report rather than embedded as broken relative URLs in
+GitHub's job-summary page.

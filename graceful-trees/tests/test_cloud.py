@@ -24,6 +24,7 @@ def load_script(name):
 
 restore = load_script("restore_checkpoint")
 cloud = load_script("cloud_run")
+publish = load_script("publish_summary")
 
 
 def archive_bytes(tmp_path, campaign="test"):
@@ -174,9 +175,37 @@ def test_example_configs_and_workflow_contracts():
     upload_steps = [s for s in job["steps"] if "upload-artifact@" in s.get("uses", "")]
     assert len(upload_steps) == 2
     assert any(s.get("if") == "always()" for s in upload_steps)
+    assert any(s.get("id") == "results" for s in upload_steps)
+    assert job["steps"][-1]["run"] == "python scripts/publish_summary.py"
+    assert (
+        job["steps"][-1]["env"]["RESULTS_ARTIFACT_URL"]
+        == "${{ steps.results.outputs.artifact-url }}"
+    )
     for step in job["steps"]:
         if "uses" in step:
             assert len(step["uses"].split("@")[1]) == 40
+
+
+def test_workflow_summary_links_artifact_without_broken_local_figures():
+    report = "\n".join(
+        [
+            "# Research",
+            "[Open the offline visual progress report](report.html)",
+            "![Charts](figures/overview.png)",
+            "| [abc](inputs/abc.json) | 4 | unknown |",
+            "A timeout is unresolved.",
+        ]
+    )
+    url = "https://github.com/owner/repo/actions/runs/12/artifacts/34"
+    rendered = publish.workflow_summary(report, url)
+    assert url in rendered
+    assert "report.html" in rendered
+    assert "figures/overview.png" not in rendered
+    assert "inputs/abc.json" not in rendered
+    assert "`abc`" in rendered
+    assert "A timeout is unresolved." in rendered
+    assert "javascript:" not in publish.workflow_summary(report, "javascript:alert(1)")
+    assert "Artifacts" in publish.workflow_summary(report)
 
 
 def test_expired_checkpoint_does_not_silently_restart(tmp_path):

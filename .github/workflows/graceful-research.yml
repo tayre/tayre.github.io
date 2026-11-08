@@ -72,12 +72,6 @@ jobs:
         id: audit
         if: always() && steps.research.outcome != 'skipped'
         run: python -m graceful_research audit results/current
-      - name: Publish run summary
-        if: always()
-        run: |
-          if test -f results/current/report.md; then
-            cat results/current/report.md >> "$GITHUB_STEP_SUMMARY"
-          fi
       - name: Preserve cumulative checkpoint
         if: success() && steps.audit.outcome == 'success'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -90,6 +84,7 @@ jobs:
           retention-days: 14
           compression-level: 9
       - name: Preserve reports and evidence, including failed runs
+        id: results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -100,3 +95,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
           compression-level: 9
+      - name: Publish run summary with visual report download
+        if: always()
+        env:
+          RESULTS_ARTIFACT_URL: ${{ steps.results.outputs.artifact-url }}
+        run: python scripts/publish_summary.py
