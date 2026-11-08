@@ -17,6 +17,8 @@ for(const entry of catalog){
   assert.ok(bars.length);
   if(entry.id==='jingle-bell-rock'){
     assert.equal(bars.length,32);
+    assert.equal(bars.some(bar=>bar.chord),false,'The photographed arrangement has no added accompaniment chords');
+    assert.equal(song.chordShapes?.length || 0,0);
     assert.equal(JSON.stringify(song.layout.rows),JSON.stringify([5,6,5,6,5,5]),'Preserve the six rows of the source photo');
     for(const [copy,original] of [[9,1],[10,2],[11,3],[12,4],[13,5],[14,6],[21,17],[25,1],[26,2],[27,3]])assert.equal(JSON.stringify(bars[copy-1].notes),JSON.stringify(bars[original-1].notes));
   }

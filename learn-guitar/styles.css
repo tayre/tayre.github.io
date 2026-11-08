@@ -29,7 +29,7 @@
   .chord-library{grid-template-columns:repeat(2,1fr);gap:10px}.chord-card{padding:12px}.chord-shape{font-size:12px;letter-spacing:1px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-.photo-layout .sheet-row{grid-template-columns:var(--row-columns);align-items:start;margin-bottom:22px;row-gap:0}
+.photo-layout .sheet-row{grid-template-columns:var(--row-columns);align-items:start;margin-bottom:14px;row-gap:0}
 .photo-layout .sheet-row:last-child{margin-bottom:0}
 .photo-layout .bar:nth-child(n){border-left:1px solid var(--line)}
 .photo-layout .bar:first-child{border-left:0}
@@ -45,9 +45,22 @@
 .photo-layout .rest{font-size:20px}
 .photo-layout .string-line{stroke-width:1.5}
 .photo-layout .tie{stroke-width:2}
+.no-chords .bar-header{min-height:16px;padding-top:0}
+.rhythm-symbol{color:var(--ink);fill:currentColor}
+.rhythm-stroke{fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.rhythm-open-head{fill:var(--card);stroke:currentColor;stroke-width:2.3}
+.bar.active .rhythm-open-head,.note.playing .tab-rest .fret-bg{fill:#fff3df}
+.rhythm-beam{fill:var(--ink)}
+.rhythm-tie{stroke:var(--ink);stroke-width:1.8;fill:none}
+.note.playing .rhythm-symbol{color:var(--accent)}
+.is-paused .note.playing .rhythm-symbol{color:#70816b}
+.time-signature{font:bold 12px Georgia,serif;fill:var(--ink)}
+.photo-layout .time-signature{font-size:22px}
+.rhythm-key{color:var(--muted)}
 @page{size:portrait;margin:10mm}
 @media print{:root{--paper:white;--card:white;--ink:#111;--line:#bbb}main{max-width:none;padding:0}.practice-toolbar,.extra-help,.source,.error{display:none!important}.print-title{display:block;font:24px Georgia,serif;margin:0 0 12px}.sheet-scroll{border:0;padding:0;overflow:visible}.tab-sheet{min-width:0}.sheet-row{margin:0 0 6px;break-inside:avoid}.bar-header{min-height:14px;padding:0 6px}.bar-number,.chord-label{font-size:8px}.tab-svg{width:100%;height:auto;max-height:76px}.repeat-ref{font-size:7px}.bar.active{box-shadow:none;background:white}.fret-bg,.active .fret-bg,.note.playing .fret-bg{fill:white}.note.playing .fret{fill:#111}}
 
 .sheet-scroll{cursor:pointer}.is-paused .bar.active{box-shadow:inset 0 0 0 1px #89947d}.is-paused .note.playing .fret-bg{fill:#70816b}
 @media print{.is-paused .bar.active{box-shadow:none}.is-paused .note.playing .fret-bg{fill:white}}
 @media print{.photo-layout .sheet-row{margin-bottom:12px}.photo-layout .bar-header{min-height:14px}.photo-layout .bar-number,.photo-layout .chord-label{font-size:8px}.photo-layout .repeat-ref{font-size:7px}.photo-layout .tab-svg{max-height:none}}
+@media print{.note.playing .rhythm-symbol,.is-paused .note.playing .rhythm-symbol{color:#111}.bar.active .rhythm-open-head,.note.playing .tab-rest .fret-bg{fill:white}}

@@ -73,10 +73,9 @@ window.GuitarSongbook.songs["jingle-bell-rock"] = {
     ]
   },
   "repeatSummary": "9–14 = 1–6 · 21 = 17 · 25–27 = 1–3",
-  "accompaniment": "Suggested accompaniment: the photo has no chord symbols. These are simple harmonic suggestions, not an official chord chart. Where two chords appear, change halfway through the bar.",
   "source": {
     "image": "assets/original-tab.jpg",
-    "description": "Transcribed from your uploaded “Jingle Bell Rock – gtr TAB” sheet. Pitches, rests, and ties follow the photo; note lengths are interpreted from its rhythm stems. Playback uses straight timing as a learning guide, not a full swing arrangement."
+    "description": "All 32 bars checked against your uploaded “Jingle Bell Rock – gtr TAB” photo: string/fret numbers, rests, beamed eighths, dotted values, and the ties in bars 8, 19–20, and 30. The six rows follow the photo. Standard tuning and no capo are assumed because neither is specified; 72 BPM is a practice tempo. Playback uses straight timing. No accompaniment chords have been added."
   },
   "tips": [
     [
@@ -88,159 +87,149 @@ window.GuitarSongbook.songs["jingle-bell-rock"] = {
       "Bars 2 and 4 start the same. Only the last fret changes: D-string 2 → 3. Bar 3 adds an open G at the end."
     ],
     [
-      "Finish together",
-      "At bar 32, let the B-string fret 1 ring over a C chord. Hold it, look up, and enjoy your ending."
+      "The final note",
+      "At bar 32, let B-string fret 1 ring for all four beats."
     ]
   ],
   "rawBars": [
     [
       "2:1:.5 2:1:.5 2:1:1 2:0:.5 2:0:.5 2:0:1",
-      "C · Cmaj7",
+      "",
       "Three on 1, then three open."
     ],
     [
       "3:2:.5 2:0:.5 3:2:1 4:2:2",
-      "Am",
+      "",
       "A little hop to the B string."
     ],
     [
       "3:2:.5 2:0:.5 3:2:1 4:2:1 3:0:1",
-      "Am",
+      "",
       "Like bar 2, with an open G ending."
     ],
     [
       "3:2:.5 2:0:.5 3:2:1 4:3:2",
-      "Dm",
+      "",
       "Like bar 2: last fret is 3, not 2."
     ],
     [
       "4:0:.5 4:2:.5 4:3:1 3:0:.5 3:2:.5 3:0:1",
-      "G7",
+      "",
       "Climb 0–2–3, then change strings."
     ],
     [
       "4:0:.5 4:2:.5 4:3:1 3:0:2",
-      "G7",
+      "",
       "Same climb; let the open G ring."
     ],
     [
       "r:1 3:2:.5 3:2:.5 3:2:1 3:2:1",
-      "Am",
+      "",
       "Wait one beat, then four 2s."
     ],
     [
       "3:2:1 4:0:.5 4:0:.5 4:0:2:t",
-      "G7",
+      "",
       "The last two 0s are tied."
     ],
     [
-      1,
-      "C · Cmaj7"
+      1
     ],
     [
-      2,
-      "Am"
+      2
     ],
     [
-      3,
-      "Am"
+      3
     ],
     [
-      4,
-      "Dm"
+      4
     ],
     [
-      5,
-      "G7"
+      5
     ],
     [
-      6,
-      "G7"
+      6
     ],
     [
       "r:1 3:2:.5 3:2:.5 2:0:1 3:0:1",
-      "G7",
+      "",
       "New ending: rest, 2–2, open B, open G."
     ],
     [
       "2:1:2 r:1 2:1:.5 2:1:.5",
-      "C",
+      "",
       "Hold, leave a gap, then two short notes."
     ],
     [
       "2:3:1.5 2:1:.5 r:1 3:2:.5 2:1:.5",
-      "F",
+      "",
       "Long 3, short 1. Leave the rest."
     ],
     [
       "2:3:1.5 2:1:.5 r:1.5 2:1:.5",
-      "Fm",
+      "",
       "Like bar 17, with a longer silence."
     ],
     [
       "2:1:1 2:0:1 3:2:1 3:0:.5 4:2:.5",
-      "C",
+      "",
       "Walk down across three strings."
     ],
     [
       "4:2:3:t 2:1:.5 2:1:.5",
-      "C",
+      "",
       "Keep the E from bar 19 ringing."
     ],
     [
-      17,
-      "F"
+      17
     ],
     [
       "2:3:1.5 2:1:.5 r:2",
-      "Fm",
+      "",
       "Same 3–1 opening; rest for two beats."
     ],
     [
       "r:.5 3:0:.5 3:0:1 3:2:.5 3:2:.5 3:2:.5 3:2:.5",
-      "D7",
+      "",
       "Start after the beat: 0–0, then four 2s."
     ],
     [
       "2:0:.5 3:0:.5 3:2:.5 3:0:.5 r:2",
-      "G7",
+      "",
       "Four quick notes, then room to breathe."
     ],
     [
-      1,
-      "C · Cmaj7"
+      1
     ],
     [
-      2,
-      "Am"
+      2
     ],
     [
-      3,
-      "Am"
+      3
     ],
     [
       "3:2:4",
-      "Am",
+      "",
       "One note. Let it ring for the whole bar."
     ],
     [
       "3:2:1 2:1:.5 2:1:.5 2:3:.5 2:3:.5 2:1:.5 2:1:.5",
-      "F",
+      "",
       "On B: two 1s, two 3s, two 1s."
     ],
     [
       "3:1:.5 3:1:.5 2:1:.5 2:3:.5 2:3:2:t",
-      "Fm",
+      "",
       "G-string fret 1 is new. Hold the tied 3."
     ],
     [
       "r:.5 2:1:.5 r:.5 3:2:.5 2:0:.5 2:1:.5 2:3:1",
-      "G7",
+      "",
       "Two little gaps, then climb B: 0–1–3."
     ],
     [
       "2:1:4",
-      "C",
+      "",
       "Home. Let that final C ring."
     ]
   ],
@@ -277,95 +266,5 @@ window.GuitarSongbook.songs["jingle-bell-rock"] = {
       "caption": "The opening, with a new ending.",
       "tip": "Bars 25–27 = 1–3. Take the final five bars slowly."
     }
-  ],
-  "chordShapes": [
-    [
-      "C",
-      [
-        -1,
-        3,
-        2,
-        0,
-        1,
-        0
-      ]
-    ],
-    [
-      "Cmaj7",
-      [
-        -1,
-        3,
-        2,
-        0,
-        0,
-        0
-      ]
-    ],
-    [
-      "Am",
-      [
-        -1,
-        0,
-        2,
-        2,
-        1,
-        0
-      ]
-    ],
-    [
-      "Dm",
-      [
-        -1,
-        -1,
-        0,
-        2,
-        3,
-        1
-      ]
-    ],
-    [
-      "G7",
-      [
-        3,
-        2,
-        0,
-        0,
-        0,
-        1
-      ]
-    ],
-    [
-      "F",
-      [
-        -1,
-        -1,
-        3,
-        2,
-        1,
-        1
-      ]
-    ],
-    [
-      "Fm",
-      [
-        -1,
-        -1,
-        3,
-        1,
-        1,
-        1
-      ]
-    ],
-    [
-      "D7",
-      [
-        -1,
-        -1,
-        0,
-        2,
-        1,
-        2
-      ]
-    ]
   ]
 };

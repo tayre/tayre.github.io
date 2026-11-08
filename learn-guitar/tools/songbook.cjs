@@ -98,7 +98,7 @@ function buildPlan(root, songs, extraFiles = new Map()) {
   plan.set('songs/catalog.js', catalogContent);
   // A song edit refreshes its file and the catalog; a player edit refreshes its asset.
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  plan.set('index.html', html.replace(/(src|href)="(styles\.css|songs\/catalog\.js|song-model\.js|playback\.js|acoustic-guitar\.js|script\.js)(?:\?[^"\s]*)?"/g, (_, attribute, file) => {
+  plan.set('index.html', html.replace(/(src|href)="(styles\.css|songs\/catalog\.js|song-model\.js|notation\.js|playback\.js|acoustic-guitar\.js|script\.js|photo-to-song-prompt\.txt)(?:\?[^"\s]*)?"/g, (_, attribute, file) => {
     const content = plan.get(file) || fs.readFileSync(path.join(root, file));
     return `${attribute}="${file}?v=${hash(content)}"`;
   }));

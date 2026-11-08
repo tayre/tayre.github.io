@@ -6,12 +6,13 @@
   <meta name="theme-color" content="#f5f1e8">
   <meta name="description" content="A guitar songbook with readable tab, repeat hints, and gentle practice playback.">
   <title>Learn Guitar</title>
-  <link rel="stylesheet" href="styles.css?v=6daad5d44c52e9e2">
-  <script src="songs/catalog.js?v=7c9ac656092b658d" defer></script>
+  <link rel="stylesheet" href="styles.css?v=b198c746dee531c0">
+  <script src="songs/catalog.js?v=1b05115f6b537c3e" defer></script>
   <script src="song-model.js?v=7e66876b6f3d13e2" defer></script>
+  <script src="notation.js?v=828a969d82fe7486" defer></script>
   <script src="playback.js?v=c4ee8ac2e0f4bb9c" defer></script>
   <script src="acoustic-guitar.js?v=2e70fb77ec73bea4" defer></script>
-  <script src="script.js?v=9dcae6258644e25e" defer></script>
+  <script src="script.js?v=fe2676cb84423970" defer></script>
 </head>
 <body>
   <main>
@@ -29,7 +30,7 @@
           <div class="options">
         <label><input id="loop" type="checkbox"> Loop</label>
         <label><input id="click" type="checkbox"> Click track</label>
-        <label><input id="show-chords" type="checkbox" checked> Chords</label>
+        <label id="chords-control" hidden><input id="show-chords" type="checkbox" checked> Chords</label>
         <label class="volume-control" for="volume">Volume <input id="volume" type="range" min="0" max="100" step="1" value="75"><output id="volume-value" for="volume">75%</output></label>
         <label for="section-select" class="sr-only">Playback range</label><select id="section-select" disabled><option value="all">Whole song</option></select>
         <button id="reset" class="text-button" type="button" disabled>↺ Start over</button>
@@ -42,15 +43,16 @@
     <p id="song-error" class="error" role="alert" hidden></p>
     <div id="score" aria-busy="true"></div>
     <details class="extra-help">
-      <summary>Tab help, repeat hints & chords</summary>
+      <summary id="tab-help-summary">Tab help, rhythm & repeat hints</summary>
       <p>Tap the sheet to play or pause. Tap again to resume from the same spot. Scrolling and the controls won’t toggle playback.</p>
       <p id="song-facts" class="song-facts"></p>
       <p id="repeat-summary"></p>
       <div class="guide-grid">
         <p><b>Lines are strings.</b> Thin high e is at the top; thick low E is at the bottom. Read left to right, then move to the next line.</p>
         <p><b>Numbers are frets.</b> 0 = an open string. A small line means let it ring; an arc joins tied notes—don’t pick the second one.</p>
-        <p><b>Follow the count.</b> “&” is halfway between beats. “rest” means stop playing. A small “= 1” beside a bar number means its melody repeats bar 1.</p>
+        <p><b>Follow the rhythm.</b> The notes below the strings show how long to play. Flagged or joined eighth notes last half a beat each; “&” is halfway between counts. Rest symbols mean silence.</p>
       </div>
+      <p class="rhythm-key"><b>Note lengths:</b> filled note + stem = 1 beat; hollow note + stem = 2; hollow note without a stem = 4. A dot adds half the note’s value. Curved ties join the lengths without another pick. “= 1” beside a bar number means the melody repeats bar 1.</p>
       <section id="play-together" class="duet">
         <div><h2>Play together</h2><p>Let one guitar take the melody. On the second, try a gentle down-strum at the beginning of each bar.</p><p id="accompaniment-note"></p></div>
         <div><div id="chord-library" class="chord-library"></div><p class="chord-key">Shapes run from thick E → thin e. × = skip; ○ = open.</p></div>
@@ -67,8 +69,8 @@
     <details class="extra-help" id="add-song-help">
       <summary>Add another song</summary>
       <p>Photograph the whole tab sheet, attach it in this project’s chat, and say: <b>“Add this to my Learn Guitar songbook.”</b></p>
-      <p>Using a new ChatGPT chat? Attach the photo and this <a href="photo-to-song-prompt.txt" download>transcription prompt</a>. Bring the resulting song file and photo back to this project’s chat to add it to the songbook.</p>
-      <p>Each song gets its own link to share, repeat hints, optional play-along chords, and the same practice controls.</p>
+      <p>Using a new ChatGPT chat? Attach the photo and this <a href="photo-to-song-prompt.txt?v=04c102070d18ce08" download>transcription prompt</a>. Bring the resulting song file and photo back to this project’s chat to add it to the songbook.</p>
+      <p>Each song gets its own link to share, rhythm notation, repeat hints, and the same practice controls.</p>
     </details>
     <noscript><p>JavaScript is needed to display the songbook. <a href="assets/original-tab.jpg">View the original Jingle Bell Rock sheet.</a></p></noscript>
   </main>

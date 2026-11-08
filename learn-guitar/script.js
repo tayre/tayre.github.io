@@ -14,21 +14,25 @@ function tabSVG(bar, width = 292, photoLayout = false, rowStart = false) {
   const y = string => (photoLayout ? 40 : 31) + (string-1)*(photoLayout ? 26 : 18);
   const noteWidth = photoLayout ? 32 : 18;
   const noteHeight = photoLayout ? 38 : 22;
+  const rhythm = rhythmSVG(bar,x,photoLayout ? 208 : 144,photoLayout ? 1.2 : .65,bars[bar.number],width);
   const spoken = bar.notes.map(n => n.rest ? `rest ${n.duration} beats` : `${n.tied ? 'hold tied' : 'play'} ${stringNames[n.string-1]} string fret ${n.fret} for ${n.duration} beats`).join('; ');
-  let svg = `<svg class="tab-svg" viewBox="0 0 ${width} ${photoLayout ? 220 : 155}" role="img" aria-label="Bar ${bar.number}: ${spoken}">`;
+  let svg = `<svg class="tab-svg" viewBox="0 0 ${width} ${photoLayout ? 276 : 184}" role="img" aria-label="Bar ${bar.number}: ${spoken}">`;
   stringNames.forEach((name,i) => {
     svg += `<line class="string-line ${!bars.some(b=>b.notes.some(n=>n.string===i+1))?'unused-string':''}" x1="0" x2="${width}" y1="${y(i+1)}" y2="${y(i+1)}"/><g class="string-label"><rect class="fret-bg" x="0" y="${y(i+1)-(photoLayout ? 13 : 9)}" width="${photoLayout ? 36 : 25}" height="${photoLayout ? 26 : 18}"/><text class="string-name" x="8" y="${y(i+1)+(photoLayout ? 6 : 3)}">${name}</text></g>`;
   });
-  for(let beat=0;beat<currentSong.beatsPerBar;beat+=.5) svg += `<text class="beat" text-anchor="middle" x="${x(beat)}" y="${photoLayout ? 212 : 145}">${Number.isInteger(beat)?beat+1:'&'}</text>`;
+  if(bar.number===1) svg+=`<g class="time-signature" transform="translate(${photoLayout?40:24} ${y(3)})"><rect class="fret-bg" x="-11" y="-15" width="22" height="46"/><text text-anchor="middle" y="0">${currentSong.beatsPerBar}</text><text text-anchor="middle" y="${photoLayout?23:16}">4</text></g>`;
+  for(let beat=0;beat<currentSong.beatsPerBar;beat+=.5) svg += `<text class="beat" text-anchor="middle" x="${x(beat)}" y="${photoLayout ? 269 : 178}">${Number.isInteger(beat)?beat+1:'&'}</text>`;
   bar.notes.forEach((n,i) => {
     const nx=x(n.beat);
-    if(n.rest){svg+=`<g class="note" id="note-${bar.number}-${i}"><text class="rest" text-anchor="middle" x="${nx}" y="${photoLayout ? 20 : 17}">rest</text><line class="note-held" x1="${nx}" x2="${Math.min(width-12,x(n.beat+n.duration)-10)}" y1="${photoLayout ? 26 : 22}" y2="${photoLayout ? 26 : 22}"/></g>`;return;}
+    if(n.rest){const marks=planRhythm({notes:[{...n,beat:0}]}).symbols.map(glyph=>`<g class="tab-rest rhythm-symbol" transform="translate(${x(n.beat+glyph.beat)} ${y(3)}) scale(${photoLayout?1:.65})"><rect class="fret-bg" x="-13" y="-18" width="${glyph.dotted?32:26}" height="38"/>${rhythmRestSVG(glyph.base,glyph.dotted)}</g>`).join('');svg+=`<g class="note" id="note-${bar.number}-${i}">${marks}${rhythm.notes[i]}</g>`;return;}
     const ny=y(n.string);
     if(n.duration>0.5) svg+=`<line class="note-held" x1="${nx+noteWidth/2+1}" x2="${Math.min(width-12,x(n.beat+n.duration)-10)}" y1="${ny}" y2="${ny}"/>`;
-    if(n.tied){const prev=bar.notes[i-1];const start=prev?x(prev.beat):photoLayout ? 0 : 25;const lift=photoLayout ? 20 : 11;svg+=`<path class="tie" d="M ${start} ${ny-lift} Q ${(start+nx)/2} ${ny-lift-14} ${nx} ${ny-lift}"/>`;}
-    svg+=`<g class="note" id="note-${bar.number}-${i}"><rect class="fret-bg" x="${nx-noteWidth/2}" y="${ny-noteHeight/2}" width="${noteWidth}" height="${noteHeight}" rx="5"/><text class="fret" text-anchor="middle" x="${nx}" y="${ny+(photoLayout ? 10 : 6)}">${n.fret}</text></g>`;
+    const lift=photoLayout ? 20 : 11;
+    if(n.tied){const prev=bar.notes[i-1];const start=prev?x(prev.beat):0;svg+=`<path class="tie" d="M ${start} ${ny-lift-(prev?0:8)} Q ${(start+nx)/2} ${ny-lift-14} ${nx} ${ny-lift}"/>`;}
+    if(i===bar.notes.length-1 && bars[bar.number]?.notes[0]?.tied)svg+=`<path class="tie" d="M ${nx} ${ny-lift} Q ${(nx+width)/2} ${ny-lift-14} ${width} ${ny-lift-8}"/>`;
+    svg+=`<g class="note" id="note-${bar.number}-${i}"><rect class="fret-bg" x="${nx-noteWidth/2}" y="${ny-noteHeight/2}" width="${noteWidth}" height="${noteHeight}" rx="5"/><text class="fret" text-anchor="middle" x="${nx}" y="${ny+(photoLayout ? 10 : 6)}">${n.fret}</text>${rhythm.notes[i]}</g>`;
   });
-  return svg+'</svg>';
+  return svg+rhythm.connections+'</svg>';
 }
 function render(){
   const activeId = document.querySelector('.bar.active')?.id;
@@ -42,9 +46,9 @@ function render(){
     const weights = photoLayout ? currentSong.layout.widths?.[row] || Array(count).fill(1) : Array(count).fill(1);
     const total = weights.reduce((sum,width)=>sum+width,0);
     const columns = weights.map(width=>`minmax(0,${width}fr)`).join(' ');
-    return `<div class="sheet-row" style="--row-columns:${columns}">${rowBars.map((b,i)=>`<article class="bar" id="bar-${b.number}" title="${escapeHTML(b.hint)}"><div class="bar-header"><span class="bar-number">${b.number}${b.repeat?` <span class="repeat-ref">= ${b.repeat}</span>`:''}</span><span class="chord-label" title="Suggested accompaniment">${escapeHTML(b.chord)}</span></div>${tabSVG(b,photoLayout ? 1752*weights[i]/total : 292,photoLayout,i===0)}</article>`).join('')}</div>`;
+    return `<div class="sheet-row" style="--row-columns:${columns}">${rowBars.map((b,i)=>`<article class="bar" id="bar-${b.number}" title="${escapeHTML(b.hint)}"><div class="bar-header"><span class="bar-number">${b.number}${b.repeat?` <span class="repeat-ref">= ${b.repeat}</span>`:''}</span>${b.chord?`<span class="chord-label">${escapeHTML(b.chord)}</span>`:''}</div>${tabSVG(b,photoLayout ? 1752*weights[i]/total : 292,photoLayout,i===0)}</article>`).join('')}</div>`;
   });
-  $('score').innerHTML = `<div class="sheet-scroll${photoLayout ? ' photo-layout' : ''}"><div class="tab-sheet">${rows.join('')}</div></div>`;
+  $('score').innerHTML = `<div class="sheet-scroll${photoLayout ? ' photo-layout' : ''}${bars.some(bar=>bar.chord)?'':' no-chords'}"><div class="tab-sheet">${rows.join('')}</div></div>`;
   if(activeId)$(activeId)?.classList.add('active');
   if(playingId)$(playingId)?.classList.add('playing');
 }
@@ -213,6 +217,9 @@ function drawSongDetails() {
   $('repeat-summary').hidden=!currentSong.repeatSummary;
   $('accompaniment-note').textContent=currentSong.accompaniment || '';
   $('play-together').hidden=!chordShapes.length;
+  const hasChords=bars.some(bar=>bar.chord) || chordShapes.length>0;
+  $('chords-control').hidden=!hasChords;
+  $('tab-help-summary').textContent=hasChords?'Tab help, rhythm, repeat hints & chords':'Tab help, rhythm & repeat hints';
   $('practice-notes').innerHTML=(currentSong.tips || []).map(([title,body])=>`<div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(body)}</p></div>`).join('');
   const source=currentSong.source;
   $('source').hidden=!source;

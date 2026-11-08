@@ -33,8 +33,9 @@ waiting. Keep questions in `transcription.unresolved`. Never silently invent a
 pitch or publish a draft with unresolved questions. If the user chooses a practice
 rhythm for a sheet without timing, label that assumption in `source.description`.
 
-Add beginner-friendly, optional accompaniment when requested or useful for the
-parent/child play-along. Distinguish printed chords from suggested chords. Preserve
+Keep the song focused on the photo's melody and rhythm. Add accompaniment chords
+only when requested; do not infer them by default. If requested, distinguish printed
+chords from suggested chords. Preserve
 any requested tuning/capo; describe assumptions if absent. Chord labels do not
 produce chord audio. Do not promise techniques or rhythms the player cannot render.
 
@@ -66,7 +67,8 @@ Run `node learn-guitar/tests/run.cjs`. Review the displayed tab against the phot
 beat totals alone cannot prove a transcription is correct. Preview the new song,
 its repeats/chords, and playback at a slow tempo. For renderer changes, also check
 phone/iPad widths and print. Preserve the compact toolbar, continuous sheet,
-collapsed help, recorded guitar, tempo control, and tap-to-pause behavior.
+collapsed help, rhythm notation, recorded guitar, tempo control, and tap-to-pause
+behavior. Rhythm symbols and playback must use the same note durations.
 
 Use existing publication authorization when present; importing a photo alone does
 not grant permission to publish elsewhere. When publishing is authorized, commit

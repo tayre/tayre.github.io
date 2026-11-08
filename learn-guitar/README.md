@@ -13,7 +13,8 @@ Attach a clear photo of the whole sheet in this project's chat and say:
 
 The project instructions route the assistant to the versioned
 [photo-to-song skill](skills/add-guitar-tab/SKILL.md). It handles transcription,
-repeated phrases, suggested play-along chords, import, and verification. Blurry
+repeated phrases, rhythm notation, import, and verification. Add play-along chords
+only when requested. Blurry
 notes or missing rhythm get specific questions rather than silent guesses.
 
 For a separate ChatGPT chat, attach the photo and
@@ -133,6 +134,17 @@ or obtain an explicit choice of simplification before importing those features.
 `script.js` owns playback and UI, `song-model.js` validates transcription data,
 `styles.css` controls the screen/print layouts, and `songs/` contains the catalog
 and individual songs. Musical data never belongs in the player or HTML.
+
+`notation.js` draws rhythm directly from the playback durations: eighth-note
+beams/flags, quarter/half/whole notes, dots, rests, and ties. Counts stay below the
+rhythm line. Uncommon durations are split into tied note values (or consecutive
+rests) without changing playback. The opening bar shows the time signature.
+Songs without chord data have no chord labels, diagrams, or Chords option.
+
+The 32 Jingle Bell Rock bars were checked against the supplied photograph,
+including the dotted rest in bar 18 and the cross-bar tie at 19–20. Its rhythms
+follow the printed beams, dots, rests, and 4/4 bars. Standard tuning, no capo, and
+72 BPM remain explicitly labeled assumptions/practice settings.
 
 
 ## Audio and tempo

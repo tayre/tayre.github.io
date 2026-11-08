@@ -35,7 +35,7 @@ try {
   // Build an isolated copy; never add a fixture to the real song menu.
   const book = path.join(temporary,'book');
   fs.mkdirSync(book);
-  for (const file of ['index.html','styles.css','script.js','song-model.js','playback.js','acoustic-guitar.js']) fs.copyFileSync(path.join(root,file),path.join(book,file));
+  for (const file of ['index.html','styles.css','script.js','song-model.js','notation.js','playback.js','acoustic-guitar.js','photo-to-song-prompt.txt']) fs.copyFileSync(path.join(root,file),path.join(book,file));
   fs.cpSync(path.join(root,'songs/data'),path.join(book,'songs/data'),{recursive:true});
   fs.mkdirSync(path.join(book,'assets'),{recursive:true});
   fs.copyFileSync(path.join(root,'assets/original-tab.jpg'),path.join(book,'assets/original-tab.jpg'));

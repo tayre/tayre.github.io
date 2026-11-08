@@ -5,6 +5,7 @@ const root = path.resolve(__dirname, '..');
 for (const args of [
   [path.join(root,'tools/songbook.cjs'),'build','--check'],
   [path.join(__dirname,'song-model.test.cjs')],
+  [path.join(__dirname,'notation.test.cjs')],
   [path.join(__dirname,'playback.test.cjs')],
   [path.join(__dirname,'import.test.cjs')]
 ]) {
