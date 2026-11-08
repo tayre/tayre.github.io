@@ -34,11 +34,14 @@ function selectRun(index) {
   $('trend-chart').append(group);
 }
 
-function renderChart() {
-  chart = chartGeometry(feed.history, range);
+function renderChart(preserveSelection = false) {
+  const selected = preserveSelection ? chart?.rows[Number($('run-slider').value)]?.run_id : null;
   const root = $('trend-chart');
+  chart = chartGeometry(feed.history, range, Math.max(280, Math.round(root.getBoundingClientRect().width)));
+  root.setAttribute('viewBox', `0 0 ${chart.width} 270`);
   root.replaceChildren(svg('title', { id: 'chart-title' }, 'Cumulative research progress'), svg('desc', { id: 'chart-description' }, `${chart.rows.length} runs shown. Use the run slider or the complete history table for exact counts.`));
-  chart.ticks.forEach(tick => root.append(svg('line', { x1: 48, x2: 722, y1: chart.y(tick), y2: chart.y(tick), class: 'chart-grid' }), svg('text', { x: 36, y: chart.y(tick) + 4, 'text-anchor': 'end', class: 'chart-axis-label' }, number(tick))));
+  root.append(svg('text', { x: chart.left, y: 12, class: 'chart-axis-label' }, 'Number of trees'));
+  chart.ticks.forEach(tick => root.append(svg('line', { x1: chart.left, x2: chart.right, y1: chart.y(tick), y2: chart.y(tick), class: 'chart-grid' }), svg('text', { x: 36, y: chart.y(tick) + 4, 'text-anchor': 'end', class: 'chart-axis-label' }, number(tick))));
   for (const [key, className] of [['trees', 'trees'], ['verified_graceful', 'verified'], ['unknown', 'unknown']]) {
     root.append(svg('path', { d: chart.series[key], class: `chart-line series-${className}` }));
     if (chart.rows.length === 1) root.append(svg('circle', { cx: chart.x(0), cy: chart.y(chart.rows[0][key]), r: 3, class: `chart-line series-${className}` }));
@@ -47,7 +50,8 @@ function renderChart() {
   indices.forEach(i => root.append(svg('text', { x: chart.x(i), y: 246, 'text-anchor': i === 0 ? 'start' : i === chart.rows.length - 1 ? 'end' : 'middle', class: 'chart-axis-label' }, `Run ${chart.rows[i].run}`)));
   $('run-slider').max = chart.rows.length - 1;
   $('run-slider').disabled = chart.rows.length === 1;
-  selectRun(chart.rows.length - 1);
+  const index = chart.rows.findIndex(row => row.run_id === selected);
+  selectRun(index < 0 ? chart.rows.length - 1 : index);
 }
 
 function renderCoverage() {
@@ -71,10 +75,10 @@ function renderCoverage() {
     block.append(element('span', 'coverage-name', name), track, element('span', 'coverage-count', number(row.trees)));
     container.append(block);
   }
-  if (!rows.length) container.append(element('p', 'caption', 'No unrestricted trees have been attempted yet.'));
+  if (!rows.length) container.append(element('p', 'note', 'No unrestricted trees have been attempted yet.'));
   const through = coverageThrough(feed.coverage);
   write('coverage-note', through ? `Exhaustive checks completed through ${through} vertices. Larger sizes are partially enumerated or sampled; they are not exhaustive coverage.` : 'Exhaustive validation is in progress. Sampled cases do not establish coverage of all trees at that size.');
-  write('coverage-scope', byFamily ? 'Families identify the first generation source; mathematical families can overlap. Green = verified; amber = unresolved; red = uncertified infeasible. Hover a bar for exact counts.' : 'Bars count distinct trees with unrestricted searches at each order. Green = verified; amber = unresolved; red = uncertified infeasible. Hover a bar for exact counts.');
+  write('coverage-scope', byFamily ? 'Distinct trees by first generation source. Mathematical families may overlap. The number at right is the total in each group.' : 'Distinct trees by number of vertices. The number at right is the total at each order.');
 }
 
 function renderFindings() {
@@ -82,21 +86,21 @@ function renderFindings() {
   container.replaceChildren();
   if (!feed.findings.length) {
     const empty = element('div', 'finding-empty');
-    empty.append(element('strong', '', 'No notable review items so far.'), element('p', '', 'The deterministic review has not flagged a milestone, repeated difficult-case resolution, or unrestricted infeasibility in this campaign.'), element('p', '', `${number(feed.cumulative.unknown)} trees remain unresolved in the current ledger. Timeouts alone never trigger a mathematical discovery claim.`));
+    empty.append(element('p', '', 'No cases have met the automated criteria for review in this campaign.'));
     container.append(empty);
   }
   feed.findings.slice(0, 4).forEach(item => {
     const article = element('article', 'finding');
     const kind = { unrestricted_infeasibility: 'Requires independent investigation', difficult_case_resolved: 'Performance observation', validation_milestone: 'Validation milestone' }[item.kind] ?? 'For human review';
-    article.append(element('span', 'mini-label', kind), element('h4', '', item.title), element('p', '', item.significance), element('p', '', `Next: ${item.next_step}`));
+    article.append(element('span', 'finding-kind', kind), element('h4', '', item.title), element('p', '', item.significance), element('p', '', `Next experiment: ${item.next_step}`));
     container.append(article);
   });
-  if (feed.findings.length > 4) container.append(element('p', 'caption', `${number(feed.findings.length - 4)} further review items are in the public JSON.`));
+  if (feed.findings.length > 4) container.append(element('p', 'note', `${number(feed.findings.length - 4)} further review items are in the public JSON.`));
   const suggestions = $('suggestions');
   suggestions.replaceChildren();
   feed.suggestions.forEach(item => {
     const article = element('article');
-    article.append(element('span', 'mini-label', item.kind === 'hypothesis' ? 'Unproven candidate question' : 'Proposed experiment'), element('p', '', item.statement), element('p', 'caption', item.status), element('span', 'caption', item.test));
+    article.append(element('span', 'suggestion-kind', item.kind === 'hypothesis' ? 'Candidate question' : 'Proposed experiment'), element('p', '', item.statement), element('p', 'note', item.status), element('span', 'note', item.test));
     suggestions.append(article);
   });
 }
@@ -136,8 +140,8 @@ function render(data, cached = false) {
   $('dashboard').hidden = false; $('load-error').hidden = true;
   const c = data.cumulative, latest = data.history.at(-1);
   write('verified-total', number(c.verified_graceful)); write('trees-total', number(c.trees)); write('unknown-total', number(c.unknown)); write('runs-total', number(c.runs));
-  write('verified-delta', `+${number(latest.new_verified)} newly verified in the latest run`);
-  write('attempts-total', `${number(c.attempts)} total search & edge-probe attempts`);
+  write('verified-delta', `${number(latest.new_verified)} newly verified trees in the latest run.`);
+  write('attempts-total', `${number(c.attempts)} search and restricted-edge attempts in total.`);
   write('infeasible-total', number(c.solver_infeasible)); write('proof-total', number(data.certificate_verified_infeasible)); write('error-total', c.errors ? `${number(c.errors)} trees with operational errors` : '');
   write('latest-finished', utc(data.finished_at)); write('latest-new', `+${number(latest.new_trees)}`); write('latest-budget', `${duration(data.elapsed_seconds)} / ${duration(data.config.budget_seconds)}`);
   write('latest-stop', { compute_budget: 'Time budget reached', case_limit: 'Case limit reached', sources_exhausted: 'Streams exhausted', generation_limit: 'Generation limit reached', cancelled: 'Cancelled' }[data.stop_reason] ?? data.stop_reason.replaceAll('_', ' '));
@@ -146,7 +150,7 @@ function render(data, cached = false) {
   write('provenance', `${data.campaign} · seed ${data.config.seed} · NetworkX ${data.versions.networkx} · OR-Tools ${data.versions.ortools}`);
   const state = cached ? { state: 'cached', label: 'Saved snapshot' } : freshness(data.finished_at);
   $('freshness').dataset.state = state.state; write('freshness', state.label);
-  write('data-message', `${cached ? 'Could not refresh; showing the last saved result. ' : ''}Last audited result: ${utc(data.finished_at)} UTC · ${data.campaign}.${state.state === 'stale' ? ' Check Actions for delays, failures, or a paused schedule.' : ''} Totals below cover the whole campaign.`);
+  write('data-message', `${cached ? 'Could not refresh; showing saved data. ' : ''}Updated ${utc(data.finished_at)} UTC. Cumulative results for ${data.campaign}.${state.state === 'stale' ? ' Check the workflow records for delays or a paused schedule.' : ''}`);
   renderChart(); renderCoverage(); renderFindings(); renderTables();
 }
 
@@ -172,7 +176,7 @@ async function refresh() {
     else {
       $('load-error').hidden = false;
       $('freshness').dataset.state = 'error'; write('freshness', 'Snapshot unavailable');
-      write('data-message', 'No audited cloud totals could be loaded. The project explanation and evidence links remain available below.');
+      write('data-message', 'Audited results are currently unavailable.');
     }
   } finally { clearTimeout(timer); busy = false; $('refresh').disabled = false; }
 }
@@ -188,8 +192,8 @@ document.querySelectorAll('[data-range]').forEach(button => button.addEventListe
 $('trend-chart').addEventListener('pointermove', event => {
   if (!chart || event.pointerType === 'touch') return;
   const bounds = event.currentTarget.getBoundingClientRect();
-  const x = (event.clientX - bounds.left) / bounds.width * 740;
-  selectRun(Math.max(0, Math.min(chart.rows.length - 1, Math.round((x - 48) / 674 * (chart.rows.length - 1)))));
+  const x = (event.clientX - bounds.left) / bounds.width * chart.width;
+  selectRun(Math.max(0, Math.min(chart.rows.length - 1, Math.round((x - chart.left) / (chart.right - chart.left) * (chart.rows.length - 1)))));
 });
 document.querySelector('.history-details').addEventListener('toggle', renderHistory);
 $('download-csv').addEventListener('click', () => {
@@ -203,8 +207,12 @@ $('complement').addEventListener('click', () => {
   const labels = active ? complement(EXAMPLE_LABELS) : EXAMPLE_LABELS;
   document.querySelectorAll('[data-node]').forEach(node => { node.textContent = labels[Number(node.dataset.node)]; });
   write('example-desc', `Vertex labels ${labels.join(', ')} give edge differences 5, 4, 3, 2, 1. An illustrative example, separate from campaign totals.`);
-  write('example-note', active ? 'Replace each label x by 5 − x. Every edge difference stays the same.' : 'Green nodes are labels; small circles are absolute differences.');
+  write('example-note', active ? 'Complemented labels: each x is replaced by 5 − x. The edge differences are unchanged.' : 'Original labeling. Replacing each x by 5 − x preserves the differences.');
 });
+// Keep SVG text at a readable size rather than shrinking a desktop plot on phones.
+new ResizeObserver(() => {
+  if (feed && chart && Math.abs($('trend-chart').getBoundingClientRect().width - chart.width) > 1) renderChart(true);
+}).observe($('trend-chart'));
 refresh();
 // Refresh the public data, not the research job. Hidden pages make no polling requests.
 setInterval(() => { if (!document.hidden) refresh(); }, 300000);

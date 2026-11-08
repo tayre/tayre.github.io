@@ -6,6 +6,12 @@ JavaScript, and small SVG icon. Tom's contact and existing Hellinger paper link
 remain in the footer. The site needs no API key, paid service, font CDN, or chart
 library.
 
+The presentation is a minimal academic page: one column, white background,
+serif body text, a compact results table, and numbered figures. Run details,
+difficult cases, proposed experiments, and the labeling example expand on demand.
+Graph geometry adapts to the available width so axis labels retain their text size
+on phones. Keep the wording factual and the figures explicit about their scope.
+
 ## What the dashboard shows
 
 - Distinct trees attempted, independently verified graceful trees, unresolved

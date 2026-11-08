@@ -42,8 +42,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     assert.match(await page.locator('#selected-run').innerText(), /8 verified \/ 10 investigated/);
     await page.selectOption('#coverage-group', 'sizes');
     assert.match(await page.locator('#coverage-bars').innerText(), /35 vertices/);
-    await page.getByRole('button', { name: 'Flip the labels' }).click();
+    await page.locator('.example-details summary').click();
+    await page.getByRole('button', { name: 'Complement labels' }).click();
     assert.deepEqual(await page.locator('[data-node]').allTextContents(), ['5', '0', '4', '3', '1', '2']);
+    await page.locator('.example-details summary').click();
     await page.locator('.history-details summary').click();
     await page.waitForFunction(() => document.querySelectorAll('#history-rows tr').length === 45);
     assert.equal(await page.locator('#history-rows tr').count(), 45);
@@ -57,12 +59,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     await page.getByRole('button', { name: 'Last 30 runs', exact: true }).click();
     await page.locator('#run-slider').fill('29');
     await page.selectOption('#coverage-group', 'families');
-    await page.getByRole('button', { name: 'Flip the labels' }).click();
+    await page.locator('.example-details summary').click();
+    await page.getByRole('button', { name: 'Complement labels' }).click();
+    await page.locator('.example-details summary').click();
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: '/tmp/graceful-home-desktop.png', fullPage: true });
     for (const width of [768, 390, 320]) {
       await page.setViewportSize({ width, height: 844 });
+      await page.waitForFunction(() => Math.abs(document.querySelector('#trend-chart').viewBox.baseVal.width - document.querySelector('#trend-chart').getBoundingClientRect().width) <= 1);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `horizontal overflow at ${width}`);
+      assert.ok(await page.locator('#trend-chart .chart-axis-label').first().evaluate(node => parseFloat(getComputedStyle(node).fontSize) * node.getScreenCTM().a >= 11), `graph labels too small at ${width}`);
       if (width === 390) {
         await page.screenshot({ path: '/tmp/graceful-home-mobile.png', fullPage: true });
         await page.locator('#progress').scrollIntoViewIfNeeded();

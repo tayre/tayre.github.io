@@ -48,9 +48,13 @@ test('the chart handles one point, zero trees, and more than thirty runs', () =>
   assert.equal(recent.rows.length, 30); assert.equal(recent.rows[0].run, 16);
   assert.equal(chartGeometry(many, 'all').rows.length, 45);
   const empty = chartGeometry([{ trees: 0, verified_graceful: 0, unknown: 0 }]);
-  assert.equal(empty.x(0), 390); assert.ok(Number.isFinite(empty.y(0)));
+  assert.ok(empty.x(0) > empty.left && empty.x(0) < empty.right);
+  assert.ok(Number.isFinite(empty.y(0)));
   assert.ok(!empty.series.trees.includes('NaN'));
   assert.ok(recent.ticks.every(Number.isInteger));
+  const mobile = chartGeometry(many, '30', 284);
+  assert.ok(mobile.rows.every((row, i) => mobile.x(i) >= 0 && mobile.x(i) < 284));
+  assert.equal(mobile.rows.at(-1).trees, recent.rows.at(-1).trees);
 });
 
 test('exhaustive coverage requires every smaller order to be fully verified', () => {

@@ -20,6 +20,12 @@ is supplied only by a successful cloud evidence audit.
 Ruff lint and formatting checks passed. See [public-dashboard.md](public-dashboard.md)
 for the data flow and commands to reproduce these checks.
 
+The subsequent academic-layout revision passed the same **19 Node tests** and
+the browser checks. Graph labels remain at least 11 CSS pixels at 320-, 390-, and
+768-pixel viewport widths. Collapsible history and example sections, CSV export,
+and cached/error states remain functional. This revision changes presentation
+and responsive graph geometry, not the research model or published evidence.
+
 ## Original research-system validation
 
 Local validation performed on 8 November 2026 using macOS ARM64, CPython 3.12.14,

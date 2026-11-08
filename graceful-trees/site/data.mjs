@@ -65,19 +65,20 @@ export function freshness(finished, now = Date.now()) {
   return age > 48 ? { state: 'stale', label: 'Snapshot over 48h old' } : { state: 'fresh', label: 'Audited cloud snapshot' };
 }
 
-export function chartGeometry(history, range = '30') {
+export function chartGeometry(history, range = '30', width = 740) {
   const rows = range === 'all' ? history : history.slice(-30);
   const peak = Math.max(1, ...rows.map(row => row.trees));
   const magnitude = 10 ** Math.floor(Math.log10(peak / 4));
   const step = Math.max(1, [1, 2, 5, 10].map(x => x * magnitude).find(x => x >= peak / 4));
   const top = Math.ceil(peak / step) * step;
-  const x = index => rows.length === 1 ? 390 : 48 + index / (rows.length - 1) * 674;
+  const left = 48, right = width - 18;
+  const x = index => rows.length === 1 ? (left + right) / 2 : left + index / (rows.length - 1) * (right - left);
   const y = value => 220 - value / top * 195;
   const ticks = Array.from({ length: Math.round(top / step) + 1 }, (_, i) => i * step);
   const series = Object.fromEntries(['trees', 'verified_graceful', 'unknown'].map(key => [key,
     rows.map((row, i) => `${i ? 'L' : 'M'}${x(i).toFixed(2)},${y(row[key]).toFixed(2)}`).join(' ')
   ]));
-  return { rows, top, ticks, x, y, series };
+  return { rows, top, ticks, x, y, series, width, left, right };
 }
 
 export function coverageThrough(coverage) {
