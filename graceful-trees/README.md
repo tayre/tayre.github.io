@@ -96,11 +96,17 @@ the campaign and start fresh when changing the generator's input space. Solver
 budgets, retry quotas and probe settings may change on resume.
 
 `constructive_search` (default `true`) labels caterpillars directly using a known
-construction, then falls back to the selected backend for other trees. Nightly
-runs use CP-SAT for the main search and proof-logging SAT for restricted probes.
-Set it to `false` for comparisons of the exact solver alone;
-this setting may change on resume without resetting the campaign. Each attempt
-records its method. Old saved requests without the option replay CP-SAT as before.
+construction. For other unrestricted CP-SAT attempts, `frontier_search` (default
+`true`) first tries a bounded descending-difference witness search. It uses at most
+`frontier_max_nodes` (default 20,000) visited nodes, four starting vertices, and a
+wall allowance of 0.1 seconds or 10% of the attempt allowance, whichever is smaller.
+It only supplies candidate labelings; an unsuccessful search falls back to the
+unchanged exact model with the remaining allowance. SAT and restricted probes skip
+this prepass. Nightly runs use CP-SAT for the main search and proof-logging SAT for
+restricted probes. Set **both** options to `false` for exact-solver-only comparisons.
+These settings may change on resume without resetting the campaign. Each attempt
+records its method, seed and work limits. Old saved requests without these options
+replay the original exact route.
 
 ## Mathematical model and verification
 
@@ -112,12 +118,15 @@ The singleton is handled explicitly by the empty edge set.
 Two optional, justified reductions are used: the implied difference-sum equation,
 and choosing `x[0] < x[1]` from each complement pair. The proof and the scope of
 this symmetry reduction are in [research.md](docs/research.md). No arbitrary
-root-zero or extreme-edge location restriction is added to the main experiment.
+root-zero or extreme-edge location restriction is added to the unrestricted exact model.
 The solver uses one search worker, a logged seed, and `symmetry_level=0`.
-The direct caterpillar construction and its invariant are documented in the same
-research note. Its witnesses undergo the same checks as solver-produced witnesses;
-it never reports infeasibility. Solver time and branch medians exclude constructed
-witnesses, whose total processing time is recorded separately in `wall_seconds`.
+The caterpillar construction and the incomplete frontier search are documented in
+the same research note. Their witnesses undergo the same checks as solver-produced
+witnesses; neither reports infeasibility. Solver time and branch medians exclude
+these witnesses, whose total processing time is recorded separately in `wall_seconds`.
+Frontier work is saved in `frontier.json` and the attempt result. Choosing roots
+inside this candidate search is not claimed to preserve every solution; no such
+choice constrains the exact fallback.
 
 Every returned labeling is checked in the worker **and again in the parent** by
 [`verify.py`](src/graceful_research/verify.py). It uses only the Python standard
@@ -155,12 +164,15 @@ For reproducible performance comparisons, run:
 
 ```sh
 python scripts/benchmark.py --output results/benchmark --attempt-seconds 1 --repeats 3
+python scripts/benchmark_frontier.py --output results/frontier-benchmark --attempt-seconds 1 --repeats 3
 ```
 
-This compares direct construction plus exact fallback with CP-SAT alone on the
-same saved inputs and seeds, alternates execution order, and independently checks
-every positive result. It also compares two-sweep and all-pairs diameters. The
-output retains requests, witnesses, source snapshots and exact versions. These
+The first compares direct caterpillar construction plus exact fallback with CP-SAT
+alone, and compares two-sweep with all-pairs diameters. The second measures the
+additional frontier prepass and graph-copy-free structural features. Both use the
+same saved inputs and seeds for each paired comparison, alternate execution order,
+and independently check every positive result. Run them without concurrent tests.
+The output retains requests, witnesses, source snapshots and exact versions. These
 are bounded benchmark results, not a campaign checkpoint; unknowns remain
 censored observations. See the [optimization measurements](docs/performance.md).
 
@@ -379,7 +391,7 @@ Publish a counterexample claim only after independent mathematical investigation
 ```text
 configs → TreeStream → exact deduplication → SQLite inputs/cursors
                          ↓                       ↑
-                   budgeted scheduler → isolated construction/CP-SAT/SAT worker
+                   budgeted scheduler → isolated witness search / exact solver
                          ↓                       ↓
                    parent verifiers ← witness or scoped UNSAT certificate
                          ↓
@@ -389,7 +401,8 @@ configs → TreeStream → exact deduplication → SQLite inputs/cursors
 ```
 
 `config.py` validates experiments; `trees.py` generates and identifies trees;
-`constructive.py` implements known-family witnesses; `solver.py` owns the exact
+`constructive.py` implements known-family witnesses; `frontier.py` provides bounded
+candidate search; `solver.py` owns the exact
 model and fallback; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.

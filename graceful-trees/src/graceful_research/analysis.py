@@ -303,7 +303,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "## Performance by input family and size",
         "",
         "Family is the first generator that introduced a tree, not an exclusive mathematical classification.",
-        "Medians use solved CP-SAT cases only; constructed witnesses have no solver time or branch count.",
+        "Medians use solved CP-SAT cases only; construction and frontier witnesses have no CP-SAT time or branch count.",
         "Unknowns are censored; different sizes, budgets, hardware",
         "or successful subsets are not controlled comparisons.",
         "",

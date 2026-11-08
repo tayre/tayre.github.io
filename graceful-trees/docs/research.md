@@ -54,11 +54,11 @@ of each complement pair survives. This preserves *existence*, not the full set o
 labelings or their counts. It also preserves the unordered extreme-edge restriction
 used below. Disable it for solution enumeration or restrictions not invariant under
 complement. No vertex is arbitrarily forced to 0, and no selected edge is forced to
-carry `n-1` in the unrestricted experiment. In particular, arbitrary root-zero
+carry `n-1` in the unrestricted exact model. In particular, arbitrary root-zero
 constraints are not sound symmetry breaking for the Graceful Tree Conjecture.
 
 Every edge label `n-1` necessarily joins 0 and `n-1`; this follows from the domain.
-We do not choose its location in the main search. CP-SAT's built-in symmetry level
+The exact model does not choose its location. CP-SAT's built-in symmetry level
 is explicitly set to 0 so the documented complement reduction is the only enabled
 symmetry reduction. Standard solver presolve remains enabled.
 
@@ -68,8 +68,8 @@ The optional `constructive_search` prepass implements the known alternating-extr
 caterpillar construction (described in [8], §2, and attributed there to Rosa).
 This is an implementation optimization, not a new gracefulness result. It applies
 to the tree's structure, regardless of which generator introduced it; paths, stars,
-brooms and double stars are included. Other trees and **all restricted probes**
-continue to the same exact CP-SAT model.
+brooms and double stars are included. Other trees can try the candidate search
+below before exact fallback. **All restricted probes** use their selected exact backend.
 
 Here is the invariant for the implementation in `constructive.py`. For `n > 2`,
 delete the leaves; proceed only if the remaining connected tree is a path or a
@@ -96,6 +96,44 @@ its truth and novelty remain unasserted. Every constructed witness still passes
 the independent worker, parent and archive verifiers. Failure of the construction
 to apply is never an infeasibility result.
 
+### Bounded frontier witness search
+
+`frontier.py` implements a candidate search inspired by Fang's descending-difference
+backtracking [1, §2.1]. This is an existing algorithmic idea, not a novelty claim.
+It grows a connected assigned region from a chosen vertex labeled zero, trying
+edge differences `n-1, n-2, ..., 1`. Each eligible unassigned vertex is adjacent to
+one assigned parent; its two candidate values are the parent's label plus or minus
+the next difference. Out-of-range and already used values are rejected. Integer
+bitsets track eligible vertices and used labels, avoiding copied search states.
+
+For a tree, the unassigned children of the assigned region each have exactly one
+assigned neighbor. Adding one such child preserves that property and consumes one
+new label and one new edge difference. A completed candidate has assigned all
+vertices and all edges; the independent verifier still checks it in full.
+Complement normalization uses the existing proved symmetry only after completion.
+
+This routine is deliberately **incomplete**: it explores connected assignment
+prefixes and a bounded selection of roots, not all graceful labelings. These
+choices are not symmetry-breaking constraints in the exact model, and no
+nonexistence conclusion follows from exhausting them. Failure passes the original
+input to the same CP-SAT model, with no root or frontier constraints or hints.
+The model's serialized hash is regression-tested against the original route.
+SAT attempts, restricted probes, and independent infeasibility investigations skip
+the frontier prepass.
+
+Version `descending-frontier-v1` tries up to four high-degree roots, with seeded
+ties and vertex ordering. It gives each root at most a quarter of the node budget
+(or an equal share if fewer roots exist). The default total is 20,000 visited
+nodes. Its wall allowance is the smaller of 0.1 seconds and 10% of the attempt
+allowance, checked periodically; the enclosing worker retains the hard deadline.
+Inputs above 256 vertices skip it to bound Python recursion. Seed, roots tried,
+visited nodes, limits, termination reason and candidate labels are saved. A wall
+cutoff can vary across machines. The exact fallback receives the remaining time.
+
+No new exact-model constraint was added, so the existing Lean model proofs apply
+unchanged. This Python heuristic is not itself formally verified. Its correctness
+boundary is the independently checked witness, not successful heuristic execution.
+
 ### Structural preprocessing
 
 An unweighted tree's diameter is found by two breadth-first searches: find a
@@ -105,6 +143,10 @@ The former all-pairs distance computation took `O(n²)` on trees. Tree validatio
 precedes the optimized calculation; it is not used on arbitrary graphs.
 Canonical encodings, input order, generators and campaign fingerprints are
 unchanged. NetworkX 3.5 already specializes its center calculation for trees.
+Structural family checks now compute degrees in the once- and twice-pruned cores
+directly, instead of copying and modifying two NetworkX graphs. These are the same
+induced subgraphs and give identical feature values; they change neither generation
+nor case identity.
 
 ## Secondary experiment: extreme-edge support
 

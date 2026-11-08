@@ -19,6 +19,8 @@
   "complement_break": true,
   "redundant_sum": true,
   "constructive_search": true,
+  "frontier_search": true,
+  "frontier_max_nodes": 20000,
   "probe_backend": "sat",
   "certify_infeasible": true
 }

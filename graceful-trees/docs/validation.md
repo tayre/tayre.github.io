@@ -1,5 +1,40 @@
 # Initial validation record
 
+## Frontier algorithm pass — 8 November 2026
+
+The complete suite passed **419 Python tests**, including the four real Lean
+rejection tests, and **26 dashboard tests**. Ruff lint/format checks and the
+desktop/mobile browser checks passed. The new candidate search was checked on
+every one of the **201 non-isomorphic trees through order 10**, and on bounded
+larger-family inputs through order 256. Tests cover deterministic node-limited
+replay, reordered edges, limits, malformed candidates, exact-model hash equality
+after fallback, separation from restricted/SAT experiments, and checkpoint resume.
+The existing Lean model lemmas are unchanged; the heuristic itself is not claimed
+to be formally verified.
+
+A fresh `configs/smoke.json` experiment investigated **100 unrestricted trees** and
+verified all 100: 56 by the established caterpillar construction and 44 by the new
+frontier search. It also ran 25 restricted CP-SAT probes, with 21 positive witnesses
+and four uncertified solver-infeasible results. The independent audit accepted
+**121 positive certificates**, with no errors, timeouts or unrestricted infeasibility.
+Local evidence is retained in `results/frontier-smoke-v1/`.
+
+A second experiment resumed the previous SAT-validation checkpoint with the
+nightly configuration and a 30-second budget. Its **40 unrestricted attempts**
+verified 39 trees and left one unresolved timeout. Forty restricted SAT probes
+produced 38 witnesses and **two independently checked restricted UNSAT proofs**.
+The audit reverified **345 cumulative positive labelings and nine scoped negative
+certificates**. All four earlier chart-history rows were preserved exactly.
+Local evidence is in `results/frontier-nightly-resume-v1/`. These are functional
+validation runs, not performance comparisons.
+
+The separate paired benchmark measured **2.90× faster processing** on its fixed
+60-case capped workload, with 54 rather than 45 verified cases in each of three
+repetitions. Full methodology, source hashes, seeds, scope and limitations are in
+[performance.md](performance.md#bounded-frontier-search). Unknown cases remain
+unknown; neither this benchmark nor the validation runs constitute mathematical
+discovery or a new exhaustive verification bound.
+
 ## SAT certificates — 8 November 2026
 
 The proof-logging backend was tested with CPython 3.12.14, NetworkX 3.5,

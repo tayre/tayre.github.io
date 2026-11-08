@@ -1,4 +1,73 @@
-# Processing optimization — 8 November 2026
+# Performance measurements — 8 November 2026
+
+## Bounded frontier search
+
+The second pass adds an incomplete descending-difference witness search before
+CP-SAT and computes structural cores without copying NetworkX graphs. The exact
+model is unchanged. Each candidate must pass the existing independent verifier;
+search exhaustion is never an infeasibility claim. See the
+[algorithm and limits](research.md#bounded-frontier-witness-search).
+
+The paired benchmark uses 60 input cases: ten families at orders 35 and 75, each
+with input seeds `20261108`, `104729`, and `130363`. There are **47 distinct tree
+isomorphism classes**; deterministic families repeat across input seeds. Solver
+seeds are logged separately. Each variant uses the same cases, exact-model options,
+one-second attempt allowance and three repetitions, with execution order reversed
+on alternate repetitions. Imports are warmed and no project tests ran concurrently.
+The baseline already includes the first pass's direct caterpillar construction.
+
+Measured on macOS 15.7.7 ARM64, CPython 3.12.14, NetworkX 3.5 and OR-Tools 9.14.6206:
+
+| Measurement | Previous route | With frontier search |
+| --- | ---: | ---: |
+| Median time for 60 input cases | 18.430 s | 6.354 s |
+| Verified cases in every repetition | 45 / 60 | 54 / 60 |
+| Unresolved cases in every repetition | 15 / 60 | 6 / 60 |
+| Cases requiring CP-SAT | 30 / 60 | 7 / 60 |
+| Verified order-75 cases | 15 / 30 | 24 / 30 |
+
+This is **2.90× faster for this capped workload**, with nine additional verified
+cases. Thirty cases use the unchanged caterpillar construction; 23 are solved by
+the frontier search and one by exact fallback. The six remaining cases include
+all three order-75 Prüfer samples, two binary-heap cases and one recursive-tree
+case. Results are consistent across the three repetitions, but the sample is small
+and structured. A short failed prepass also consumes time that CP-SAT would
+otherwise have received, so individual cases can regress near a cutoff.
+
+Separately, 150 complete structural-feature calculations took a median **0.09314 s**
+with copied/pruned graphs and **0.04041 s** with direct core degrees: **2.30× faster**.
+The workload comprises the same ten families at orders 35, 75 and 256, five passes
+per repetition, with identical full feature dictionaries required for every input.
+
+These are measured processing costs for fixed, bounded workloads. Unknown results
+are censored, not measured solution times. Neither ratio estimates nightly
+throughput or performance on arbitrary trees, and the two speedup ratios must not
+be multiplied. Archive auditing, report rendering, generation and checkpoint I/O
+are outside the search timing. The heuristic does not establish a new verification
+bound, a counterexample, or a new mathematical theorem.
+
+Reproduce this pass with:
+
+```sh
+python scripts/benchmark_frontier.py --output results/frontier-benchmark --attempt-seconds 1 --repeats 3
+```
+
+The output must be new. Every positive witness is independently verified, and each
+request/result is retained along with exact inputs, versions, source snapshots and
+checksums. [Saved measurements](../examples/frontier-benchmark.json) include the 60
+inputs, all 360 attempt records, repetition totals and source hashes. The full local
+archive is `results/frontier-benchmark-v1/`. Its recorded Git commit is the base
+before the uncommitted optimization; the source hashes identify what was measured.
+This benchmark archive is not a campaign checkpoint for `graceful-research audit`.
+
+`frontier_search` is enabled by default and explicitly in the nightly configuration;
+`frontier_max_nodes` defaults to 20,000. Seeds and node limits make the search order
+reproducible; wall cutoffs can still vary by machine. Changing these options does
+not reset generation or rewrite earlier chart history. Restricted and SAT attempts
+skip the prepass. No additional exact-model constraint needs a new Lean proof;
+the existing proofs and independent certificate checks remain in use.
+
+## First pass: caterpillar construction and diameter
 
 The optimized path uses the established caterpillar construction before CP-SAT,
 and computes tree diameters with two breadth-first sweeps. It also defers loading
@@ -6,7 +75,7 @@ OR-Tools until an attempt needs the solver. No solver constraints, generation
 streams, canonical tree IDs, time limits or independent verification checks were
 weakened. See the [construction invariant](research.md#direct-witnesses-for-caterpillars).
 
-## Paired measurements
+### Paired measurements
 
 Measured on macOS 15.7.7, ARM64, CPython 3.12.14, NetworkX 3.5 and OR-Tools
 9.14.6206. The workload contains one input from each of the ten configured
@@ -40,7 +109,7 @@ we do not substitute the time limit for an actual solution time. Smaller exhaust
 cases, non-caterpillar-heavy workloads, report generation and checkpoint I/O can
 have different speedups. The lazy-import saving is not included in these ratios.
 
-## Reproduction and evidence
+### Reproduction and evidence
 
 ```sh
 python scripts/benchmark.py --output results/benchmark --attempt-seconds 1 --repeats 3
@@ -59,7 +128,7 @@ The full local evidence is in `results/optimization-benchmark/`. The recorded Gi
 commit is the base before the optimization; the file hashes identify the code
 actually measured. Repeat runs may produce different timings and cutoff outcomes.
 
-## Validation and reporting
+### Validation and reporting
 
 - 319 Python tests and 19 dashboard tests passed. The fast algorithms were checked
   on all 201 non-isomorphic trees through order 10, and on larger generated and
@@ -74,6 +143,7 @@ actually measured. Repeat runs may produce different timings and cutoff outcomes
   constructed witnesses. History counts retain their existing schema.
 
 `constructive_search` is enabled by default and explicitly in the nightly config.
-Set it to `false` to benchmark CP-SAT alone. Changing it does not reset the campaign.
+Set it and `frontier_search` to `false` to benchmark CP-SAT alone. Changing either
+does not reset the campaign.
 Replay of a legacy request without this field still uses CP-SAT. The existing
 nightly budget and schedule are unchanged.

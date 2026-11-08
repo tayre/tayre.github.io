@@ -85,13 +85,13 @@ def edge_orbits(graph):
 def features(graph):
     """Structural features of an unweighted tree (the generator's validated domain)."""
     n = len(graph)
-    degrees = [d for _, d in graph.degree]
-    core = graph.copy()
-    core.remove_nodes_from([v for v, d in graph.degree if d == 1])
-    is_caterpillar = len(core) <= 1 or max(dict(core.degree).values()) <= 2
-    core2 = core.copy()
-    core2.remove_nodes_from([v for v, d in core.degree if d <= 1])
-    is_lobster = len(core2) <= 1 or max(dict(core2.degree).values()) <= 2
+    degree = dict(graph.degree)
+    degrees = list(degree.values())
+    # Compute both induced cores directly, without copying and pruning two graphs.
+    core_degree = {v: sum(degree[w] != 1 for w in graph[v]) for v in graph if degree[v] != 1}
+    is_caterpillar = len(core_degree) <= 1 or max(core_degree.values()) <= 2
+    core2 = {v for v, d in core_degree.items() if d > 1}
+    is_lobster = len(core2) <= 1 or all(sum(w in core2 for w in graph[v]) <= 2 for v in core2)
     colors = nx.bipartite.color(graph)
     counts = Counter(colors.values())
     leaf_count = sum(d == 1 for d in degrees)
@@ -108,7 +108,7 @@ def features(graph):
         "is_caterpillar": is_caterpillar,
         "is_lobster": is_lobster,
         "max_sibling_leaves": max(
-            (sum(graph.degree(v) == 1 for v in graph[u]) for u in graph), default=0
+            (sum(degree[v] == 1 for v in graph[u]) for u in graph), default=0
         ),
     }
 

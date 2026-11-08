@@ -45,6 +45,8 @@ class Config:
     complement_break: bool = True
     redundant_sum: bool = True
     constructive_search: bool = True
+    frontier_search: bool = True
+    frontier_max_nodes: int = 20000
     backend: str = "cp-sat"
     probe_backend: str = "same"
     certify_infeasible: bool = True
@@ -59,6 +61,7 @@ class Config:
             ("max_attempts_per_case", 1, 100),
             ("probe_max_n", 0, 32),
             ("probe_max_attempts", 0, 10000),
+            ("frontier_max_nodes", 0, 1000000),
         ):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
@@ -102,6 +105,7 @@ class Config:
             "complement_break",
             "redundant_sum",
             "constructive_search",
+            "frontier_search",
             "certify_infeasible",
         ):
             if type(getattr(self, name)) is not bool:

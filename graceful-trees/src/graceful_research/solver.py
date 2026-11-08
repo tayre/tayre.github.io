@@ -1,4 +1,4 @@
-"""Known-family witnesses followed by exact CP-SAT, inside a disposable worker."""
+"""Candidate witnesses followed by the exact model, in a bounded worker."""
 
 import hashlib
 import time
@@ -76,6 +76,36 @@ def solve(request):
 
         return solve_sat(request)
 
+    frontier = None
+    if request.get("frontier_search", False) and request["restriction"] is None:
+        from .frontier import search
+
+        frontier = search(
+            **data,
+            seed=request["seed"],
+            max_nodes=request.get("frontier_max_nodes", 20000),
+            seconds=min(0.1, request["solver_seconds"] * 0.1),
+        )
+        write_json(directory / "frontier.json", frontier)
+        if frontier["labels"] is not None:
+            labels = frontier["labels"]
+            if request["complement_break"] and len(labels) > 1 and labels[0] > labels[1]:
+                labels = [data["n"] - 1 - value for value in labels]
+            verification = verify_labeling(**data, labels=labels)
+            return {
+                "status": "verified_graceful" if verification["valid"] else "invalid_solution",
+                "raw_status": "CANDIDATE_WITNESS",
+                "search_method": "frontier-search",
+                "labels": labels,
+                "verification": verification,
+                "proof_certificate_verified": False,
+                "proof_certificate": None,
+                "termination": "candidate_witness",
+                "timed_out": False,
+                "frontier": frontier,
+                "wall_seconds": time.monotonic() - started,
+            }
+
     # Avoid loading the solver and its dependencies for construction-only workers.
     from google.protobuf import text_format
     from ortools.sat.python import cp_model
@@ -90,7 +120,11 @@ def solve(request):
     model_text = text_format.MessageToString(model.proto)
     (directory / "model.pbtxt").write_text(model_text)
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = request["solver_seconds"]
+    solver_seconds = request["solver_seconds"]
+    if frontier is not None:
+        # Candidate search shares the attempt allowance; it does not buy extra compute.
+        solver_seconds = max(0.001, solver_seconds - (time.monotonic() - started))
+    solver.parameters.max_time_in_seconds = solver_seconds
     solver.parameters.num_search_workers = 1
     solver.parameters.random_seed = request["seed"]
     solver.parameters.symmetry_level = 0
@@ -130,7 +164,7 @@ def solve(request):
     (directory / "response.pbtxt").write_text(response_text)
     # UNKNOWN is never promoted to infeasible. CP-SAT can stop for reasons other
     # than its wall limit; call it a timeout only when we observed that limit.
-    timed_out = status == cp_model.UNKNOWN and solver.wall_time >= request["solver_seconds"] * 0.95
+    timed_out = status == cp_model.UNKNOWN and solver.wall_time >= solver_seconds * 0.95
     return {
         "status": outcome,
         "search_method": "cp-sat",
@@ -149,4 +183,5 @@ def solve(request):
         "model_sha256": hashlib.sha256(model_text.encode()).hexdigest(),
         "parameters": parameter_text,
         "response_stats": solver.response_stats(),
+        **({"frontier": frontier} if frontier is not None else {}),
     }
