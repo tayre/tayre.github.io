@@ -1,4 +1,4 @@
-import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName } from './data.mjs?v=2';
+import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName } from './data.mjs?v=3';
 
 const $ = id => document.getElementById(id);
 const number = n => new Intl.NumberFormat('en').format(n);
@@ -111,7 +111,7 @@ function renderTables() {
     const tr = element('tr');
     const id = element('td', 'tree-code', `${item.tree_id.slice(0, 10)}… / #${item.attempt_id}`);
     id.title = `Tree ${item.tree_id}; attempt ${item.attempt_id} in the downloaded research.sqlite`;
-    const status = element('span', 'outcome', { verified_graceful: 'Verified graceful', unknown: item.timed_out ? 'Unresolved · timed out' : 'Unresolved', solver_infeasible: 'Infeasible · uncertified' }[item.status] ?? 'Operational error');
+    const status = element('span', 'outcome', { verified_graceful: 'Verified graceful', unknown: item.timed_out ? 'Unresolved · timed out' : 'Unresolved', solver_infeasible: item.proof_certificate_verified ? 'Infeasible · proof checked' : 'Infeasible · uncertified' }[item.status] ?? 'Operational error');
     status.dataset.status = item.status;
     const cell = element('td'); cell.append(status);
     tr.append(id, element('td', '', familyName(item.family)), element('td', '', number(item.n)), cell, element('td', '', item.wall_seconds == null ? '—' : duration(item.wall_seconds)), element('td', '', item.branches == null ? '—' : number(item.branches)));
@@ -143,6 +143,7 @@ function render(data, cached = false) {
   write('verified-delta', `${number(latest.new_verified)} newly verified trees in the latest run.`);
   write('attempts-total', `${number(c.attempts)} search and restricted-edge attempts in total.`);
   write('infeasible-total', number(c.solver_infeasible)); write('proof-total', number(data.certificate_verified_infeasible)); write('error-total', c.errors ? `${number(c.errors)} trees with operational errors` : '');
+  write('restricted-proof-total', number(data.proof_counts?.restricted_attempts ?? 0));
   write('latest-finished', utc(data.finished_at)); write('latest-new', `+${number(latest.new_trees)}`); write('latest-budget', `${duration(data.elapsed_seconds)} / ${duration(data.config.budget_seconds)}`);
   write('latest-stop', { compute_budget: 'Time budget reached', case_limit: 'Case limit reached', sources_exhausted: 'Streams exhausted', generation_limit: 'Generation limit reached', cancelled: 'Cancelled' }[data.stop_reason] ?? data.stop_reason.replaceAll('_', ' '));
   write('latest-timeouts', `${number(data.current_run.timeout_attempts)} / ${number(data.current_run.attempts)} attempts`);

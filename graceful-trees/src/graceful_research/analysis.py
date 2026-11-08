@@ -78,7 +78,8 @@ def summarize(records):
     for items in by_tree.values():
         # A positive witness remains positive even if a later timed search is unknown.
         solved = [r for r in items if r["status"] == "verified_graceful"]
-        final.append(solved[-1] if solved else items[-1])
+        certified = [r for r in items if r.get("proof_certificate_verified")]
+        final.append((solved or certified or items)[-1])
     counts = Counter(r["status"] for r in final)
     groups = defaultdict(list)
     for record in final:
@@ -86,7 +87,11 @@ def summarize(records):
     families = []
     for (family, n), items in sorted(groups.items()):
         solved = [r for r in items if r["status"] == "verified_graceful"]
-        times = [r["solver_wall_seconds"] for r in solved if "solver_wall_seconds" in r]
+        times = [
+            r["solver_wall_seconds"]
+            for r in solved
+            if "solver_wall_seconds" in r and r.get("search_method", "cp-sat") == "cp-sat"
+        ]
         branches = [r["branches"] for r in solved if "branches" in r]
         families.append(
             {
@@ -149,7 +154,9 @@ def summarize(records):
         "verified_graceful": counts["verified_graceful"],
         "unknown": counts["unknown"],
         "solver_infeasible": counts["solver_infeasible"],
-        "certificate_verified_infeasible": 0,
+        "certificate_verified_infeasible": len(
+            {r["tree_id"] for r in main if r.get("proof_certificate_verified")}
+        ),
         "timeout_attempts": sum(bool(r.get("timed_out")) for r in records),
         "unknown_attempts": sum(r["status"] == "unknown" for r in records),
         "errors": sum(r["status"] in ERROR_STATUSES for r in records),
@@ -174,10 +181,14 @@ def extreme_profiles(store, max_n):
         for orbit in edge_orbits(to_graph(case)):
             key = "-".join(map(str, orbit["representative"]))
             records = store.attempts(tree_id=case["tree_id"], scope="extreme_edge", edge_key=key)
-            status = records[-1]["status"] if records else "untested"
-            entries.append(
-                {**orbit, "status": status, "attempt_ids": [r["attempt_id"] for r in records]}
-            )
+            witnessed = [r for r in records if r["status"] == "verified_graceful"]
+            certified = [r for r in records if r.get("proof_certificate_verified")]
+            evidence = witnessed or certified or records
+            status = evidence[-1]["status"] if evidence else "untested"
+            entry = {**orbit, "status": status, "attempt_ids": [r["attempt_id"] for r in records]}
+            if any(r.get("proof_certificate_verified") for r in records):
+                entry["proof_certificate_verified"] = True
+            entries.append(entry)
         if any(e["status"] != "untested" for e in entries):
             profiles.append(
                 {
@@ -193,7 +204,14 @@ def extreme_profiles(store, max_n):
                     "pendant_witness": any(
                         e["pendant"] and e["status"] == "verified_graceful" for e in entries
                     ),
-                    "exclusions_independently_certified": False,
+                    "exclusions_independently_certified": (
+                        any(e["status"] == "solver_infeasible" for e in entries)
+                        and all(
+                            e.get("proof_certificate_verified", False)
+                            for e in entries
+                            if e["status"] == "solver_infeasible"
+                        )
+                    ),
                 }
             )
     return profiles
@@ -259,7 +277,8 @@ def write_reports(output, manifest, records, profiles, provider=None):
         f"- Unique trees investigated (including probes): **{summary['trees_investigated']}**.",
         f"- Unrestricted trees: **{summary['unrestricted_trees']}**; verified graceful: **{summary['verified_graceful']}**.",
         f"- Unrestricted unknown: **{summary['unknown']}**; solver-reported infeasible: **{summary['solver_infeasible']}**.",
-        "- Independently certificate-verified infeasible: **0** (unsupported by this backend).",
+        f"- Unrestricted trees with independently checked UNSAT certificates: **{summary['certificate_verified_infeasible']}**.",
+        f"- Restricted attempts with independently checked UNSAT certificates: **{sum(r['scope'] != 'graceful' and bool(r.get('proof_certificate_verified')) for r in records)}** (not counterexamples).",
         f"- Attempts: **{summary['attempts']}** ({summary['restricted_attempts']} restricted probes).",
         f"- Unknown attempts: **{summary['unknown_attempts']}**; observed timeouts: **{summary['timeout_attempts']}**.",
         f"- Verified labeling certificates: **{summary['verified_certificates']}**; errors: **{summary['errors']}**.",
@@ -270,6 +289,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "",
         "A timeout is unresolved. A CP-SAT INFEASIBLE result is a solver conclusion, not an",
         "independently checked proof certificate. No counterexample is declared automatically.",
+        "The SAT backend saves scoped DRUP proofs and checks them against an independently regenerated CNF.",
         "These experiments do not prove the universal conjecture or establish novelty.",
         "",
         "## Tree sizes (unrestricted searches)",
@@ -324,7 +344,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "",
         f"Cumulative checkpoint contains {len(profiles)} partially or fully probed trees.",
         "`analysis.json` records every edge orbit, witnesses, exclusions reported by the solver,",
-        "and untested/unknown orbits. Only witnessed membership is independently verified.",
+        "and untested/unknown orbits. Each checked exclusion is explicitly marked with its proof status.",
         "Infeasibility for a prescribed edge does not imply that the tree is nongraceful.",
         "",
         "## Proposed next experiments (unproven)",
@@ -341,7 +361,8 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "",
         "See `manifest.json` for exact versions, seeds, source hashes, configuration, hardware,",
         "generation cursors and cumulative counts. `attempts.jsonl` and CSV describe this run;",
-        "`research.sqlite` carries the complete accumulated inputs, attempts and positive witnesses.",
+        "`research.sqlite` carries the complete accumulated inputs, attempts, witnesses and proof text.",
+        "`unsat-certificates/` contains checked negative certificates; each binds the exact input and restriction.",
         "`certificates/` contains standalone witnesses. Model/parameter/response protos are retained",
         "per attempt when the worker reached those stages. `checksums.json` covers saved files.",
         "Run `graceful-research audit RUN_DIRECTORY` before using results.",

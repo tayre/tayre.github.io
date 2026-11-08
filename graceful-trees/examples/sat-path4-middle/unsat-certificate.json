@@ -1,0 +1,32 @@
+{
+  "cnf_sha256": "ee5234a19308a3dcd3d2f2ecbda0d4b6b8e5bb43fc028e0a81ae7ff5ee5fbd8e",
+  "encoding": "graceful-onehot-v1",
+  "format": "drup",
+  "input": {
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "n": 4
+  },
+  "proof": "-13 25 0\n-2 -12 13 0\n-12 13 0\n-14 -9 0\n25 0\n-9 0\n0\n",
+  "proof_sha256": "e4fa3943a0d256dc73389801319afff38f9eaa1813b8db243c813a57d52811ac",
+  "restriction": {
+    "edge": [
+      1,
+      2
+    ],
+    "kind": "extreme_edge"
+  },
+  "schema_version": 1
+}

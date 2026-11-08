@@ -17,7 +17,15 @@ function counts(row) {
 export function validateFeed(data) {
   requireThat(data?.schema_version === 1 && data.source === 'github-actions', 'Unsupported source');
   requireThat(data.repository === 'tayre/tayre.github.io' && data.campaign === 'nightly-v1', 'Unexpected campaign');
-  requireThat(data.audit?.passed === true && data.certificate_verified_infeasible === 0 && data.audit.infeasibility_proofs_checked === 0, 'Unsupported audit or proof claim');
+  requireThat(data.audit?.passed === true, 'Unsupported audit or proof claim');
+  if (data.proof_evidence_schema_version === 1) {
+    const p = data.proof_counts;
+    requireThat(p && ['unrestricted_attempts', 'restricted_attempts', 'total_attempts'].every(key => integer(p[key])) && integer(data.certificate_verified_infeasible), 'Invalid proof counts');
+    requireThat(p.total_attempts === p.unrestricted_attempts + p.restricted_attempts && p.total_attempts === data.audit.infeasibility_proofs_checked, 'Proof counts disagree with audit');
+    requireThat(data.certificate_verified_infeasible <= data.cumulative?.solver_infeasible && data.certificate_verified_infeasible <= p.unrestricted_attempts && (p.unrestricted_attempts === 0) === (data.certificate_verified_infeasible === 0) && p.unrestricted_attempts <= data.cumulative?.unrestricted_attempts && p.restricted_attempts <= data.cumulative?.restricted_solver_infeasible, 'Proof scopes disagree');
+  } else {
+    requireThat(data.proof_evidence_schema_version == null && data.proof_counts == null && data.certificate_verified_infeasible === 0 && data.audit.infeasibility_proofs_checked === 0, 'Unsupported audit or proof claim');
+  }
   requireThat(date(data.started_at) && date(data.finished_at), 'Invalid publication dates');
   requireThat(Date.parse(data.started_at) <= Date.parse(data.finished_at), 'Publication precedes research');
   requireThat(/^[a-f0-9]{40}$/.test(data.source_commit), 'Invalid source revision');

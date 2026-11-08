@@ -20,6 +20,7 @@ Treehood is a separate precondition: these model lemmas work for any edge list.
 | [Constraints.lean](Graceful/Constraints.lean) | A graceful difference permutation sums to `m(m+1)/2`; a difference of `m` joins labels 0 and `m`. | The redundant sum equation and extreme-edge experiments. |
 | [Constraints.lean](Graceful/Constraints.lean) | The explicit four-vertex path has a graceful labeling, but none with difference 3 on its middle edge. | The positive and negative controls in the Python tests. This proof is independent of CP-SAT. |
 | [Construction.lean](Graceful/Construction.lean) | Low/high interval assignments produce descending differences; assigning the next spine vertex last preserves the boundary arithmetic. | The arithmetic invariant of the caterpillar construction. |
+| [SAT.lean](Graceful/SAT.lean) | Every graceful labeling respecting the declared edge restriction satisfies every clause in the one-hot schema; refuting that schema excludes such a labeling. Row-major variable indices are injective and the X block ends before the Y block. | The mathematical interpretation of the SAT backend's scoped UNSAT proofs. |
 
 The construction proofs cover **local arithmetic**, conditional on their stated
 bounds. Spine recognition, traversal coverage, the complete caterpillar theorem,
@@ -28,9 +29,11 @@ not formalized here. They retain their mathematical arguments and independent
 tests. The mapping from Python code to these Lean statements remains a human
 review obligation; changing one does not automatically change the other.
 
-No run result is promoted to a Lean-certified infeasibility result. The formal
-path control is a separate theorem, not a proof certificate attached to arbitrary
-solver records. Existing certificate-verified-infeasible counts remain unchanged.
+No run result is promoted to a Lean-certified infeasibility result. The SAT schema
+proof is a mathematical model theorem; the Python serialization loops and DRUP
+checker are not formalized or extracted from Lean. Runtime certificate counts
+refer to independently checked DRUP, not Lean-checked refutations. The formal path
+control is a separate theorem. See the [SAT trust boundary](../docs/sat-certificates.md).
 
 ## Build and audit
 

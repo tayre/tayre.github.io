@@ -103,6 +103,7 @@ def snapshot(evidence, artifact_id):
                 "wall_seconds": record.get("wall_seconds"),
                 "branches": record.get("branches"),
                 "timed_out": bool(record.get("timed_out")),
+                "proof_certificate_verified": bool(record.get("proof_certificate_verified")),
                 "features": {
                     k: record["features"].get(k) for k in ("leaves", "diameter", "max_degree")
                 },
@@ -155,6 +156,11 @@ def snapshot(evidence, artifact_id):
             )
         },
         "coverage": manifest["exhaustive_coverage"],
+        **{
+            k: progress[k]
+            for k in ("proof_evidence_schema_version", "proof_counts")
+            if k in progress
+        },
         "findings": evidence["findings.json"]["findings"],
         "suggestions": analysis["suggestions"],
         "difficult": difficult,

@@ -1,0 +1,14 @@
+{
+  "assumptions": [],
+  "binding": "python-sat",
+  "binding_version": "1.8.dev24",
+  "encoding": "graceful-onehot-v1",
+  "randomization": "fixed solver defaults; binding exposes no seed setter",
+  "redundant_sum": false,
+  "request_seed": 17,
+  "solver": "Glucose 4.1",
+  "symmetry_breaking": false,
+  "total_seconds": 5,
+  "with_proof": true,
+  "workers": 1
+}

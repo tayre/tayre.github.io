@@ -1,5 +1,40 @@
 # Initial validation record
 
+## SAT certificates — 8 November 2026
+
+The proof-logging backend was tested with CPython 3.12.14, NetworkX 3.5,
+`python-sat==1.8.dev24` (Glucose 4.1), and the independent standard-library DRUP
+checker. SAT agrees with a permutation oracle for every tree through six vertices
+and every edge orbit. Tests also cover 6,000 randomized propagation queries against
+a separate unit-propagation oracle and truth tables, small random CNF refutations,
+corrupt or retargeted certificates, time limits, replay, and checkpoint auditing.
+
+The end-to-end `sat-certificates` run tested **25 trees through order 7** and
+**50 restricted edge placements**. It saved **71 verified labelings** and **4
+independently checked restricted UNSAT proofs**. There were no timeouts, errors,
+or unrestricted infeasibility results. All four proofs also passed the external
+DRAT-trim checker at commit `2e3b2dc0ecf938addbd779d42877b6ed69d9a985` with `-u`.
+The reproducible [four-vertex negative control](../examples/sat-path4-middle/README.md)
+is checked into the repository; it is not a discovery.
+
+A separate nightly-configuration trial resumed the existing optimization
+checkpoint. Its **55 attempts** yielded **47 verified labelings**, **7 checked
+restricted exclusions**, and one unresolved main-search timeout. The audit
+reverified **268 cumulative labelings and all 7 negative certificates**. All three
+previous chart-history rows remained byte-for-byte equivalent as JSON values.
+Local run directories are `results/sat-validation-v1` and
+`results/sat-nightly-resume-v1`; they retain the exact inputs, source snapshots,
+versions and logs. These trials were bounded by 30 seconds and finished early at
+1.21 and 10.34 seconds respectively; they are functional validations, not benchmarks.
+
+The complete suite has **380 Python tests**, including the real Lean rejection
+tests, and **26 dashboard tests**. Desktop/mobile browser checks passed. Lean
+4.24.0 now checks **23 named mathematical lemmas/theorems**; the transitive audit
+covered **107 declarations and 60 theorems including generated helpers**. Six new
+named theorems concern the SAT schema and variable numbering. This proves the
+stated mathematical lemmas, not correctness of the entire Python checker or the
+Graceful Tree Conjecture. The original validation records below remain historical.
+
 ## Lean proof checks — 8 November 2026
 
 Lean 4.24.0 compiled **17 named lemmas and theorems**. The transitive axiom audit

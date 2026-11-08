@@ -1,0 +1,8 @@
+{
+  "valid": true,
+  "checker": "stdlib-drup-v1",
+  "errors": [],
+  "additions_checked": 7,
+  "deletions_ignored": 0,
+  "scope": "extreme_edge"
+}

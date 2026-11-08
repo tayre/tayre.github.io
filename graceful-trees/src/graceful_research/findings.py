@@ -56,6 +56,16 @@ def build_findings(database, manifest):
             "attempt_ids": [record["attempt_id"]],
         }
         if record["status"] == "solver_infeasible":
+            if record.get("proof_certificate_verified"):
+                add(
+                    "certificate_verified_infeasibility",
+                    tree,
+                    **common,
+                    title=f"Checked unrestricted UNSAT certificate on a {common['n']}-vertex tree",
+                    significance="Candidate for independent mathematical review; no automatic counterexample claim.",
+                    next_step="Recheck the archived graph, encoding and proof with a separate implementation, then obtain expert review.",
+                )
+                continue
             add(
                 "unrestricted_infeasibility",
                 tree,
@@ -105,6 +115,7 @@ def build_findings(database, manifest):
             )
         best = max(best, through)
     priority = {
+        "certificate_verified_infeasibility": 0,
         "unrestricted_infeasibility": 0,
         "difficult_case_resolved": 1,
         "validation_milestone": 2,

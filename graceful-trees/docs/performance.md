@@ -67,7 +67,7 @@ actually measured. Repeat runs may produce different timings and cutoff outcomes
 - The end-to-end smoke run verified 100 unrestricted trees and produced 25 edge
   probes. Four probes were solver-infeasible; no unrestricted tree was infeasible
   or unresolved. Its independent audit accepted all 121 positive certificates.
-- Restricted negative controls still use CP-SAT. Invalid constructed witnesses
+- Restricted negative controls used CP-SAT in this benchmark; nightly probes now use SAT with proof checking. Invalid constructed witnesses
   fail verification, and non-caterpillars fall back to the original model.
 - Reports record `search_method`; construction has no invented solver time,
   branch count or infeasibility proof. CP-SAT medians and outlier baselines exclude

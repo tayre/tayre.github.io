@@ -17,6 +17,42 @@ test('valid histories preserve unresolved cases separately from negative claims'
   assert.equal(data.certificate_verified_infeasible, 0);
 });
 
+function withRestrictedProofs() {
+  const data = fixture();
+  data.proof_evidence_schema_version = 1;
+  data.proof_counts = { unrestricted_attempts: 0, restricted_attempts: 2, total_attempts: 2 };
+  data.audit.infeasibility_proofs_checked = 2;
+  return data;
+}
+
+test('checked restricted proofs never become unrestricted negative trees', () => {
+  const data = validateFeed(withRestrictedProofs());
+  assert.equal(data.certificate_verified_infeasible, 0);
+  assert.equal(data.proof_counts.restricted_attempts, 2);
+});
+
+test('an audited unrestricted proof is displayed separately from restricted proofs', () => {
+  const data = withRestrictedProofs();
+  data.certificate_verified_infeasible = 1;
+  data.proof_counts.unrestricted_attempts = 1;
+  data.proof_counts.total_attempts = 3;
+  data.audit.infeasibility_proofs_checked = 3;
+  for (const row of [data.cumulative, data.current_run, data.history.at(-1), ...data.sizes, ...data.families]) {
+    row.unknown = 1; row.solver_infeasible = 1;
+  }
+  assert.equal(validateFeed(data).certificate_verified_infeasible, 1);
+});
+
+for (const [name, mutate] of [
+  ['proof total exceeds audit', data => data.proof_counts.total_attempts++],
+  ['restricted proof is promoted to a negative tree', data => data.certificate_verified_infeasible++],
+  ['proof exceeds excluded restricted attempts', data => data.cumulative.restricted_solver_infeasible = 1],
+  ['unknown proof schema', data => data.proof_evidence_schema_version = 2],
+  ['fractional proof counts', data => data.proof_counts.restricted_attempts = 1.5],
+]) test(`${name} is rejected`, () => {
+  const data = withRestrictedProofs(); mutate(data); assert.throws(() => validateFeed(data));
+});
+
 for (const [name, mutate] of [
   ['missing total', data => delete data.cumulative.trees],
   ['contradictory counts', data => data.cumulative.verified_graceful++],

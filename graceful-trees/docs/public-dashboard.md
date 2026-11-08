@@ -124,3 +124,10 @@ JavaScript-free project explanation. It writes inspection screenshots to `/tmp/`
 Synthetic fixtures are never a production fallback. To preview real data, serve
 the repository root with `python3 -m http.server`; the page fetches the public cloud
 feed just as the hosted site does.
+
+Snapshots with `proof_evidence_schema_version: 1` include `proof_counts` for
+unrestricted and restricted certified attempts. Their sum must equal the audit's
+cumulative checked-proof count. The headline negative tree count includes only
+distinct unrestricted inputs; restricted edge exclusions have a separate line.
+Legacy snapshots without this extension must have zero checked-proof counts.
+Adding the extension does not rewrite historical chart rows.

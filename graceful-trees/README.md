@@ -25,7 +25,8 @@ counts and downloadable, reproducible run archives.
 Selected mathematical safeguards now have [Lean proofs](formal/README.md), checked
 in CI with a pinned toolchain and an audit of their assumptions. These cover the
 complement symmetry reduction, difference-sum constraint, a restricted negative
-control, and the local arithmetic of the caterpillar construction. They do not
+control, the local arithmetic of the caterpillar construction, and completeness
+of the SAT clause schema. They do not
 formalize the whole Python program or prove the conjecture.
 
 Every run also produces an **offline visual progress report** (`report.html`),
@@ -83,16 +84,18 @@ Available configurations:
 | `exhaustive-small.json` | All 95 non-isomorphic trees of orders 1–9, plus bounded edge probes |
 | `nightly.json` | 30-minute budget; exhaustive streams through order 12 interleaved with sampled orders 20, 35, 50 and 75 |
 | `edge-profiles.json` | Small exhaustive inputs with more compute reserved for prescribed maximum-difference edge experiments |
+| `sat-certificates.json` | Pure SAT validation through order 7, with scoped, independently checked UNSAT proofs for negative edge controls |
 
-`--budget-seconds`, `--max-cases` and `--seed` override JSON settings. Decreasing the
+`--budget-seconds`, `--max-cases`, `--seed` and `--backend` override JSON settings. Decreasing the
 budget also reduces the finalization reserve to at most 10% of the budget.
 Generation settings, the NetworkX version and the master seed must match a restored checkpoint. Change
 the campaign and start fresh when changing the generator's input space. Solver
 budgets, retry quotas and probe settings may change on resume.
 
 `constructive_search` (default `true`) labels caterpillars directly using a known
-construction, then falls back to CP-SAT for other trees. All restricted edge
-experiments use CP-SAT. Set it to `false` for comparisons of the exact solver alone;
+construction, then falls back to the selected backend for other trees. Nightly
+runs use CP-SAT for the main search and proof-logging SAT for restricted probes.
+Set it to `false` for comparisons of the exact solver alone;
 this setting may change on resume without resetting the campaign. Each attempt
 records its method. Old saved requests without the option replay CP-SAT as before.
 
@@ -126,15 +129,17 @@ python3 -S results/smoke/verify.py results/smoke/certificates
 | Status | Meaning |
 | --- | --- |
 | `verified_graceful` | A positive witness passed the independent verifier; restricted attempts also satisfy their declared restriction |
-| `solver_infeasible` | CP-SAT returned INFEASIBLE for the exact saved model; no independent UNSAT certificate has been checked |
+| `solver_infeasible` | Exact solver reported infeasibility; `proof_certificate_verified` separately states whether an independent UNSAT proof check passed |
 | `unknown` | No conclusion, including timeouts, cancellation, or solver UNKNOWN |
 | `model_invalid`, `invalid_solution`, `error`, `integrity_error` | An implementation/operational problem; the run fails and retains evidence |
 
-CP-SAT v1 integration does **not** export a checkable infeasibility proof. The report's
-independently certificate-verified infeasible count is therefore always zero.
-No result is automatically called a counterexample. Unrestricted solver-infeasible
-inputs receive priority for repeat searches with both optional reductions disabled,
-but repeated CP-SAT answers still do not constitute an independent proof.
+CP-SAT does **not** export a checkable infeasibility proof. The optional SAT backend
+does: it saves a canonical CNF and DRUP refutation, independently reconstructs the
+encoding, and verifies each proof step. Its translation, trust boundary, limits,
+and standalone commands are documented in [SAT certificates](docs/sat-certificates.md).
+Unrestricted infeasible inputs receive priority for a SAT retry when eligible;
+both optional reductions are disabled. Restricted proofs are counted separately.
+No result is automatically called a counterexample.
 Contradictory positive and infeasible results for the same scoped input fail the run.
 
 The secondary experiment computes partial information about
@@ -228,8 +233,10 @@ your GitHub notification settings.
 
 The initial deterministic rules report:
 
-- Unrestricted CP-SAT infeasibility, explicitly labeled an uncertified result
+- Unrestricted solver infeasibility, explicitly labeled an uncertified result
   requiring independent investigation, never a confirmed counterexample.
+- A newly checked unrestricted UNSAT certificate, with a separate alert requesting
+  independent mathematical review of the input, translation, and proof.
 - A valid labeling for a tree of at least 20 vertices after at least three
   inconclusive unrestricted attempts spanning at least two runs. This is an
   algorithm-performance observation, not a claim of mathematical novelty.
@@ -255,7 +262,7 @@ To disable these alerts, remove or disable the workflow's `notify` job.
 
 ## How budgets, progress and priorities work
 
-The parent process owns a monotonic deadline. CP-SAT gets an individual time limit,
+The parent process owns a monotonic deadline. Each exact backend gets an individual time limit,
 and a separate process supervisor enforces the outer limit even if native solver
 code stalls. A persistent worker amortizes imports. SIGINT/SIGTERM stops new work,
 terminates the worker and writes the report. A hard OS kill can prevent finalization,
@@ -308,8 +315,9 @@ cover the HTML and figures. Matplotlib renders CPU-only SVG and PNG files with n
 GUI. A reusable temporary font cache avoids rescanning fonts during shutdown.
 
 Read `report.md`, then `analysis.json` for the full scientific context. The latter explicitly separates
-observations, proposed experiments/hypotheses, and mathematical proofs (none are
-generated). The rule-based analyzer groups by family **and order**, flags large
+observations and proposed experiments/hypotheses. The analyzer's `mathematical_proofs`
+list remains empty: scoped SAT certificates are separate solver evidence, not
+proofs of its suggested hypotheses. The rule-based analyzer groups by family **and order**, flags large
 branch-count outliers within an order, and exposes censored searches. Its solved-only
 runtime medians are not unbiased population estimates or significance tests.
 
@@ -326,8 +334,9 @@ Useful files in every run:
 | `attempts.jsonl`, `attempts.csv` | All attempts in this run, scope, seeds, model options, results, runtime, branches/conflicts and verifier output |
 | `attempts/NNNNNN/` | Request, result, CP model, explicit solver parameters, and response protobuf text when available |
 | `certificates/` | Independently checkable positive labelings from this run |
-| `research.sqlite` | Cumulative cases, generation cursors, run provenance and all attempts/witnesses across resumed runs |
-| `source/`, `verify.py` | Actual source snapshot and standalone verifier |
+| `unsat-certificates/` | Checked scoped SAT refutations; CNF, DRUP and parameters also remain in the attempt directory |
+| `research.sqlite` | Cumulative cases, generation cursors, run provenance, attempts, witnesses and UNSAT proof text across resumed runs |
+| `source/`, `verify.py`, `proof_verify.py` | Actual source snapshot and standalone positive/negative verifiers |
 | `checksums.json`, `checkpoint.json` | Transport-integrity hashes, not mathematical proof certificates |
 | `audit.json` | Result of a subsequent audit |
 
@@ -344,7 +353,8 @@ outcomes can change with CPU, OS, solver version, or surrounding load. OR-Tools
 defaults are determined by the recorded exact version; all overridden parameters
 are saved. Model text is an input artifact, not an UNSAT certificate.
 
-`graceful-research audit` also reverifies every historical positive labeling in
+`graceful-research audit` also reverifies every historical positive labeling and every
+claimed checked UNSAT certificate in
 the cumulative ledger, including witnesses from earlier nightly runs.
 
 Inspect cumulative evidence with SQLite, for example:
@@ -357,8 +367,8 @@ SELECT data FROM attempts WHERE scope = 'graceful' AND status = 'solver_infeasib
 
 On a suspected unrestricted infeasible result: first check the numbered input and
 model domains, rerun without reductions and with a fresh seed, compare an independent
-SMT/backtracking implementation, then implement or commission a proof-logging SAT
-encoding and independently validate its certificate. Preserve the original evidence.
+SMT/backtracking implementation, then replay using `--backend sat` and independently
+validate its certificate with a separate checker. Preserve the original evidence.
 Publish a counterexample claim only after independent mathematical investigation.
 
 ## Architecture and extension points
@@ -366,9 +376,9 @@ Publish a counterexample claim only after independent mathematical investigation
 ```text
 configs → TreeStream → exact deduplication → SQLite inputs/cursors
                          ↓                       ↑
-                   budgeted scheduler → isolated witness/CP-SAT worker
+                   budgeted scheduler → isolated construction/CP-SAT/SAT worker
                          ↓                       ↓
-                   parent verifier ← positive witness
+                   parent verifiers ← witness or scoped UNSAT certificate
                          ↓
              attempts + certificates → rule-based analysis → Markdown/JSON/CSV
                          ↓

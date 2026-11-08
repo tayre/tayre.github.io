@@ -19,18 +19,25 @@ def parser():
     run.add_argument("--budget-seconds", type=float)
     run.add_argument("--max-cases", type=int)
     run.add_argument("--seed", type=int)
+    run.add_argument("--backend", choices=("cp-sat", "sat"))
     audit = commands.add_parser("audit", help="audit saved evidence, counts and checksums")
     audit.add_argument("directory", type=Path)
     verify = commands.add_parser(
         "verify", help="verify a positive certificate or certificate directory"
     )
     verify.add_argument("path", type=Path)
+    proof = commands.add_parser(
+        "verify-unsat", help="independently check a scoped DRUP certificate"
+    )
+    proof.add_argument("path", type=Path)
+    proof.add_argument("--seconds", type=float, default=30)
     replay = commands.add_parser(
         "replay", help="replay a saved attempt with its logged seed and model options"
     )
     replay.add_argument("attempt", type=Path, help="result.json or request.json")
     replay.add_argument("--output", type=Path, required=True)
     replay.add_argument("--seconds", type=float, help="optional replacement solver time limit")
+    replay.add_argument("--backend", choices=("cp-sat", "sat"), help="optional independent backend")
     return result
 
 
@@ -46,6 +53,8 @@ def replay(args):
     args.output.mkdir(parents=True, exist_ok=True)
     write_json(args.output / "provenance.json", provenance(args.output.resolve()))
     request["directory"] = str(args.output.resolve())
+    if args.backend is not None:
+        request["backend"] = args.backend
     if args.seconds is not None:
         if not 0.001 <= args.seconds <= 604800:
             raise ValueError("--seconds must be in [0.001, 604800]")
@@ -73,8 +82,24 @@ def replay(args):
                 },
             )
     write_json(args.output / "result.json", {**result, "request": request})
+    if result.get("proof_certificate_verified"):
+        from .proof_verify import verify_record
+
+        check = verify_record(
+            {**result, "input": request["input"], "restriction": request["restriction"]},
+            deadline=time.monotonic() + min(30, request["solver_seconds"]),
+        )
+        if not check["valid"]:
+            result.update(proof_certificate_verified=False, proof_check=check)
+            if not check.get("timed_out"):
+                result["status"] = "integrity_error"
+        else:
+            write_json(args.output / "unsat-certificate.json", result["proof_certificate"])
+        write_json(args.output / "result.json", {**result, "request": request})
     print(json.dumps({"status": result["status"], "output": str(args.output)}, indent=2))
-    return int(result["status"] in {"error", "invalid_solution", "model_invalid"})
+    return int(
+        result["status"] in {"error", "invalid_solution", "model_invalid", "integrity_error"}
+    )
 
 
 def main(argv=None):
@@ -84,6 +109,10 @@ def main(argv=None):
             from .verify import main as verify_main
 
             return verify_main([str(args.path)])
+        if args.command == "verify-unsat":
+            from .proof_verify import main as proof_main
+
+            return proof_main([str(args.path), "--seconds", str(args.seconds)])
         if args.command == "audit":
             from .audit import audit_run
 
@@ -97,7 +126,7 @@ def main(argv=None):
         from .runner import cancellation_signals, run
 
         config = Config.read(args.config)
-        for field in ("budget_seconds", "max_cases", "seed"):
+        for field in ("budget_seconds", "max_cases", "seed", "backend"):
             value = getattr(args, field)
             if value is not None:
                 setattr(config, field, value)

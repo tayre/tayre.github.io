@@ -8,13 +8,14 @@ from .analysis import summarize
 from .findings import build_findings
 from .io import sha256
 from .progress import REPORT_FILES, build_progress
+from .proof_verify import verify_record
 from .trees import canonical_code, to_graph, tree_id
 from .verify import verify_certificate, verify_labeling, verify_tree
 
 
 def audit_ledger(database):
     """Reverify ALL historical witnesses, including those restored from prior runs."""
-    errors, checked = [], 0
+    errors, checked, proofs_checked = [], 0, 0
     cases = {}
     for identity, raw in database.execute("SELECT tree_id,data FROM cases"):
         case = json.loads(raw)
@@ -51,8 +52,14 @@ def audit_ledger(database):
             or edge_key != "-".join(map(str, restriction.get("edge", [])))
         ):
             errors.append(f"{prefix}: restriction/key mismatch")
-        if record.get("proof_certificate_verified") is not False:
-            errors.append(f"{prefix}: unsupported independent UNSAT proof claim")
+        if record.get("proof_certificate_verified") is True:
+            check = verify_record(record)
+            if check["valid"]:
+                proofs_checked += 1
+            else:
+                errors.append(f"{prefix}: invalid UNSAT proof: {check['errors']}")
+        elif record.get("proof_certificate_verified") is not False:
+            errors.append(f"{prefix}: invalid independent UNSAT proof flag")
         if record.get("labels") is not None:
             checked += 1
             check = verify_labeling(
@@ -75,7 +82,7 @@ def audit_ledger(database):
     for key, statuses in scoped_statuses.items():
         if {"verified_graceful", "solver_infeasible"} <= statuses:
             errors.append(f"contradictory solver evidence: {key}")
-    return checked, errors
+    return checked, proofs_checked, errors
 
 
 def audit_run(output):
@@ -83,6 +90,7 @@ def audit_run(output):
     errors = []
     checked = 0
     ledger_checked = 0
+    proofs_checked = 0
     try:
         manifest = json.loads((output / "manifest.json").read_text())
         checksums = json.loads((output / "checksums.json").read_text())
@@ -99,6 +107,8 @@ def audit_run(output):
             required.update(REPORT_FILES)
         if manifest.get("findings_schema_version") == 1:
             required.add("findings.json")
+        if manifest.get("proof_evidence_schema_version") == 1:
+            required.update(("verify.py", "proof_verify.py"))
         if not required <= checksums.keys():
             errors.append("required files absent from checksum manifest")
         for relative, expected in checksums.items():
@@ -130,6 +140,7 @@ def audit_run(output):
                 errors.append("duplicate certificate attempt_id")
             certificates[certificate["attempt_id"]] = certificate
         valid_ids = set()
+        proof_files = set()
         for record in records:
             prefix = f"attempt {record['attempt_id']}"
             data = record["input"]
@@ -141,8 +152,28 @@ def audit_run(output):
             restriction = record.get("restriction")
             if (record["scope"] == "graceful") != (restriction is None):
                 errors.append(f"{prefix}: scope/restriction mismatch")
-            if record.get("proof_certificate_verified") is not False:
-                errors.append(f"{prefix}: unsupported infeasibility certificate claim")
+            if record.get("proof_certificate_verified") is True:
+                proof_name = Path(record["files"]).name + ".json"
+                proof_files.add(proof_name)
+                saved_proof = output / "unsat-certificates" / proof_name
+                if not saved_proof.is_file() or json.loads(saved_proof.read_text()) != record.get(
+                    "proof_certificate"
+                ):
+                    errors.append(f"{prefix}: missing or mismatched UNSAT certificate")
+                model_path = (output / record["files"] / "model.cnf").resolve()
+                proof_path = (output / record["files"] / "proof.drup").resolve()
+                certificate = record.get("proof_certificate") or {}
+                for path, key in ((model_path, "cnf_sha256"), (proof_path, "proof_sha256")):
+                    if (
+                        not path.is_relative_to(output)
+                        or not path.is_file()
+                        or sha256(path) != certificate.get(key)
+                    ):
+                        errors.append(
+                            f"{prefix}: saved SAT evidence differs from proof certificate"
+                        )
+            elif record.get("proof_certificate_verified") is not False:
+                errors.append(f"{prefix}: invalid infeasibility certificate flag")
             if record.get("labels") is not None:
                 check = verify_labeling(data["n"], data["edges"], record["labels"], restriction)
                 if not check["valid"] or record.get("verification") != check:
@@ -166,6 +197,8 @@ def audit_run(output):
                 errors.append(f"{prefix}: {record['status']}")
         if set(certificates) != valid_ids:
             errors.append("certificate set differs from verified attempt set")
+        if {p.name for p in (output / "unsat-certificates").glob("*.json")} != proof_files:
+            errors.append("UNSAT certificate set differs from certified attempt set")
         with sqlite3.connect(f"file:{output / 'research.sqlite'}?mode=ro", uri=True) as database:
             if database.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
                 errors.append("SQLite integrity check failed")
@@ -175,7 +208,7 @@ def audit_run(output):
             ).fetchall()
             if [json.loads(row[0]) for row in rows] != records:
                 errors.append("JSONL attempts differ from cumulative ledger")
-            ledger_checked, ledger_errors = audit_ledger(database)
+            ledger_checked, proofs_checked, ledger_errors = audit_ledger(database)
             errors.extend(ledger_errors)
             if manifest.get("findings_schema_version") == 1:
                 findings = json.loads((output / "findings.json").read_text())
@@ -197,5 +230,5 @@ def audit_run(output):
         "certificates_checked": checked,
         "cumulative_labelings_checked": ledger_checked,
         "errors": errors,
-        "infeasibility_proofs_checked": 0,
+        "infeasibility_proofs_checked": proofs_checked,
     }

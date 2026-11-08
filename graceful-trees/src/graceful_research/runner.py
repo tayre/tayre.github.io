@@ -14,6 +14,7 @@ from .analysis import extreme_profiles, write_reports
 from .findings import build_findings
 from .io import provenance, sha256, utc_now, write_checksums, write_json
 from .progress import build_progress
+from .proof_verify import verify_record
 from .storage import ERROR_STATUSES, Store
 from .trees import TreeStream, derived_seed, edge_orbits, to_graph
 from .verify import verify_labeling
@@ -66,7 +67,8 @@ def run(config, output, resume=None, cancelled=lambda: False):
         "stop_reason": "running",
         "generated": 0,
         "duplicates": 0,
-        "proof_certificates_supported": False,
+        "proof_certificates_supported": True,
+        "proof_evidence_schema_version": 1,
     }
     write_json(output / "config.json", config.as_dict())
     write_json(output / "manifest.json", manifest)
@@ -88,6 +90,11 @@ def run(config, output, resume=None, cancelled=lambda: False):
         directory.mkdir(parents=True, exist_ok=True)
         seed = derived_seed(config.seed, case["tree_id"], scope, edge_key, len(previous))
         investigate_infeasible = any(r["status"] == "solver_infeasible" for r in previous)
+        backend = config.backend
+        if restriction and config.probe_backend != "same":
+            backend = config.probe_backend
+        if investigate_infeasible and config.certify_infeasible and case["n"] <= 75:
+            backend = "sat"
         allowance = min(seconds, max(0.001, deadline - time.monotonic() - 0.02))
         request = {
             "input": {"n": case["n"], "edges": case["edges"]},
@@ -98,10 +105,18 @@ def run(config, output, resume=None, cancelled=lambda: False):
             "complement_break": config.complement_break and not investigate_infeasible,
             "redundant_sum": config.redundant_sum and not investigate_infeasible,
             "constructive_search": config.constructive_search,
+            "backend": backend,
         }
         write_json(directory / "request.json", request)
         write_json(output / "inputs" / f"{case['tree_id']}.json", case)
         result = supervisor.solve(request, deadline)
+        if result.get("proof_certificate_verified") is True:
+            proof_record = {**result, "input": request["input"], "restriction": restriction}
+            check = verify_record(proof_record, deadline=deadline)
+            result["proof_check"] = check
+            result["proof_certificate_verified"] = check["valid"]
+            if not check["valid"] and not check.get("timed_out"):
+                result.update(status="integrity_error", error="parent rejected UNSAT certificate")
         if result.get("labels") is not None:
             result["verification"] = verify_labeling(
                 case["n"], case["edges"], result["labels"], restriction
@@ -143,6 +158,10 @@ def run(config, output, resume=None, cancelled=lambda: False):
         store.add_attempt(record)
         records.append(record)
         write_json(directory / "result.json", record)
+        if record.get("proof_certificate_verified"):
+            write_json(
+                output / "unsat-certificates" / f"{index:06d}.json", record["proof_certificate"]
+            )
         with (output / "attempts.jsonl").open("a") as handle:
             handle.write(json.dumps(record, sort_keys=True, allow_nan=False) + "\n")
             handle.flush()
@@ -215,8 +234,14 @@ def run(config, output, resume=None, cancelled=lambda: False):
                     prior = store.attempts(
                         tree_id=case["tree_id"], scope="extreme_edge", edge_key=key
                     )
-                    if any(
-                        r["status"] in {"verified_graceful", "solver_infeasible"} for r in prior
+                    if any(r["status"] == "verified_graceful" for r in prior):
+                        continue
+                    if any(r.get("proof_certificate_verified") for r in prior):
+                        continue
+                    if any(r["status"] == "solver_infeasible" for r in prior) and not (
+                        config.certify_infeasible
+                        or config.probe_backend == "sat"
+                        or config.backend == "sat"
                     ):
                         continue
                     if len(prior) >= config.max_attempts_per_case:
@@ -308,5 +333,6 @@ def run(config, output, resume=None, cancelled=lambda: False):
             },
         )
         shutil.copyfile(Path(__file__).with_name("verify.py"), output / "verify.py")
+        shutil.copyfile(Path(__file__).with_name("proof_verify.py"), output / "proof_verify.py")
         write_checksums(output)
     return manifest, int(failed)

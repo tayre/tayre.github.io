@@ -65,6 +65,8 @@ def test_actual_run_exports_only_audited_statistics(audited):
     assert feed["cumulative"]["verified_graceful"] == 5
     assert feed["certificate_verified_infeasible"] == 0
     assert feed["audit"]["passed"] is True
+    assert feed["proof_evidence_schema_version"] == 1
+    assert feed["proof_counts"]["total_attempts"] == feed["audit"]["infeasibility_proofs_checked"]
     assert feed["workflow"]["artifact_url"].endswith("/runs/123/artifacts/456")
     for secret_field in ("directory", "git_status", "processor", "GITHUB_TOKEN", "request"):
         assert secret_field not in json.dumps(feed)

@@ -31,7 +31,7 @@ be confused with the universal conjecture.
 | Tabu / randomized local search | Swap labels to reduce missing differences. Useful witness finder; failure supplies no infeasibility evidence. |
 | CP / CP-SAT | Bounded integer labels, `AllDifferent`, absolute equalities and distinct differences directly express the definition. CP-SAT combines propagation and SAT search [4]. Selected for v1. |
 | SMT | The same bounded-integer model can use Z3 `Distinct` and `If` to encode absolute differences [5]. A separate implementation is a useful cross-check; an UNSAT answer alone is not an independently checked proof. |
-| SAT + certificates | One-hot vertex assignments, exactly-one constraints, and implications to edge-difference variables give a finite CNF encoding. A proof-logging SAT solver plus DRAT/LRAT checking could certify UNSAT [6]. The graph-to-CNF translation must itself be audited. Not implemented in v1. |
+| SAT + certificates | One-hot vertex assignments and implications to edge-difference variables give an exact CNF. The implemented Glucose 4.1 backend emits DRUP; an independent checker regenerates the scoped CNF and checks every proof addition [6]. A Lean lemma covers the schema's completeness, not the entire Python pipeline. See [encoding and trust boundary](sat-certificates.md). |
 | Graph isomorphism | NetworkX's nonisomorphic-tree generator avoids repeated free trees [7]. Exact center/root encodings additionally deduplicate sampled trees. General graph isomorphism machinery is unnecessary for trees. |
 
 ## Exact model and safe optimizations

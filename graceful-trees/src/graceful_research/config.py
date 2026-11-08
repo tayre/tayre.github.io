@@ -45,6 +45,9 @@ class Config:
     complement_break: bool = True
     redundant_sum: bool = True
     constructive_search: bool = True
+    backend: str = "cp-sat"
+    probe_backend: str = "same"
+    certify_infeasible: bool = True
 
     def validate(self):
         for name, low, high in (
@@ -95,9 +98,24 @@ class Config:
             raise ValueError(f"families must be drawn from {FAMILIES}")
         if len(set(self.families)) != len(self.families):
             raise ValueError("families must not repeat")
-        for name in ("complement_break", "redundant_sum", "constructive_search"):
+        for name in (
+            "complement_break",
+            "redundant_sum",
+            "constructive_search",
+            "certify_infeasible",
+        ):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"{name} must be boolean")
+        if not isinstance(self.backend, str) or self.backend not in {"cp-sat", "sat"}:
+            raise ValueError("backend must be cp-sat or sat")
+        if not isinstance(self.probe_backend, str) or self.probe_backend not in {
+            "same",
+            "cp-sat",
+            "sat",
+        }:
+            raise ValueError("probe_backend must be same, cp-sat or sat")
+        if self.backend == "sat" and any(n > 75 for n in self.sample_sizes):
+            raise ValueError("SAT sampling currently supports at most 75 vertices")
         if not self.exhaustive_sizes and not (self.sample_sizes and self.families):
             raise ValueError("at least one generation stream is required")
         return self

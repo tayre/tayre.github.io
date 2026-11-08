@@ -18,5 +18,7 @@
   "probe_max_attempts": 40,
   "complement_break": true,
   "redundant_sum": true,
-  "constructive_search": true
+  "constructive_search": true,
+  "probe_backend": "sat",
+  "certify_infeasible": true
 }

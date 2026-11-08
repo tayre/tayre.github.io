@@ -47,6 +47,8 @@ def solve(request):
     data = request["input"]
     directory = Path(request["directory"])
     directory.mkdir(parents=True, exist_ok=True)
+    if request.get("backend", "cp-sat") not in {"cp-sat", "sat"}:
+        raise ValueError("unsupported solver backend")
     # An old saved request without this option must replay the original CP-SAT path.
     # Restricted probes always use the exact model, including negative controls.
     if request.get("constructive_search", False) and request["restriction"] is None:
@@ -68,6 +70,11 @@ def solve(request):
                 "timed_out": False,
                 "wall_seconds": time.monotonic() - started,
             }
+
+    if request.get("backend", "cp-sat") == "sat":
+        from .sat_solver import solve_sat
+
+        return solve_sat(request)
 
     # Avoid loading the solver and its dependencies for construction-only workers.
     from google.protobuf import text_format

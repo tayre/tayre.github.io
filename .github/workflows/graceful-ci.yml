@@ -43,11 +43,16 @@ jobs:
         run: |
           graceful-research run --config configs/exhaustive-small.json --output results/ci --budget-seconds 20 --max-cases 25
           graceful-research audit results/ci
+          graceful-research run --config configs/sat-certificates.json --output results/ci-sat --budget-seconds 20
+          graceful-research audit results/ci-sat
+          python3 -S results/ci-sat/proof_verify.py results/ci-sat/unsat-certificates
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: graceful-ci-${{ github.run_id }}-${{ github.run_attempt }}
-          path: graceful-trees/results/ci/
+          path: |
+            graceful-trees/results/ci/
+            graceful-trees/results/ci-sat/
           retention-days: 7
           if-no-files-found: warn
 

@@ -1,0 +1,19 @@
+{
+  "campaign": "sat-certificates-v1",
+  "seed": 20261108,
+  "budget_seconds": 60,
+  "finalize_reserve_seconds": 5,
+  "attempt_seconds": 2,
+  "retry_seconds": 5,
+  "max_cases": 100,
+  "max_generated": 500,
+  "exhaustive_sizes": [1, 2, 3, 4, 5, 6, 7],
+  "sample_sizes": [],
+  "families": [],
+  "probe_max_n": 7,
+  "probe_max_attempts": 50,
+  "probe_budget_fraction": 0.3,
+  "backend": "sat",
+  "probe_backend": "sat",
+  "constructive_search": false
+}

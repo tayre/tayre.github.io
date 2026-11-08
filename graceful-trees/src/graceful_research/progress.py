@@ -24,7 +24,7 @@ OUTCOMES = ("verified_graceful", "unknown", "solver_infeasible", "errors")
 LABELS = {
     "verified_graceful": "Verified graceful",
     "unknown": "Unresolved",
-    "solver_infeasible": "Solver infeasible (uncertified)",
+    "solver_infeasible": "Solver infeasible",
     "errors": "Errors",
 }
 
@@ -48,6 +48,7 @@ def compact_record(record):
         "wall_seconds",
         "solver_wall_seconds",
         "timed_out",
+        "proof_certificate_verified",
     )
     result = {key: record[key] for key in keys if key in record}
     result["input"] = {"n": record["input"]["n"]}
@@ -58,7 +59,9 @@ def remember(final, counts, record):
     previous = final.get(record["tree_id"])
     if (
         previous
-        and previous["status"] == "verified_graceful"
+        and (
+            previous["status"] == "verified_graceful" or previous.get("proof_certificate_verified")
+        )
         and record["status"] != "verified_graceful"
     ):
         return
@@ -91,6 +94,7 @@ def build_progress(database, manifest):
     outcomes, current_outcomes = Counter(), Counter()
     totals, current_totals = Counter(), Counter()
     history, runtime = [], []
+    proofs, certified_trees = Counter(), set()
     runs = database.execute("SELECT run_id,manifest FROM runs ORDER BY rowid").fetchall()
     for run_id, raw in runs:
         info = manifest if run_id == manifest["run_id"] else json.loads(raw)
@@ -100,6 +104,10 @@ def build_progress(database, manifest):
             "SELECT data FROM attempts WHERE run_id=? ORDER BY attempt_id", (run_id,)
         ):
             record = compact_record(json.loads(raw_record))
+            if record.get("proof_certificate_verified"):
+                proofs["unrestricted" if record["scope"] == "graceful" else "restricted"] += 1
+                if record["scope"] == "graceful":
+                    certified_trees.add(record["tree_id"])
             current = run_id == manifest["run_id"]
             for counter in (totals, current_totals) if current else (totals,):
                 counter["attempts"] += 1
@@ -145,12 +153,12 @@ def build_progress(database, manifest):
         for counter in (sizes[record["input"]["n"]], families[record["family"]]):
             counter[outcome(record["status"])] += 1
             counter["trees"] += 1
-    return {
+    result = {
         "schema_version": 1,
         "campaign": manifest["config"]["campaign"],
         "run_id": manifest["run_id"],
         "basis": "Distinct trees with unrestricted attempts; positive witnesses take precedence.",
-        "certificate_verified_infeasible": 0,
+        "certificate_verified_infeasible": len(certified_trees),
         "cumulative": {
             **count_snapshot(final, outcomes, totals),
             "runs": len(history),
@@ -169,3 +177,11 @@ def build_progress(database, manifest):
         "family_sizes": summarize(list(final.values()))["families"],
         "runtime": runtime,
     }
+    if manifest.get("proof_evidence_schema_version") == 1:
+        result["proof_evidence_schema_version"] = 1
+        result["proof_counts"] = {
+            "unrestricted_attempts": proofs["unrestricted"],
+            "restricted_attempts": proofs["restricted"],
+            "total_attempts": sum(proofs.values()),
+        }
+    return result
