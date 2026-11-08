@@ -4,7 +4,7 @@ A buildless, touch-friendly scorekeeper at `/flip7/`. Choose 1–18 players, ent
 
 Setup shows **Min 1 · Max 18 players** beside the player selector; the minus and plus controls stop at those limits. Scoring help explains the [official player guidance](https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2025/12/FLIP_7-RULES.pdf): standard play is for 3 or more, with a second deck recommended above 18. For 1–2 players, the rules suggest trying to reach 200 in as few rounds as possible. The scorekeeper's 18-player limit is separate from the physical game's guidance.
 
-A minimal cream-and-green layout keeps scores and actions prominent. **Bust** and **Count points** are always on each player's card, including on phones. Four players and Save round fit at 320 × 568 with short names. iPads use larger cards in two columns. The number-card picker uses equally sized buttons in centered rows of 5, 4 and 4. The score editor keeps its action buttons visible while the card picker scrolls on short screens.
+A minimal cream-and-green layout keeps scores and actions prominent. **Bust** and **Count points** are always on each player's card, including on phones. Four players and Save round fit at 320 × 568 with short names. iPads use larger cards in two columns. The number-card picker uses equally sized buttons in centered rows of 5, 4 and 4. The score editor's **Bust** and **Use score** buttons are at least 72 px tall, with larger labels and more width for Bust. Both stay visible while the card picker scrolls on short screens.
 
 ## At the table
 

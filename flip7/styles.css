@@ -171,10 +171,11 @@ dialog::backdrop { background: #172b2599; }
 .keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
 .keypad button { min-height: 52px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); font-size: 25px; font-weight: 650; }
 .keypad button[data-key=clear], .keypad button[data-key=backspace] { font-size: 20px; color: var(--muted); }
-.score-footer { display: flex; flex-shrink: 0; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-.score-footer > .primary { flex: 1; }
-.bust-button { display: flex; flex-direction: column; gap: 1px; min-width: 96px; padding: 8px 12px; border-color: #e8dcd6; background: #faf5f2; color: #8d5148; font-size: 15px; }
-.bust-button span { font-size: 10px; font-weight: 500; }
+.score-footer { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.8fr); flex-shrink: 0; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.score-footer .button { min-width: 0; min-height: 72px; padding: 12px; font-size: 20px; }
+.score-footer > .primary { gap: 10px; }
+.bust-button { display: flex; flex-direction: column; gap: 3px; border-color: #e8dcd6; background: #faf5f2; color: #8d5148; }
+.bust-button span { font-size: 12px; font-weight: 500; }
 .card-picker-heading { display: flex; align-items: center; justify-content: space-between; margin: 13px 0 9px; font-size: 12px; }
 .card-picker-heading:first-child { margin-top: 2px; }
 .card-picker-heading > span { font-size: 10px; color: var(--muted); }
@@ -301,9 +302,7 @@ dialog::backdrop { background: #172b2599; }
   .entry-hint { font-size: 10px; margin: 2px 0 11px; }
   .keypad { gap: 6px; }
   .keypad button { min-height: 48px; font-size: 24px; }
-  .score-footer { padding-top: 11px; margin-top: 12px; gap: 9px; }
-  .score-footer .button { min-height: 49px; padding: 9px 12px; font-size: 15px; gap: 14px; }
-  .score-footer .bust-button { min-width: 88px; gap: 1px; padding: 6px 10px; }
+  .score-footer { padding-top: 11px; margin-top: 12px; }
   .card-picker-heading { font-size: 11px; margin: 10px 0 7px; }
   .card-picker-heading > span { font-size: 9px; }
   .number-cards button { height: 47px; font-size: 21px; }
