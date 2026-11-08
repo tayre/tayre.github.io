@@ -14,6 +14,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
   const repo = path.resolve(project, '..');
   const allowed = new Map([
     ['/', [path.join(repo, 'index.html'), 'text/html']],
+    ['/graceful-trees/', [path.join(project, 'index.html'), 'text/html']],
+    ['/hellinger-stability/', [path.join(repo, 'hellinger-stability/index.html'), 'text/html']],
     ...['app.js', 'data.mjs', 'style.css', 'icon.svg'].map(name => [`/graceful-trees/site/${name}`, [path.join(__dirname, name), name.endsWith('.css') ? 'text/css' : name.endsWith('.svg') ? 'image/svg+xml' : 'text/javascript']]),
   ]);
   const server = http.createServer(async (request, response) => {
@@ -23,6 +25,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${server.address().port}/`;
+  const dashboard = `${base}graceful-trees/`;
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH } : {}) });
   try {
     const context = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
@@ -31,7 +34,21 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     let mode = 'success', current = fixture(45);
     current.finished_at = new Date().toISOString();
     await context.route(FEED_URL, route => mode === 'success' ? route.fulfill({ json: current }) : route.abort());
-    await page.goto(base); await page.locator('#dashboard').waitFor({ state: 'visible' });
+    await page.goto(base);
+    assert.equal(await page.locator('h1').innerText(), 'Mathematical work');
+    await page.screenshot({ path: '/tmp/math-index-desktop.png', fullPage: true });
+    await page.setViewportSize({ width: 320, height: 844 });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+    await page.screenshot({ path: '/tmp/math-index-mobile.png', fullPage: true });
+    await page.getByRole('link', { name: 'A spectral remainder in the Hellinger-to-information implication', exact: true }).click();
+    assert.equal(new URL(page.url()).pathname, '/hellinger-stability/');
+    await page.getByRole('link', { name: 'Home', exact: true }).click();
+    await page.getByRole('link', { name: 'Graceful trees', exact: true }).click();
+    assert.equal(page.url(), dashboard);
+    await page.setViewportSize({ width: 1440, height: 1100 });
+    await page.locator('#dashboard').waitFor({ state: 'visible' });
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://tayre.github.io/graceful-trees/');
+    assert.equal(await page.getByRole('link', { name: 'Mathematical work', exact: true }).getAttribute('href'), '../');
     assert.equal(await page.locator('#verified-total').innerText(), '448');
     assert.equal(await page.locator('#unknown-total').innerText(), '2');
     assert.equal(await page.locator('#freshness').innerText(), 'Audited cloud snapshot');
@@ -99,10 +116,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     assert.deepEqual(errors, []);
     await context.close();
     const noJs = await browser.newContext({ javaScriptEnabled: false });
-    const staticPage = await noJs.newPage(); await staticPage.goto(base);
+    const staticPage = await noJs.newPage(); await staticPage.goto(dashboard);
     assert.ok(await staticPage.locator('noscript').isVisible());
     assert.ok(await staticPage.locator('#project-title').isVisible());
     await noJs.close();
-    console.log('Browser checks passed: desktop/mobile layouts, history slider, range, coverage, CSV, example, cached/error/stale/one-run states, text safety, and no-JS explanation.');
+    console.log('Browser checks passed: index links to both projects, dashboard at /graceful-trees/, desktop/mobile layouts, history slider, range, coverage, CSV, example, cached/error/stale/one-run states, text safety, and no-JS explanation.');
   } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

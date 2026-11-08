@@ -5,14 +5,17 @@ and independently verifies positive labeling witnesses, keeps inconclusive searc
 unresolved, and carries a cumulative research ledger between nightly GitHub Actions
 runs. No LLM, personal API key, or paid compute service is required.
 
-**[Watch the public research dashboard →](https://tayre.github.io/)**
+**[Watch the public research dashboard →](https://tayre.github.io/graceful-trees/)**
 
-The homepage shows the nightly campaign's cumulative progress, run history,
+The project page shows the nightly campaign's cumulative progress, run history,
 coverage by family and size, notable review items, and the latest evidence download.
 It explains the conjecture and the project's goals, including the limits of numerical
 evidence. Data updates automatically after a successful cloud audit. See
 [how the public dashboard works](docs/public-dashboard.md) for publication,
 maintenance, and browser checks.
+
+The [site index](https://tayre.github.io/) links to this project and the Hellinger
+research note.
 
 This is research software, not a proof of the conjecture. The literature already
 reports exhaustive verification through 35 vertices. Our small exhaustive runs

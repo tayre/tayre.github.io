@@ -1,10 +1,11 @@
-# Permit the research papers and their discovery pages.
+# Permit the research projects and their discovery pages.
 # Other paths retain the existing crawl restriction.
 User-agent: *
 Allow: /$
 Allow: /quantitative-depth-three/
 Allow: /switch-chain-gap/
 Allow: /hellinger-stability/
+Allow: /graceful-trees/
 Disallow: /
 
 Sitemap: https://tayre.github.io/quantitative-depth-three/sitemap.xml

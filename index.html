@@ -3,140 +3,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="Computational experiments on the Graceful Tree Conjecture: methods, verified labelings, unresolved cases, and cumulative results.">
-  <title>Graceful trees — computational experiments</title>
+  <meta name="description" content="Mathematical notes and computational research by Tom Ayre: graceful trees and a spectral remainder in the Hellinger-to-information implication.">
+  <title>Mathematical work — Tom Ayre</title>
   <link rel="canonical" href="https://tayre.github.io/">
-  <link rel="icon" href="graceful-trees/site/icon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="graceful-trees/site/style.css?v=2">
-  <script type="module" src="graceful-trees/site/app.js?v=3"></script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { max-width: 760px; margin: 60px auto; padding: 0 24px; background: #fff; color: #202020; font: 17px/1.6 Georgia, "Times New Roman", serif; }
+    h1, h2 { line-height: 1.3; color: #151515; }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    h2 { margin: 0 0 10px; font-size: 21px; font-weight: normal; }
+    p { margin: 8px 0; }
+    a { color: #164d8a; text-underline-offset: 3px; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible { outline: 2px solid #164d8a; outline-offset: 4px; }
+    .byline, .kind { color: #555; font-size: 15px; }
+    header { margin-bottom: 38px; }
+    article { margin: 0 0 32px; }
+    footer { border-top: 1px solid #d6d6d6; padding-top: 16px; margin-top: 38px; font-size: 14px; }
+    @media (max-width: 600px) { body { margin-block: 28px; padding-inline: 20px; font-size: 16px; } h1 { font-size: 28px; } h2 { font-size: 20px; } }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#progress">Skip to results</a>
   <header>
-    <h1>Graceful trees</h1>
-    <p class="byline">Computational experiments · <a href="mailto:ayre.tom@gmail.com">Tom Ayre</a></p>
-    <p>The <strong>Graceful Tree Conjecture</strong> states that every finite tree with <i>n</i> vertices can be labeled with the integers 0, …, <i>n</i> − 1, each used once, so that the absolute differences across its edges are exactly 1, …, <i>n</i> − 1.</p>
-    <p>This project searches for such labelings, independently verifies them, and studies difficult cases and restrictions on the labels. The goal is to contribute reproducible evidence and testable mathematical questions, or identify a counterexample that can be independently established.</p>
-    <nav aria-label="Page navigation">
-      <a href="#progress">Results</a> · <a href="#project">Method</a> · <a href="#references">References</a> · <a href="https://github.com/tayre/tayre.github.io/tree/master/graceful-trees">Source code</a>
-    </nav>
+    <h1>Mathematical work</h1>
+    <p class="byline">Tom Ayre · Research notes and computational experiments</p>
   </header>
-
   <main>
-    <section id="progress" aria-labelledby="progress-title">
-      <div class="section-heading">
-        <h2 id="progress-title">Results</h2>
-        <div class="data-status"><span id="freshness" data-state="loading">Loading results…</span> <button id="refresh" type="button" aria-label="Refresh research results">Refresh</button></div>
-      </div>
-      <p id="data-message" class="note" role="status">Reading the latest audited results from the nightly campaign.</p>
-      <noscript><p>JavaScript is needed for the graphs. The <a href="https://raw.githubusercontent.com/tayre/tayre.github.io/graceful-progress/campaigns/nightly-v1.json">public JSON data</a> and <a href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">workflow records</a> are also available.</p></noscript>
-      <p id="load-error" class="notice" hidden>Results could not be loaded. <a href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">Check the workflow records</a> or refresh this page. Missing data is not treated as zero.</p>
-      <div id="dashboard" hidden>
-        <table class="summary-table" aria-label="Cumulative nightly campaign results">
-          <thead><tr><th scope="col">Trees investigated</th><th scope="col">Verified graceful</th><th scope="col">Unresolved</th><th scope="col">Runs</th></tr></thead>
-          <tbody><tr><td id="trees-total">—</td><td id="verified-total">—</td><td id="unknown-total">—</td><td id="runs-total">—</td></tr></tbody>
-        </table>
-        <p class="note"><span id="verified-delta"></span> <span id="attempts-total"></span></p>
-        <p class="note">Solver-infeasible trees: <strong id="infeasible-total">—</strong>; of these, with independently checked proofs: <strong id="proof-total">—</strong>. <span id="error-total"></span></p>
-        <p class="note">Checked proofs for restricted edge experiments: <strong id="restricted-proof-total">—</strong>. These exclude a prescribed edge placement, not a graceful labeling of the tree.</p>
-        <p class="interpretation">A verified labeling establishes gracefulness for that tree. A timeout leaves the question unresolved. These experiments do not prove the conjecture.</p>
-
-        <figure class="research-figure" aria-labelledby="trend-title">
-          <div class="figure-heading">
-            <h3 id="trend-title">Progress by run</h3>
-            <div class="range-controls" role="group" aria-label="History range"><button type="button" data-range="30" aria-pressed="true">Last 30 runs</button> <button type="button" data-range="all" aria-pressed="false">All runs</button></div>
-          </div>
-          <div class="legend"><span class="legend-verified">Verified graceful</span><span class="legend-trees">Investigated</span><span class="legend-unknown">Unresolved</span></div>
-          <svg id="trend-chart" viewBox="0 0 740 270" role="img" aria-labelledby="chart-title chart-description"><title id="chart-title">Cumulative numbers of distinct trees</title><desc id="chart-description">Use the run selector or the history table for exact counts.</desc></svg>
-          <div class="run-picker"><label for="run-slider">Select run</label><input id="run-slider" type="range" min="0" max="0" value="0"><output id="run-selection" for="run-slider">—</output></div>
-          <p id="selected-run" class="note" aria-live="polite"></p>
-          <figcaption><strong>Figure 1.</strong> Cumulative counts of distinct trees with unrestricted searches. Runs are spaced evenly. Retries do not add trees; a verified witness remains valid after an inconclusive retry.</figcaption>
-        </figure>
-
-        <figure class="research-figure" aria-labelledby="coverage-title">
-          <div class="figure-heading"><h3 id="coverage-title">Coverage</h3><label class="group-control">Group by <select id="coverage-group"><option value="families">Tree family</option><option value="sizes">Tree size</option></select></label></div>
-          <p id="coverage-note" class="note"></p>
-          <div class="legend"><span class="legend-verified">Verified graceful</span><span class="legend-unknown">Unresolved</span><span class="legend-infeasible">Solver infeasible</span></div>
-          <div id="coverage-bars" class="coverage-bars"></div>
-          <figcaption><strong>Figure 2.</strong> <span id="coverage-scope">Distinct trees by generation source. Families may overlap; the first source is recorded.</span> All bars use the same count scale.</figcaption>
-        </figure>
-
-        <details class="history-details">
-          <summary>Run history <span id="history-count"></span></summary>
-          <div class="history-actions"><p class="note">Cumulative totals at the end of each run.</p><button id="download-csv" type="button">Export history CSV</button></div>
-          <div class="table-scroll" tabindex="0" role="region" aria-label="Run history"><table><thead><tr><th scope="col">Run</th><th scope="col">Started (UTC)</th><th scope="col">Investigated</th><th scope="col">Verified</th><th scope="col">Unresolved</th><th scope="col">Infeasible*</th><th scope="col">New trees</th></tr></thead><tbody id="history-rows"></tbody></table></div>
-          <p class="note">*Solver infeasibility and independently checked proof counts are reported separately above.</p>
-        </details>
-
-        <details class="run-details">
-          <summary>Latest run and evidence</summary>
-          <dl class="latest-details">
-            <div><dt>Finished (UTC)</dt><dd id="latest-finished">—</dd></div>
-            <div><dt>New trees</dt><dd id="latest-new">—</dd></div>
-            <div><dt>Research time / budget</dt><dd id="latest-budget">—</dd></div>
-            <div><dt>Stop reason</dt><dd id="latest-stop">—</dd></div>
-            <div><dt>Timeout attempts</dt><dd id="latest-timeouts">—</dd></div>
-          </dl>
-          <p><a id="latest-workflow" href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">Workflow run</a> · <a id="latest-artifact" href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">Download report and evidence</a></p>
-          <p class="note">The independent audit passed. Artifact downloads require GitHub sign-in and expire after 14 days. Public summary history is retained in Git.</p>
-        </details>
-
-        <details class="difficult-details">
-          <summary>Difficult cases in the latest run</summary>
-          <p class="note">Unresolved or solver-infeasible cases come first, followed by cases requiring more search work. Runtime depends on the model, seed, budget, and machine; it is not evidence against gracefulness.</p>
-          <div class="table-scroll" tabindex="0" role="region" aria-label="Difficult case results"><table><thead><tr><th scope="col">Tree / attempt</th><th scope="col">Source</th><th scope="col">Vertices</th><th scope="col">Outcome</th><th scope="col">Wall time</th><th scope="col">Branches</th></tr></thead><tbody id="difficult-rows"></tbody></table></div>
-        </details>
-
-        <section class="research-notes" aria-labelledby="findings-title">
-          <h3 id="findings-title">Observations</h3>
-          <div id="findings"></div>
-          <p class="note"><a href="https://github.com/tayre/tayre.github.io/issues?q=is%3Aissue+author%3Aapp%2Fgithub-actions+%22Graceful+trees%22">Review log</a>. Automated flags require human review and do not establish mathematical novelty.</p>
-        </section>
-        <details class="suggestion-details"><summary>Proposed experiments</summary><p class="note">Candidate questions and benchmarks; truth and novelty have not been established.</p><div id="suggestions"></div></details>
-        <p class="provenance"><span id="provenance"></span><br><a id="raw-data" href="https://raw.githubusercontent.com/tayre/tayre.github.io/graceful-progress/campaigns/nightly-v1.json">Download public data (JSON)</a></p>
-      </div>
-    </section>
-
-    <section id="project" aria-labelledby="project-title">
-      <h2 id="project-title">Method and limitations</h2>
-      <p>NetworkX generates non-isomorphic small trees and reproducible samples of larger trees. An exact isomorphism check removes duplicates. A known construction labels caterpillars directly; OR-Tools CP-SAT searches other trees. A SAT solver checks restricted edge experiments and can revisit infeasibility claims. A separate verifier checks that each input is a tree, that the vertex labels are a permutation of 0, …, <i>n</i> − 1, and that the edge differences are a permutation of 1, …, <i>n</i> − 1.</p>
-      <p>The system preserves inputs, seeds, solver versions, and verified labelings. Unresolved cases are retained for further search. A secondary experiment studies which edges can carry the largest difference. Infeasibility under that extra restriction does not imply that the tree is nongraceful.</p>
-      <p>CP-SAT infeasibility is recorded separately from timeouts. The SAT backend can save a checkable refutation: a separate checker reconstructs the constraints from the tree and verifies every proof step. Any unrestricted refutation would require independent mathematical review before a counterexample announcement. Exhaustive verification through 35 vertices has already been reported [<a href="#ref-fang">1</a>]; our smaller exhaustive runs test the implementation.</p>
-      <p class="note">Runs are scheduled daily at 06:23 UTC with a 30-minute research budget. Configuration changes trigger shorter validation runs. GitHub may delay or skip a scheduled job. The page displays the latest audited result, and marks stale data.</p>
-      <p><a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/docs/research.md">Detailed methodology</a> · <a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/formal/README.md">Lean proofs and scope</a> · <a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/README.md">Reproduction instructions</a> · <a href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">Scheduled runs</a></p>
-
-      <details class="example-details">
-        <summary>Example: a graceful labeling of a six-vertex tree</summary>
-        <figure class="example-figure">
-          <svg id="example-tree" viewBox="0 0 480 230" role="img" aria-labelledby="example-title example-desc">
-            <title id="example-title">A graceful labeling of a six-vertex tree</title>
-            <desc id="example-desc">Vertex labels 0, 5, 1, 2, 4, 3 give edge differences 5, 4, 3, 2, 1. This illustrative example is separate from campaign totals.</desc>
-            <g class="example-edges"><path d="M45 55L170 115L45 175M170 115H300L425 55M300 115L425 175"/></g>
-            <g class="example-differences" aria-hidden="true">
-              <g transform="translate(105 80)"><circle r="16"/><text y="5">5</text></g><g transform="translate(105 150)"><circle r="16"/><text y="5">4</text></g><g transform="translate(235 115)"><circle r="16"/><text y="5">3</text></g><g transform="translate(363 80)"><circle r="16"/><text y="5">2</text></g><g transform="translate(363 150)"><circle r="16"/><text y="5">1</text></g>
-            </g>
-            <g class="example-nodes" aria-hidden="true">
-              <g transform="translate(45 55)"><circle r="23"/><text y="8" data-node="0">0</text></g><g transform="translate(170 115)"><circle r="23"/><text y="8" data-node="1">5</text></g><g transform="translate(45 175)"><circle r="23"/><text y="8" data-node="2">1</text></g><g transform="translate(300 115)"><circle r="23"/><text y="8" data-node="3">2</text></g><g transform="translate(425 55)"><circle r="23"/><text y="8" data-node="4">4</text></g><g transform="translate(425 175)"><circle r="23"/><text y="8" data-node="5">3</text></g>
-            </g>
-          </svg>
-          <figcaption>Labels inside the vertices are 0 through 5. The five edge differences are 1 through 5.</figcaption>
-        </figure>
-        <p><button id="complement" type="button" aria-pressed="false">Complement labels</button> <span id="example-note" class="note" aria-live="polite">Replacing each label <i>x</i> by 5 − <i>x</i> preserves the differences.</span></p>
-      </details>
-    </section>
-
-    <section id="references" aria-labelledby="references-title">
-      <h2 id="references-title">References</h2>
-      <ol>
-        <li id="ref-fang">Wenjie Fang. <a href="https://arxiv.org/abs/1003.3045">A Computational Approach to the Graceful Tree Conjecture</a>, 2010.</li>
-        <li>R. E. L. Aldred and B. D. McKay. <a href="https://users.cecs.anu.edu.au/~bdm/papers/graceful.pdf">Graceful and harmonious labellings of trees</a>. <i>Bulletin of the ICA</i> 23 (1998), 69–72.</li>
-      </ol>
-    </section>
+    <article aria-labelledby="graceful-title">
+      <h2 id="graceful-title"><a href="graceful-trees/">Graceful trees</a></h2>
+      <p>An ongoing investigation of the Graceful Tree Conjecture. Verified labelings, checked proof certificates, and graphs of progress from nightly computational experiments.</p>
+      <p class="kind">Computational research · Ongoing</p>
+    </article>
+    <article aria-labelledby="hellinger-title">
+      <h2 id="hellinger-title"><a href="hellinger-stability/">A spectral remainder in the Hellinger-to-information implication</a></h2>
+      <p>A research note on a spectral remainder and a Boolean stability bound. Includes the paper, LaTeX source, and verification material.</p>
+      <p class="kind">Research note · <time datetime="2026-10-10">10 October 2026</time></p>
+    </article>
   </main>
   <footer>
-    <p><a href="mailto:ayre.tom@gmail.com">Tom Ayre</a> · <a href="https://github.com/tayre/tayre.github.io">Site source</a></p>
-    <p>Other work: <a href="hellinger-stability/">A spectral remainder in the Hellinger-to-information implication</a>.</p>
+    <a href="mailto:ayre.tom@gmail.com">Contact</a> · <a href="https://github.com/tayre/tayre.github.io">Source files</a>
   </footer>
 </body>
 </html>

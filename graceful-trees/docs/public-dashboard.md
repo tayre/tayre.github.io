@@ -1,10 +1,11 @@
-# Public research homepage
+# Public research dashboard
 
-The project homepage is **https://tayre.github.io/**. It is a buildless GitHub Pages
-site: the repository-root `index.html` uses `graceful-trees/site/` for its CSS,
-JavaScript, and small SVG icon. Tom's contact and existing Hellinger paper link
-remain in the footer. The site needs no API key, paid service, font CDN, or chart
-library.
+The project page is **https://tayre.github.io/graceful-trees/**. It is a buildless
+GitHub Pages site: `graceful-trees/index.html` uses its adjacent `site/` directory
+for CSS, JavaScript, and a small SVG icon. The repository-root `index.html` is a
+minimal index linking to the graceful-tree project and the Hellinger research
+note. The dashboard links back to that index and to the Hellinger paper. The site
+needs no API key, paid service, font CDN, or chart library.
 
 The presentation is a minimal academic page: one column, white background,
 serif body text, a compact results table, and numbered figures. Run details,
@@ -40,7 +41,7 @@ no inferred counts. Invalid or inconsistent data cannot populate the dashboard.
 The existing `graceful-research.yml` workflow has a separate **Publish public
 progress** job, after the research job. It is limited to successful independent
 audits of the nightly campaign on `master`. Other manually selected campaigns
-retain their own artifacts without changing the homepage's campaign.
+retain their own artifacts without changing the dashboard's campaign.
 
 `scripts/publish_dashboard.py` downloads the workflow's results artifact, verifies
 the selected files against saved SHA-256 checksums, checks the exact repository,
@@ -105,8 +106,8 @@ The Python tests include a real research run and independent audit before export
 tampered files, wrong provenance, failing audits, history rewrites, idempotency,
 network failure, and non-forced Git ref updates. Node tests cover count invariants,
 the graceful illustration, chart edge cases, incomplete coverage, stale timestamps,
-and CSV export. The regular CI workflow runs both suites when this project or the
-homepage changes.
+and CSV export. The regular CI workflow runs both suites when the project or site
+index changes.
 
 For browser QA, use an existing Playwright installation and Chromium:
 
@@ -116,14 +117,15 @@ PLAYWRIGHT_EXECUTABLE_PATH=/absolute/path/to/chromium \
 node site/browser.test.cjs
 ```
 
-The harness serves only the homepage and its assets on an ephemeral loopback port,
-uses explicit **synthetic test fixtures**, and does not contact or publish research
-results. It checks desktop and mobile layouts, chart navigation, coverage grouping,
+The harness serves the site index, both project pages, and dashboard assets on an
+ephemeral loopback port, uses explicit **synthetic test fixtures**, and does not
+contact or publish research results. It checks desktop and mobile layouts, chart navigation, coverage grouping,
 CSV download, stale/offline/unavailable states, safe text rendering, and the
 JavaScript-free project explanation. It writes inspection screenshots to `/tmp/`.
 Synthetic fixtures are never a production fallback. To preview real data, serve
 the repository root with `python3 -m http.server`; the page fetches the public cloud
-feed just as the hosted site does.
+feed just as the hosted site does. Open `/` for the index or `/graceful-trees/` for
+the dashboard.
 
 Snapshots with `proof_evidence_schema_version: 1` include `proof_counts` for
 unrestricted and restricted certified attempts. Their sum must equal the audit's
