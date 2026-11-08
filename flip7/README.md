@@ -2,7 +2,7 @@
 
 A buildless, touch-friendly scorekeeper at `/flip7/`. Choose 1–18 players, enter names, and tap a profile to choose from 29 emojis, including dragon, badger, snake, eagle, turtle and scorpion. Blank names become “Player 1”, etc. The player order stays stable while totals and leader labels update after each round. Each score card has a progress bar toward 200; scores above 200 remain visible while the bar stays full.
 
-A minimal cream-and-green layout keeps scores and actions prominent. **Bust** and **Count points** are always on each player's card, including on phones. Four players and Save round fit at 320 × 568 with short names. iPads use larger cards in two columns. The score editor keeps its action buttons visible while the card picker scrolls on short screens.
+A minimal cream-and-green layout keeps scores and actions prominent. **Bust** and **Count points** are always on each player's card, including on phones. Four players and Save round fit at 320 × 568 with short names. iPads use larger cards in two columns. The number-card picker uses equally sized buttons in centered rows of 5, 4 and 4. The score editor keeps its action buttons visible while the card picker scrolls on short screens.
 
 ## At the table
 

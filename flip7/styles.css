@@ -166,8 +166,10 @@ dialog::backdrop { background: #172b2599; }
 .card-picker-heading { display: flex; align-items: center; justify-content: space-between; margin: 13px 0 9px; font-size: 12px; }
 .card-picker-heading:first-child { margin-top: 2px; }
 .card-picker-heading > span { font-size: 10px; color: var(--muted); }
-.number-cards { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 6px; }
-.number-cards button { min-width: 0; height: 55px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font-size: 23px; font-weight: 700; }
+.number-cards { display: grid; grid-template-columns: repeat(10,minmax(0,1fr)); gap: 6px; }
+.number-cards button { grid-column: span 2; min-width: 0; height: 55px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font-size: 23px; font-weight: 700; }
+/* Center the four-card rows while keeping all thirteen buttons the same size. */
+.number-cards button:nth-child(6), .number-cards button:nth-child(10) { grid-column: 2 / span 2; }
 .number-cards button[aria-pressed=true] { background: var(--green); border-color: var(--green); color: white; }
 .modifier-cards { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 6px; }
 .modifier-cards button { min-width: 0; height: 46px; padding: 0; border: 1px solid #e4dcbf; border-radius: 8px; background: #f7f3e7; font-size: 17px; font-weight: 700; }
@@ -289,7 +291,6 @@ dialog::backdrop { background: #172b2599; }
   .score-footer .bust-button { min-width: 88px; gap: 1px; padding: 6px 10px; }
   .card-picker-heading { font-size: 11px; margin: 10px 0 7px; }
   .card-picker-heading > span { font-size: 9px; }
-  .number-cards { grid-template-columns: repeat(6,minmax(0,1fr)); }
   .number-cards button { height: 47px; font-size: 21px; }
   .modifier-cards { gap: 5px; }
   .modifier-cards button { height: 44px; font-size: 15px; }
@@ -315,7 +316,7 @@ dialog::backdrop { background: #172b2599; }
   .score-progress { width: calc(100% - 33px); margin-left: 33px; }
   .round-score { font-size: 12px; }
   .quick-bust { min-width: 46px; }
-  .number-cards, .emoji-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
+  .emoji-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
   .modifier-cards { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .round-bar .button { min-width: 126px; font-size: 13px; }
 }
