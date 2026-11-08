@@ -61,16 +61,13 @@ h1 { font-size: 38px; font-weight: 750; letter-spacing: -1.2px; line-height: 1.1
 .game-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 24px 0 18px; }
 .game-heading h1 { margin-top: 4px; font-size: 34px; outline: none; }
 .board-caption { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 12px; color: var(--muted); }
-.board-caption > div { min-width: 0; }
-.deal-order { overflow-wrap: anywhere; line-height: 1.4; }
-.deal-order strong { color: var(--green); }
-.next-deal { margin-top: 2px; font-size: 11px; }
 .small-pill { font-size: 11px; font-weight: 650; white-space: nowrap; }
 .scoreboard { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
 .player-card { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
 .player-card-heading { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .avatar { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; background: var(--player-color, #f6e7ba); font-size: 28px; flex-shrink: 0; }
 .player-card h2 { font-size: 20px; font-weight: 700; letter-spacing: -.4px; min-width: 0; overflow-wrap: anywhere; line-height: 1.2; }
+.first-card-badge { flex-shrink: 0; padding: 3px 5px; border-radius: 5px; background: var(--soft-green); color: var(--green); font-size: 10px; font-weight: 750; line-height: 1.2; }
 .leader-badge, .rank-label { margin-left: auto; flex-shrink: 0; font-size: 9px; font-weight: 650; color: var(--muted); }
 .leader-badge { padding: 5px 7px; border-radius: 5px; background: var(--soft-green); color: var(--green); }
 .total-line { display: flex; align-items: baseline; gap: 7px; margin: 12px 0 14px; }
@@ -237,7 +234,6 @@ dialog::backdrop { background: #172b2599; }
   .game-heading .eyebrow { font-size: 8px; letter-spacing: 1px; }
   .game-heading .quiet-button { font-size: 11px; padding: 8px 10px; }
   .board-caption { font-size: 11px; margin-bottom: 10px; }
-  .next-deal { font-size: 10px; }
   .small-pill { font-size: 10px; }
   .scoreboard { grid-template-columns: 1fr; gap: 8px; }
   .player-card { display: grid; grid-template-columns: minmax(0,1fr) 144px; grid-template-rows: auto auto 4px; gap: 2px 9px; min-height: 79px; padding: 10px; border-radius: 10px; }

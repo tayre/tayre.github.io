@@ -6,7 +6,7 @@ A minimal cream-and-green layout keeps scores and actions prominent. **Bust** an
 
 ## At the table
 
-- **First card** shows who receives the first deal this round, with the next round’s recipient underneath. The house rule keeps the same dealer: Player 1 receives first in round 1, then each player in setup order, wrapping back to Player 1. Tiebreak rounds keep rotating; undo restores the previous recipient. New games and rematches restart with Player 1.
+- A small **1st** badge beside a player’s name marks who gets the first card this round. The house rule keeps the same dealer: Player 1 receives first in round 1, then each player in setup order, wrapping back to Player 1. Tiebreak rounds keep rotating; undo restores the previous recipient. New games and rematches restart with Player 1.
 - Tap **Count points** to open the card calculator directly. Choose **Enter total** to use the large keypad or a physical keyboard instead. Manual scores accept whole numbers from 0 to 999; editing a saved manual entry returns to that keypad.
 - **Count cards** adds unique number cards from 0–12, optional +2/+4/+6/+8/+10 modifiers, ×2, and the automatic seven-card bonus. Tap a selected card again to remove it. Zero counts toward seven cards.
 - **Bust** records zero immediately from the main screen. Its selected state marks the player ready. Use **Count points** to correct a bust, or **Edit points** to change an entered score before saving the round.

@@ -182,19 +182,13 @@ function renderGame() {
   $('#game-eyebrow').textContent = won ? `${game.rounds.length} ROUNDS PLAYED` : 'FIRST TO 200';
   $('#recorded-count').textContent = won ? 'Final scores' : `${ready} / ${game.players.length} ready`;
   $('#round-instruction').textContent = won ? 'The scores are in. Time for a rematch?' : 'Bust or count your points.';
-  $('#deal-order').hidden = won;
-  if (!won) {
-    const first = firstRecipient(game);
-    const next = firstRecipient(game, round);
-    $('#first-recipient').textContent = `${first.emoji} ${first.name}`;
-    $('#next-recipient').textContent = `${next.emoji} ${next.name}`;
-  }
+  const firstId = won ? null : firstRecipient(game).id;
   $('#scoreboard').innerHTML = game.players.map((p, i) => {
     const entry = game.draft[i];
     const rank = scores.filter(score => score > scores[i]).length + 1;
     const leading = game.rounds.length > 0 && result.leaders.includes(i);
     const entryScore = entry === null ? null : scoreEntry(entry);
-    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : ''}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>of ${TARGET}</span></div><progress class="score-progress" max="${TARGET}" value="${Math.min(scores[i], TARGET)}" aria-label="${escapeHTML(p.name)}’s progress to ${TARGET} points" aria-valuetext="${scores[i]} points out of ${TARGET}">${scores[i]} / ${TARGET}</progress><div class="card-score-actions">${won ? `<span class="final-label">${leading ? 'Winner ✨' : 'Well played'}</span>` : `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted" aria-pressed="${entry?.kind === 'bust'}">Bust</button><button class="round-score${entry !== null && entry.kind !== 'bust' ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null && entry.kind !== 'bust' ? 'Edit round score' : 'Count points'} for ${escapeHTML(p.name)}">${entry !== null && entry.kind !== 'bust' ? `<span>+${entryScore}</span><small>Edit points</small>` : '<span>Count</span><span>points</span>'}</button>`}</div></article>`;
+    return `<article class="player-card${entry !== null ? ' is-ready' : ''}${won && leading ? ' is-winner' : ''}" style="--player-color:var(--player-${i % 6})"><div class="player-card-heading"><span class="avatar" aria-hidden="true">${p.emoji}</span><h2>${escapeHTML(p.name)}</h2>${p.id === firstId ? '<span class="first-card-badge" title="Gets the first card this round"><span aria-hidden="true">1st</span><span class="sr-only">Gets the first card this round</span></span>' : ''}${leading ? `<span class="leader-badge">${won ? 'WINNER' : 'LEADING'}</span>` : `<span class="rank-label">${game.rounds.length ? `#${rank}` : ''}</span>`}</div><div class="total-line"><strong class="player-total">${scores[i]}</strong><span>of ${TARGET}</span></div><progress class="score-progress" max="${TARGET}" value="${Math.min(scores[i], TARGET)}" aria-label="${escapeHTML(p.name)}’s progress to ${TARGET} points" aria-valuetext="${scores[i]} points out of ${TARGET}">${scores[i]} / ${TARGET}</progress><div class="card-score-actions">${won ? `<span class="final-label">${leading ? 'Winner ✨' : 'Well played'}</span>` : `<button class="quick-bust" data-bust="${p.id}" aria-label="Mark ${escapeHTML(p.name)} as busted" aria-pressed="${entry?.kind === 'bust'}">Bust</button><button class="round-score${entry !== null && entry.kind !== 'bust' ? ' entered' : ''}" data-score="${p.id}" aria-label="${entry !== null && entry.kind !== 'bust' ? 'Edit round score' : 'Count points'} for ${escapeHTML(p.name)}">${entry !== null && entry.kind !== 'bust' ? `<span>+${entryScore}</span><small>Edit points</small>` : '<span>Count</span><span>points</span>'}</button>`}</div></article>`;
   }).join('');
   $('#save-round').hidden = won;
   $('#save-round').disabled = ready !== game.players.length;
