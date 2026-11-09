@@ -21,6 +21,7 @@ Treehood is a separate precondition: these model lemmas work for any edge list.
 | [Constraints.lean](Graceful/Constraints.lean) | The explicit four-vertex path has a graceful labeling, but none with difference 3 on its middle edge. | The positive and negative controls in the Python tests. This proof is independent of CP-SAT. |
 | [Construction.lean](Graceful/Construction.lean) | Low/high interval assignments produce descending differences; assigning the next spine vertex last preserves the boundary arithmetic. | The arithmetic invariant of the caterpillar construction. |
 | [SAT.lean](Graceful/SAT.lean) | Every graceful labeling respecting the declared edge restriction satisfies every clause in the one-hot schema; refuting that schema excludes such a labeling. Row-major variable indices are injective and the X block ends before the Y block. | The mathematical interpretation of the SAT backend's scoped UNSAT proofs. |
+| [Search.lean](Graceful/Search.lean) | A remaining edge bounds its endpoint's label interval; distinct child labels cannot outnumber available interval labels; packed boundary fields are injective under the stated type-ID bound. | Necessary capacity pruning and exact boundary-field packing in `frontier_memo.py`. |
 
 The construction proofs cover **local arithmetic**, conditional on their stated
 bounds. Spine recognition, traversal coverage, the complete caterpillar theorem,
@@ -28,6 +29,10 @@ tree diameter, graph isomorphism, the CP-SAT encoding and the Python verifier ar
 not formalized here. They retain their mathematical arguments and independent
 tests. The mapping from Python code to these Lean statements remains a human
 review obligation; changing one does not automatically change the other.
+The residual-forest equivalence argument is documented in
+[techniques.md](../docs/techniques.md); rooted-type construction, memo-table control
+flow, and the complete search are not formalized in Lean. The Hall ablation is
+checked by permutation oracles and a separate exchange argument, not this library.
 
 No run result is promoted to a Lean-certified infeasibility result. The SAT schema
 proof is a mathematical model theorem; the Python serialization loops and DRUP

@@ -107,6 +107,7 @@ def run(config, output, resume=None, cancelled=lambda: False):
             "constructive_search": config.constructive_search,
             "frontier_search": config.frontier_search and not investigate_infeasible,
             "frontier_max_nodes": config.frontier_max_nodes,
+            "frontier_algorithm": config.frontier_algorithm,
             "backend": backend,
         }
         write_json(directory / "request.json", request)

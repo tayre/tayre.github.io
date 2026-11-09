@@ -1,5 +1,19 @@
 # Performance measurements — 8 November 2026
 
+## Residual-state portfolio
+
+The subsequent technique review found that memoization, label-capacity pruning
+and central roots complement the original candidate search. Replacing v1 outright
+regressed on the genuinely unseen subset of its first evaluation. The deployed
+portfolio therefore keeps v1 first and tries the second method in the same shared
+wall allowance. A separate 48-tree evaluation excluded all earlier tree shapes:
+**47 rather than 43 verified cases**, with median capped-workload time **1.413 rather
+than 5.236 seconds** across three repetitions (**3.71×** on that workload).
+
+See [techniques.md](techniques.md) for the prior work, failed replacement experiment,
+component ablations, proofs, exact inputs and limitations. These comparisons use
+different corpora from the historical passes below; do not multiply their ratios.
+
 ## Bounded frontier search
 
 The second pass adds an incomplete descending-difference witness search before
@@ -60,8 +74,9 @@ archive is `results/frontier-benchmark-v1/`. Its recorded Git commit is the base
 before the uncommitted optimization; the source hashes identify what was measured.
 This benchmark archive is not a campaign checkpoint for `graceful-research audit`.
 
-`frontier_search` is enabled by default and explicitly in the nightly configuration;
-`frontier_max_nodes` defaults to 20,000. Seeds and node limits make the search order
+`frontier_search` is enabled by default and explicitly in the nightly configuration.
+The v1 `frontier_max_nodes` was 20,000; the current portfolio permits 20,000 per
+stage, 40,000 in total, within the same wall allowance. Seeds and node limits make the search order
 reproducible; wall cutoffs can still vary by machine. Changing these options does
 not reset generation or rewrite earlier chart history. Restricted and SAT attempts
 skip the prepass. No additional exact-model constraint needs a new Lean proof;

@@ -78,12 +78,23 @@ def solve(request):
 
     frontier = None
     if request.get("frontier_search", False) and request["restriction"] is None:
-        from .frontier import search
+        # Requests saved before the second method retain their original algorithm.
+        algorithm = request.get("frontier_algorithm", "descending-frontier-v1")
+        if algorithm == "descending-frontier-v1":
+            from .frontier import search
+        elif algorithm == "memo-frontier-v2":
+            from .frontier_memo import search
+        elif algorithm == "portfolio-frontier-v3":
+            from .frontier_portfolio import search
+        else:
+            raise ValueError("unsupported frontier_algorithm")
 
         frontier = search(
             **data,
             seed=request["seed"],
-            max_nodes=request.get("frontier_max_nodes", 20000),
+            max_nodes=request.get(
+                "frontier_max_nodes", 40000 if algorithm == "portfolio-frontier-v3" else 20000
+            ),
             seconds=min(0.1, request["solver_seconds"] * 0.1),
         )
         write_json(directory / "frontier.json", frontier)

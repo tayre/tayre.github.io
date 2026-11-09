@@ -28,8 +28,8 @@ counts and downloadable, reproducible run archives.
 Selected mathematical safeguards now have [Lean proofs](formal/README.md), checked
 in CI with a pinned toolchain and an audit of their assumptions. These cover the
 complement symmetry reduction, difference-sum constraint, a restricted negative
-control, the local arithmetic of the caterpillar construction, and completeness
-of the SAT clause schema. They do not
+control, the local arithmetic of the caterpillar construction, completeness
+of the SAT clause schema, and necessary bounds used in candidate search. They do not
 formalize the whole Python program or prove the conjecture.
 
 Every run also produces an **offline visual progress report** (`report.html`),
@@ -97,8 +97,9 @@ budgets, retry quotas and probe settings may change on resume.
 
 `constructive_search` (default `true`) labels caterpillars directly using a known
 construction. For other unrestricted CP-SAT attempts, `frontier_search` (default
-`true`) first tries a bounded descending-difference witness search. It uses at most
-`frontier_max_nodes` (default 20,000) visited nodes, four starting vertices, and a
+`true`) first tries bounded descending-difference witness searches. The default
+portfolio uses at most `frontier_max_nodes` (40,000) visited nodes in total, at most
+20,000 per method and four starting vertices per method. Both methods share one
 wall allowance of 0.1 seconds or 10% of the attempt allowance, whichever is smaller.
 It only supplies candidate labelings; an unsuccessful search falls back to the
 unchanged exact model with the remaining allowance. SAT and restricted probes skip
@@ -107,6 +108,15 @@ restricted probes. Set **both** options to `false` for exact-solver-only compari
 These settings may change on resume without resetting the campaign. Each attempt
 records its method, seed and work limits. Old saved requests without these options
 replay the original exact route.
+
+`frontier_algorithm` selects `portfolio-frontier-v3` by default: try the original
+`descending-frontier-v1` first, then `memo-frontier-v2` if time and nodes remain.
+The second method remembers equivalent failed residual forests, rejects branches
+with too few eligible unused labels, and tries central roots first. Both individual
+methods remain selectable; old saved frontier requests without this field retain
+v1. The cache stores only fully explored failures within the heuristic's restricted search,
+never a cutoff or a proof about the whole tree. See the
+[technique review, correctness arguments and benchmarks](docs/techniques.md).
 
 ## Mathematical model and verification
 
@@ -165,13 +175,19 @@ For reproducible performance comparisons, run:
 ```sh
 python scripts/benchmark.py --output results/benchmark --attempt-seconds 1 --repeats 3
 python scripts/benchmark_frontier.py --output results/frontier-benchmark --attempt-seconds 1 --repeats 3
+python scripts/benchmark_techniques.py --output results/techniques-benchmark --attempt-seconds 1 --repeats 3
+python scripts/benchmark_portfolio.py --output results/portfolio-benchmark --attempt-seconds 1 --repeats 3
 ```
 
 The first compares direct caterpillar construction plus exact fallback with CP-SAT
 alone, and compares two-sweep with all-pairs diameters. The second measures the
 additional frontier prepass and graph-copy-free structural features. Both use the
 same saved inputs and seeds for each paired comparison, alternate execution order,
-and independently check every positive result. Run them without concurrent tests.
+and independently check every positive result. The third compares v1 and v2 on
+reference and separately generated held-out inputs, and saves seven component
+ablations on the reference corpus. That replacement regressed on the subset of
+previously unseen shapes. The fourth evaluates the resulting portfolio on 48
+unique trees, excluding every shape in the earlier corpora. Run without concurrent tests.
 The output retains requests, witnesses, source snapshots and exact versions. These
 are bounded benchmark results, not a campaign checkpoint; unknowns remain
 censored observations. See the [optimization measurements](docs/performance.md).
@@ -401,8 +417,9 @@ configs → TreeStream → exact deduplication → SQLite inputs/cursors
 ```
 
 `config.py` validates experiments; `trees.py` generates and identifies trees;
-`constructive.py` implements known-family witnesses; `frontier.py` provides bounded
-candidate search; `solver.py` owns the exact
+`constructive.py` implements known-family witnesses; `frontier.py` retains the v1
+candidate search, `frontier_memo.py` adds residual-state reuse, and
+`frontier_portfolio.py` shares the allowance between them; `solver.py` owns the exact
 model and fallback; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.

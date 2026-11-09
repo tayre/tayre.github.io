@@ -99,7 +99,7 @@ to apply is never an infeasibility result.
 ### Bounded frontier witness search
 
 `frontier.py` implements a candidate search inspired by Fang's descending-difference
-backtracking [1, §2.1]. This is an existing algorithmic idea, not a novelty claim.
+backtracking [2, §2.1]. This is an existing algorithmic idea, not a novelty claim.
 It grows a connected assigned region from a chosen vertex labeled zero, trying
 edge differences `n-1, n-2, ..., 1`. Each eligible unassigned vertex is adjacent to
 one assigned parent; its two candidate values are the parent's label plus or minus
@@ -130,9 +130,20 @@ Inputs above 256 vertices skip it to bound Python recursion. Seed, roots tried,
 visited nodes, limits, termination reason and candidate labels are saved. A wall
 cutoff can vary across machines. The exact fallback receives the remaining time.
 
-No new exact-model constraint was added, so the existing Lean model proofs apply
-unchanged. This Python heuristic is not itself formally verified. Its correctness
-boundary is the independently checked witness, not successful heuristic execution.
+The `memo-frontier-v2` method adds residual-forest failure caching, a
+necessary label-capacity check, and center-first root selection. The original
+`descending-frontier-v1` remains available, and saved requests without an algorithm
+field still select it. See [techniques.md](techniques.md) for prior work, the
+state-equivalence argument, ablations and fresh-input evaluation. The default
+`portfolio-frontier-v3` tries v1 and then v2 within a single shared wall allowance.
+Each stage receives at most 20,000 visited nodes (40,000 total by default); the
+exact fallback model is unchanged. This allows complementary methods without
+discarding the original method's early witnesses.
+
+Lean additionally checks the local capacity inequality and injectivity of packed
+boundary fields. Neither Python search is itself formally verified. Its
+correctness boundary is the independently checked witness, not successful
+heuristic execution. No new exact-model or symmetry-breaking constraint is added.
 
 ### Structural preprocessing
 

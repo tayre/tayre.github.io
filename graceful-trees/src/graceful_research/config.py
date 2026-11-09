@@ -46,7 +46,8 @@ class Config:
     redundant_sum: bool = True
     constructive_search: bool = True
     frontier_search: bool = True
-    frontier_max_nodes: int = 20000
+    frontier_max_nodes: int = 40000
+    frontier_algorithm: str = "portfolio-frontier-v3"
     backend: str = "cp-sat"
     probe_backend: str = "same"
     certify_infeasible: bool = True
@@ -112,6 +113,12 @@ class Config:
                 raise ValueError(f"{name} must be boolean")
         if not isinstance(self.backend, str) or self.backend not in {"cp-sat", "sat"}:
             raise ValueError("backend must be cp-sat or sat")
+        if not isinstance(self.frontier_algorithm, str) or self.frontier_algorithm not in {
+            "descending-frontier-v1",
+            "memo-frontier-v2",
+            "portfolio-frontier-v3",
+        }:
+            raise ValueError("unsupported frontier_algorithm")
         if not isinstance(self.probe_backend, str) or self.probe_backend not in {
             "same",
             "cp-sat",

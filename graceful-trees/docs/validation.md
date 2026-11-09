@@ -1,5 +1,41 @@
 # Initial validation record
 
+## Residual-search portfolio — 8 November 2026
+
+The complete suite passed **472 Python tests**, including the four real Lean
+rejection tests, and **26 dashboard tests**. Ruff lint and formatting checks passed.
+The new tests compare residual-state equivalence and capacity pruning against
+complete permutation oracles through six vertices, verify candidate witnesses on
+all 201 non-isomorphic trees through order 10, and exercise larger inputs, cache
+limits, interrupted searches, shared portfolio budgets and legacy replay. Exact
+fallback models remain byte-identical; restricted probes retain their separate scope.
+
+Lean 4.24.0 checked four additional named lemmas concerning necessary capacity
+bounds and packed-field injectivity. The library now has **27 named mathematical
+lemmas/theorems**; the transitive audit checked **115 declarations and 68 theorems
+including generated helpers**, using only the allowed standard logical axioms.
+This does not formalize the complete Python search or prove the conjecture.
+Local proof evidence is in `results/techniques-proofs-v1/`.
+
+A fresh smoke run verified all **100 unrestricted trees** and made 25 restricted
+CP-SAT probes: 21 witnesses and four uncertified solver-infeasible results. Its
+independent archive audit accepted **121 positive certificates**. A second run
+resumed the earlier checkpoint, verified all **40 unrestricted attempts**, and
+made 40 restricted SAT probes: 36 witnesses and four independently checked scoped
+UNSAT proofs. Its audit rechecked **421 cumulative positive labelings and 13 scoped
+negative certificates**. All five earlier chart-history rows were preserved
+exactly. Neither run had unknowns, errors or unrestricted infeasibility. Evidence
+is retained in `results/portfolio-smoke-v1/` and `results/portfolio-resume-v1/`.
+These are functional validations, not performance comparisons.
+
+A separate benchmark used 48 unique tree shapes excluded from both earlier
+evaluation corpora. Across three repetitions, the portfolio verified **47 rather
+than 43** trees, with median total workload time **1.413 rather than 5.236 seconds**
+under the same time allowances. The single unresolved input is not a counterexample.
+The [technique review](techniques.md) preserves the earlier replacement's regression,
+component ablations, exact inputs, source hashes and limitations. No mathematical
+or literature novelty is claimed.
+
 ## Frontier algorithm pass — 8 November 2026
 
 The complete suite passed **419 Python tests**, including the four real Lean

@@ -20,7 +20,8 @@
   "redundant_sum": true,
   "constructive_search": true,
   "frontier_search": true,
-  "frontier_max_nodes": 20000,
+  "frontier_max_nodes": 40000,
+  "frontier_algorithm": "portfolio-frontier-v3",
   "probe_backend": "sat",
   "certify_infeasible": true
 }

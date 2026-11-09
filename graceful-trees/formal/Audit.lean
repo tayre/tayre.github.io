@@ -23,7 +23,9 @@ run_cmd do
     ``Graceful.caterpillar_high_step, ``Graceful.caterpillar_low_transition,
     ``Graceful.caterpillar_high_transition,
     ``Graceful.SAT.witness_satisfies_clause, ``Graceful.SAT.unsat_excludes_graceful,
-    ``Graceful.SAT.row_major_injective, ``Graceful.SAT.x_block_bound]
+    ``Graceful.SAT.row_major_injective, ``Graceful.SAT.x_block_bound,
+    ``Graceful.remaining_edge_window, ``Graceful.distinct_subset_length,
+    ``Graceful.remaining_child_capacity, ``Graceful.boundary_fields_injective]
   for name in required do
     unless names.contains name do
       throwError "Required theorem missing from audit: {name}"
