@@ -25,7 +25,21 @@ run_cmd do
     ``Graceful.SAT.witness_satisfies_clause, ``Graceful.SAT.unsat_excludes_graceful,
     ``Graceful.SAT.row_major_injective, ``Graceful.SAT.x_block_bound,
     ``Graceful.remaining_edge_window, ``Graceful.distinct_subset_length,
-    ``Graceful.remaining_child_capacity, ``Graceful.boundary_fields_injective]
+    ``Graceful.remaining_child_capacity, ``Graceful.boundary_fields_injective,
+    ``Graceful.LeafTail.midpoint_iff, ``Graceful.LeafTail.midpoint_unique,
+    ``Graceful.LeafTail.reflected_differences,
+    ``Graceful.LeafTail.swapped_differences_reflect,
+    ``Graceful.LeafTail.two_distances_injective,
+    ``Graceful.LeafTail.reflected_pair_resources,
+    ``Graceful.LeafTail.candidate_difference_shape,
+    ``Graceful.LeafTail.lower_candidate_neighbor_unique,
+    ``Graceful.LeafTail.pair_contribution_append,
+    ``Graceful.LeafTail.pair_contribution_true,
+    ``Graceful.LeafTail.pair_contribution_false,
+    ``Graceful.LeafTail.pair_contribution_bounds,
+    ``Graceful.LeafTail.pair_choices_exact,
+    ``Graceful.LeafTail.quota_criterion,
+    ``Graceful.LeafTail.extreme_pair_quota]
   for name in required do
     unless names.contains name do
       throwError "Required theorem missing from audit: {name}"

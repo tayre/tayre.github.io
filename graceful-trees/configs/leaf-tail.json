@@ -1,0 +1,38 @@
+{
+  "campaign": "leaf-tail-v1",
+  "seed": 20261108,
+  "budget_seconds": 60,
+  "finalize_reserve_seconds": 3,
+  "attempt_seconds": 1,
+  "retry_seconds": 3,
+  "max_cases": 100,
+  "max_generated": 500,
+  "exhaustive_sizes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "sample_sizes": [
+    12,
+    20
+  ],
+  "families": [
+    "path",
+    "star",
+    "binary_heap",
+    "prufer",
+    "spider",
+    "caterpillar",
+    "lobster"
+  ],
+  "probe_max_n": 7,
+  "probe_max_attempts": 25,
+  "frontier_search": true,
+  "frontier_algorithm": "leaf-portfolio-v4",
+  "frontier_max_nodes": 40000,
+  "probe_backend": "sat"
+}

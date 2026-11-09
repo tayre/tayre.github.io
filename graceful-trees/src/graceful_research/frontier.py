@@ -10,13 +10,14 @@ import math
 import random
 import time
 
+from .leaf_frontier import finish_tail
 from .verify import verify_tree
 
 ALGORITHM = "descending-frontier-v1"
 MAX_N = 256
 
 
-def search(n, edges, *, seed, max_nodes=20000, seconds=0.1):
+def search(n, edges, *, seed, max_nodes=20000, seconds=0.1, leaf_tail=False, leaf_observer=None):
     errors = verify_tree(n, edges)
     if errors:
         raise ValueError(f"invalid tree input: {errors}")
@@ -24,10 +25,12 @@ def search(n, edges, *, seed, max_nodes=20000, seconds=0.1):
         raise ValueError("max_nodes must be a nonnegative integer")
     if type(seconds) not in (int, float) or not math.isfinite(seconds) or seconds < 0:
         raise ValueError("seconds must be finite and nonnegative")
+    if type(leaf_tail) is not bool:
+        raise ValueError("leaf_tail must be boolean")
     started = time.monotonic()
     deadline = started + seconds
     result = {
-        "algorithm": ALGORITHM,
+        "algorithm": "leaf-descending-frontier-v4" if leaf_tail else ALGORITHM,
         "seed": seed,
         "max_nodes": max_nodes,
         "seconds": seconds,
@@ -37,6 +40,9 @@ def search(n, edges, *, seed, max_nodes=20000, seconds=0.1):
         "search_complete": False,
         "termination": "candidates_exhausted",
     }
+    leaf_stats = {"calls": 0, "leaves": 0, "completed": 0, "rejected_partials": 0}
+    if leaf_tail:
+        result["leaf_tail"] = leaf_stats
     if n > MAX_N:
         return {**result, "termination": "size_limit", "wall_seconds": time.monotonic() - started}
     neighbors = [[] for _ in range(n)]
@@ -70,6 +76,26 @@ def search(n, edges, *, seed, max_nodes=20000, seconds=0.1):
         nodes += 1
         if difference == 0:
             return labels.copy()
+        # Every remaining vertex is on the boundary iff all remaining vertices
+        # are leaves. Labels count the unassigned vertices exactly.
+        if (leaf_tail or leaf_observer is not None) and frontier.bit_count() == difference:
+            applied, answer = finish_tail(
+                n,
+                difference,
+                frontier,
+                used,
+                order,
+                parents,
+                labels,
+                enabled=leaf_tail,
+                observer=leaf_observer,
+                stats=leaf_stats,
+                seed=seed,
+                root=root,
+                node=nodes,
+            )
+            if applied:
+                return answer
         choices = frontier
         while choices:
             bit = choices & -choices

@@ -46,6 +46,9 @@ jobs:
           graceful-research run --config configs/sat-certificates.json --output results/ci-sat --budget-seconds 20
           graceful-research audit results/ci-sat
           python3 -S results/ci-sat/proof_verify.py results/ci-sat/unsat-certificates
+          graceful-research run --config configs/leaf-tail.json --output results/ci-leaf --budget-seconds 20 --max-cases 25
+          graceful-research audit results/ci-leaf
+          python scripts/experiment_residual_signatures.py --output results/ci-signatures
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -53,6 +56,8 @@ jobs:
           path: |
             graceful-trees/results/ci/
             graceful-trees/results/ci-sat/
+            graceful-trees/results/ci-leaf/
+            graceful-trees/results/ci-signatures/
           retention-days: 7
           if-no-files-found: warn
 

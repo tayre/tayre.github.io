@@ -14,11 +14,13 @@ ALGORITHM = "portfolio-frontier-v3"
 STAGE_MAX_NODES = 20000
 
 
-def search(n, edges, *, seed, max_nodes=40000, seconds=0.1):
+def search(n, edges, *, seed, max_nodes=40000, seconds=0.1, leaf_tail=False):
     if type(max_nodes) is not int or max_nodes < 0:
         raise ValueError("max_nodes must be a nonnegative integer")
     if type(seconds) not in (int, float) or not math.isfinite(seconds) or seconds < 0:
         raise ValueError("seconds must be finite and nonnegative")
+    if type(leaf_tail) is not bool:
+        raise ValueError("leaf_tail must be boolean")
     started = time.monotonic()
     stages = []
     nodes = 0
@@ -36,6 +38,7 @@ def search(n, edges, *, seed, max_nodes=40000, seconds=0.1):
             seed=seed,
             max_nodes=min(STAGE_MAX_NODES, max_nodes - nodes),
             seconds=allowance,
+            **({"leaf_tail": True} if leaf_tail else {}),
         )
         stages.append(result)
         nodes += result["nodes"]
@@ -53,7 +56,7 @@ def search(n, edges, *, seed, max_nodes=40000, seconds=0.1):
         elif nodes >= max_nodes:
             termination = "node_limit"
     return {
-        "algorithm": ALGORITHM,
+        "algorithm": "leaf-portfolio-v4" if leaf_tail else ALGORITHM,
         "seed": seed,
         "max_nodes": max_nodes,
         "stage_max_nodes": STAGE_MAX_NODES,

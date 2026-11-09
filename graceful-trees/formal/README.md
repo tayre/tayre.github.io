@@ -22,6 +22,7 @@ Treehood is a separate precondition: these model lemmas work for any edge list.
 | [Construction.lean](Graceful/Construction.lean) | Low/high interval assignments produce descending differences; assigning the next spine vertex last preserves the boundary arithmetic. | The arithmetic invariant of the caterpillar construction. |
 | [SAT.lean](Graceful/SAT.lean) | Every graceful labeling respecting the declared edge restriction satisfies every clause in the one-hot schema; refuting that schema excludes such a labeling. Row-major variable indices are injective and the X block ends before the Y block. | The mathematical interpretation of the SAT backend's scoped UNSAT proofs. |
 | [Search.lean](Graceful/Search.lean) | A remaining edge bounds its endpoint's label interval; distinct child labels cannot outnumber available interval labels; packed boundary fields are injective under the stated type-ID bound. | Necessary capacity pruning and exact boundary-field packing in `frontier_memo.py`. |
+| [LeafTail.lean](Graceful/LeafTail.lean) | Reflection swaps two-parent differences; a midpoint is unique; candidate differences satisfy the folded-path arithmetic; explicit independent pair choices realize exactly the even counts in their interval. With forced count `f`, `c` pairs, and an optional midpoint `e <= 1`, a quota `k` is realizable exactly when `f <= k <= f+2*c+e` and either `e=1` or `k-f` is even. | The allocation arithmetic in `leaf_tail.py`, conditional on a correct decomposition of its choice graph. |
 
 The construction proofs cover **local arithmetic**, conditional on their stated
 bounds. Spine recognition, traversal coverage, the complete caterpillar theorem,
@@ -33,6 +34,24 @@ The residual-forest equivalence argument is documented in
 [techniques.md](../docs/techniques.md); rooted-type construction, memo-table control
 flow, and the complete search are not formalized in Lean. The Hall ablation is
 checked by permutation oracles and a separate exchange argument, not this library.
+
+The leaf-tail quota theorem is an equivalence with **finite assignments of the
+pair choices**, and its sufficient direction constructs those assignments. It
+does not assume that all intermediate even counts are attainable. The reflected
+pair lemma proves preservation of the exact two consumed differences, and the
+midpoint uniqueness lemma justifies at most one such single-label choice.
+Two-parent distance injectivity bounds the multiplicity of a candidate edge. A
+further arithmetic lemma shows that a maximum difference vertex has at most one
+distinct lower neighbor, supporting the written argument against longer simple
+cycles without formalizing the graph argument itself.
+An additional theorem specializes the arithmetic to the double-star leaf counts;
+it is conditional on the reflected decomposition, not a formalized graph-family
+gracefulness theorem. The multigraph component-balance argument, forced-choice
+peeling, the absence of longer cycles, decomposition coverage and Python
+reconstruction are **not formalized**. They require the written proof argument,
+independent exhaustive oracles and runtime witness verification. A local negative
+result concerns only that fixed partial labeling and is not a Lean-certified
+refutation of the complete tree.
 
 No run result is promoted to a Lean-certified infeasibility result. The SAT schema
 proof is a mathematical model theorem; the Python serialization loops and DRUP

@@ -10,6 +10,7 @@ import random
 import struct
 import time
 
+from .leaf_frontier import finish_tail
 from .verify import verify_tree
 
 ALGORITHM = "memo-frontier-v2"
@@ -103,6 +104,8 @@ def search(
     capacity="local",
     roots_mode="centers",
     memoize=True,
+    leaf_tail=False,
+    leaf_observer=None,
 ):
     errors = verify_tree(n, edges)
     if errors:
@@ -115,10 +118,12 @@ def search(
         raise ValueError("unsupported candidate-search ablation")
     if type(memoize) is not bool:
         raise ValueError("memoize must be boolean")
+    if type(leaf_tail) is not bool:
+        raise ValueError("leaf_tail must be boolean")
     started = time.monotonic()
     deadline = started + seconds
     result = {
-        "algorithm": ALGORITHM,
+        "algorithm": "leaf-memo-frontier-v4" if leaf_tail else ALGORITHM,
         "options": {"capacity": capacity, "roots_mode": roots_mode, "memoize": memoize},
         "memo_limit": MAX_MEMO_STATES,
         "seed": seed,
@@ -130,6 +135,9 @@ def search(
         "search_complete": False,
         "termination": "candidates_exhausted",
     }
+    leaf_stats = {"calls": 0, "leaves": 0, "completed": 0, "rejected_partials": 0}
+    if leaf_tail:
+        result["leaf_tail"] = leaf_stats
     if n > MAX_N:
         return {**result, "termination": "size_limit", "wall_seconds": time.monotonic() - started}
     neighbors = [[] for _ in range(n)]
@@ -171,6 +179,26 @@ def search(
         nodes += 1
         if difference == 0:
             return labels.copy()
+        # Every remaining vertex is on the boundary iff all remaining vertices
+        # are leaves. Labels count the unassigned vertices exactly.
+        if (leaf_tail or leaf_observer is not None) and frontier.bit_count() == difference:
+            applied, answer = finish_tail(
+                n,
+                difference,
+                frontier,
+                used,
+                order,
+                parents,
+                labels,
+                enabled=leaf_tail,
+                observer=leaf_observer,
+                stats=leaf_stats,
+                seed=seed,
+                root=root,
+                node=nodes,
+            )
+            if applied:
+                return answer
         key = None
         if memoize:
             key = _state_key(frontier, used, order, parents, labels, shape)

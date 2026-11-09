@@ -84,7 +84,7 @@ def solve(request):
             from .frontier import search
         elif algorithm == "memo-frontier-v2":
             from .frontier_memo import search
-        elif algorithm == "portfolio-frontier-v3":
+        elif algorithm in {"portfolio-frontier-v3", "leaf-portfolio-v4"}:
             from .frontier_portfolio import search
         else:
             raise ValueError("unsupported frontier_algorithm")
@@ -93,9 +93,11 @@ def solve(request):
             **data,
             seed=request["seed"],
             max_nodes=request.get(
-                "frontier_max_nodes", 40000 if algorithm == "portfolio-frontier-v3" else 20000
+                "frontier_max_nodes",
+                40000 if algorithm in {"portfolio-frontier-v3", "leaf-portfolio-v4"} else 20000,
             ),
             seconds=min(0.1, request["solver_seconds"] * 0.1),
+            **({"leaf_tail": True} if algorithm == "leaf-portfolio-v4" else {}),
         )
         write_json(directory / "frontier.json", frontier)
         if frontier["labels"] is not None:

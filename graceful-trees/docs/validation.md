@@ -1,5 +1,43 @@
 # Initial validation record
 
+## Exact residual completion experiments — 8 November 2026
+
+The complete suite passed **570 Python tests** with the pinned Lean compiler and
+**26 dashboard tests**. Ruff lint and formatting checks passed.
+
+The leaf rule's independent exhaustive oracle passed **291,720 residual instances,
+1,343,154 capacity checks, and 35,375 reconstructed witnesses** through ambient
+order 9. Integration tests also verify every non-isomorphic tree through order 10,
+bounded larger inputs, unchanged exact fallback models, legacy requests, scoped
+restricted probes, time limits and checkpoint continuation.
+
+Lean 4.24.0 checks **15 additional named theorems**, bringing the library to 42.
+The transitive axiom audit passed for **161 declarations and 108 theorem
+declarations including generated helpers**. The exact quota theorem constructs
+pair assignments, conditional on a correct decomposition; graph decomposition and
+Python correctness remain outside Lean. Evidence: `results/leaf-tail-proofs-v2/`.
+
+The opt-in `leaf-portfolio-v4` smoke run verified all **100 unrestricted trees**,
+with 21 restricted witnesses and four independently checked restricted SAT
+refutations. The audit accepted **121 positive certificates**. A resumed run
+verified all **40 unrestricted attempts**, with 36 restricted witnesses and four
+checked refutations. Its audit reverified **497 cumulative labelings and 17 scoped
+negative certificates**, preserving all six previous history rows. Neither run
+had errors, unknowns or unrestricted infeasibility. Evidence is in
+`results/leaf-tail-smoke-v1/` and `results/leaf-tail-resume-v1/`.
+
+The separate signature-table experiment completed **102 residual problems**:
+25 feasible and 77 infeasible under their fixed boundary/resource conditions.
+All agreed with an independent full-permutation oracle. Thirty failures had
+nonempty tables for every component, but no compatible joint assignment.
+These are observations about partial problems, not counterexamples or certified
+UNSAT results for unrestricted trees.
+
+Benchmarks found a regression: 45/48 rather than 46/48 verified trees, with longer
+capped-workload time. The nightly default stays at v3. The complete inputs,
+positive witnesses, negative measurements and reproduction commands are preserved
+in [leaf-tail.md](leaf-tail.md). No speedup or literature novelty is claimed.
+
 ## Residual-search portfolio — 8 November 2026
 
 The complete suite passed **472 Python tests**, including the four real Lean

@@ -1,5 +1,14 @@
 # Performance measurements — 8 November 2026
 
+## Exact leaf completion experiment
+
+The opt-in `leaf-portfolio-v4` passed correctness checks but lost one success on
+a new 48-shape corpus: **45/48 versus 46/48** for v3, with median total time
+**3.718 versus 2.486 seconds**. On 5,112 frozen residual visits, the exact rule
+also cost more than ordinary branching; most tails had only one or two leaves.
+The nightly default remains v3. Full protocols, source hashes, inputs and negative
+measurements are retained in [leaf-tail.md](leaf-tail.md).
+
 ## Residual-state portfolio
 
 The subsequent technique review found that memoization, label-capacity pruning

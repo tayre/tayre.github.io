@@ -117,6 +117,7 @@ class Config:
             "descending-frontier-v1",
             "memo-frontier-v2",
             "portfolio-frontier-v3",
+            "leaf-portfolio-v4",
         }:
             raise ValueError("unsupported frontier_algorithm")
         if not isinstance(self.probe_backend, str) or self.probe_backend not in {

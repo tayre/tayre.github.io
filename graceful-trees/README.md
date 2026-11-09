@@ -118,6 +118,18 @@ v1. The cache stores only fully explored failures within the heuristic's restric
 never a cutoff or a proof about the whole tree. See the
 [technique review, correctness arguments and benchmarks](docs/techniques.md).
 
+`leaf-portfolio-v4` is an opt-in experiment that finishes residual leaves attached
+to at most two assigned parents using an exact count-and-parity rule. It passed
+independent exhaustive checks and has conditional Lean proofs, but regressed on
+the fresh-tree benchmark, so the nightly default remains v3. Run
+`graceful-research run --config configs/leaf-tail.json --output results/leaf-tail`
+or select `leaf-tail` in the manual GitHub workflow. See the
+[completion argument, proof boundary and retained negative measurements](docs/leaf-tail.md).
+The separate `scripts/experiment_residual_signatures.py --output results/signatures`
+experiment constructs exact compatibility tables for branches of at most three
+vertices and at most eight remaining vertices, with an independent permutation
+oracle. These bounded research tables do not change the nightly search.
+
 ## Mathematical model and verification
 
 For each vertex `v`, CP-SAT assigns `x[v]` in `0..n-1`. All vertex labels are

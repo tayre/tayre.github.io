@@ -170,6 +170,13 @@ def test_example_configs_and_workflow_contracts():
         "graceful-trees/configs/nightly.json",
     ]
     assert workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"] == "30"
+    assert (
+        set(workflow["on"]["workflow_dispatch"]["inputs"]["experiment"]["options"])
+        == cloud.EXPERIMENTS
+    )
+    for experiment in cloud.EXPERIMENTS:
+        config_path, budget = cloud.dispatch_config(experiment, "2")
+        assert Config.read(PROJECT / config_path).budget_seconds > 0 and budget == 120
     assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     dashboard = workflow["jobs"]["dashboard"]
     assert dashboard["needs"] == "research" and dashboard["continue-on-error"] == "true"

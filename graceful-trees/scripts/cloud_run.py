@@ -9,7 +9,14 @@ from pathlib import Path
 
 from graceful_research.config import Config
 
-EXPERIMENTS = {"nightly", "smoke", "exhaustive-small", "edge-profiles", "sat-certificates"}
+EXPERIMENTS = {
+    "nightly",
+    "smoke",
+    "exhaustive-small",
+    "edge-profiles",
+    "sat-certificates",
+    "leaf-tail",
+}
 
 
 def dispatch_config(experiment, minutes):
