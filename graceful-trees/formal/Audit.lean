@@ -39,7 +39,8 @@ run_cmd do
     ``Graceful.LeafTail.pair_contribution_bounds,
     ``Graceful.LeafTail.pair_choices_exact,
     ``Graceful.LeafTail.quota_criterion,
-    ``Graceful.LeafTail.extreme_pair_quota]
+    ``Graceful.LeafTail.extreme_pair_quota,
+    ``Graceful.RootedPairing.case56_no_completion]
   for name in required do
     unless names.contains name do
       throwError "Required theorem missing from audit: {name}"

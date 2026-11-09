@@ -49,6 +49,9 @@ jobs:
           graceful-research run --config configs/leaf-tail.json --output results/ci-leaf --budget-seconds 20 --max-cases 25
           graceful-research audit results/ci-leaf
           python scripts/experiment_residual_signatures.py --output results/ci-signatures
+          graceful-research run --config configs/swap-search.json --output results/ci-swaps --budget-seconds 20 --max-cases 25
+          graceful-research audit results/ci-swaps
+          python scripts/experiment_rooted_pairings.py --output results/ci-pairings
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -58,6 +61,8 @@ jobs:
             graceful-trees/results/ci-sat/
             graceful-trees/results/ci-leaf/
             graceful-trees/results/ci-signatures/
+            graceful-trees/results/ci-swaps/
+            graceful-trees/results/ci-pairings/
           retention-days: 7
           if-no-files-found: warn
 

@@ -33,7 +33,7 @@ def check(project, output, lake):
         "started_at": datetime.now(UTC).isoformat(),
         "source_sha256": source_hashes(project),
         "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
-        "scope": "Model lemmas, construction arithmetic, search capacity bounds, and conditional residual leaf allocation; not the conjecture or Python code.",
+        "scope": "Model lemmas, construction arithmetic, search capacity bounds, conditional residual leaf allocation, and one fixed rooted-branch obstruction; not the conjecture or Python code.",
     }
 
     def command(label, args):

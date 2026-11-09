@@ -86,18 +86,36 @@ def solve(request):
             from .frontier_memo import search
         elif algorithm in {"portfolio-frontier-v3", "leaf-portfolio-v4"}:
             from .frontier_portfolio import search
+        elif algorithm == "label-swap-v1":
+            from .swap_search import search
+        elif algorithm == "swap-portfolio-v5":
+            from .swap_portfolio import search
         else:
             raise ValueError("unsupported frontier_algorithm")
 
+        swap_route = algorithm in {"label-swap-v1", "swap-portfolio-v5"}
+        default_nodes = {
+            "descending-frontier-v1": 20000,
+            "memo-frontier-v2": 20000,
+            "portfolio-frontier-v3": 40000,
+            "leaf-portfolio-v4": 40000,
+            "label-swap-v1": 40000,
+            "swap-portfolio-v5": 80000,
+        }[algorithm]
         frontier = search(
             **data,
             seed=request["seed"],
-            max_nodes=request.get(
-                "frontier_max_nodes",
-                40000 if algorithm in {"portfolio-frontier-v3", "leaf-portfolio-v4"} else 20000,
-            ),
+            max_nodes=request.get("frontier_max_nodes", default_nodes),
             seconds=min(0.1, request["solver_seconds"] * 0.1),
             **({"leaf_tail": True} if algorithm == "leaf-portfolio-v4" else {}),
+            **(
+                {
+                    "objective": request.get("swap_objective", "missing_sum"),
+                    "proposal_policy": request.get("swap_proposal_policy", "uniform"),
+                }
+                if swap_route
+                else {}
+            ),
         )
         write_json(directory / "frontier.json", frontier)
         if frontier["labels"] is not None:
@@ -108,7 +126,13 @@ def solve(request):
             return {
                 "status": "verified_graceful" if verification["valid"] else "invalid_solution",
                 "raw_status": "CANDIDATE_WITNESS",
-                "search_method": "frontier-search",
+                "search_method": (
+                    "swap-portfolio-search"
+                    if algorithm == "swap-portfolio-v5"
+                    else "label-swap-search"
+                    if swap_route
+                    else "frontier-search"
+                ),
                 "labels": labels,
                 "verification": verification,
                 "proof_certificate_verified": False,

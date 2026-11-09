@@ -48,6 +48,8 @@ class Config:
     frontier_search: bool = True
     frontier_max_nodes: int = 40000
     frontier_algorithm: str = "portfolio-frontier-v3"
+    swap_objective: str = "missing_sum"
+    swap_proposal_policy: str = "uniform"
     backend: str = "cp-sat"
     probe_backend: str = "same"
     certify_infeasible: bool = True
@@ -118,8 +120,20 @@ class Config:
             "memo-frontier-v2",
             "portfolio-frontier-v3",
             "leaf-portfolio-v4",
+            "label-swap-v1",
+            "swap-portfolio-v5",
         }:
             raise ValueError("unsupported frontier_algorithm")
+        if not isinstance(self.swap_objective, str) or self.swap_objective not in {
+            "missing_sum",
+            "missing_count",
+        }:
+            raise ValueError("unsupported swap_objective")
+        if not isinstance(self.swap_proposal_policy, str) or self.swap_proposal_policy not in {
+            "uniform",
+            "missing_difference",
+        }:
+            raise ValueError("unsupported swap_proposal_policy")
         if not isinstance(self.probe_backend, str) or self.probe_backend not in {
             "same",
             "cp-sat",

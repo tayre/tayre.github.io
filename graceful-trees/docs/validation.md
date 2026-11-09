@@ -1,5 +1,53 @@
 # Initial validation record
 
+## Swap search and rooted branch classification — 8 November 2026
+
+The final suite passed **739 Python tests**, including all four real Lean
+rejection checks, and **26 dashboard tests**. Ruff lint and format checks passed.
+The tests cover incremental swap arithmetic against full recomputation, inverse
+indexes, targeted proposals, limits, replay, independent witness rejection,
+byte-identical exact fallback models, restricted-scope isolation and checkpoint
+history preservation.
+
+The 100-tree CLI run with `configs/swap-search.json` verified every unrestricted
+input across orders 1–7, 12, 20 and 35. It also made 25 restricted SAT probes:
+21 witnesses and four checked refutations. The independent archive audit accepted
+**121 positive certificates and four scoped negative certificates**, with no
+errors, unknowns or unrestricted infeasibility. The standard-library-only proof
+checker separately accepted all four refutations. Evidence is retained in
+`results/swap-smoke-v1/` and the [downloadable archive](../examples/swap-experiments.zip).
+
+The benchmark's independent holdout used 48 shapes excluded from all four earlier
+corpora. V3 verified **46/48**, targeted swaps **24/48**, and their portfolio
+**45/48** in every repetition. The portfolio lost one case and was slower, so v3
+remains the nightly default. All **345 positive attempt witnesses** were checked,
+and all **126 exact-fallback hashes** matched the original model. The initial
+uniform-swap development result and targeted-policy development result are both
+preserved; no tuning followed the holdout. See the
+[performance record and graphs](performance.md#label-swap-search-experiment).
+
+The rooted-pairing experiment classified **82 fixed residual problems** and agreed
+with an independent permutation oracle on all **795,109 examined assignments**.
+There were 24 completions and 58 scoped failures. Twenty-one failures admit an
+internal pairing but fail the attachment constraints; only one survives all
+recorded local resource-availability checks. The corpus is intentionally structured
+and includes constructed controls, so those proportions are not estimates of
+natural search behavior.
+
+Lean 4.24.0 proves that one specific three-branch resource partition is impossible.
+The library now has **43 public named mathematical theorems**; its transitive audit
+checks **175 declarations and 121 theorem declarations including generated helpers**.
+The new theorem uses only `propext` and `Quot.sound`. A separate Python regression
+verifies a graceful labeling of the underlying 11-vertex tree when the partition
+is relaxed. This is a proof of a fixed residual obstruction, not a counterexample
+or claimed novel theorem. See the [experiment and trust boundary](leaf-tail.md#rooted-two-vertex-branch-experiment)
+and [proof audit](../examples/rooted-pairing-proof.json).
+
+The two evidence archives passed checksum validation and ZIP integrity checks:
+
+- `swap-experiments.zip`: SHA-256 `4d217be160effb22aa61f86d001e2f9062110258356b8fa82cf24af55bd46f15`.
+- `rooted-pairings.zip`: SHA-256 `f897862f394c42615746bfcbd0657a368094206fcfa7a09508417f1c151a539b`.
+
 ## Exact residual completion experiments — 8 November 2026
 
 The complete suite passed **570 Python tests** with the pinned Lean compiler and

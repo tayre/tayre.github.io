@@ -13,7 +13,7 @@ on:
       experiment:
         description: Experiment configuration
         type: choice
-        options: [nightly, smoke, exhaustive-small, edge-profiles, sat-certificates, leaf-tail]
+        options: [nightly, smoke, exhaustive-small, edge-profiles, sat-certificates, leaf-tail, swap-search]
         default: nightly
       budget_minutes:
         description: Compute budget in minutes (1 through 30)

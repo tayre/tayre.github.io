@@ -32,8 +32,9 @@ Selected mathematical safeguards now have [Lean proofs](formal/README.md), check
 in CI with a pinned toolchain and an audit of their assumptions. These cover the
 complement symmetry reduction, difference-sum constraint, a restricted negative
 control, the local arithmetic of the caterpillar construction, completeness
-of the SAT clause schema, and necessary bounds used in candidate search. They do not
-formalize the whole Python program or prove the conjecture.
+of the SAT clause schema, necessary bounds used in candidate search, and a fixed
+rooted-branch obstruction. They do not formalize the whole Python program or prove
+the conjecture.
 
 Every run also produces an **offline visual progress report** (`report.html`),
 SVG charts, a PNG overview, and audited chart data (`progress.json`). It shows
@@ -91,6 +92,8 @@ Available configurations:
 | `nightly.json` | 30-minute budget; exhaustive streams through order 12 interleaved with sampled orders 20, 35, 50 and 75 |
 | `edge-profiles.json` | Small exhaustive inputs with more compute reserved for prescribed maximum-difference edge experiments |
 | `sat-certificates.json` | Pure SAT validation through order 7, with scoped, independently checked UNSAT proofs for negative edge controls |
+| `leaf-tail.json` | Opt-in exact two-parent leaf completion experiment |
+| `swap-search.json` | Opt-in v3/swap portfolio with targeted proposals; main search and scoped SAT controls |
 
 `--budget-seconds`, `--max-cases`, `--seed` and `--backend` override JSON settings. Decreasing the
 budget also reduces the finalization reserve to at most 10% of the budget.
@@ -132,6 +135,32 @@ The separate `scripts/experiment_residual_signatures.py --output results/signatu
 experiment constructs exact compatibility tables for branches of at most three
 vertices and at most eight remaining vertices, with an independent permutation
 oracle. These bounded research tables do not change the nightly search.
+
+`label-swap-v1` searches label permutations; `swap-portfolio-v5` combines v3 with
+swaps within the same candidate time allowance. Set `swap_objective` to
+`missing_sum` or `missing_count`, and `swap_proposal_policy` to `uniform` or
+`missing_difference`. The latter targets a missing difference with probability
+3/4 per proposal. Defaults for saved requests are `missing_sum` and `uniform`.
+The example below explicitly selects the targeted policy and an 80,000-operation
+cap (40,000 v3 nodes plus 40,000 swap proposals):
+
+```sh
+graceful-research run --config configs/swap-search.json --output results/swap-search
+graceful-research audit results/swap-search
+```
+
+Select `swap-search` in the manual GitHub research workflow to run the same
+experiment in the cloud. The [swap-search methods and benchmark protocol](docs/techniques.md#label-swapping-and-a-complementary-portfolio)
+explain limits, replay and independent verification. See the
+[measured comparison and deployment decision](docs/performance.md).
+
+The separate mathematical experiment
+`python scripts/experiment_rooted_pairings.py --output results/rooted-pairings`
+classifies up to four two-vertex branches with fixed parent labels and separate
+internal/attachment differences. It checks every result against an independent
+permutation oracle. The [results and a concrete obstruction](docs/leaf-tail.md#rooted-two-vertex-branch-experiment)
+are scoped to partial assignments, not whole-tree counterexamples. CI runs both
+new experiments and uploads their evidence alongside the existing checks.
 
 ## Mathematical model and verification
 

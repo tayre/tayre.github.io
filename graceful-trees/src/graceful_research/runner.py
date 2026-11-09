@@ -108,6 +108,8 @@ def run(config, output, resume=None, cancelled=lambda: False):
             "frontier_search": config.frontier_search and not investigate_infeasible,
             "frontier_max_nodes": config.frontier_max_nodes,
             "frontier_algorithm": config.frontier_algorithm,
+            "swap_objective": config.swap_objective,
+            "swap_proposal_policy": config.swap_proposal_policy,
             "backend": backend,
         }
         write_json(directory / "request.json", request)

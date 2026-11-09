@@ -167,3 +167,81 @@ cannot certify impossibility: such investigations need a complete scoped model
 and an independently checked proof. Any claimed new rule also needs a targeted
 literature review. Current cache statistics are algorithm observations, not new
 theorems about gracefulness.
+
+## Label swapping and a complementary portfolio
+
+`swap_search.py` adds `label-swap-v1`, an incomplete permutation search based on
+the established swapping/tabu approach of Aldred–McKay and Fang. It starts with
+a seeded permutation and evaluates exchanges of two vertex labels. Frequencies
+of edge differences support two objectives: the number of missing differences
+(`missing_count`) and their sum (`missing_sum`). Scores from these objectives
+have different scales. The diagnostic missing-count and missing-sum values at
+the best objective score describe that same state, not separate optima.
+
+A swap changes only incident edges; the edge between the exchanged vertices,
+if present, keeps its absolute difference. Net frequency changes account for
+common neighbors and repeated differences before adjusting either objective.
+The permutation invariant is preserved. Since a tree has exactly `n-1` edges,
+a zero objective implies every required difference occurs once. A separate
+definition-level verifier nevertheless checks every returned labeling.
+
+The fixed policy evaluates at most `min(24,2n)` proposals per step, chooses a
+best admissible proposal, uses a tabu tenure of seven accepted moves, and restarts
+after `max(25,4n)` stagnant steps. Improving the global best overrides tabu.
+Uphill moves are allowed. The default proposal policy is `uniform`, preserving
+the initial development behavior; `missing_difference` is an explicit alternative.
+
+The alternative targets an absent difference with probability 3/4 per proposal.
+Choose an absent difference `d` and labels `a,b` with `|a-b|=d`. Choose a neighbor
+`u` of the vertex carrying `b`, then swap the label at `u` with `a`. Because `d`
+is absent, these are different vertices, and the chosen edge gains difference
+`d`. Other edges may lose useful differences, so the complete objective still
+determines acceptance. The remaining proposals are uniform escape moves.
+Inverse label positions and a swap-delete missing-difference index avoid a full
+label scan per proposal. This is an experimental proposal rule, with no novelty
+or completeness claim.
+
+`swap-portfolio-v5` gives v3 at most half the candidate wall allowance, then
+gives swaps the unused time if no witness was found. The complete attempt still
+uses the original exact fallback with the original constraints and no hints.
+Restricted probes and SAT attempts skip both candidates. Failures of either
+candidate remain unresolved. No failed partial labeling constrains fallback.
+
+The shared candidate wall cap is `min(0.1 seconds, 10% of the attempt allowance)`.
+V3 visits at most 40,000 search nodes; swaps evaluate at most 40,000 proposals.
+The portfolio permits both caps, at most 80,000 combined work units, within that
+same wall allowance. These are different operations; comparisons are equal-time,
+not equal-node. Time checks occur regularly, and the enclosing worker retains
+the attempt's hard deadline. Inputs above 256 vertices skip the candidate.
+
+Unit oracles compare every incremental move against full recomputation on every
+permutation of every tree through order six. They also check inverse indexes,
+missing-difference indexes, the targeted-edge guarantee, restart behavior, zero
+budgets, time/node limits and deterministic replay when time does not intervene.
+Integration tests check invalid-witness rejection, identical fallback model
+hashes, skipped restricted probes and preservation of campaign history on resume.
+
+### Reproducing the swap experiments
+
+```sh
+python scripts/benchmark_swaps.py --phase development --policy uniform --output results/swap-development --repeats 3
+python scripts/benchmark_swaps.py --phase development --policy missing_difference --output results/swap-targeted-development --repeats 3
+python scripts/benchmark_swaps.py --phase holdout --objective missing_sum --policy missing_difference --output results/swap-holdout --repeats 3
+graceful-research run --config configs/swap-search.json --output results/swap-smoke
+graceful-research audit results/swap-smoke
+```
+
+Use new output directories and keep other CPU-heavy jobs idle. The development
+phase reuses the previous 48-tree portfolio corpus. The holdout contains 48 new
+non-caterpillar shapes, six per family/order at 35 and 75 vertices, excluding
+every class in the four preceding corpora. Inputs, objective, proposal policy and
+limits are frozen before its measurements; no holdout-based tuning is permitted.
+It compares v3, swaps, and their portfolio, all with the same exact fallback and
+one-second complete attempt allowance. Method order rotates over three repetitions.
+
+Each archive preserves exact inputs, requests, results, trajectories, independent
+witness checks, expected exact-model hashes, source snapshots and versions. It
+also contains a Markdown report and SVG/PNG comparisons. These are benchmark
+archives, not campaign checkpoints. Measured elapsed time includes failed attempts;
+timeouts are censored outcomes, never evidence of nongracefulness. See the
+[performance record](performance.md) for the measured result and deployment decision.

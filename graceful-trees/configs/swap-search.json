@@ -1,0 +1,21 @@
+{
+  "campaign": "swap-search-v1",
+  "seed": 20261108,
+  "budget_seconds": 60,
+  "finalize_reserve_seconds": 3,
+  "attempt_seconds": 1,
+  "retry_seconds": 3,
+  "max_cases": 100,
+  "max_generated": 500,
+  "exhaustive_sizes": [1, 2, 3, 4, 5, 6, 7],
+  "sample_sizes": [12, 20, 35],
+  "families": ["binary_heap", "prufer", "recursive", "spider", "lobster"],
+  "probe_max_n": 7,
+  "probe_max_attempts": 25,
+  "frontier_search": true,
+  "frontier_algorithm": "swap-portfolio-v5",
+  "frontier_max_nodes": 80000,
+  "swap_objective": "missing_sum",
+  "swap_proposal_policy": "missing_difference",
+  "probe_backend": "sat"
+}

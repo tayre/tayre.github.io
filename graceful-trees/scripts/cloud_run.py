@@ -16,6 +16,7 @@ EXPERIMENTS = {
     "edge-profiles",
     "sat-certificates",
     "leaf-tail",
+    "swap-search",
 }
 
 

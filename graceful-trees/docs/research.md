@@ -3,7 +3,10 @@
 Literature review: 8 November 2026. This is a scoped review, not a novelty certification.
 The [deep review and experiment priorities](#deep-review-and-experiment-priorities)
 below compare the implemented searches with primary papers, author programs and
-recent preprints. Proposed experiments are not implemented results.
+recent preprints. The follow-up [rooted-branch experiment](leaf-tail.md#rooted-two-vertex-branch-experiment)
+is now implemented and independently cross-checked. The [swap-search comparison](performance.md)
+is also complete; its regression keeps the current default in place. Other proposed mathematical
+experiments remain proposals unless accompanied by an implementation and evidence.
 
 ## What is established
 

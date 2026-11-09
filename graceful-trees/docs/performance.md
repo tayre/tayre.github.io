@@ -1,5 +1,61 @@
 # Performance measurements — 8 November 2026
 
+## Label-swap search experiment
+
+**The nightly default remains `portfolio-frontier-v3`.** The new swap search is
+available explicitly, but its portfolio lost a success on the independent holdout.
+All methods below use the same one-second complete attempt allowance and unchanged
+CP-SAT fallback. The candidate allowance remains at most 0.1 seconds.
+
+| Complete route | Verified in every repetition | Unresolved | Median total seconds |
+| --- | ---: | ---: | ---: |
+| Existing v3 + exact fallback | 46 / 48 | 2 | 2.371 |
+| Targeted swaps + exact fallback | 24 / 48 | 24 | 28.563 |
+| v3 then targeted swaps + exact fallback | 45 / 48 | 3 | 3.363 |
+
+![Independent comparison of swap routes](../examples/swap-comparison.svg)
+
+The portfolio's lost case is a 75-vertex lobster, case 43. In its first repetition,
+v3 found a labeling in about 0.056 seconds; the new portfolio stopped v3 at its
+reserved 0.05-second share, and neither swaps nor exact fallback finished in the
+remaining time. This occurred in every repetition. There were no gained cases.
+All 45 portfolio candidate successes came from its v3 stage; swaps supplied no
+additional portfolio witness in this corpus. Standalone targeted swaps found 11
+witnesses per repetition, with exact fallback supplying the other 13 successes.
+
+Development used the earlier 48-tree portfolio corpus. Uniform proposals verified
+one case consistently with the missing-sum objective and zero with missing-count.
+One targeted proposal policy was then developed: introduce a selected absent
+difference with probability 3/4 per proposed move, retaining uniform proposals for
+escape. On the same development corpus it verified 10 cases with missing-sum and
+one with missing-count. Those observations selected missing-sum and the targeted
+policy **before** the fresh holdout was generated and measured. The initial source
+snapshot is retained, including the earlier implementation before the extra indexes.
+There was no tuning after holdout results.
+
+The holdout contains 48 unique non-caterpillar trees: six per family (Prüfer,
+recursive, spider, lobster) and order (35,75), excluding all four previous benchmark
+corpora. Three repetitions rotate route order. Candidate work limits are explicit:
+40,000 v3 nodes or swap proposals for individual routes, and 40,000 of each for
+the portfolio. These operations are not equivalent; the comparison is equal-time.
+Every positive witness was independently verified, and every fallback hash matched
+the original exact model. Imports were warmed; no project tests or other project
+CPU-heavy tasks ran during timing. The measured environment is macOS ARM64,
+CPython 3.12.14, NetworkX 3.5 and OR-Tools 9.14.6206.
+
+These are censored timings on a small structured sample, not predicted nightly
+throughput or a comparison against published implementations. The result does not
+rule out swaps at longer budgets or with a different policy. Such work should use
+development inputs and a new independent holdout. Increasing nightly compute or
+replacing v3 is not justified by these measurements.
+
+The [summary and all holdout inputs](../examples/swap-benchmark.json),
+[complete experiment archive](../examples/swap-experiments.zip), and
+[method/reproduction details](techniques.md#label-swapping-and-a-complementary-portfolio)
+preserve both the initial weak result and the failed portfolio improvement. The
+archive contains each development phase and the holdout, full trajectories,
+requests/results, witnesses, source snapshots, versions, checksums and visual reports.
+
 ## Exact leaf completion experiment
 
 The opt-in `leaf-portfolio-v4` passed correctness checks but lost one success on

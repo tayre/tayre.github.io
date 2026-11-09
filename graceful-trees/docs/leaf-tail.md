@@ -181,5 +181,75 @@ The [deep literature review](research.md#deep-review-and-experiment-priorities)
 identifies the reflection identity as established transfer arithmetic and connects
 short-branch completion to generalized Skolem pairings. Its next proposed targets
 are compatibility with fixed attachment labels and independently checked congruence
-certificates for complete signature tables. These proposals are not implemented
-results or claims of novelty.
+certificates for complete signature tables. The rooted-branch classification below
+implements the first bounded experiment; congruence certificates remain proposed.
+Neither direction carries a claim of novelty.
+
+## Rooted two-vertex branch experiment
+
+`rooted_pairings.py` now implements the short-branch classification proposed in
+the literature review. For each branch `p--x--y`, the already assigned parent
+label `p` is fixed. Unused labels `U`, internal differences `A`, and attachment
+differences `B` must each be consumed exactly once in their specified roles.
+The initial bound is four branches, with one or two distinct parents.
+
+The classifier enumerates all internal pairings, then tests their orientations
+and allocations to individual branch instances. Choosing the least remaining
+label first removes duplicate descriptions of an unordered pairing; it does not
+exclude any pairing. Internal and attachment differences remain disjoint. A
+separate oracle enumerates all permutations of `U` and checks the definitions
+directly, without using the pairing search or its necessary-condition filters.
+
+```sh
+python scripts/experiment_rooted_pairings.py --output results/rooted-pairings
+```
+
+The first corpus has **82 distinct resource problems** from 89 deterministic
+proposals, including explicit controls and seeded interval, two-interval and
+two-hole resources. This is not exhaustive coverage of those families or a sample
+of naturally encountered search states. All classifications agreed with the
+independent oracle, which examined **795,109 assignments**:
+
+| Outcome | Cases |
+| --- | ---: |
+| Verified rooted completion | 24 |
+| Internal pairing exists, attachment constraints prevent completion | 21 |
+| Skolem parity or density condition fails | 35 |
+| Conditions pass, but no internal pairing exists | 2 |
+
+The known Nordh example is a regression control, not a discovery. Among the 21
+attachment failures, four have a locally feasible assignment for every branch
+and cover every attachment difference somewhere. Only one also covers every
+unused label and internal difference in the local tables. These are necessary
+availability checks, not a sufficient compatibility criterion.
+
+That stronger example, case 56, has
+`U={1,4,5,6,7,8}`, `A={1,4,6}`, `B={2,3,5}`, and parents `(0,9,9)`.
+The branch at zero must start with label 5. Its attachment uses difference 5,
+so the other two branches must start with labels 6 and 7 to use differences 3
+and 2. The remaining leaf labels are 1, 4 and 8. None can follow label 6 with
+an internal difference in `A`. Thus this particular resource partition fails,
+even though the local option tables cover every resource.
+
+[RootedPairing.lean](../formal/Graceful/RootedPairing.lean) now proves this precise
+obstruction, with exact permutation requirements for the labels and both difference
+lists. The fresh Lean 4.24.0 audit checks all 175 project declarations, including
+121 theorem declarations with generated helpers; the public named theorem count
+is 43. The new theorem depends only on standard `propext` and `Quot.sound`.
+The Python classifier and general pairing completeness are not formalized.
+
+A regression embeds the example in an 11-vertex tree and independently verifies
+a graceful labeling when the split is relaxed to internal differences `{2,3,6}`
+and attachment differences `{1,4,5}`. This checks the negative claim's limited scope.
+
+This is a small explanation of a fixed partial-state obstruction, with no novelty
+claim. It does not exclude a labeling of the underlying tree or a completion using
+a different internal/attachment partition. It is not installed as a nightly prune.
+The [machine-readable evidence](../examples/rooted-pairings.json) preserves all
+inputs, internal pairings, local options, witnesses and oracle results. The local
+archive `results/rooted-pairings-v2/` adds the source snapshot, dependency versions,
+per-case files, checksums and Markdown report. These are research archives, not
+campaign checkpoints accepted by `graceful-research audit`.
+The [downloadable archive](../examples/rooted-pairings.zip) includes that experiment
+and the separate successful Lean source/build/axiom audit; the
+[proof audit summary](../examples/rooted-pairing-proof.json) is also checked in.
