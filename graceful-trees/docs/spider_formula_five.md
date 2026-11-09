@@ -128,7 +128,8 @@ supplies graceful labelings with zero at any vertex in the first two and last
 two levels: depths `0,1,4,5`. The construction above and its complement supply
 depths `2,3`. Permuting the equal legs covers every vertex at either depth.
 All vertices are therefore covered. The new formulas themselves also work for
-the degenerate path cases `k=1,2`.
+the degenerate path cases `k=1,2`; full 0-rotatability of paths is Rosa's known
+result, reproduced as [Superdock's Theorem 2.3](https://arxiv.org/pdf/1403.1564).
 
 This corollary concerns the *position of zero*. Ordinary gracefulness of these
 trees was already known. One labeling need not work for several prescribed
@@ -145,7 +146,7 @@ Absence from this list is not a proof of absence from the literature.
 - The rooted uniform-subdivision construction follows from the generalized
   exceptional-vertex construction described in
   [Krop, 2014, Theorem 2.4 and its following paragraph](https://arxiv.org/pdf/1402.3994)
-  and [Superdock, 2014, §2.2](https://arxiv.org/pdf/1403.1564).
+  and [Superdock, 2014, Theorems 2.28–2.29](https://arxiv.org/pdf/1403.1564).
   With complementation, it preserves zero on an original vertex. It already
   resolves the midpoint targets at leg lengths four and six by subdividing
   length-two legs. Our earlier four-edge midpoint target was therefore a known

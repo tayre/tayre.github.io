@@ -47,7 +47,7 @@ Download the [finite experiment](../examples/five-spider-construction.json),
 [complete evidence](../examples/five-spider-evidence.zip). The archive includes
 all witnesses, inputs, verification records, source snapshots, the proof note,
 Lean source and compiler logs. ZIP integrity passed; SHA-256:
-`dfb4de96214751545ca6b50cb83b6110c05eb03abf27cf925a90e1464852d4c3`.
+`811320dda40edabed822863c330081f29844d2290a5c7bb96c6f8555b9737570`.
 
 The parallel [integer/real relaxation experiment](leaf-tail.md#integer-and-real-relaxations)
 explains the nine previously unrefuted impossible residuals. All nine admit signed
