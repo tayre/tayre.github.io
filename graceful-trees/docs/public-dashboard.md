@@ -109,6 +109,11 @@ the graceful illustration, chart edge cases, incomplete coverage, stale timestam
 and CSV export. The regular CI workflow runs both suites when the project or site
 index changes.
 
+The separate construction section presents the five-edge symmetric-spider formula,
+its witness diagram, proof and evidence archive. Its finite validation counts are
+not merged into the campaign feed. The page distinguishes proof validity from
+unconfirmed research priority.
+
 For browser QA, use an existing Playwright installation and Chromium:
 
 ```sh

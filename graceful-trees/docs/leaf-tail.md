@@ -223,15 +223,16 @@ Every option therefore has even weight, but all required resources together have
 weight three. This excludes the stated residual problem only.
 
 Complete global permutation checks examined 60,678 assignments and agreed on all
-102 inputs. The nine impossible cases with no congruence certificate have exhausted
-oracle records: failure of the relaxation does not establish feasibility.
+102 inputs. The nine impossible cases unexplained by the four-field search have
+exhausted oracle records: failure to find a certificate does not establish feasibility.
 The standalone checker regenerated 1,317 local assignments and checked 411 valid
 options across the 68 certificates. No frequency or speed claim follows from this
 small, deliberately structured corpus.
 
 Lean's [`modular_obstruction`](../formal/Graceful/ResidueCertificate.lean) proves the
 finite-sum arithmetic implication for arbitrary natural-number moduli. Discovery
-currently uses only four prime fields; this is not a full integer-lattice test.
+in this experiment uses only four prime fields; the follow-up below tests the
+integer-lattice limitation directly.
 The Lean theorem assumes the column arithmetic, whereas the Python checker tests
 it by complete bounded enumeration. Python correctness and its correspondence to
 the formal model are outside the proof. The certificate method is established
@@ -247,6 +248,49 @@ python -S src/graceful_research/residual_congruence_verify.py results/residual-c
 [complete three-track archive](../examples/parallel-experiments.zip) preserve the
 evidence. After extraction, run the archived checker with
 `python3 -S residual-congruence-v1/residual_congruence_verify.py residual-congruence-v1/certificates`.
+
+### Integer and real relaxations
+
+The `residual-relaxations-v1` follow-up resolves why all nine remaining inputs
+escaped the congruence search. Write the complete local resource columns as `A`
+and the target containing each resource once as `b`. Every input has an independently
+checked **signed integer cover** `Az=b`. Consequently, at **any modulus**, a linear
+functional that annihilates every column also annihilates `b`. No modular
+linear-functional certificate of the preceding form can exclude these inputs.
+Negative coefficients are allowed in this witness; it is not a completion.
+
+Eight inputs instead have exact Farkas certificates: integer row weights `w` with
+`wA >= 0` on every valid local option and `wb < 0`. These inequalities exclude
+every nonnegative real cover, hence every actual completion of the stated residual.
+The standard-library checker regenerates all local assignments and checks the
+inequalities using exact arithmetic.
+
+Case 32 passes both relaxations while remaining impossible. Its unused labels
+and differences are both `{1,2,3,4,5}`. A three-vertex fork and a two-vertex path
+attach to parent label 0. Assigning weight one half to each of
+`fork[4,2,3]`, `fork[5,1,3]`, `path[1,4]` and `path[5,2]` covers every resource
+exactly once algebraically. A separate signed integer cover also exists, but the
+independent permutation oracle rejects all 120 actual assignments. Thus
+nonnegative real feasibility and integer-lattice membership together are
+insufficient; they need not have the same witness.
+
+Across the nine inputs, the oracle exhausted 42,480 assignments. The archived
+standalone checker accepted all **18 certificates**: nine signed integer covers,
+eight separating functionals and one nonnegative rational cover. It regenerated
+1,538 local assignments. All 329 entries in the SHA-256 manifest were rechecked.
+These are fixed residual problems, separate from whole-tree infeasibility counts.
+The linear-algebra principles are established; the underlying obstruction in
+case 32 is covered by van Bussel's classification, reproduced in Theorem 2.54 of
+[Superdock's thesis](https://arxiv.org/abs/1403.1564). No novelty is claimed.
+
+[Results and oracle records](../examples/residual-relaxations.json) and the
+[complete evidence archive](../examples/residual-relaxations-evidence.zip) preserve
+the inputs, certificates, discovery models, versions, seeds and checksums.
+From the extracted run directory, verify without third-party dependencies:
+
+```sh
+python3 -S residual_relaxations_verify.py certificates
+```
 
 ## Rooted two-vertex branch experiment
 

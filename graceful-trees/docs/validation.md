@@ -1,5 +1,72 @@
 # Initial validation record
 
+## Five-edge spider construction — 9 November 2026
+
+The new [explicit formula and general proof](spider_formula_five.md) place zero
+at either interior position of a symmetric spider with five edges per leg, for
+every positive leg count. Combined with Rofa's known other four position classes,
+this proves 0-rotatability of this family. An independent mathematical review
+checked the vertex partitions, every edge-to-progression index, the empty middle
+range at two legs, the one-leg case, complementation and the cited corollary.
+No matching prior construction was found in the scoped review; novelty remains
+unconfirmed. Ordinary gracefulness of this family was already known.
+
+The complete suite passed **1,217 Python tests**, including all four real Lean
+rejection checks, and **26 dashboard tests**. After formatting the new sources,
+all 110 constructor/experiment tests passed again; Ruff lint and formatting passed.
+Browser checks passed at desktop and mobile sizes, including the new diagram,
+the index links to both projects, existing chart controls, offline/error states
+and the JavaScript-free explanation. The full-size SVG is linked for closer
+inspection on small screens.
+
+The deterministic experiment `spider-construction-v2` independently checked
+**338 full witnesses**: 68 known four-edge controls and 270 five-edge cases.
+It uses leg counts 1–64, 100, 256, 1,000 and 10,000; the five-edge cases include
+both interior zero positions on the first and last leg, deduplicated at one leg.
+The largest input has **50,001 vertices**. Across the corpus, the verifier checked
+322,792 vertex occurrences and 322,454 edges, including full treehood, exact
+label/difference sets, requested tree shape, zero vertex and maximum edge.
+All **511 file checksums** passed. The 164 source snapshots include the final
+formatted constructors and experiment, tests, and the final Lean formula file.
+An earlier archive remains locally preserved as version 1; the downloadable
+evidence uses version 2. Finite checks validate instances, not the universal claim.
+
+Lean 4.24.0 checks the two construction formulas for **every positive leg count**,
+including exact permutations of vertex labels and actual adjacent differences.
+The stronger formula additionally certifies its interior extremes and complement.
+The library now has **69 public named theorems**; the transitive audit covers
+**1,047 declarations and 969 theorem declarations including generated helpers**.
+No extra axiom, unfinished proof or native computation is allowed. Treehood, the
+Python implementation, leg permutation and Rofa's remaining four root classes
+are outside this formalization. The full corollary uses those written and cited
+arguments as well as the formalized formula arithmetic.
+
+Download the [finite experiment](../examples/five-spider-construction.json),
+[formal audit](../examples/five-spider-proof.json),
+[witness figure](../examples/five-spider-witness.svg), and
+[complete evidence](../examples/five-spider-evidence.zip). The archive includes
+all witnesses, inputs, verification records, source snapshots, the proof note,
+Lean source and compiler logs. ZIP integrity passed; SHA-256:
+`dfb4de96214751545ca6b50cb83b6110c05eb03abf27cf925a90e1464852d4c3`.
+
+The parallel [integer/real relaxation experiment](leaf-tail.md#integer-and-real-relaxations)
+explains the nine previously unrefuted impossible residuals. All nine admit signed
+integer covers, excluding modular linear refutations of the existing form at any
+modulus. Eight have independently checked integer separators; the ninth has a
+nonnegative half-integral cover despite all 120 actual assignments failing.
+The standalone standard-library checker accepted **18 certificates**, regenerating
+1,538 local assignments for the separators. Full global enumeration checked
+42,480 assignments across the nine fixed residuals. All **329 file checksums**
+passed. These conclusions concern fixed partial labelings, not whole-tree failures,
+and the linear-algebra principles are established methods.
+
+Download the [relaxation summary](../examples/residual-relaxations.json) and
+[complete certificate archive](../examples/residual-relaxations-evidence.zip).
+ZIP integrity passed; SHA-256:
+`5c25c85bc3b80ca010912255859f9d0f82ae780b2e734feb01e7fb03c41d9e2e`.
+The nightly solver, schedule and compute budget are unchanged. These standalone
+mathematical experiments are not added to the nightly ledger's coverage totals.
+
 ## Deep optimization pass — 8 November 2026
 
 The complete suite passed **1,060 Python tests**, including the four real Lean

@@ -6,3 +6,4 @@ import Graceful.Search
 import Graceful.LeafTail
 import Graceful.RootedPairing
 import Graceful.ResidueCertificate
+import Graceful.FiveSpider

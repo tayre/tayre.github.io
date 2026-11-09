@@ -16,6 +16,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     ['/', [path.join(repo, 'index.html'), 'text/html']],
     ['/graceful-trees/', [path.join(project, 'index.html'), 'text/html']],
     ['/hellinger-stability/', [path.join(repo, 'hellinger-stability/index.html'), 'text/html']],
+    ['/graceful-trees/examples/five-spider-witness.svg', [path.join(project, 'examples/five-spider-witness.svg'), 'image/svg+xml']],
     ...['app.js', 'data.mjs', 'style.css', 'icon.svg'].map(name => [`/graceful-trees/site/${name}`, [path.join(__dirname, name), name.endsWith('.css') ? 'text/css' : name.endsWith('.svg') ? 'image/svg+xml' : 'text/javascript']]),
   ]);
   const server = http.createServer(async (request, response) => {
@@ -79,6 +80,11 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
     await page.locator('.example-details summary').click();
     await page.getByRole('button', { name: 'Complement labels' }).click();
     await page.locator('.example-details summary').click();
+    await page.locator('#construction summary').click();
+    await page.locator('#construction img').scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => document.querySelector('#construction img').naturalWidth > 0);
+    await page.locator('#construction').screenshot({ path: '/tmp/graceful-construction-desktop.png' });
+    await page.locator('#construction summary').click();
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path: '/tmp/graceful-home-desktop.png', fullPage: true });
     for (const width of [768, 390, 320]) {
@@ -87,6 +93,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || 'playwright')
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `horizontal overflow at ${width}`);
       assert.ok(await page.locator('#trend-chart .chart-axis-label').first().evaluate(node => parseFloat(getComputedStyle(node).fontSize) * node.getScreenCTM().a >= 11), `graph labels too small at ${width}`);
       if (width === 390) {
+        await page.locator('#construction summary').click();
+        await page.locator('#construction').screenshot({ path: '/tmp/graceful-construction-mobile.png' });
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        await page.locator('#construction summary').click();
         await page.screenshot({ path: '/tmp/graceful-home-mobile.png', fullPage: true });
         await page.locator('#progress').scrollIntoViewIfNeeded();
         await page.screenshot({ path: '/tmp/graceful-home-mobile-progress.png' });

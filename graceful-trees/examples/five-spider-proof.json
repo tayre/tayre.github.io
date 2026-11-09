@@ -1,0 +1,3858 @@
+{
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "axiom_dependencies": {
+    "Graceful.FiveSpider.TwoInterior.a.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.b.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.c.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.complementary_distance": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_distance._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_interior_zero": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_interior_zero._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_vertexLabels_complete": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_vertexLabels_complete._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.complementary_vertexLabels_complete._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.construction_certificate": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.d.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.e.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.edgeWeights_complete": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.interior_extremes": [
+      "propext"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.label_bounded": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_10": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_11": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_15": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_16": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_17": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_19": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_20": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_21": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_22": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_23": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_24": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_25": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_8": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_bounded._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_10": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_100": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_101": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_102": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_103": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_104": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_105": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_106": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_107": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_108": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_109": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_110": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_111": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_112": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_113": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_114": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_115": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_116": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_117": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_118": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_119": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_120": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_121": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_122": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_123": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_124": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_125": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_126": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_127": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_128": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_129": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_130": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_131": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_132": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_133": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_134": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_135": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_136": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_137": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_138": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_139": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_140": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_141": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_142": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_143": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_144": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_145": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_146": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_147": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_148": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_149": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_15": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_150": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_151": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_152": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_153": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_154": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_155": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_156": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_157": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_158": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_159": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_16": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_160": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_161": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_162": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_163": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_164": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_165": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_166": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_167": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_168": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_169": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_17": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_170": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_171": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_172": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_173": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_174": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_175": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_176": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_177": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_178": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_179": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_180": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_181": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_182": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_183": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_184": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_185": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_186": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_187": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_188": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_189": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_19": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_190": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_191": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_192": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_193": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_194": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_195": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_196": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_197": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_198": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_199": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_20": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_200": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_201": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_202": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_203": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_204": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_205": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_206": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_207": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_208": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_209": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_21": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_210": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_211": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_212": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_213": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_214": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_215": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_216": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_217": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_218": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_219": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_22": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_220": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_221": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_222": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_223": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_224": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_225": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_226": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_227": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_228": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_229": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_23": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_230": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_231": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_232": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_233": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_234": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_235": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_236": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_237": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_238": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_239": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_24": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_240": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_241": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_242": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_243": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_244": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_245": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_246": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_247": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_248": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_249": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_25": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_250": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_251": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_252": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_253": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_254": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_255": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_256": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_257": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_258": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_259": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_26": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_260": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_261": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_262": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_263": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_264": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_265": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_266": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_267": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_268": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_269": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_27": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_270": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_271": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_272": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_273": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_274": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_275": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_276": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_277": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_278": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_279": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_28": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_280": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_29": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_30": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_31": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_32": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_33": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_34": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_35": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_36": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_37": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_38": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_39": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_40": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_41": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_42": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_43": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_44": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_45": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_46": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_47": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_48": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_49": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_50": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_51": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_52": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_53": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_54": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_55": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_56": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_57": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_58": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_59": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_60": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_61": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_62": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_63": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_64": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_65": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_66": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_67": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_68": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_69": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_70": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_71": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_72": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_73": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_74": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_75": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_76": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_77": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_78": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_79": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_80": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_81": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_82": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_83": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_84": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_85": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_86": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_87": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_88": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_89": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_90": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_91": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_92": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_93": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_94": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_95": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_96": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_97": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_98": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.label_injective._proof_1_99": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_6": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_7": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_8": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.vertexLabels_complete._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight.eq_1": [],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_10": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_12": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_15": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_16": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_17": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_19": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_20": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_21": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_22": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_23": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_24": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_25": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_26": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_27": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_28": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_bounded._proof_1_9": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_10": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_100": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_101": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_102": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_103": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_104": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_105": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_106": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_107": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_108": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_109": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_110": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_111": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_112": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_113": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_114": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_115": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_116": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_117": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_118": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_119": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_120": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_121": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_122": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_123": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_124": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_125": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_126": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_127": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_128": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_129": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_130": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_131": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_132": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_133": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_134": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_135": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_136": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_137": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_138": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_139": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_140": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_141": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_142": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_143": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_144": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_145": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_146": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_147": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_148": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_149": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_15": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_150": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_151": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_152": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_153": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_154": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_155": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_156": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_157": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_158": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_159": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_16": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_160": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_161": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_162": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_163": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_164": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_165": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_166": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_167": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_168": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_169": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_17": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_170": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_171": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_172": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_173": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_174": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_175": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_176": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_177": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_178": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_179": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_180": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_181": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_182": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_183": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_184": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_185": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_186": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_187": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_188": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_189": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_19": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_190": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_191": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_192": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_193": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_194": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_195": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_196": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_197": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_198": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_199": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_20": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_200": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_201": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_202": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_203": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_204": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_205": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_206": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_207": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_208": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_209": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_21": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_210": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_211": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_212": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_213": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_214": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_215": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_216": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_217": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_218": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_219": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_22": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_220": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_221": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_222": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_223": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_224": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_225": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_226": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_227": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_228": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_229": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_23": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_230": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_231": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_232": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_233": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_234": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_235": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_236": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_237": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_238": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_239": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_24": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_240": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_241": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_242": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_243": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_244": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_245": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_246": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_247": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_248": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_249": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_25": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_250": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_251": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_252": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_253": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_254": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_255": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_256": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_257": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_258": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_259": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_26": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_260": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_261": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_262": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_263": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_264": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_265": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_266": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_267": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_268": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_269": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_27": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_270": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_271": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_272": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_273": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_274": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_275": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_276": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_277": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_278": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_279": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_28": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_280": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_281": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_282": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_283": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_284": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_285": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_286": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_287": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_288": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_289": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_29": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_290": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_291": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_292": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_293": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_294": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_295": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_296": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_297": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_298": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_299": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_30": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_300": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_301": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_302": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_303": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_304": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_305": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_306": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_307": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_308": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_309": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_31": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_310": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_311": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_312": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_313": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_314": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_315": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_316": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_317": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_318": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_319": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_32": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_320": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_321": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_322": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_323": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_324": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_325": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_326": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_327": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_328": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_329": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_33": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_330": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_331": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_332": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_333": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_334": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_335": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_336": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_337": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_338": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_339": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_34": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_340": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_341": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_342": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_343": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_344": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_345": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_346": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_347": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_348": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_349": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_35": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_350": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_351": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_352": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_36": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_37": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_38": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_39": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_40": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_41": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_42": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_43": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_44": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_45": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_46": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_47": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_48": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_49": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_50": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_51": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_52": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_53": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_54": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_55": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_56": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_57": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_58": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_59": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_60": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_61": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_62": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_63": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_64": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_65": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_66": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_67": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_68": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_69": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_70": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_71": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_72": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_73": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_74": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_75": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_76": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_77": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_78": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_79": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_80": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_81": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_82": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_83": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_84": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_85": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_86": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_87": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_88": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_89": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_90": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_91": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_92": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_93": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_94": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_95": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_96": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_97": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_98": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.TwoInterior.weight_injective._proof_1_99": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.a.eq_1": [],
+    "Graceful.FiveSpider.b.eq_1": [],
+    "Graceful.FiveSpider.c.eq_1": [],
+    "Graceful.FiveSpider.construction_certificate": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.d.eq_1": [],
+    "Graceful.FiveSpider.designated_zero": [
+      "propext"
+    ],
+    "Graceful.FiveSpider.e.eq_1": [],
+    "Graceful.FiveSpider.edgeWeights_complete": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_6": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_7": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_8": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.indexed_coverage._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label.eq_1": [],
+    "Graceful.FiveSpider.label_bounded": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_10": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_8": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_bounded._proof_1_9": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_10": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_15": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_16": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_17": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_19": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_20": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_21": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_22": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_23": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_24": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_25": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_26": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_27": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_28": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_29": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_30": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_31": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_32": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_33": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_34": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_35": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_36": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_37": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_38": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_39": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_40": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_41": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_42": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.label_injective._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels.eq_1": [],
+    "Graceful.FiveSpider.vertexLabels_complete": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_6": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_7": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_8": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.vertexLabels_complete._proof_1_9": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight.eq_1": [],
+    "Graceful.FiveSpider.weight_bounded": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_10": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_11": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_12": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_13": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_14": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_15": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_bounded._proof_1_9": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_10": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_11": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_12": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_13": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_14": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_15": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_16": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_17": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_18": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_19": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_20": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_21": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_22": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_23": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_24": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_25": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_26": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_27": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_28": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_29": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_30": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_31": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_32": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_33": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_34": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_35": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_36": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_37": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_38": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_39": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_40": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_41": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_42": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_43": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_44": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_45": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_46": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_47": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_48": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_49": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_50": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_51": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_52": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_53": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_54": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_55": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_56": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.FiveSpider.weight_injective._proof_1_57": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.candidate_difference_shape": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.candidate_difference_shape._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.lower_candidate_neighbor_unique": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.lower_candidate_neighbor_unique._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_iff": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_iff._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_unique": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_unique._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pairContribution.eq_1": [],
+    "Graceful.LeafTail.pairContribution.eq_2": [],
+    "Graceful.LeafTail.pair_choices_exact": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_choices_exact._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_choices_exact._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_append": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_append._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds._proof_1_4": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds._proof_1_5": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_false": [
+      "propext"
+    ],
+    "Graceful.LeafTail.pair_contribution_true": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_true._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_1": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_differences": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_differences._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_pair_resources": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_pair_resources._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.swapped_differences_reflect": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.swapped_differences_reflect._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.two_distances_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.two_distances_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.dot.eq_1": [],
+    "Graceful.ResidueCertificate.dot_sum_columns": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.modular_obstruction": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo.eq_1": [],
+    "Graceful.ResidueCertificate.sumTo.eq_2": [],
+    "Graceful.ResidueCertificate.sumTo_add": [
+      "propext"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.RootedPairing.case56_no_completion": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.Admissible._proof_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.Satisfied.eq_1": [],
+    "Graceful.SAT.Var.x.inj": [],
+    "Graceful.SAT.Var.x.injEq": [
+      "propext"
+    ],
+    "Graceful.SAT.Var.x.sizeOf_spec": [],
+    "Graceful.SAT.Var.y.inj": [],
+    "Graceful.SAT.Var.y.injEq": [
+      "propext"
+    ],
+    "Graceful.SAT.Var.y.sizeOf_spec": [],
+    "Graceful.SAT.differences_nodup": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.distinct_edge_differences": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.row_major_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.unsat_excludes_graceful": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.witness.eq_1": [],
+    "Graceful.SAT.witness.eq_2": [],
+    "Graceful.SAT.witness_satisfies_clause": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_2": [
+      "propext"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_3": [
+      "propext"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_5": [
+      "propext"
+    ],
+    "Graceful.SAT.x_block_bound": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.x_block_bound._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.boundary_fields_injective": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.boundary_fields_injective._proof_1_1": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_step": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_step._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_transition": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_transition._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_step": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_step._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_transition": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_transition._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement.eq_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_bijective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_differences": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_graceful": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.differences.eq_1": [],
+    "Graceful.distance.eq_1": [],
+    "Graceful.distinct_subset_length": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.distinct_subset_length._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.extreme_endpoints": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.extreme_endpoints._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip._proof_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip._proof_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip.eq_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_distance": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_distance._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_involution": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_involution._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.graceful_difference_sum": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.graceful_difference_sum._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.oriented_witness": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.oriented_witness._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4Edges._proof_1": [
+      "propext"
+    ],
+    "Graceful.path4Edges.eq_1": [
+      "propext"
+    ],
+    "Graceful.path4_graceful": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.path4_middle_not_graceful": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4_middle_repeats": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4_middle_repeats._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_child_capacity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_child_capacity._simp_1_1": [
+      "propext"
+    ],
+    "Graceful.remaining_edge_endpoints": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_endpoints._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_window": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_window._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.requiredDifferences.eq_1": [],
+    "Graceful.requiredDifferences_succ": [
+      "propext"
+    ],
+    "Graceful.twice_required_sum": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.twice_required_sum._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.FiveSpider.0.Graceful.FiveSpider.TwoInterior.member_bounded": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "_private.Graceful.FiveSpider.0.Graceful.FiveSpider.TwoInterior.member_bounded._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.FiveSpider.0.Graceful.FiveSpider.nodup_map_on": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.FiveSpider.0.Graceful.FiveSpider.perm_of_nodup_subset_length": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "_private.Graceful.FiveSpider.0.Graceful.FiveSpider.perm_of_nodup_subset_length._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.LeafTail.0.Graceful.LeafTail.pairContribution.match_1.eq_1": [],
+    "_private.Graceful.LeafTail.0.Graceful.LeafTail.pairContribution.match_1.eq_2": [],
+    "_private.Graceful.ResidueCertificate.0.Graceful.ResidueCertificate.sumTo.match_1.eq_1": [],
+    "_private.Graceful.ResidueCertificate.0.Graceful.ResidueCertificate.sumTo.match_1.eq_2": [],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.SAT.0.Graceful.SAT.witness.match_1.eq_1": [],
+    "_private.Graceful.SAT.0.Graceful.SAT.witness.match_1.eq_2": []
+  },
+  "declarations_checked": 1047,
+  "finished_at": "2026-11-09T04:42:12.864511+00:00",
+  "lean_version": "Lean (version 4.24.0, arm64-apple-darwin23.6.0, commit 797c613eb9b6d4ec95db23e3e00af9ac6657f24b, Release)",
+  "passed": true,
+  "schema_version": 1,
+  "scope": "Model lemmas, construction arithmetic, search capacity bounds, conditional residual leaf allocation, one fixed rooted-branch obstruction, modular resource certificates, and universal exact vertex/edge permutation certificates for two equal-five-edge-leg spider formulas with interior extrema and complementation; not graph recognition/treehood, the abstract spider IsGraceful wrapper, Rofa's other four zero-position classes, the full conjecture, or Python code.",
+  "source_sha256": {
+    "Audit.lean": "291b2c544296818fb20fd5ef2d857559526963c26300214a13fed9611e7f2fca",
+    "Graceful.lean": "ed092ce21d1ff3ecf7ae7478048e9f4a33df47ba25c9ce9994a836b7015793ee",
+    "Graceful/Basic.lean": "dcc4d6be9723e0e5e58ca7a91dab0b432fde2ebc8bbea3984d52ef66f1e3d1f7",
+    "Graceful/Complement.lean": "d861614c5cb00a6ceb945648f1889c0cc92282b6ccfa5413a2240cc7b4465e95",
+    "Graceful/Constraints.lean": "5579a8b4cc64527462f51d5e4010fab7b59724fc699408eda3231f68ffd79e0f",
+    "Graceful/Construction.lean": "32bf5b648eb693399919c759d919c07135d73664b70c41003ded5a00020c7df0",
+    "Graceful/FiveSpider.lean": "735dcd60884cb7b534e675d6c380b37a1b443517898f1d277bcb13031880d28c",
+    "Graceful/LeafTail.lean": "fc8605922095166b9c4744310e02e82cef6ebbead927ad35f3507ff19ee8e2b2",
+    "Graceful/ResidueCertificate.lean": "04811e84f21b91e948993548ec1c26af6495d6f5fc75f3e2502f8fd178564f72",
+    "Graceful/RootedPairing.lean": "65c7868bb9f1691b6557119e0ae83af81dba5ea0ec8f6d056a6030d1dacb0271",
+    "Graceful/SAT.lean": "c6d501b36bbf0d0ab45a8aece0efd9480c8d2acb26709a5577aa10243dbd6f53",
+    "Graceful/Search.lean": "e21667d1ebd86c7678039a7f758d3ae862c7058a2c9438361ac5acf7a96f02aa",
+    "README.md": "dd6711b01645d0679eddc8e1091647dbd8d4e1aa59aa687559f756085063ac0c",
+    "lake-manifest.json": "c870b8b0c1d1cac07e83d270ec2618194a8e5c117abcb0de207fc3d5e9c12a40",
+    "lakefile.toml": "bb27f2fad3c04eadaa3fc7c2f1335c7876e7ee9e14dde992517e18dcd8a9da7d",
+    "lean-toolchain": "42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434"
+  },
+  "started_at": "2026-11-09T04:24:08.391680+00:00",
+  "theorems_checked_including_generated": 969,
+  "toolchain": "leanprover/lean4:v4.24.0"
+}

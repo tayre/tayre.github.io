@@ -1,0 +1,2757 @@
+{
+  "cases": 9,
+  "certified_against_all_modular_functionals": [
+    32,
+    50,
+    54,
+    55,
+    71,
+    72,
+    93,
+    95,
+    100
+  ],
+  "finished_at": "2026-11-09T04:19:17.397353+00:00",
+  "integer_and_nonnegative_relaxations_pass_but_completion_fails": [
+    32
+  ],
+  "metadata": {
+    "case_ids": [
+      32,
+      50,
+      54,
+      55,
+      71,
+      72,
+      93,
+      95,
+      100
+    ],
+    "discovery_seconds_per_kind_per_case": 2,
+    "protocol": "Use precisely the nine impossible residuals from the previous frozen corpus that lacked certificates over prime fields 2,3,5,7. For each seek a signed integer cover with coefficients -1..1, a nonnegative rational cover with denominator2, and an integer separator with weights -3..3. Each bounded CP-SAT search is seeded, single-threaded, and time-limited; failure makes no unbounded relaxation claim. Independently verify each positive certificate. Covers are checked from explicit valid local assignments; separating weights are checked against every injective branch assignment. Re-run full global permutation enumeration for exact completion. No runtime comparison, whole-tree negative claim or novelty claim.",
+    "provenance": {
+      "cpu_count": 8,
+      "dependencies": {
+        "PyYAML": "6.0.3",
+        "Pygments": "2.21.0",
+        "absl-py": "2.5.1",
+        "contourpy": "1.4.0",
+        "cycler": "0.12.1",
+        "fonttools": "4.68.0",
+        "graceful-tree-research": "0.1.0",
+        "immutabledict": "4.3.1",
+        "iniconfig": "2.3.1",
+        "kiwisolver": "1.5.1",
+        "matplotlib": "3.10.7",
+        "networkx": "3.5",
+        "numpy": "2.5.4",
+        "ortools": "9.14.6206",
+        "packaging": "26.3",
+        "pandas": "3.1.1",
+        "pillow": "13.0.0",
+        "pip": "25.0.1",
+        "pluggy": "1.7.0",
+        "protobuf": "6.31.1",
+        "pyparsing": "3.3.3",
+        "pytest": "8.4.2",
+        "python-dateutil": "4.0.0",
+        "python-sat": "1.8.dev24",
+        "ruff": "0.14.3",
+        "setuptools": "80.9.0",
+        "six": "1.17.0",
+        "typing_extensions": "4.16.0",
+        "tzdata": "2026.6",
+        "wheel": "0.45.1"
+      },
+      "git_commit": "3d2b2bed31bc5e6fcf37f7584fe943d338023fdf",
+      "git_status": "?? graceful-trees/formal/Graceful/FiveSpider.lean\n?? graceful-trees/scripts/experiment_residual_relaxations.py\n?? graceful-trees/src/graceful_research/residual_relaxations.py\n?? graceful-trees/src/graceful_research/residual_relaxations_verify.py\n?? graceful-trees/src/graceful_research/spider_construction.py\n?? graceful-trees/tests/test_residual_relaxations.py\n?? graceful-trees/tests/test_spider_construction.py",
+      "github": {},
+      "machine": "arm64",
+      "platform": "macOS-15.7.7-arm64-arm-64bit",
+      "processor": "arm",
+      "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+      "source_hashes": {
+        "README.md": "b1cca655c5b3ae44fa28bc2c320805e287430aebcf8bed4ee51b40a3e573439e",
+        "configs/bitset-search.json": "1863a272fec67b405c9348885589cb3224e6edbb449f3475275ddde65144d4ba",
+        "configs/edge-profiles.json": "2551e33efbc7ca3697a722a590b183be8260ecaedeea4aad12011d2cb2059adc",
+        "configs/exhaustive-small.json": "152f8eff75467a3f7824f60f7ebcb87541d1efa6b1400fc91941769698f7fcc9",
+        "configs/leaf-tail.json": "d211980903ef1ecd4b9f21414062e4b2a168c2b1c5680a55255e972ea3de9e63",
+        "configs/nightly.json": "ce3437e37d3c7a47b21d7b114d81ae6388e04600fbfb36275dcb8f6f165715ed",
+        "configs/orbit-search.json": "3c7df4ea4ad2acb3bc92bba93a2fd7f8c6ae0b7f7646ccb6e9fdb65304093c6d",
+        "configs/sat-certificates.json": "4766f4b1c80a9aaad7f8d820f53e945bf115b82872941f74d8a19e84b20ae3e5",
+        "configs/smoke.json": "ff0b3ea01a76be04692111b3e4aba7c533e5d1c742913838ca2ace704f0a0c67",
+        "configs/swap-search.json": "b325e1f5d80bc315048981b4d414a99520de9483287c38842e9a2cd1f5b542ba",
+        "docs/github-actions-usage.md": "2e84f86f82908c4cb6ed261635a7528a376e6f70b29161a2103e3d64bc0c7ddb",
+        "docs/leaf-tail.md": "eabeb2a026dbae86b600fd70274b4aac4d8a1aceb7face22614e514f4938f3e1",
+        "docs/performance.md": "b8b816d04c540b56c5702ac50a9f4397d7e00748c9331af28e75f56879a389df",
+        "docs/public-dashboard.md": "774df3921d971bf2052c03b0a561a62571d40d2c58b731287353eba32999493e",
+        "docs/research.md": "bde13ae2998328a581f4784d5736272f2cbd755bc3432fd726d144a135441816",
+        "docs/sat-certificates.md": "bfa9d32d75e5778b0717e9f66c5b32b8a6d4a3a820f701292cb25fecee18aaff",
+        "docs/techniques.md": "ac7086192a3b64e0e43deffcb8311484273b441d981900fc8f5af727f87a03ce",
+        "docs/validation.md": "623093dde0f09b6ab781c02af2a7ffabc120391e43af9e2ee9df6d580070088b",
+        "examples/archives.json": "462a5ecf17b0b840ca5285da9f4da1ab52c11e746fee314f90a949b18d004597",
+        "examples/deep-benchmark.json": "db5f1acd26ae9342579b369c59b9503bbd87e49b429a93da3e139bfe221dbfbd",
+        "examples/deep-comparison.png": "454712df81923d07ebd72ffbe5b99b17076d4386904ece03bfea11f8f5a6338e",
+        "examples/deep-comparison.svg": "17e787f26fd9c5e81add94890081dbe7ffdb61dd56b535292153663583347468",
+        "examples/deep-development.json": "03ea03b236088e65b60aaea0345dd00953873067d3fd6c7b8f66dec93dd5e04a",
+        "examples/deep-proof.json": "2281588156c17107eb7a46d110d8073812a6ce4eca4013168baa24f173c699dd",
+        "examples/frontier-benchmark.json": "6d29acf19b4626c33283a45cf8fd6143f2552d9ddff517ca0efa659fb322830c",
+        "examples/leaf-tail-benchmark.json": "61556658a13f3b6cfb1931485d12ebd4aa9c8f9025cff5c0c321ab537f48eb0c",
+        "examples/matching-lift.json": "118d110dce6277fe20b8b9834c497a9a2aad7faaaf44c6c5030f31a95410c887",
+        "examples/optimization-benchmark.json": "d656812fb8bb866a4fa9102909052108ea2863a644f1a63e9118f06514e58ab3",
+        "examples/path4-central-edge-request.json": "0ac821b139b54649731d1a5745c5a286e8960dd66ea4dc815616676b6af3e80e",
+        "examples/path4-certificate.json": "ac817784567b370d488386492493405337b989b2603b69bc4db52d2a19857bf7",
+        "examples/portfolio-benchmark.json": "5208af20a39e83f3bf7bb826ddf6807df2d0b3e99d368166241e549972cdee53",
+        "examples/residual-congruence.json": "6769ffb9507efeab312cc4ca39b6be5a6ae728b1c4f9f22509ecf9af0b0d8612",
+        "examples/residual-signatures.json": "8011328776a6691b3e95915d4382a6879055363bec3cf891ee019119570ed11b",
+        "examples/residue-proof.json": "4ed58768dd8c9a375a63f7a688fe9ba375a18dc46c9b1d1a75b3ce6e5118e08c",
+        "examples/rooted-pairing-proof.json": "1ce557971a34a25f67654ca087bfceda5ec238b45c2260912cd3ded9e07537e9",
+        "examples/rooted-pairings.json": "a197de335dd87981eff7be3f3ef0e9b3f08acd6c8070cc91012ff71a4ffd17bf",
+        "examples/sat-path4-middle/README.md": "7703e5ff0cfd7ff7690bd2a3e645d11919847e484a525bfc1383da13ff704dd1",
+        "examples/sat-path4-middle/model.cnf": "ee5234a19308a3dcd3d2f2ecbda0d4b6b8e5bb43fc028e0a81ae7ff5ee5fbd8e",
+        "examples/sat-path4-middle/proof.drup": "e4fa3943a0d256dc73389801319afff38f9eaa1813b8db243c813a57d52811ac",
+        "examples/sat-path4-middle/request.json": "75e7bf2ff4001dd34d96bb9e5c32b877af6fd269c71870dc0fa0753626aecc62",
+        "examples/sat-path4-middle/sat-parameters.json": "4c8df53cd40029db52ca6ad587a3dc2f531b13d22e7c725430c5111923df5c14",
+        "examples/sat-path4-middle/unsat-certificate.json": "6aac24f12fe01bba42f9d218301f615621ef3f2c0d199cb2c3b1f199c13d00f7",
+        "examples/sat-path4-middle/verification.json": "266187906635e76aa7d6c50e0849eb1256bc70ec55bd4e83c8e5473660973087",
+        "examples/spider-root-coverage.png": "ec2295a75537a07830833c3848e36ec7244c1bd22d84eaee8bcc0eb1177b99c7",
+        "examples/spider-root-coverage.svg": "3ca98d02ade9f1928f86e2997d31a60a470d744aaf1b0e4446d09ea57f1647f6",
+        "examples/spider-roots.json": "4a530d00fd599966efedb23247d528fb120c3098892b0316664569b747620776",
+        "examples/swap-benchmark.json": "80c6038a0fc8d5fc97f94a97041e8268c05c2ed0d509aac4073270f4794f1924",
+        "examples/swap-comparison.png": "6f218af16238931cddea8e0cca27a86ff76d7cd21c23fcfdf4f15c1447eaba32",
+        "examples/swap-comparison.svg": "d9ef4046f1114aa9cf52a67e5e6e66b833b792388762b6c58aa7c040bcc7dc1a",
+        "examples/techniques-benchmark.json": "528e8d3cd00cb7bc6e0b4646c3264972cbd13e2d4b1f169a551d3d699bc77d3d",
+        "examples/visual-progress.png": "254bf8210492e9fe46077023f14d541e8c5d17b6fc3f126da976a5e7cb2bc889",
+        "formal/.gitignore": "fde850d24186b6e99c8c0debd641fb3ab85198b109eb66f71a1fea02bd6ea1b3",
+        "formal/Audit.lean": "cdd4eeecdd39c648974e69fd878f755b28997e958aee4107cee9807e129a244c",
+        "formal/Graceful.lean": "e2819a465ddd62941a43c1879ac101b9332e85daaadec758ceaf7897e2414aff",
+        "formal/Graceful/Basic.lean": "dcc4d6be9723e0e5e58ca7a91dab0b432fde2ebc8bbea3984d52ef66f1e3d1f7",
+        "formal/Graceful/Complement.lean": "d861614c5cb00a6ceb945648f1889c0cc92282b6ccfa5413a2240cc7b4465e95",
+        "formal/Graceful/Constraints.lean": "5579a8b4cc64527462f51d5e4010fab7b59724fc699408eda3231f68ffd79e0f",
+        "formal/Graceful/Construction.lean": "32bf5b648eb693399919c759d919c07135d73664b70c41003ded5a00020c7df0",
+        "formal/Graceful/FiveSpider.lean": "bf72192cb9be975e28db488fef4d5680265f3926219bf7991e0c8bc3a0810496",
+        "formal/Graceful/LeafTail.lean": "fc8605922095166b9c4744310e02e82cef6ebbead927ad35f3507ff19ee8e2b2",
+        "formal/Graceful/ResidueCertificate.lean": "04811e84f21b91e948993548ec1c26af6495d6f5fc75f3e2502f8fd178564f72",
+        "formal/Graceful/RootedPairing.lean": "65c7868bb9f1691b6557119e0ae83af81dba5ea0ec8f6d056a6030d1dacb0271",
+        "formal/Graceful/SAT.lean": "c6d501b36bbf0d0ab45a8aece0efd9480c8d2acb26709a5577aa10243dbd6f53",
+        "formal/Graceful/Search.lean": "e21667d1ebd86c7678039a7f758d3ae862c7058a2c9438361ac5acf7a96f02aa",
+        "formal/README.md": "4a3101555d1b2e7c1edc5a3b7aa0f2a2bb993e03d64932ff58ff29351d2ca6fb",
+        "formal/lake-manifest.json": "c870b8b0c1d1cac07e83d270ec2618194a8e5c117abcb0de207fc3d5e9c12a40",
+        "formal/lakefile.toml": "bb27f2fad3c04eadaa3fc7c2f1335c7876e7ee9e14dde992517e18dcd8a9da7d",
+        "formal/lean-toolchain": "42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434",
+        "pyproject.toml": "9d4bcba3b8be3134a5c1c20e774ff7ebf8c2fe9d9e7c87cd62f2dd6f57527774",
+        "requirements.lock": "8a08affbf5e23cf1f7d45880664308d8e9d097a9ff774d9e78b24b153daf8fb0",
+        "scripts/benchmark.py": "9a9ead48f2391b70c3dc1d0f465116f59075098d8d1d80f93dde3e8f2f91751d",
+        "scripts/benchmark_deep.py": "8e9d6b7fedcbcd4ac1068d866633067a28e159a92ae21fabbe8ebbee5e45d3d0",
+        "scripts/benchmark_frontier.py": "43c3b480b04d06da3bbd5930f1af4edbb0f0089ab9d31c3cbccbf624b2bd62e9",
+        "scripts/benchmark_leaf_tail.py": "f5e4d3b4fbe3efca499f656d239c8a6c4ebc1d78ac32e935f31b598d9d1d4e59",
+        "scripts/benchmark_portfolio.py": "d215f6f25e230476c334d42c0aa81037f8da5eefb4f9a49dc43f78dd54f42f9c",
+        "scripts/benchmark_swaps.py": "c3e50b1f7218fb2100caa06c61c2ac47b8555d6ab3259b330326f784900001c8",
+        "scripts/benchmark_techniques.py": "c638bfd59b0bb345191ffe3d9cf3072f4aeef969a8c1361919033ead754acac9",
+        "scripts/check_proofs.py": "847cf1a08fe25fa3bc96831c6cbd5bfba79fa95e598a64129ca81290fd1f0f86",
+        "scripts/cloud_run.py": "34ab3575864805256b9a8ec0903e04a113ee7c54a26dfd56c7f26eac3f47016e",
+        "scripts/experiment_matching_lift.py": "798e1ea97307c08a898797d78e6327ff48263f2e0ec4ec0009b1e3a63dd0f30f",
+        "scripts/experiment_residual_congruence.py": "69cdccebc870ce216a1a724390cb50a82aa29517e527ccbb38764e742b9a0bcb",
+        "scripts/experiment_residual_relaxations.py": "73b80cdc545d5aa8799894a73d2c90f33b12b023700754f85326d3423653bd44",
+        "scripts/experiment_residual_signatures.py": "80fbd39561b1d61fe7b2423fe319816a9830380081cf40a837951d0046dc9338",
+        "scripts/experiment_rooted_pairings.py": "c001f9cc378b3b52d9cbf83c893db06166cddc953bfd6277d2dfae5831cfc870",
+        "scripts/experiment_spider_roots.py": "a3c446a226f0914420a05efe7fc475ea031834a3f776cdf8c22ed696a50a0077",
+        "scripts/notify_findings.py": "447c5648d8493b177fb4d3cd3737cc888991db5506fd55bdc5252170046d03a1",
+        "scripts/publish_dashboard.py": "145764d1b03182291e36a9a2b75e9c66300b405ee168fc71d3c42db182aaef92",
+        "scripts/publish_summary.py": "504d15c202c5360b192ccd4ffb9138f60b998aeb5145ccd1caa980d5a5d384aa",
+        "scripts/restore_checkpoint.py": "d1a616fff8d3f51d0a04953391795975d351fa27a9da5b37b38d74055c163672",
+        "src/graceful_research/__init__.py": "ec67998353c5d50e733d9fdf8febbf16737ab3d99b29ae648647f7c78c4389df",
+        "src/graceful_research/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+        "src/graceful_research/analysis.py": "f9b532ef8cd9965e119f7a2d9a384e9e90c7d3fb6daf0889ae44a19be5fd9df8",
+        "src/graceful_research/audit.py": "f1fc48ab425cc0a834e2414b48190ba8dc224f90b9abeb46b732c3282ca53826",
+        "src/graceful_research/cli.py": "f567f358d2e074864e0864cff590d412cb22eabb9c8a23ecbde22159ed7cbc46",
+        "src/graceful_research/config.py": "b2ff68a081b913ea6ebce80966780edea753efe88d58d745a2cb4319ac92b269",
+        "src/graceful_research/constructive.py": "ff7d01a5104e7bdd0e0d574a60964de61497ec45fe07f76d936050d06c64a475",
+        "src/graceful_research/findings.py": "853ea507ad3daf28f58eb4aac97d343a1b703c8ad183a68b24f195fc21c2d893",
+        "src/graceful_research/frontier.py": "1301bd8f5e7d91d4ac8f32c8f6df9bcfcb49a27c44c650645d3ed15ab418c742",
+        "src/graceful_research/frontier_accelerated.py": "20011d57c2d9c7692b4f85515d1f7eeb6e7ab24f543fd3cb86c5ff52ef8f3631",
+        "src/graceful_research/frontier_fast.py": "d4b1683da2873dc485a8c329d3a6da22e6f9e6460bd75e0177c7b2d1f4c25c0a",
+        "src/graceful_research/frontier_memo.py": "d26af07f62b04472db849b7d5e37b0e2aed87d136b563eb86cc8a00dd22229cd",
+        "src/graceful_research/frontier_memo_fast.py": "26aac5c3dbccbb0df99c15af64a2331a03de1fad748036645fddcb4a32a9c9f2",
+        "src/graceful_research/frontier_portfolio.py": "9ae028a24cf5d6e3e662c35bb2e32af491fc10be11415d15aaafa4e25bd8567c",
+        "src/graceful_research/io.py": "b415f03f4f264e3d835716826030cc03aa61a5a94364ae0479e028ff53e0e489",
+        "src/graceful_research/leaf_frontier.py": "3a10d3e5cd142cc025ec2ba0cdff5daf427ffd5ca2df5502b1d846ecd681c7c0",
+        "src/graceful_research/leaf_tail.py": "c7820034e6f9ecb270fa191d007ed5529e64051cc1200b22fbb554f724917295",
+        "src/graceful_research/matching_lift.py": "370f1fcac3978833d0f24a8060e8f645e445aafc6fa7d5af83b7497aaa11535d",
+        "src/graceful_research/progress.py": "b1489edfd49b31693438d42f7291e7823044636e49fa0d41bdab562b8b086e76",
+        "src/graceful_research/proof_verify.py": "37f6811dafc7b32c04ce661eb91e73f384ddd402eb223eea8701cd7a65a338d0",
+        "src/graceful_research/residual_congruence.py": "f456c0c344911691d34e5f1a4b8503a78a468d2b9f03e56e6232da6daa14d75b",
+        "src/graceful_research/residual_congruence_verify.py": "066a3fae027f98084971ff32398797b3aa9e891b0ed17e0059bb37ab829ac619",
+        "src/graceful_research/residual_relaxations.py": "3a4dd8171b04645c3c375153105da1ac17534f6643a2c1ecc5938ec87bbcd79f",
+        "src/graceful_research/residual_relaxations_verify.py": "143fbfa72a3a9878be2a8fb9f89d073d8060b6c088aa90e390dc84ea17abc07f",
+        "src/graceful_research/residual_signatures.py": "4b1b26e79776d306ae313f031c885a38a26e39c2ec9a9c27defedcd9dbe23b5d",
+        "src/graceful_research/rooted_pairings.py": "e037d79320053ad106d81dbd96d778d03e7104079824d81ee4480a1a9eb3460c",
+        "src/graceful_research/rooted_spiders.py": "e026eed579b5ed1cd7c9489f8786a5e274a92a3db9509571497b1711fba99196",
+        "src/graceful_research/runner.py": "1a7d890e97d6bf21d263ef339cc259a5458feff882dd08a17a6b7a93bcc6119b",
+        "src/graceful_research/sat_encoding.py": "1f44a2d3cc84357990213d23ba6789c081ea4a92ea9795251c0cd3872f0b3f9b",
+        "src/graceful_research/sat_solver.py": "2bcfc0538ca182bed87ba75a3cbcc3d329d5bc32e643576f12db2e36dd3e85cc",
+        "src/graceful_research/solver.py": "4017e54b0827009fba3121c96f1245f561dd924658c61659f55709d86df3ad6e",
+        "src/graceful_research/spider_construction.py": "8b6b3fa46e55eb4791c8fe3efcaec4f2ffa2624e88b280bf12eaa1ad28994301",
+        "src/graceful_research/storage.py": "59b57b3ca799d1a67c60b41a57c41405f61ceded4f72f7c6efbc74a3b178e5ed",
+        "src/graceful_research/swap_portfolio.py": "098791626cba5f34797adec8bd0d2ca1cfd0d8098d4a281c2b34b8d1ce34299f",
+        "src/graceful_research/swap_search.py": "483c28ab2bc4b79468699368d68d3323e6c7d57c95b35519d319e60a354dde08",
+        "src/graceful_research/trees.py": "e40fe33dd2eb1a95d84a6501cf411543e383a57fd501817c2434d86ccc1520d8",
+        "src/graceful_research/verify.py": "557dbce92cbba825a994b15716cf7f14d63eb9bf1fdd7498c2ae0013f51603df",
+        "src/graceful_research/visuals.py": "af88f0cce7658058ccee52e09c4288617de5f83657b12e438893be0fec518f4b",
+        "src/graceful_research/worker.py": "43d19486190ab30a0f33d80dc69522bb0273916792c6892b887c3f011f190295",
+        "tests/test_cloud.py": "5a05cc9ba8edcd4190fb2e9b90398beb9d0b2f45e89d8ec6af3dfc0f04e8e65a",
+        "tests/test_dashboard.py": "bd55f0d8dd88ccb5aa9e812a9ffff48a9d43973102d02cd89d562682e196cac8",
+        "tests/test_deep_benchmark.py": "16775cea409a678e413d4279b738523b0ef4e6ffe67d4f7b0de8c9a3d6840b8c",
+        "tests/test_findings.py": "f8ac3a16a68d8ea3ccf5ed308e6200c4681687a58674a648f0bcd301f1383cca",
+        "tests/test_formal.py": "290e279c3ce3acafa4e7556dc6146a671408612664cad038dc3b046fb527b653",
+        "tests/test_frontier.py": "ef33cdd6de09772b63d69e0531e5bb491c2943ba22adddd7ca08dbe0c6690b9b",
+        "tests/test_frontier_accelerated.py": "3a602e5c74dae16d9c47088798b26cc1897020ab60675130a11a370004a5ab6e",
+        "tests/test_frontier_fast.py": "5f5445de871529a7e11506fd230588ab392329adf8efce67f0c8c969ab55bde8",
+        "tests/test_frontier_memo.py": "522140956a411a0b236faf09cb915a6bbc724348232d42d3b963bbdbd5a9b3bf",
+        "tests/test_frontier_memo_fast.py": "2453cca281d7aa76917457e822740a60029b13acc20a461c3f2dad27224ffa5c",
+        "tests/test_frontier_portfolio.py": "c937cfba139b857c90d50a0af592d1988e46aa1b0551e762c6ac56aafa899359",
+        "tests/test_leaf_integration.py": "f9ca25d7b26c9b5484cb2f54e04fdb7c66ffa98717a6eec01221fed5be7bace4",
+        "tests/test_leaf_tail.py": "23df13538a9ac8e326f5233ba5ee7ced28acf4e7b518600f8758d71fd6e84543",
+        "tests/test_matching_lift.py": "d9e09895c7f57a37ad8400ee4a15e1786d03faab80586c35be4a2ce0074d942c",
+        "tests/test_math.py": "ef76487b30ebffc9d6d4290339f601286595f78c5d09fc87176f16974b14ca7a",
+        "tests/test_optimizations.py": "c5815eac2c9d4ef9f3410f69697c965ae1065e5ba6ddb8ee096fddd259aa33e9",
+        "tests/test_parallel_experiments.py": "824a833671b852feff1c146fde30f88700c724c9aa8128521ea94e1dfa81681e",
+        "tests/test_progress.py": "6003444058327c204fdaf36a5dd65ea148c3c214e3f7ede0786903bffe2c04b4",
+        "tests/test_residual_congruence.py": "21f3cecb6b8ee846f21e20a359345d0f24dfe99e0fecd7e001f8faf8c9d105ee",
+        "tests/test_residual_relaxations.py": "b602aa1070c877db9fad9cdd2b274627b5bfaf94ab42512465fcf733c88146b2",
+        "tests/test_residual_signatures.py": "c49ca9436678f64ac45b1d93b0ba3316dc39d203fbcb58e11b2fc4b9a2193d23",
+        "tests/test_retry_queue.py": "95fa71262e5cc574d801607a44a595a8e964f7b1e70dfd8ba367378e9c5e3723",
+        "tests/test_rooted_pairings.py": "77a3e83d2e780f58d8d7e9569702601d36679d577e388469591289de4db5f750",
+        "tests/test_rooted_spiders.py": "a0bd2c5e61500d4ed9954cb4468fbd3ee83785def43afb2b4c69c3c8ade3f264",
+        "tests/test_sat.py": "301cb509f4881bd1e37aaa03771e569eb364a8af3484ede149f7e558b92bb5c1",
+        "tests/test_spider_construction.py": "2849f73a217a8dc063c747969ce11f8a51f20ffac7fc746c18d5c29c98715042",
+        "tests/test_swap_benchmark.py": "71fdc284780bbb992abb4e089fdbfd629e908afe456472d187650d2d1d3b3a15",
+        "tests/test_swap_integration.py": "9ded33319629783e3ae275fd10ab538ac3253bcfce81f7565dc5e4ce460e349e",
+        "tests/test_swap_search.py": "ac1e718dd3e4864900a31d68586a247f1adadc88f430edf33397a139a37c8ecf",
+        "tests/test_system.py": "d1c26bf185e33fe756963d01ce6ba711b6bdcf63e8ccbe1c894cccdd1a896598",
+        "workflows/graceful-ci.yml": "6a01ef0df564636c00b64ade301127654b74fa7f561b7e065d1180590ec12c98",
+        "workflows/graceful-experiments.yml": "2c5564c5f78c3a84764eab2ed4f4934492fed0fc19e8c7ca293c4e7b5e3c8c3f",
+        "workflows/graceful-research.yml": "d788039e81f2c9fffd6bfbbd17b11027f511ecb143352faa68a3287116a1180e"
+      }
+    },
+    "schema_version": 1,
+    "scope": "fixed_residual_forest",
+    "source_corpus_sha256": "8011328776a6691b3e95915d4382a6879055363bec3cf891ee019119570ed11b",
+    "started_at": "2026-11-09T04:19:14.926026+00:00"
+  },
+  "novelty_claimed": false,
+  "oracle_assignments_checked": 42480,
+  "records": [
+    {
+      "case": 32,
+      "input": {
+        "ambient_n": 6,
+        "components": [
+          {
+            "parent_label": 0,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "parent_label": 0,
+            "parents": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "kind": "generated",
+        "layout": 7,
+        "sample": 0,
+        "seed": 250002547,
+        "unused": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "unused": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            "kind": "nonnegative_rational_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 2,
+                "labels": [
+                  4,
+                  1,
+                  2
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 2,
+                "labels": [
+                  5,
+                  1,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 2,
+                "labels": [
+                  3,
+                  2
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 2,
+                "labels": [
+                  5,
+                  4
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 35,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "nonnegative_rational_relaxation_feasible",
+            "errors": [],
+            "kind": "nonnegative_rational_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 353479703,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0038620419800281525
+        },
+        "nonnegative_separator": {
+          "certificate": null,
+          "columns": 35,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 693437961,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0023419579956680536
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "unused": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  1,
+                  3,
+                  5
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  1,
+                  4,
+                  5
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  5,
+                  1,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  2,
+                  3
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 35,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 615434539,
+          "status": "certificate_verified",
+          "wall_seconds": 0.1288249169883784
+        }
+      }
+    },
+    {
+      "case": 50,
+      "input": {
+        "ambient_n": 7,
+        "components": [
+          {
+            "parent_label": 1,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "parent_label": 1,
+            "parents": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "kind": "generated",
+        "layout": 7,
+        "sample": 0,
+        "seed": 1960670908,
+        "unused": [
+          0,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 14,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 573967104,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0011183750175405294
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                0
+              ],
+              "differences": [
+                1,
+                0,
+                0,
+                0,
+                -1
+              ],
+              "labels": [
+                1,
+                0,
+                -1,
+                -1,
+                0
+              ]
+            }
+          },
+          "columns": 14,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 80,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 19
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 1668919349,
+          "status": "certificate_verified",
+          "wall_seconds": 0.002002666995394975
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  6,
+                  0,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  6
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  4,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  5,
+                  3
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 14,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 120786363,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0031094999867491424
+        }
+      }
+    },
+    {
+      "case": 54,
+      "input": {
+        "ambient_n": 7,
+        "components": [
+          {
+            "parent_label": 2,
+            "parents": [
+              -1,
+              0
+            ]
+          },
+          {
+            "parent_label": 2,
+            "parents": [
+              -1,
+              0
+            ]
+          },
+          {
+            "parent_label": 2,
+            "parents": [
+              -1
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "kind": "generated",
+        "layout": 9,
+        "sample": 0,
+        "seed": 1641722664,
+        "unused": [
+          0,
+          1,
+          3,
+          4,
+          6
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 2097619363,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0012702499807346612
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                1,
+                3,
+                4,
+                6
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                0,
+                0
+              ],
+              "differences": [
+                0,
+                0,
+                0,
+                -1,
+                -1
+              ],
+              "labels": [
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          },
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 45,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 26
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 1220139646,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0031696670048404485
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                1,
+                3,
+                4,
+                6
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  4,
+                  1
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  1
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  1,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  0
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  6
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 2,
+                "denominator": 1,
+                "labels": [
+                  3
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 7
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 621738431,
+          "status": "certificate_verified",
+          "wall_seconds": 0.005741832981584594
+        }
+      }
+    },
+    {
+      "case": 55,
+      "input": {
+        "ambient_n": 7,
+        "components": [
+          {
+            "parent_label": 6,
+            "parents": [
+              -1,
+              0
+            ]
+          },
+          {
+            "parent_label": 2,
+            "parents": [
+              -1,
+              0
+            ]
+          },
+          {
+            "parent_label": 2,
+            "parents": [
+              -1
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "kind": "generated",
+        "layout": 9,
+        "sample": 1,
+        "seed": 1774959732,
+        "unused": [
+          0,
+          1,
+          3,
+          4,
+          5
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 2000338628,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.001595958019606769
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 6,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                4,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                1,
+                3,
+                4,
+                5
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                2,
+                0,
+                0
+              ],
+              "differences": [
+                0,
+                0,
+                -1,
+                -2,
+                -2
+              ],
+              "labels": [
+                1,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          },
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 45,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 26
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 2021392792,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0026903750258497894
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 6,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 2,
+                  "parents": [
+                    -1
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                4,
+                5,
+                6
+              ],
+              "unused": [
+                0,
+                1,
+                3,
+                4,
+                5
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  4
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  1,
+                  5
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  4,
+                  0
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  4,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 2,
+                "denominator": 1,
+                "labels": [
+                  0
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 24,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 5
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 13,
+          "seconds": 2,
+          "seed": 1124805982,
+          "status": "certificate_verified",
+          "wall_seconds": 0.020229582994943485
+        }
+      }
+    },
+    {
+      "case": 71,
+      "input": {
+        "ambient_n": 8,
+        "components": [
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          3,
+          6,
+          7
+        ],
+        "kind": "generated",
+        "layout": 7,
+        "sample": 1,
+        "seed": 1915829610,
+        "unused": [
+          0,
+          2,
+          3,
+          6,
+          7
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 12,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 602979275,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0007697079854551703
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                6,
+                7
+              ],
+              "unused": [
+                0,
+                2,
+                3,
+                6,
+                7
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                0
+              ],
+              "differences": [
+                0,
+                1,
+                0,
+                -1,
+                0
+              ],
+              "labels": [
+                0,
+                -1,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "columns": 12,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 80,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 16
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 884824230,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0021679170022252947
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                6,
+                7
+              ],
+              "unused": [
+                0,
+                2,
+                3,
+                6,
+                7
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  6,
+                  0,
+                  7
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  2,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  0
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  6,
+                  7
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  7,
+                  0
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 12,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 6
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 1459445946,
+          "status": "certificate_verified",
+          "wall_seconds": 0.002137583011062816
+        }
+      }
+    },
+    {
+      "case": 72,
+      "input": {
+        "ambient_n": 8,
+        "components": [
+          {
+            "parent_label": 5,
+            "parents": [
+              -1,
+              0,
+              1
+            ]
+          },
+          {
+            "parent_label": 5,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "kind": "generated",
+        "layout": 8,
+        "sample": 0,
+        "seed": 1941606288,
+        "unused": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          7
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 720,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 47,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 1873727532,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0030565419874619693
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 5,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 5,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "unused": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                7
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                -1,
+                -1
+              ],
+              "differences": [
+                0,
+                0,
+                0,
+                0,
+                -1,
+                -1
+              ],
+              "labels": [
+                1,
+                1,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          },
+          "columns": 47,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 240,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 74
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 729144065,
+          "status": "certificate_verified",
+          "wall_seconds": 0.011496791004901752
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 5,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 5,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ],
+              "unused": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                7
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  3,
+                  7
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  2,
+                  7,
+                  0
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  7,
+                  1
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  3,
+                  4
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 47,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 1940206696,
+          "status": "certificate_verified",
+          "wall_seconds": 0.03207466599997133
+        }
+      }
+    },
+    {
+      "case": 93,
+      "input": {
+        "ambient_n": 9,
+        "components": [
+          {
+            "parent_label": 0,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          3,
+          6,
+          8
+        ],
+        "kind": "generated",
+        "layout": 7,
+        "sample": 1,
+        "seed": 1184523539,
+        "unused": [
+          1,
+          3,
+          6,
+          7,
+          8
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 13,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 2128135719,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.0008064580033533275
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                6,
+                8
+              ],
+              "unused": [
+                1,
+                3,
+                6,
+                7,
+                8
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                0
+              ],
+              "differences": [
+                0,
+                0,
+                0,
+                -1,
+                -2
+              ],
+              "labels": [
+                0,
+                0,
+                0,
+                1,
+                1
+              ]
+            }
+          },
+          "columns": 13,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 80,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 19
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 1586742710,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0026351669803261757
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                6,
+                8
+              ],
+              "unused": [
+                1,
+                3,
+                6,
+                7,
+                8
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  8,
+                  6,
+                  7
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  1,
+                  7
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  3,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  7,
+                  6
+                ],
+                "numerator": -1
+              }
+            ]
+          },
+          "columns": 13,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 12,
+          "seconds": 2,
+          "seed": 940204397,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0028371250082273036
+        }
+      }
+    },
+    {
+      "case": 95,
+      "input": {
+        "ambient_n": 9,
+        "components": [
+          {
+            "parent_label": 1,
+            "parents": [
+              -1,
+              0,
+              1
+            ]
+          },
+          {
+            "parent_label": 0,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "kind": "generated",
+        "layout": 8,
+        "sample": 1,
+        "seed": 283098922,
+        "unused": [
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 720,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 41,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 702806807,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.002713125024456531
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                3,
+                4,
+                5,
+                7,
+                8
+              ],
+              "unused": [
+                2,
+                3,
+                4,
+                5,
+                7,
+                8
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                1
+              ],
+              "differences": [
+                0,
+                0,
+                0,
+                0,
+                -1,
+                -2
+              ],
+              "labels": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          },
+          "columns": 41,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 240,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 63
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 784754443,
+          "status": "certificate_verified",
+          "wall_seconds": 0.004900457977782935
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 1,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 0,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                3,
+                4,
+                5,
+                7,
+                8
+              ],
+              "unused": [
+                2,
+                3,
+                4,
+                5,
+                7,
+                8
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  5,
+                  2,
+                  7
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  5,
+                  8,
+                  3
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  8,
+                  4,
+                  3
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  8,
+                  3,
+                  5
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 41,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 4
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 14,
+          "seconds": 2,
+          "seed": 1676969509,
+          "status": "certificate_verified",
+          "wall_seconds": 0.018506249994970858
+        }
+      }
+    },
+    {
+      "case": 100,
+      "input": {
+        "ambient_n": 9,
+        "components": [
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0,
+              1
+            ]
+          },
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0,
+              0
+            ]
+          },
+          {
+            "parent_label": 4,
+            "parents": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "differences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "kind": "generated",
+        "layout": 11,
+        "sample": 0,
+        "seed": 1901795697,
+        "unused": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "oracle": {
+        "assignments_checked": 40320,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "relaxations": {
+        "nonnegative_rational_cover": {
+          "certificate": null,
+          "columns": 378,
+          "discovery_bounds": {
+            "coefficient_max": 2,
+            "coefficient_min": 0,
+            "denominator": 2
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": null,
+          "kind": "nonnegative_rational_cover",
+          "raw_discovery_status": "INFEASIBLE",
+          "rows": 19,
+          "seconds": 2,
+          "seed": 1340157006,
+          "status": "no_certificate_found_within_bounds",
+          "wall_seconds": 0.02544429202680476
+        },
+        "nonnegative_separator": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "unused": [
+                0,
+                1,
+                2,
+                3,
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            "kind": "nonnegative_separator",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "weights": {
+              "branches": [
+                0,
+                0,
+                0
+              ],
+              "differences": [
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                -1,
+                -2
+              ],
+              "labels": [
+                1,
+                0,
+                -1,
+                -1,
+                -1,
+                -1,
+                0,
+                1
+              ]
+            }
+          },
+          "columns": 378,
+          "discovery_bounds": {
+            "coefficient_max": 3,
+            "coefficient_min": -3
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "no_nonnegative_real_cover",
+            "errors": [],
+            "kind": "nonnegative_separator",
+            "local_assignments_examined": 728,
+            "scope": "fixed_residual_forest",
+            "target_weight": -1,
+            "valid": true,
+            "valid_options_checked": 560
+          },
+          "kind": "nonnegative_separator",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 19,
+          "seconds": 2,
+          "seed": 323735880,
+          "status": "certificate_verified",
+          "wall_seconds": 0.0318132090033032
+        },
+        "signed_integer_cover": {
+          "certificate": {
+            "input": {
+              "components": [
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    1
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "parent_label": 4,
+                  "parents": [
+                    -1,
+                    0
+                  ]
+                }
+              ],
+              "differences": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "unused": [
+                0,
+                1,
+                2,
+                3,
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            "kind": "signed_integer_cover",
+            "schema_version": 1,
+            "scope": "fixed_residual_forest",
+            "terms": [
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  5,
+                  8,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  7,
+                  1,
+                  6
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 0,
+                "denominator": 1,
+                "labels": [
+                  7,
+                  6,
+                  8
+                ],
+                "numerator": -1
+              },
+              {
+                "branch": 1,
+                "denominator": 1,
+                "labels": [
+                  0,
+                  7,
+                  8
+                ],
+                "numerator": 1
+              },
+              {
+                "branch": 2,
+                "denominator": 1,
+                "labels": [
+                  2,
+                  3
+                ],
+                "numerator": 1
+              }
+            ]
+          },
+          "columns": 378,
+          "discovery_bounds": {
+            "coefficient_max": 1,
+            "coefficient_min": -1,
+            "denominator": 1
+          },
+          "exact_completion_feasible": false,
+          "failure_scope": "bounded discovery only; no unbounded relaxation claim",
+          "independent_check": {
+            "checker": "stdlib-residual-relaxations-v1",
+            "conclusion": "integer_lattice_membership_excludes_all_modular_functionals",
+            "errors": [],
+            "kind": "signed_integer_cover",
+            "local_assignments_examined": 0,
+            "scope": "fixed_residual_forest",
+            "valid": true,
+            "valid_options_checked": 5
+          },
+          "kind": "signed_integer_cover",
+          "raw_discovery_status": "OPTIMAL",
+          "rows": 19,
+          "seconds": 2,
+          "seed": 1806016209,
+          "status": "certificate_verified",
+          "wall_seconds": 1.3928193330066279
+        }
+      }
+    }
+  ],
+  "verified_certificate_counts": {
+    "nonnegative_rational_cover": 1,
+    "nonnegative_separator": 8,
+    "signed_integer_cover": 9
+  },
+  "whole_tree_counterexamples": 0
+}

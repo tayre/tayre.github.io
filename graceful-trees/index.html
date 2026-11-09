@@ -19,7 +19,7 @@
     <p>The <strong>Graceful Tree Conjecture</strong> states that every finite tree with <i>n</i> vertices can be labeled with the integers 0, …, <i>n</i> − 1, each used once, so that the absolute differences across its edges are exactly 1, …, <i>n</i> − 1.</p>
     <p>This project searches for such labelings, independently verifies them, and studies difficult cases and restrictions on the labels. The goal is to contribute reproducible evidence and testable mathematical questions, or identify a counterexample that can be independently established.</p>
     <nav aria-label="Page navigation">
-      <a href="#progress">Results</a> · <a href="#project">Method</a> · <a href="#references">References</a> · <a href="https://github.com/tayre/tayre.github.io/tree/master/graceful-trees">Source code</a>
+      <a href="#progress">Results</a> · <a href="#construction">Construction</a> · <a href="#project">Method</a> · <a href="#references">References</a> · <a href="https://github.com/tayre/tayre.github.io/tree/master/graceful-trees">Source code</a>
     </nav>
   </header>
 
@@ -96,6 +96,21 @@
         <details class="suggestion-details"><summary>Proposed experiments</summary><p class="note">Candidate questions and benchmarks; truth and novelty have not been established.</p><div id="suggestions"></div></details>
         <p class="provenance"><span id="provenance"></span><br><a id="raw-data" href="https://raw.githubusercontent.com/tayre/tayre.github.io/graceful-progress/campaigns/nightly-v1.json">Download public data (JSON)</a></p>
       </div>
+    </section>
+
+    <section id="construction" aria-labelledby="construction-title">
+      <h2 id="construction-title">A construction for symmetric spiders</h2>
+      <p class="note">9 November 2026 · General formula proved; research priority unconfirmed.</p>
+      <p>Take any number of equal legs, each five edges long, meeting at one hub. Every vertex can receive zero in some graceful labeling. An explicit formula supplies the two interior positions; <a href="https://arxiv.org/pdf/2312.16235">Rofa’s Corollary 2</a> supplies the remaining positions. This property is called <em>0-rotatability</em>.</p>
+      <p>Lean checks the new formula’s exact vertex labels and edge differences for every positive number of legs. Independent finite checks also verify the implementation through 10,000 legs. The full conclusion additionally uses the graph argument and Rofa’s result. No matching construction was found in the scoped literature review; novelty still needs specialist review.</p>
+      <details>
+        <summary>View a three-leg example</summary>
+        <figure class="research-figure">
+          <a href="examples/five-spider-witness.svg" aria-label="Open the three-leg diagram at full size"><img src="examples/five-spider-witness.svg" width="900" height="750" style="width:100%;height:auto" loading="lazy" alt="Three five-edge legs share a hub labeled 1. The distinguished leg is labeled 14, 0, 15, 3, 12 outward. All vertex labels 0 through 15 and edge differences 1 through 15 occur once."></a>
+          <figcaption><a href="examples/five-spider-witness.svg">Open the diagram at full size.</a> The formula places 0 and 15 at adjacent interior vertices. Complementing every label, replacing <i>x</i> by 15 − <i>x</i>, moves zero to the other endpoint and preserves every edge difference. This construction is separate from the nightly campaign totals.</figcaption>
+        </figure>
+      </details>
+      <p><a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/docs/spider_formula_five.md">Formula and proof</a> · <a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/formal/Graceful/FiveSpider.lean">Lean source</a> · <a href="examples/five-spider-evidence.zip">Reproducible evidence</a></p>
     </section>
 
     <section id="project" aria-labelledby="project-title">

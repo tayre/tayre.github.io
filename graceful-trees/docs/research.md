@@ -1,6 +1,6 @@
 # Research basis and initial strategy
 
-Literature review: 8 November 2026. This is a scoped review, not a novelty certification.
+Literature review: 8–9 November 2026. This is a scoped review, not a novelty certification.
 The [deep review and experiment priorities](#deep-review-and-experiment-priorities)
 below compare the implemented searches with primary papers, author programs and
 recent preprints. The follow-up [rooted-branch experiment](leaf-tail.md#rooted-two-vertex-branch-experiment)
@@ -370,8 +370,17 @@ formalize the Python checker or prove that its branch enumeration is complete.
 The standalone checker establishes that finite premise by regenerating every
 injective branch assignment. Neither the certificate principle nor the Lean lemma
 is claimed novel. A family-specific explanation of recurring coefficients remains
-a more interesting mathematical target; integer-lattice and real-feasibility
-comparisons are still future work.
+a more interesting mathematical target.
+
+**Relaxation follow-up:** all nine remaining impossible inputs admit independently
+checked signed integer solutions of `Az=b`. Consequently no modular linear
+functional of this form can refute any of them, at **any** modulus. Eight instead
+have exact integer separating functionals excluding nonnegative real covers.
+The ninth, case 32, admits a nonnegative half-integral cover as well as a signed
+integer cover, although all 120 actual assignments fail. It demonstrates the
+limitation of combining these two relaxations. This is an explanation of a fixed
+corpus, not a new general obstruction theorem. See the
+[exact certificates](leaf-tail.md#integer-and-real-relaxations).
 
 ### 5. Measure the restriction imposed by connected prefixes
 
@@ -423,13 +432,26 @@ that the authors' executable results are false.
 | Li's October 2026 rainbow-map preprint [23] | Counts graceful labeled trees across all shapes and repairs cycles by changing topology. This does not show that every fixed shape occurs. A fixed-shape swap/three-cycle exchange experiment is an interesting, lower-priority bridge to investigate. |
 | Claimed general proof, arXiv:2409.01981 [24] | Withdrawn on 1 September 2026 for an error in its Composition Lemma. It is not an available proof of the conjecture. |
 
-A particularly small theorem target from Rofa's question is an equal-leg spider
-with four edges per leg and zero prescribed at a leg midpoint. The other vertex
-levels are covered by his Corollary 2. Start with 3–8 legs, then seek a formula
-for arbitrary leg count; finite successes alone do not establish it. No later
-resolution was found in this scoped review. For lobsters, deficiency exactly two
-suggests a different construction experiment: contract matched pairs while keeping
-the two unmatched vertices as exceptional attachment interfaces.
+**Correction after closer review:** the equal-four-edge-leg midpoint target is
+already a consequence of rooted uniform subdivision applied to the known
+length-two depth-one construction. The same observation covers the length-six
+midpoint. These are useful implementation controls, not unresolved theorem
+targets. The rooted consequence follows from the exceptional-vertex construction
+in [Krop, Theorem 2.4](https://arxiv.org/pdf/1402.3994), with complementation;
+[Superdock's thesis](https://arxiv.org/pdf/1403.1564) surveys these subdivision
+constructions. For lobsters, deficiency exactly two suggests a different
+experiment: retain two exceptional interfaces while contracting matched pairs.
+
+**General construction obtained:** for every positive leg count, an explicit
+formula for `S(k,5)` puts 0 at depth two and `5k` at adjacent depth three.
+Complementation supplies zero at depth three. Rofa's Corollary 2 covers depths
+0,1,4,5, so every five-edge symmetric spider is 0-rotatable. The
+[formula, proof, literature comparison and evidence](spider_formula_five.md)
+are preserved. Lean verifies its exact vertex and edge-weight permutations for
+all positive `k`; the full corollary also uses the written graph argument and
+Rofa's result. No matching construction was found in this scoped review;
+priority remains unconfirmed. Primitive length-seven interior positions are
+the next targets, not asserted to be open in the full literature.
 
 **Implemented spider experiment:** CP-SAT found independently verified prescribed-
 zero witnesses for all six midpoint targets and all 24 other root-orbit controls,
@@ -437,8 +459,8 @@ with four edges per leg and 3–8 legs. Eleven tiny controls gave ten witnesses 
 one restricted solver negative, also checked by all 120 root-fixed permutations;
 no negative proof certificate is claimed for it. The model disables complement
 symmetry breaking because complementation does not preserve a specified zero.
-This finite table supplies examples for a prospective formula, not a formula or
-general theorem. [Exact witnesses](../examples/spider-roots.json) and a
+This earlier finite table is not the proof of the general construction above.
+[Exact witnesses](../examples/spider-roots.json) and a
 [coverage figure](../examples/spider-root-coverage.svg) are preserved.
 
 The Li preprint includes Lean files and explicitly assumes two Gamma-function

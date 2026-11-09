@@ -46,7 +46,14 @@ run_cmd do
     ``Graceful.ResidueCertificate.sumTo_add,
     ``Graceful.ResidueCertificate.dot_sum_columns,
     ``Graceful.ResidueCertificate.sumTo_mod_zero,
-    ``Graceful.ResidueCertificate.modular_obstruction]
+    ``Graceful.ResidueCertificate.modular_obstruction,
+    ``Graceful.FiveSpider.construction_certificate,
+    ``Graceful.FiveSpider.designated_zero,
+    ``Graceful.FiveSpider.TwoInterior.construction_certificate,
+    ``Graceful.FiveSpider.TwoInterior.interior_extremes,
+    ``Graceful.FiveSpider.TwoInterior.complementary_vertexLabels_complete,
+    ``Graceful.FiveSpider.TwoInterior.complementary_distance,
+    ``Graceful.FiveSpider.TwoInterior.complementary_interior_zero]
   for name in required do
     unless names.contains name do
       throwError "Required theorem missing from audit: {name}"

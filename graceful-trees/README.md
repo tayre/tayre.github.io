@@ -28,6 +28,14 @@ with established methods separated from unverified research proposals.
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
+**Current mathematical result:** an [explicit construction](docs/spider_formula_five.md)
+puts zero at either interior position on a symmetric spider with five edges per
+leg, for any number of legs. Together with Rofa's known remaining positions,
+this gives zero at any chosen vertex. Lean checks the new formula's exact label
+and difference permutations for every positive leg count. The literature search
+found no matching result, but novelty remains unconfirmed; this does not settle
+the general conjecture.
+
 Three [parallel follow-up experiments](docs/validation.md#parallel-follow-up-experiments--8-november-2026)
 now test a known perfect-matching construction, prescribed zero labels on symmetric
 spiders, and independently checkable parity obstructions for fixed residual
@@ -40,7 +48,8 @@ complement symmetry reduction, difference-sum constraint, a restricted negative
 control, the local arithmetic of the caterpillar construction, completeness
 of the SAT clause schema, necessary bounds used in candidate search, and a fixed
 rooted-branch obstruction, plus the arithmetic implication of modular resource
-certificates. They do not formalize the whole Python program or prove
+certificates and universal five-edge spider formula certificates.
+They do not formalize the whole Python program or prove
 the conjecture.
 
 Every run also produces an **offline visual progress report** (`report.html`),
@@ -521,6 +530,20 @@ These can run concurrently for functional validation. Keep timed algorithm
 comparisons isolated from other CPU-intensive jobs. The
 [saved archive](examples/parallel-experiments.zip) includes a report for each track;
 [the validation record](docs/validation.md) explains the observations and limits.
+
+The formula and relaxation follow-ups also run independently:
+
+```sh
+python scripts/experiment_spider_construction.py --output results/spider-construction
+python scripts/experiment_residual_relaxations.py --output results/residual-relaxations
+python -S results/residual-relaxations/residual_relaxations_verify.py results/residual-relaxations/certificates
+```
+
+`spider_construction.py` produces complete labeled trees without search;
+`residual_relaxations.py` discovers bounded algebraic certificates, and the
+separate `residual_relaxations_verify.py` checks them using exact standard-library
+arithmetic. Their reports distinguish a general proved formula, finite witness
+validation, relaxation feasibility and fixed-residual impossibility.
 
 `HypothesisProvider` is a typed interface for future optional LLM assistance. Such a
 provider consumes the analysis summary and proposes questions; it must never modify

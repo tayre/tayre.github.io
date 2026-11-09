@@ -33,7 +33,7 @@ def check(project, output, lake):
         "started_at": datetime.now(UTC).isoformat(),
         "source_sha256": source_hashes(project),
         "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
-        "scope": "Model lemmas, construction arithmetic, search capacity bounds, conditional residual leaf allocation, one fixed rooted-branch obstruction, and the algebraic implication of modular resource certificates; not the conjecture or Python code.",
+        "scope": "Model lemmas, construction arithmetic, search capacity bounds, conditional residual leaf allocation, one fixed rooted-branch obstruction, modular resource certificates, and universal exact vertex/edge permutation certificates for two equal-five-edge-leg spider formulas with interior extrema and complementation; not graph recognition/treehood, the abstract spider IsGraceful wrapper, Rofa's other four zero-position classes, the full conjecture, or Python code.",
     }
 
     def command(label, args):

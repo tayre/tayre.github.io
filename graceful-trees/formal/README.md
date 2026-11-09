@@ -25,9 +25,18 @@ Treehood is a separate precondition: these model lemmas work for any edge list.
 | [LeafTail.lean](Graceful/LeafTail.lean) | Reflection swaps two-parent differences; a midpoint is unique; candidate differences satisfy the folded-path arithmetic; explicit independent pair choices realize exactly the even counts in their interval. With forced count `f`, `c` pairs, and an optional midpoint `e <= 1`, a quota `k` is realizable exactly when `f <= k <= f+2*c+e` and either `e=1` or `k-f` is even. | The allocation arithmetic in `leaf_tail.py`, conditional on a correct decomposition of its choice graph. |
 | [RootedPairing.lean](Graceful/RootedPairing.lean) | Three branches at parents `(0,9,9)` cannot consume unused labels `{1,4,5,6,7,8}`, internal differences `{1,4,6}` and attachment differences `{2,3,5}` exactly. The predicate requires all three resource lists to be exact permutations, hence labels and differences are unique. | The fixed case-56 obstruction in `rooted_pairings.py` experiments. This proves only the declared resource partition, not impossibility after relaxing that partition or gracefulness of a whole tree. |
 | [ResidueCertificate.lean](Graceful/ResidueCertificate.lean) | A modular linear functional that annihilates every selected resource column but not a target excludes any exact cover of that target. The proof establishes linearity across finite column sums and the zero-residue sum implication. | The algebra behind residual congruence certificates. No primality assumption is needed for validity; discovery uses small prime fields. Python table completeness, serialization and checking are not formalized. |
+| [FiveSpider.lean](Graceful/FiveSpider.lean) | For every positive number `k` of five-edge legs, both explicit constructions give vertex-label lists permuting `0,...,5k` and actual adjacent-edge-difference lists permuting `1,...,5k`. The stronger construction puts 0 and `5k` at depths 2 and 3; its complement preserves all differences and vertex coverage and puts 0 at depth 3. | Universal exact-list certificates for the equal-five-edge-leg constructions. This is not merely a finite collection of checked examples. Graph recognition, treehood, an abstract `IsGraceful` wrapper and Rofa's remaining four zero-position classes are not formalized. |
 
-The construction proofs cover **local arithmetic**, conditional on their stated
-bounds. Spine recognition, traversal coverage, the complete caterpillar theorem,
+The caterpillar construction proofs cover **local arithmetic**, conditional on
+their stated bounds. `FiveSpider.lean` goes further: it proves the complete
+vertex and edge permutations for both displayed formulas, with no finite bound
+on the number of legs. These exact lists encode the hub-to-first-vertex edge
+and four subsequent edges of every leg. Combining the interior-position result
+with Rofa's published result for the other four positions is a separate written
+argument; the complete 0-rotatability theorem is not claimed as formalized here.
+Neither proof validity nor the axiom audit establishes novelty.
+
+Spine recognition, traversal coverage, the complete caterpillar theorem,
 tree diameter, graph isomorphism, the CP-SAT encoding and the Python verifier are
 not formalized here. They retain their mathematical arguments and independent
 tests. The mapping from Python code to these Lean statements remains a human
