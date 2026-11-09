@@ -17,10 +17,13 @@ maintenance, and browser checks.
 The [site index](https://tayre.github.io/) links to this project and the Hellinger
 research note.
 
-This is research software, not a proof of the conjecture. The literature already
-reports exhaustive verification through 35 vertices. Our small exhaustive runs
-validate the implementation; they do not improve that bound. Read the
-[research summary and references](docs/research.md) before interpreting results.
+This is research software, not a proof of the conjecture. Fang's 2010 paper reports
+exhaustive verification through 35 vertices; his 2012 author announcement reports
+39. Our small exhaustive runs validate the implementation; they do not improve
+either bound. Read the [research summary and references](docs/research.md) before
+interpreting results. The [deep literature review](docs/research.md#deep-review-and-experiment-priorities)
+ranks practical improvements and precisely scoped mathematical experiments,
+with established methods separated from unverified research proposals.
 
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.

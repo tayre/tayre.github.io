@@ -176,3 +176,10 @@ The connected descending search itself follows
 and [Fang's algorithm](https://arxiv.org/abs/1003.3045).
 A broader priority review would be required before claiming this residual criterion
 as a new result in the literature.
+
+The [deep literature review](research.md#deep-review-and-experiment-priorities)
+identifies the reflection identity as established transfer arithmetic and connects
+short-branch completion to generalized Skolem pairings. Its next proposed targets
+are compatibility with fixed attachment labels and independently checked congruence
+certificates for complete signature tables. These proposals are not implemented
+results or claims of novelty.

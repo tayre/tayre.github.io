@@ -1,6 +1,9 @@
 # Research basis and initial strategy
 
 Literature review: 8 November 2026. This is a scoped review, not a novelty certification.
+The [deep review and experiment priorities](#deep-review-and-experiment-priorities)
+below compare the implemented searches with primary papers, author programs and
+recent preprints. Proposed experiments are not implemented results.
 
 ## What is established
 
@@ -10,10 +13,13 @@ has label 0 and no differences. A search cutoff says nothing about nonexistence.
 
 Aldred and McKay reported exhaustive verification through 27 vertices, using
 label-swapping search with tabu-style escape from local optima [1]. Fang reported
-verification through 35 vertices with a hybrid of backtracking, randomized search,
-and reuse between related trees [2]. These are computational results reported by
+verification through 35 vertices with a hybrid of backtracking and randomized
+search [2]. Reusing a previous tree's witness is explicitly proposed by
+Aldred–McKay [1]. These are computational results reported by
 their authors; this project has not rerun them. The 35-vertex result is our primary
-published computational baseline, not a claim that no subsequent computation exists.
+documented paper baseline. Fang subsequently announced verification through
+**39 vertices** in December 2012 [9]; that author report is distinct from the
+documented 2010 paper and has not been reproduced here.
 The number of unlabelled trees grows rapidly; nightly runs here will not reproduce
 that bound by brute force. Small exhaustive sweeps are regression evidence.
 
@@ -182,6 +188,253 @@ rotatability, prescribed-label and edge-constrained graceful labelings is requir
 before claiming novelty. Observed solver difficulty is a property of an encoding,
 seed and machine, not evidence that a tree is nongraceful.
 
+## Deep review and experiment priorities
+
+### What the review changes
+
+The immediate engineering priority is **a complementary search space**, followed
+by known constructive reductions. The mathematical priority is **small completion
+theorems with prescribed boundary labels**. Neither requires larger nightly budgets.
+The existing v3 portfolio remains the baseline: the opt-in leaf-v4 method lost a
+success and increased runtime on its held-out sample [local evidence](leaf-tail.md).
+That result argues against adding more work at every search node without measuring
+how often the new rule applies.
+
+| Priority | Direction | Status in the literature | Useful deliverable here |
+| --- | --- | --- | --- |
+| 1, engineering | Incremental label swapping and bounded exact repair | Swapping, tabu escape and hybrids are established [1,2] | A complementary, independently verified witness finder |
+| 2, engineering | Contract a perfect matching, solve the smaller tree, lift | Known strong-gracefulness / delta constructions [10,11] | A positive construction reducing `2s` vertices to `s` |
+| 1, mathematics | Rooted pairing of short residual branches | Skolem and interval pairing are established [3,15,16]; the proposed boundary classification is unverified | An explicit completion rule for a narrowly defined resource family |
+| 2, mathematics | Congruence certificates for incompatible signatures | Standard integer-lattice reasoning applied to our exact tables | Small explanations of partial-state impossibility, then a parameterized lemma |
+| 3, mathematics | Root/edge-conditioned descending-prefix width | Connected edge search and rooted failures have substantial prior work [12,13,14] | A certified separation or a constructive theorem for a specified family |
+
+This ordering is a research judgment, not an estimated probability of solving the
+conjecture. A useful contribution could be a construction, a proved completion
+criterion, or a reproducible negative result about a stronger restricted statement.
+
+### 1. Search permutations, then repair a small neighborhood
+
+Aldred–McKay search by exchanging vertex labels and escaping local optima [1].
+Fang's hybrid includes swaps, a missing-difference objective, recent-move exclusions
+and occasional non-improving moves [2, §§2.2–2.3]. Our production fast path currently
+grows connected descending prefixes; it lacks this complementary permutation search.
+
+Maintain the frequency of each edge difference. A swap at vertices `u,v` changes
+only edges incident to `u` or `v`; evaluate the union once, including `uv` only once
+when it exists. Compare minimizing the number of missing differences with minimizing
+their sum. Both objectives are zero exactly at a graceful permutation, but may guide
+search differently. If a candidate stalls with few conflicts, an optional exact
+neighborhood model can unfreeze their endpoints and a bounded set of neighbors,
+keeping the other vertex labels fixed. Its infeasibility concerns only that frozen
+neighborhood. Every successful repair still needs the full independent verifier.
+
+**Experiment:** v3 candidates, swap candidates, and v3/swaps candidates on 48 fresh
+isomorphism classes, three repetitions, one second per complete attempt. All three
+routes retain the same exact fallback; candidates share a 0.1-second cap and the
+fallback receives the remainder. That is 432 seconds of attempt allowance,
+excluding preparation. Use earlier failures for
+development, then freeze choices before generating the final holdout. Record
+success sets, censored failures, objective trajectories and runtime. Add exact repair
+only in a separate ablation. No speedup is asserted before this comparison.
+
+### 2. Use perfect matchings as a constructive reduction
+
+Broersma–Hoede's strong-gracefulness framework [10,25, §4] and the generalized delta
+construction [11, §2] give a useful implementation route. For a tree on `2s`
+vertices with a perfect matching, contract its matched edges to a tree `C` on `s`
+vertices. Given a graceful labeling `f` of `C`, assign the two vertices of its
+matched pair the values
+
+```text
+2 f(v),  2s - 1 - 2 f(v).
+```
+
+Orient each pair so that every edge between pairs joins two even labels or two
+odd labels. This can be done recursively because `C` is a tree. Inter-pair
+differences are then the distinct even numbers `2,4,...,2s-2`; matched differences
+are the distinct odd numbers `|4f(v)-(2s-1)|`. Together the labels and differences
+exhaust the required ranges. This is a restatement of a known construction,
+not a new theorem.
+
+**Experiment:** detect the matching, solve the contree with the existing portfolio,
+reconstruct, independently verify, and record contraction depth and total cost.
+Include matching-rich sampled trees as well as known lobster controls. Recursive
+contraction may reduce the problem further. A failed or timed-out contree attempt
+does not justify rejecting the original tree: this route seeks a strongly graceful
+witness, a stronger condition than ordinary gracefulness.
+
+There is also a useful refinement to our pendant-maximum-edge question. Perfect-
+matching lobsters and almost-perfect-matching lobsters are already graceful by
+known constructions [10,11]. For lobsters with at least two vertices, those
+constructions also yield a pendant maximum edge (the two-vertex case is immediate):
+in the perfect case, lift a zero-labeled end leaf of the caterpillar contree; its
+matched pair has only one external incident edge. In the almost-perfect case,
+Krop's proof leaves a longest-path endpoint unmatched and gives it the largest
+label. Since it is a leaf in a graceful labeling, its sole edge must be the largest.
+This pendant-edge conclusion is our direct consequence of the constructions,
+not a separately quoted theorem or a novelty claim.
+
+Accordingly, focus discovery probes on non-caterpillar lobsters with
+`n - 2*maximum_matching_size >= 2`. Keep the known cases as controls. This excludes
+two already explained subclasses; it does not establish that all remaining cases
+are outside every known construction. The current campaign filter has not yet
+been changed to make this refinement.
+
+### 3. Classify short branches using Skolem and interval pairings
+
+An unfinished branch `p--x--y` consumes unused labels `x,y`, internal difference
+`|x-y|`, and attachment difference `|p-x|`. Generalized Skolem sets study pairing
+positions into prescribed differences. Nordh's Theorem 6 gives parity and density
+necessary conditions; they are insufficient for arbitrary positions, with
+`P={1,2,4,5}`, `A={1,3}` as an explicit control [15].
+
+Letzter–Pokrovskiy–Williams give an explicit rainbow matching between equal odd-width
+label intervals using a centered consecutive difference block (Proposition 5.8),
+then lift repeated components using extra label range (Lemma 5.9) [3]. Signed
+Langford constructions supply related even-width displacement patterns [16,
+Lemma 4.3 and Theorem 5.5]. Simply rediscovering these pairings would not be new.
+
+The concrete question is which pairings can **also satisfy prescribed attachment
+labels and differences simultaneously**. Start with at most four two-vertex
+branches attached to one or two fixed parents, within the existing eight-vertex
+residual limit. Enumerate unused resources consisting of one interval, two
+intervals, or an interval with at most two holes; specify a partition of remaining
+differences into internal and attachment resources. Compare exact feasibility with
+the known pairing conditions and constructions. Extract smallest failures caused
+specifically by attachment or orientation, rather than by impossible pairing alone.
+
+The target is a theorem for one parameterized resource pattern, with an explicit
+construction and finite exceptions. Arbitrary resource sets are too broad for an
+initial classification. Existing spider branch-packing work [17] is another prior-art
+boundary. Novelty of the proposed rooted compatibility classification is unresolved.
+
+Our existing two-parent leaf identity also has clear transfer ancestry:
+`x+y=p+q` is precisely the reflection arithmetic that lets a pair of leaves change
+parents without changing the two differences. Superdock's transfer framework
+explicitly uses such parent/leaf sums [18, §1.1]. The identity itself should not be
+advertised as novel; the exact arbitrary-resource criterion still needs a separate
+priority check.
+
+### 4. Turn impossible tables into short arithmetic certificates
+
+The existing [residual experiment](leaf-tail.md#bounded-branch-compatibility-tables)
+contains 30 cases where every branch has a possible assignment but the branches
+cannot share resources consistently. Represent each complete branch signature as
+a column of a `0/1` matrix `A`, with rows for each branch instance, unused labels and
+remaining differences. A completion chooses columns with `A z = b`, where `b`
+is all ones and `z` is binary.
+
+A short sufficient impossibility certificate is a modulus `q >= 2` and an integer
+row vector `lambda` such that
+
+```text
+lambda A = 0 (mod q),     lambda b != 0 (mod q).
+```
+
+Multiplying `A z = b` gives a contradiction. This is elementary integer-lattice
+reasoning; Smith normal form is a possible discovery tool, not a new principle.
+Passing the congruence test does not prove feasible completion.
+
+**Experiment:** search for such certificates on the frozen 102-instance corpus,
+then on new bounded tables. Test real feasibility with `0 <= z <= 1` and integer
+lattice membership with unrestricted integer `z` separately: both relax binary
+selection, but in different ways, and their failures can overlap. Identify
+incompatibility surviving both relaxations. A checker must independently
+regenerate **complete** branch tables as well as check the arithmetic: a congruence
+over sampled columns cannot exclude an omitted valid assignment. Report the fixed
+boundary, resources and branch shapes with every certificate. These remain
+partial-state certificates, never unrestricted tree counterexamples.
+
+A concise Lean theorem can prove the certificate implication; a family-specific
+lemma explaining recurring coefficients would be the more interesting mathematical
+output. Neither this certificate format nor that theorem is implemented yet.
+
+### 5. Measure the restriction imposed by connected prefixes
+
+Horton explicitly studied connected descending edge search and formulated a
+corresponding stronger conjecture [12, §4.5]. Knuth's unrestricted `BACK-GRACEFUL`
+also allows the next edge to join **two previously unassigned vertices**, opening
+a new component; its published implementation supports at most 64 vertices [13].
+This is a useful independent baseline absent from our current prepasses. The
+single-boundary memoization key cannot be carried over unchanged.
+
+For a graceful labeling `f` of a tree with `m` edges, let `H_k` contain its `k`
+largest-difference edges and their endpoints, for `1 <= k <= m`, and define
+`w(f)=max_k components(H_k)` (zero for the singleton). Ignore isolated
+vertices outside those edges. Since these graphs are forests,
+`components(H_k)=active_vertices(H_k)-k`. Connected descending witnesses have width
+one. Investigate minimum width **conditional on a specified zero vertex or maximum
+edge**, rather than relabeling Horton's unrestricted question as new. Define a
+conditional minimum only when the restriction admits a graceful labeling; an
+unsupported restriction is a separate outcome, not a large width.
+
+**Experiment:** enumerate exact small-instance witnesses, record conditioned minima,
+and identify the smallest separations between width-one and unrestricted support.
+A witnessed width-two solution alone does not prove the absence of a width-one
+solution. That negative claim requires a complete correctly scoped search, ideally
+with a checked SAT certificate. A parameterized family forcing larger width would
+be more informative than a small atlas duplicating previous rooted computations.
+
+For prescribed-zero experiments, disable the existing complement inequality:
+complementation changes a zero root to a maximum-labeled root and need not preserve
+the restricted solution set. It remains valid for an unordered prescribed maximum
+edge. Root feasibility and ordinary gracefulness must have separate result fields.
+
+Arnold–Vitor's 2026 flexible edge search changes difference order and already studies
+rooted failures [14]. Their order-15 unrooted comparison was slower than descending
+search, despite benefits on the all-roots task. The printed Apply/Remove pseudocode
+reverses used/unused movement, so a reproduction needs independent small oracles.
+Their flexible main algorithm propagates cutoffs; its comparison algorithm does
+not visibly do so. These observations limit reuse of the pseudocode, not establish
+that the authors' executable results are false.
+
+### Other useful leads and literature cautions
+
+| Source or approach | What can be used, and what cannot be concluded |
+| --- | --- |
+| Knuth's colored exact-cover program [19] | A direct graceful-labeling encoding already exists. Our branch-signature join can use most-constrained-resource branching; decomposition or exact cover itself is not novel. Benchmark table generation separately from joining. |
+| Smith's endpoint-selector model [20] | Choose the smaller label of each difference and channel inverse vertex positions. A useful encoding ablation for restricted probes; older CP results do not establish a CP-SAT speedup on trees. |
+| Rofa's symmetric rooted trees [21] | The full paper asks whether symmetric spiders with longer legs are 0-rotatable. Interior root levels provide a precise target. Its abstract's broader wording about all spiders must not replace the narrower full-text conjecture. |
+| Recent spider constructions [17,22] | Pinned paths, self-matched legs and boundary-label extension rules provide controls and construction ideas. These results have specific hypotheses, not all-spider or all-tree conclusions. |
+| Li's October 2026 rainbow-map preprint [23] | Counts graceful labeled trees across all shapes and repairs cycles by changing topology. This does not show that every fixed shape occurs. A fixed-shape swap/three-cycle exchange experiment is an interesting, lower-priority bridge to investigate. |
+| Claimed general proof, arXiv:2409.01981 [24] | Withdrawn on 1 September 2026 for an error in its Composition Lemma. It is not an available proof of the conjecture. |
+
+A particularly small theorem target from Rofa's question is an equal-leg spider
+with four edges per leg and zero prescribed at a leg midpoint. The other vertex
+levels are covered by his Corollary 2. Start with 3–8 legs, then seek a formula
+for arbitrary leg count; finite successes alone do not establish it. No later
+resolution was found in this scoped review. For lobsters, deficiency exactly two
+suggests a different construction experiment: contract matched pairs while keeping
+the two unmatched vertices as exceptional attachment interfaces.
+
+The Li preprint includes Lean files and explicitly assumes two Gamma-function
+identities for its main analytic result. Its combinatorial part is reported to use
+only standard Lean axioms. This review checked the paper and ancillary listing,
+not a local compilation or axiom audit. Its formalization does not certify this
+repository or establish the Graceful Tree Conjecture.
+
+The asymptotic gracesize result [3] allows repeated differences; a nearly graceful
+labeling need not admit a bounded local repair. Neither abundance across tree shapes
+nor a construction of a larger graceful supertree supplies a proof for a specified
+input tree. We therefore use these works to suggest finite experiments, not to
+strengthen solver conclusions.
+
+### Evidence required before adopting a direction
+
+Keep development examples separate from fresh isomorphism classes. Freeze seeds,
+limits, objectives and method order; compare the whole route under the same wall
+allowance, including preprocessing and failed attempts. Preserve regressions and
+timeouts. Check every positive witness independently and compare exact bounded
+claims with a definition-level oracle. A new theorem needs a general argument;
+enumerating small cases alone is insufficient. Formalize useful lemmas in Lean
+with their assumptions visible, then state separately which implementation steps
+remain outside the formal proof.
+
+This review verified accessible primary texts and programs and checked source
+status through 8 November 2026. It is not an exhaustive priority search or an
+independent proof audit of every cited paper. There are no new performance
+measurements, new exhaustive bounds or claimed discoveries in this review.
+
 ## References
 
 1. R. E. L. Aldred and B. D. McKay, *Graceful and harmonious labellings of trees*,
@@ -199,3 +452,48 @@ seed and machine, not evidence that a tree is nongraceful.
 8. M. F. Hossain, M. M. Al Aziz and M. Kaykobad, *New Classes of Graceful Trees*,
    Journal of Discrete Mathematics (2014), article 194759, §2.
    [Paper and description of the standard caterpillar construction](https://doi.org/10.1155/2014/194759).
+9. Wenjie Fang, *Every tree with at most 39 vertices is graceful*, author announcement,
+   4 December 2012. [Primary report](https://fwjmath.wordpress.com/2012/12/04/every-tree-with-at-most-39-vertices-is-graceful/).
+10. H. J. Broersma and C. Hoede, *Another equivalent of the graceful tree conjecture*,
+    Ars Combinatoria 51 (1999), 183–192.
+    [Publisher record and paper](https://combinatorialpress.com/ars-articles/volume-051-ars-articles/another-equivalent-of-the-graceful-tree-conjecture/).
+11. Elliot Krop, *Lobsters with an almost perfect matching are graceful* (2014),
+    Theorem 1.6 and §2. [Full text](https://arxiv.org/html/1402.3994v1).
+12. Michael P. Horton, *Graceful Trees: Statistics and Algorithms*, University of
+    Tasmania thesis (2003), §§4.5, 4.7 and 5.2–5.4.
+    [University repository](https://figshare.utas.edu.au/articles/thesis/Graceful_Trees_Statistics_and_Algorithms/23212346).
+13. Donald E. Knuth, `BACK-GRACEFUL`, author program (2020).
+    [Literate source](https://cs.stanford.edu/~knuth/programs/back-graceful.w).
+14. Michael Arnold and Fabio Vitor, *A Flexible Edge Search Algorithm for Graceful
+    Tree Labeling*, IJCSMT 12(3) (2026), 295–333, §§4–6.
+    [Publisher PDF](https://iiardjournals.org/get/IJCSMT/VOL.%2012%20NO.%203%202026/A%20FLEXIBLE%20EDGE%20SEARCH%20ALGORITHM%20295-333.pdf).
+15. Gustav Nordh, *Perfect Skolem sets*, arXiv:math/0506155 (2005), Theorem 6.
+    [Full text](https://arxiv.org/html/math/0506155).
+16. Heather Jordon and Lon Mitchell, *Signed Langford sequences*, Discrete Mathematics
+    345(3) (2022), 112719. [Publisher article](https://doi.org/10.1016/j.disc.2021.112719).
+17. Bogdan Dumitru and Mihai Nacu, *Alternating Extremes in Graceful Labelings of Full
+    Binary Trees and Spider Trees*, July 2026 preprint, v2.
+    [arXiv:2607.12597](https://arxiv.org/abs/2607.12597).
+18. Matt Superdock, *New graceful diameter-6 trees by transfers*, June 2015 revision,
+    §1.1. [Paper](https://arxiv.org/pdf/1402.6570).
+    His 2013 thesis, posted 2014, restates the pair and midpoint transfer rules in
+    Lemmas 2.44 and 2.46: [full text](https://arxiv.org/html/1403.1564v1).
+19. Donald E. Knuth, `GRACEFUL-DLX-PRESETS`, author program (2020).
+    [Colored exact-cover generator](https://cs.stanford.edu/~knuth/programs/graceful-dlx-presets.w).
+20. Barbara M. Smith, *Constraint Programming Models for Graceful Graphs* (2006),
+    slides 13–14. [Author slides](https://www.cs.rhul.ac.uk/home/dave/MathsCSP/WebSite/slides/talks/smith/GracefulGraphs.pdf).
+21. Rafael I. Rofa, *0-rotatability of classes of rooted symmetric trees. Are rooted
+    symmetric trees 0-rotatable?*, December 2023 preprint, §3 Corollary 2 and §4.
+    [Full paper](https://arxiv.org/pdf/2312.16235).
+22. Songling Shan and Yucheng Zhong, *Graceful Labeling of Two Families of Spiders*,
+    May 2026 preprint, v2. [arXiv:2605.14295](https://arxiv.org/abs/2605.14295).
+23. Shisheng Li, *Rainbow maps and the number of graceful labelings of trees*,
+    26 October 2026 preprint, v1, Theorem 1.3 and §5.
+    [Full text](https://arxiv.org/html/2610.34877v1);
+    [metadata and Lean ancillary files](https://arxiv.org/abs/2610.34877).
+24. Parikshit Chalise, Antwan Clark and Edinah K. Gnang, arXiv:2409.01981,
+    withdrawn v3, 1 September 2026.
+    [Withdrawal and reason](https://arxiv.org/abs/2409.01981).
+25. Atílio G. Luiz, C. N. Campos and R. Bruce Richter, *On α-labellings of lobsters
+    and trees with a perfect matching*, Technical Report IC-17-14 (August 2017), §4.
+    [Primary report and explicit lift](https://www.ic.unicamp.br/~reltech/2017/17-14.pdf).
