@@ -1,0 +1,7999 @@
+{
+  "by_kind": {
+    "known_orbit_control": {
+      "verified_graceful": 24
+    },
+    "midpoint_target": {
+      "verified_graceful": 6
+    },
+    "permutation_control": {
+      "solver_infeasible": 1,
+      "verified_graceful": 10
+    }
+  },
+  "cases": 41,
+  "finished_at": "2026-11-09T03:32:58.827237+00:00",
+  "general_theorem_proved": false,
+  "metadata": {
+    "attempt_seconds": 2,
+    "budget_seconds": 90,
+    "cases": 41,
+    "master_seed": 2026110811,
+    "protocol": "Six midpoint targets on equal-leg length-four spiders with 3..8 legs, followed by the other four root orbits for each shape and eleven tiny permutation controls. One representative per symmetric leg orbit; no root or complement constraint is imposed as symmetry breaking. The prescribed zero is the experiment itself. CP-SAT uses one worker and symmetry_level=0. Preparation counts against each attempt; the total solve loop is bounded, with output finalization afterward. Concurrent execution is permitted for functional evidence; timings are not performance comparisons.",
+    "provenance": {
+      "cpu_count": 8,
+      "dependencies": {
+        "PyYAML": "6.0.3",
+        "Pygments": "2.21.0",
+        "absl-py": "2.5.1",
+        "contourpy": "1.4.0",
+        "cycler": "0.12.1",
+        "fonttools": "4.68.0",
+        "graceful-tree-research": "0.1.0",
+        "immutabledict": "4.3.1",
+        "iniconfig": "2.3.1",
+        "kiwisolver": "1.5.1",
+        "matplotlib": "3.10.7",
+        "networkx": "3.5",
+        "numpy": "2.5.4",
+        "ortools": "9.14.6206",
+        "packaging": "26.3",
+        "pandas": "3.1.1",
+        "pillow": "13.0.0",
+        "pip": "25.0.1",
+        "pluggy": "1.7.0",
+        "protobuf": "6.31.1",
+        "pyparsing": "3.3.3",
+        "pytest": "8.4.2",
+        "python-dateutil": "4.0.0",
+        "python-sat": "1.8.dev24",
+        "ruff": "0.14.3",
+        "setuptools": "80.9.0",
+        "six": "1.17.0",
+        "typing_extensions": "4.16.0",
+        "tzdata": "2026.6",
+        "wheel": "0.45.1"
+      },
+      "git_commit": "d15234dcdc487d7df9ec23977d657d2df3df0c28",
+      "git_status": "M graceful-trees/formal/Audit.lean\n M graceful-trees/formal/Graceful.lean\n M graceful-trees/formal/README.md\n M graceful-trees/scripts/check_proofs.py\n?? .github/workflows/graceful-experiments.yml\n?? graceful-trees/formal/Graceful/ResidueCertificate.lean\n?? graceful-trees/scripts/experiment_matching_lift.py\n?? graceful-trees/scripts/experiment_residual_congruence.py\n?? graceful-trees/scripts/experiment_spider_roots.py\n?? graceful-trees/src/graceful_research/matching_lift.py\n?? graceful-trees/src/graceful_research/residual_congruence.py\n?? graceful-trees/src/graceful_research/residual_congruence_verify.py\n?? graceful-trees/src/graceful_research/rooted_spiders.py\n?? graceful-trees/tests/test_matching_lift.py\n?? graceful-trees/tests/test_parallel_experiments.py\n?? graceful-trees/tests/test_rooted_spiders.py",
+      "github": {},
+      "machine": "arm64",
+      "platform": "macOS-15.7.7-arm64-arm-64bit",
+      "processor": "arm",
+      "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+      "source_hashes": {
+        "README.md": "6668426571937b8706feaee1db90259388fe0acbd6c0ab2acbc8a1a3357ed937",
+        "configs/edge-profiles.json": "2551e33efbc7ca3697a722a590b183be8260ecaedeea4aad12011d2cb2059adc",
+        "configs/exhaustive-small.json": "152f8eff75467a3f7824f60f7ebcb87541d1efa6b1400fc91941769698f7fcc9",
+        "configs/leaf-tail.json": "d211980903ef1ecd4b9f21414062e4b2a168c2b1c5680a55255e972ea3de9e63",
+        "configs/nightly.json": "8b1b385eb47df788912ff0e22f33952407b3d66affe22cbbd900edb59e4b3ed3",
+        "configs/sat-certificates.json": "4766f4b1c80a9aaad7f8d820f53e945bf115b82872941f74d8a19e84b20ae3e5",
+        "configs/smoke.json": "ff0b3ea01a76be04692111b3e4aba7c533e5d1c742913838ca2ace704f0a0c67",
+        "configs/swap-search.json": "b325e1f5d80bc315048981b4d414a99520de9483287c38842e9a2cd1f5b542ba",
+        "docs/github-actions-usage.md": "2e84f86f82908c4cb6ed261635a7528a376e6f70b29161a2103e3d64bc0c7ddb",
+        "docs/leaf-tail.md": "bd66a986b583c01b343e5585c9859e940abcd4d2665c87758deff15e17e1efd2",
+        "docs/performance.md": "0141a1a22ed2da9821aefa8fbd7cd7fe0360596ddcf02b4900bf833216552efa",
+        "docs/public-dashboard.md": "774df3921d971bf2052c03b0a561a62571d40d2c58b731287353eba32999493e",
+        "docs/research.md": "ab29985d452659d558401b6a42b34f9e222370cb042cf061ec736f856504955a",
+        "docs/sat-certificates.md": "bfa9d32d75e5778b0717e9f66c5b32b8a6d4a3a820f701292cb25fecee18aaff",
+        "docs/techniques.md": "3d001b613363cf0f8d1ff9b3bfb7323cc38d44b0e278e1e71f0f3fa958c0a3b9",
+        "docs/validation.md": "d8582a5e73ba53fe96ee4debafb874dd80f3052a7b0381cb2ecfa50938a2a98e",
+        "examples/archives.json": "462a5ecf17b0b840ca5285da9f4da1ab52c11e746fee314f90a949b18d004597",
+        "examples/frontier-benchmark.json": "6d29acf19b4626c33283a45cf8fd6143f2552d9ddff517ca0efa659fb322830c",
+        "examples/leaf-tail-benchmark.json": "61556658a13f3b6cfb1931485d12ebd4aa9c8f9025cff5c0c321ab537f48eb0c",
+        "examples/optimization-benchmark.json": "d656812fb8bb866a4fa9102909052108ea2863a644f1a63e9118f06514e58ab3",
+        "examples/path4-central-edge-request.json": "0ac821b139b54649731d1a5745c5a286e8960dd66ea4dc815616676b6af3e80e",
+        "examples/path4-certificate.json": "ac817784567b370d488386492493405337b989b2603b69bc4db52d2a19857bf7",
+        "examples/portfolio-benchmark.json": "5208af20a39e83f3bf7bb826ddf6807df2d0b3e99d368166241e549972cdee53",
+        "examples/residual-signatures.json": "8011328776a6691b3e95915d4382a6879055363bec3cf891ee019119570ed11b",
+        "examples/rooted-pairing-proof.json": "1ce557971a34a25f67654ca087bfceda5ec238b45c2260912cd3ded9e07537e9",
+        "examples/rooted-pairings.json": "a197de335dd87981eff7be3f3ef0e9b3f08acd6c8070cc91012ff71a4ffd17bf",
+        "examples/sat-path4-middle/README.md": "7703e5ff0cfd7ff7690bd2a3e645d11919847e484a525bfc1383da13ff704dd1",
+        "examples/sat-path4-middle/model.cnf": "ee5234a19308a3dcd3d2f2ecbda0d4b6b8e5bb43fc028e0a81ae7ff5ee5fbd8e",
+        "examples/sat-path4-middle/proof.drup": "e4fa3943a0d256dc73389801319afff38f9eaa1813b8db243c813a57d52811ac",
+        "examples/sat-path4-middle/request.json": "75e7bf2ff4001dd34d96bb9e5c32b877af6fd269c71870dc0fa0753626aecc62",
+        "examples/sat-path4-middle/sat-parameters.json": "4c8df53cd40029db52ca6ad587a3dc2f531b13d22e7c725430c5111923df5c14",
+        "examples/sat-path4-middle/unsat-certificate.json": "6aac24f12fe01bba42f9d218301f615621ef3f2c0d199cb2c3b1f199c13d00f7",
+        "examples/sat-path4-middle/verification.json": "266187906635e76aa7d6c50e0849eb1256bc70ec55bd4e83c8e5473660973087",
+        "examples/swap-benchmark.json": "80c6038a0fc8d5fc97f94a97041e8268c05c2ed0d509aac4073270f4794f1924",
+        "examples/swap-comparison.png": "6f218af16238931cddea8e0cca27a86ff76d7cd21c23fcfdf4f15c1447eaba32",
+        "examples/swap-comparison.svg": "d9ef4046f1114aa9cf52a67e5e6e66b833b792388762b6c58aa7c040bcc7dc1a",
+        "examples/techniques-benchmark.json": "528e8d3cd00cb7bc6e0b4646c3264972cbd13e2d4b1f169a551d3d699bc77d3d",
+        "examples/visual-progress.png": "254bf8210492e9fe46077023f14d541e8c5d17b6fc3f126da976a5e7cb2bc889",
+        "formal/.gitignore": "fde850d24186b6e99c8c0debd641fb3ab85198b109eb66f71a1fea02bd6ea1b3",
+        "formal/Audit.lean": "2ef78f1da78603e8e55269d46fd7457b7c3134feaacb3c536498f840b42d6f60",
+        "formal/Graceful.lean": "e2819a465ddd62941a43c1879ac101b9332e85daaadec758ceaf7897e2414aff",
+        "formal/Graceful/Basic.lean": "dcc4d6be9723e0e5e58ca7a91dab0b432fde2ebc8bbea3984d52ef66f1e3d1f7",
+        "formal/Graceful/Complement.lean": "d861614c5cb00a6ceb945648f1889c0cc92282b6ccfa5413a2240cc7b4465e95",
+        "formal/Graceful/Constraints.lean": "5579a8b4cc64527462f51d5e4010fab7b59724fc699408eda3231f68ffd79e0f",
+        "formal/Graceful/Construction.lean": "32bf5b648eb693399919c759d919c07135d73664b70c41003ded5a00020c7df0",
+        "formal/Graceful/LeafTail.lean": "fc8605922095166b9c4744310e02e82cef6ebbead927ad35f3507ff19ee8e2b2",
+        "formal/Graceful/ResidueCertificate.lean": "04811e84f21b91e948993548ec1c26af6495d6f5fc75f3e2502f8fd178564f72",
+        "formal/Graceful/RootedPairing.lean": "65c7868bb9f1691b6557119e0ae83af81dba5ea0ec8f6d056a6030d1dacb0271",
+        "formal/Graceful/SAT.lean": "c6d501b36bbf0d0ab45a8aece0efd9480c8d2acb26709a5577aa10243dbd6f53",
+        "formal/Graceful/Search.lean": "3dab72b4f8167769138cc2c4759f3b95e6588b9460469a6c728183bef8c79617",
+        "formal/README.md": "46d08fd87c016794048165223b086883f568492e5ded470cf6fbfe1f80a4cf58",
+        "formal/lake-manifest.json": "c870b8b0c1d1cac07e83d270ec2618194a8e5c117abcb0de207fc3d5e9c12a40",
+        "formal/lakefile.toml": "bb27f2fad3c04eadaa3fc7c2f1335c7876e7ee9e14dde992517e18dcd8a9da7d",
+        "formal/lean-toolchain": "42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434",
+        "pyproject.toml": "9d4bcba3b8be3134a5c1c20e774ff7ebf8c2fe9d9e7c87cd62f2dd6f57527774",
+        "requirements.lock": "8a08affbf5e23cf1f7d45880664308d8e9d097a9ff774d9e78b24b153daf8fb0",
+        "scripts/benchmark.py": "9a9ead48f2391b70c3dc1d0f465116f59075098d8d1d80f93dde3e8f2f91751d",
+        "scripts/benchmark_frontier.py": "43c3b480b04d06da3bbd5930f1af4edbb0f0089ab9d31c3cbccbf624b2bd62e9",
+        "scripts/benchmark_leaf_tail.py": "f5e4d3b4fbe3efca499f656d239c8a6c4ebc1d78ac32e935f31b598d9d1d4e59",
+        "scripts/benchmark_portfolio.py": "d215f6f25e230476c334d42c0aa81037f8da5eefb4f9a49dc43f78dd54f42f9c",
+        "scripts/benchmark_swaps.py": "c3e50b1f7218fb2100caa06c61c2ac47b8555d6ab3259b330326f784900001c8",
+        "scripts/benchmark_techniques.py": "c638bfd59b0bb345191ffe3d9cf3072f4aeef969a8c1361919033ead754acac9",
+        "scripts/check_proofs.py": "847cf1a08fe25fa3bc96831c6cbd5bfba79fa95e598a64129ca81290fd1f0f86",
+        "scripts/cloud_run.py": "9134fb40c6c37603a0228bf3e485ca3c53745d450b67b2141339fe813fee8d13",
+        "scripts/experiment_matching_lift.py": "798e1ea97307c08a898797d78e6327ff48263f2e0ec4ec0009b1e3a63dd0f30f",
+        "scripts/experiment_residual_congruence.py": "e3f83e4585b0cc60c753f12ee8412633572f7510a28fcb60471fb148b4930e2a",
+        "scripts/experiment_residual_signatures.py": "80fbd39561b1d61fe7b2423fe319816a9830380081cf40a837951d0046dc9338",
+        "scripts/experiment_rooted_pairings.py": "c001f9cc378b3b52d9cbf83c893db06166cddc953bfd6277d2dfae5831cfc870",
+        "scripts/experiment_spider_roots.py": "a3c446a226f0914420a05efe7fc475ea031834a3f776cdf8c22ed696a50a0077",
+        "scripts/notify_findings.py": "447c5648d8493b177fb4d3cd3737cc888991db5506fd55bdc5252170046d03a1",
+        "scripts/publish_dashboard.py": "145764d1b03182291e36a9a2b75e9c66300b405ee168fc71d3c42db182aaef92",
+        "scripts/publish_summary.py": "504d15c202c5360b192ccd4ffb9138f60b998aeb5145ccd1caa980d5a5d384aa",
+        "scripts/restore_checkpoint.py": "d1a616fff8d3f51d0a04953391795975d351fa27a9da5b37b38d74055c163672",
+        "src/graceful_research/__init__.py": "ec67998353c5d50e733d9fdf8febbf16737ab3d99b29ae648647f7c78c4389df",
+        "src/graceful_research/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+        "src/graceful_research/analysis.py": "f9b532ef8cd9965e119f7a2d9a384e9e90c7d3fb6daf0889ae44a19be5fd9df8",
+        "src/graceful_research/audit.py": "f1fc48ab425cc0a834e2414b48190ba8dc224f90b9abeb46b732c3282ca53826",
+        "src/graceful_research/cli.py": "f567f358d2e074864e0864cff590d412cb22eabb9c8a23ecbde22159ed7cbc46",
+        "src/graceful_research/config.py": "b5e6aa29e6d8cc6b8cbcb8e9764db9fa1b2188166a4691898217129f99bc8903",
+        "src/graceful_research/constructive.py": "ff7d01a5104e7bdd0e0d574a60964de61497ec45fe07f76d936050d06c64a475",
+        "src/graceful_research/findings.py": "853ea507ad3daf28f58eb4aac97d343a1b703c8ad183a68b24f195fc21c2d893",
+        "src/graceful_research/frontier.py": "1301bd8f5e7d91d4ac8f32c8f6df9bcfcb49a27c44c650645d3ed15ab418c742",
+        "src/graceful_research/frontier_memo.py": "d26af07f62b04472db849b7d5e37b0e2aed87d136b563eb86cc8a00dd22229cd",
+        "src/graceful_research/frontier_portfolio.py": "9ae028a24cf5d6e3e662c35bb2e32af491fc10be11415d15aaafa4e25bd8567c",
+        "src/graceful_research/io.py": "b415f03f4f264e3d835716826030cc03aa61a5a94364ae0479e028ff53e0e489",
+        "src/graceful_research/leaf_frontier.py": "3a10d3e5cd142cc025ec2ba0cdff5daf427ffd5ca2df5502b1d846ecd681c7c0",
+        "src/graceful_research/leaf_tail.py": "c7820034e6f9ecb270fa191d007ed5529e64051cc1200b22fbb554f724917295",
+        "src/graceful_research/matching_lift.py": "370f1fcac3978833d0f24a8060e8f645e445aafc6fa7d5af83b7497aaa11535d",
+        "src/graceful_research/progress.py": "b1489edfd49b31693438d42f7291e7823044636e49fa0d41bdab562b8b086e76",
+        "src/graceful_research/proof_verify.py": "37f6811dafc7b32c04ce661eb91e73f384ddd402eb223eea8701cd7a65a338d0",
+        "src/graceful_research/residual_congruence.py": "cdc535481e7363a2b1244c9ff6159541205bd803b82740d69578ed5ccbfde429",
+        "src/graceful_research/residual_congruence_verify.py": "066a3fae027f98084971ff32398797b3aa9e891b0ed17e0059bb37ab829ac619",
+        "src/graceful_research/residual_signatures.py": "4b1b26e79776d306ae313f031c885a38a26e39c2ec9a9c27defedcd9dbe23b5d",
+        "src/graceful_research/rooted_pairings.py": "e037d79320053ad106d81dbd96d778d03e7104079824d81ee4480a1a9eb3460c",
+        "src/graceful_research/rooted_spiders.py": "e026eed579b5ed1cd7c9489f8786a5e274a92a3db9509571497b1711fba99196",
+        "src/graceful_research/runner.py": "1a7d890e97d6bf21d263ef339cc259a5458feff882dd08a17a6b7a93bcc6119b",
+        "src/graceful_research/sat_encoding.py": "1f44a2d3cc84357990213d23ba6789c081ea4a92ea9795251c0cd3872f0b3f9b",
+        "src/graceful_research/sat_solver.py": "2bcfc0538ca182bed87ba75a3cbcc3d329d5bc32e643576f12db2e36dd3e85cc",
+        "src/graceful_research/solver.py": "09e38f06c63b5c215aa22ec968e448318ccc40175d4c0c6b67b6d0a1c60adea6",
+        "src/graceful_research/storage.py": "3dd7762d13fb823183d941b050df88e7cb4600df17f088d92a8165db3f239c15",
+        "src/graceful_research/swap_portfolio.py": "098791626cba5f34797adec8bd0d2ca1cfd0d8098d4a281c2b34b8d1ce34299f",
+        "src/graceful_research/swap_search.py": "483c28ab2bc4b79468699368d68d3323e6c7d57c95b35519d319e60a354dde08",
+        "src/graceful_research/trees.py": "e40fe33dd2eb1a95d84a6501cf411543e383a57fd501817c2434d86ccc1520d8",
+        "src/graceful_research/verify.py": "557dbce92cbba825a994b15716cf7f14d63eb9bf1fdd7498c2ae0013f51603df",
+        "src/graceful_research/visuals.py": "af88f0cce7658058ccee52e09c4288617de5f83657b12e438893be0fec518f4b",
+        "src/graceful_research/worker.py": "43d19486190ab30a0f33d80dc69522bb0273916792c6892b887c3f011f190295",
+        "tests/test_cloud.py": "5a05cc9ba8edcd4190fb2e9b90398beb9d0b2f45e89d8ec6af3dfc0f04e8e65a",
+        "tests/test_dashboard.py": "bd55f0d8dd88ccb5aa9e812a9ffff48a9d43973102d02cd89d562682e196cac8",
+        "tests/test_findings.py": "f8ac3a16a68d8ea3ccf5ed308e6200c4681687a58674a648f0bcd301f1383cca",
+        "tests/test_formal.py": "290e279c3ce3acafa4e7556dc6146a671408612664cad038dc3b046fb527b653",
+        "tests/test_frontier.py": "ef33cdd6de09772b63d69e0531e5bb491c2943ba22adddd7ca08dbe0c6690b9b",
+        "tests/test_frontier_memo.py": "522140956a411a0b236faf09cb915a6bbc724348232d42d3b963bbdbd5a9b3bf",
+        "tests/test_frontier_portfolio.py": "c937cfba139b857c90d50a0af592d1988e46aa1b0551e762c6ac56aafa899359",
+        "tests/test_leaf_integration.py": "f9ca25d7b26c9b5484cb2f54e04fdb7c66ffa98717a6eec01221fed5be7bace4",
+        "tests/test_leaf_tail.py": "23df13538a9ac8e326f5233ba5ee7ced28acf4e7b518600f8758d71fd6e84543",
+        "tests/test_matching_lift.py": "d9e09895c7f57a37ad8400ee4a15e1786d03faab80586c35be4a2ce0074d942c",
+        "tests/test_math.py": "ef76487b30ebffc9d6d4290339f601286595f78c5d09fc87176f16974b14ca7a",
+        "tests/test_optimizations.py": "c5815eac2c9d4ef9f3410f69697c965ae1065e5ba6ddb8ee096fddd259aa33e9",
+        "tests/test_parallel_experiments.py": "824a833671b852feff1c146fde30f88700c724c9aa8128521ea94e1dfa81681e",
+        "tests/test_progress.py": "6003444058327c204fdaf36a5dd65ea148c3c214e3f7ede0786903bffe2c04b4",
+        "tests/test_residual_signatures.py": "c49ca9436678f64ac45b1d93b0ba3316dc39d203fbcb58e11b2fc4b9a2193d23",
+        "tests/test_rooted_pairings.py": "77a3e83d2e780f58d8d7e9569702601d36679d577e388469591289de4db5f750",
+        "tests/test_rooted_spiders.py": "a0bd2c5e61500d4ed9954cb4468fbd3ee83785def43afb2b4c69c3c8ade3f264",
+        "tests/test_sat.py": "301cb509f4881bd1e37aaa03771e569eb364a8af3484ede149f7e558b92bb5c1",
+        "tests/test_swap_benchmark.py": "71fdc284780bbb992abb4e089fdbfd629e908afe456472d187650d2d1d3b3a15",
+        "tests/test_swap_integration.py": "9ded33319629783e3ae275fd10ab538ac3253bcfce81f7565dc5e4ce460e349e",
+        "tests/test_swap_search.py": "ac1e718dd3e4864900a31d68586a247f1adadc88f430edf33397a139a37c8ecf",
+        "tests/test_system.py": "d1c26bf185e33fe756963d01ce6ba711b6bdcf63e8ccbe1c894cccdd1a896598",
+        "workflows/graceful-ci.yml": "6a01ef0df564636c00b64ade301127654b74fa7f561b7e065d1180590ec12c98",
+        "workflows/graceful-experiments.yml": "2c5564c5f78c3a84764eab2ed4f4934492fed0fc19e8c7ca293c4e7b5e3c8c3f",
+        "workflows/graceful-research.yml": "34955e5cd6a99f536409c8f7407740e6a62b2aa72725c760582c339d185c1c2c"
+      }
+    },
+    "references": [
+      "https://arxiv.org/pdf/2312.16235"
+    ],
+    "schema_version": 1,
+    "scope": "prescribed_zero",
+    "started_at": "2026-11-09T03:32:56.345750+00:00"
+  },
+  "negative_proof_certificates": 0,
+  "novelty_claimed": false,
+  "oracle_assignments_checked": 486,
+  "outcomes": {
+    "solver_infeasible": 1,
+    "verified_graceful": 40
+  },
+  "records": [
+    {
+      "case": 0,
+      "independent_verification": {
+        "edge_differences": [
+          11,
+          12,
+          10,
+          6,
+          8,
+          4,
+          2,
+          3,
+          7,
+          1,
+          5,
+          9
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          "n": 13
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 3,
+        "name": "equal_3_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 66795923
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 2604,
+        "complement_break": false,
+        "conflicts": 7,
+        "deterministic_time": 0.00930976597308107,
+        "labels": [
+          1,
+          12,
+          0,
+          10,
+          4,
+          9,
+          5,
+          3,
+          6,
+          8,
+          7,
+          2,
+          11
+        ],
+        "model_sha256": "f71e88d491cf543c926bae5e38bca94f7deb6db636824a1d56480e058528ccd7",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 66795923,
+        "solver_seconds": 1.9989882909867447,
+        "solver_wall_seconds": 0.013988,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            11,
+            12,
+            10,
+            6,
+            8,
+            4,
+            2,
+            3,
+            7,
+            1,
+            5,
+            9
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.01667029201053083
+      }
+    },
+    {
+      "case": 1,
+      "independent_verification": {
+        "edge_differences": [
+          14,
+          16,
+          15,
+          12,
+          9,
+          4,
+          3,
+          2,
+          1,
+          13,
+          10,
+          5,
+          11,
+          8,
+          7,
+          6
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ]
+          ],
+          "n": 17
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 4,
+        "name": "equal_4_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 1725034036
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 5356,
+        "complement_break": false,
+        "conflicts": 129,
+        "deterministic_time": 0.026786565142334774,
+        "labels": [
+          2,
+          16,
+          0,
+          15,
+          3,
+          11,
+          7,
+          10,
+          8,
+          1,
+          14,
+          4,
+          9,
+          13,
+          5,
+          12,
+          6
+        ],
+        "model_sha256": "a19518f6124bcfefa1fd8d581984796fe9df66695e4c338070dca26838d70eaf",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1725034036,
+        "solver_seconds": 1.9987900419801008,
+        "solver_wall_seconds": 0.029169,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            14,
+            16,
+            15,
+            12,
+            9,
+            4,
+            3,
+            2,
+            1,
+            13,
+            10,
+            5,
+            11,
+            8,
+            7,
+            6
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.030605875013861805
+      }
+    },
+    {
+      "case": 2,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          18,
+          20,
+          19,
+          14,
+          7,
+          2,
+          5,
+          16,
+          13,
+          10,
+          4,
+          17,
+          15,
+          6,
+          3,
+          12,
+          8,
+          11,
+          9
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "n": 21
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 5,
+        "name": "equal_5_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 1971731928
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 8740,
+        "complement_break": false,
+        "conflicts": 49,
+        "deterministic_time": 0.0464021700061034,
+        "labels": [
+          19,
+          18,
+          0,
+          20,
+          1,
+          5,
+          12,
+          14,
+          9,
+          3,
+          16,
+          6,
+          10,
+          2,
+          17,
+          11,
+          8,
+          7,
+          15,
+          4,
+          13
+        ],
+        "model_sha256": "6f7b10ea8ce44da2b49ae10744b798417dc495c02b789b6a102fe23267a608a7",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1971731928,
+        "solver_seconds": 1.998593832977349,
+        "solver_wall_seconds": 0.042640000000000004,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            18,
+            20,
+            19,
+            14,
+            7,
+            2,
+            5,
+            16,
+            13,
+            10,
+            4,
+            17,
+            15,
+            6,
+            3,
+            12,
+            8,
+            11,
+            9
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.04430620901985094
+      }
+    },
+    {
+      "case": 3,
+      "independent_verification": {
+        "edge_differences": [
+          19,
+          23,
+          24,
+          22,
+          18,
+          21,
+          20,
+          16,
+          13,
+          6,
+          1,
+          4,
+          10,
+          5,
+          7,
+          3,
+          11,
+          8,
+          12,
+          9,
+          2,
+          14,
+          17,
+          15
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "n": 25
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 6,
+        "name": "equal_6_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 868801068
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 13203,
+        "complement_break": false,
+        "conflicts": 82,
+        "deterministic_time": 0.08223027845237606,
+        "labels": [
+          4,
+          23,
+          0,
+          24,
+          2,
+          22,
+          1,
+          21,
+          5,
+          17,
+          11,
+          12,
+          8,
+          14,
+          9,
+          16,
+          13,
+          15,
+          7,
+          19,
+          10,
+          6,
+          20,
+          3,
+          18
+        ],
+        "model_sha256": "f877d3ccfde6170a3619a0cad8c6942ef4ab780cdb55ce9cefc9659be84c42c8",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 868801068,
+        "solver_seconds": 1.9983460000075866,
+        "solver_wall_seconds": 0.064804,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            19,
+            23,
+            24,
+            22,
+            18,
+            21,
+            20,
+            16,
+            13,
+            6,
+            1,
+            4,
+            10,
+            5,
+            7,
+            3,
+            11,
+            8,
+            12,
+            9,
+            2,
+            14,
+            17,
+            15
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.06674779200693592
+      }
+    },
+    {
+      "case": 4,
+      "independent_verification": {
+        "edge_differences": [
+          26,
+          28,
+          27,
+          13,
+          23,
+          22,
+          20,
+          17,
+          15,
+          9,
+          8,
+          7,
+          24,
+          25,
+          21,
+          12,
+          18,
+          16,
+          1,
+          14,
+          11,
+          2,
+          3,
+          6,
+          19,
+          10,
+          4,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ]
+          ],
+          "n": 29
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 7,
+        "name": "equal_7_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 527005259
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 18909,
+        "complement_break": false,
+        "conflicts": 163,
+        "deterministic_time": 0.135742580089308,
+        "labels": [
+          2,
+          28,
+          0,
+          27,
+          14,
+          25,
+          3,
+          23,
+          6,
+          17,
+          8,
+          16,
+          9,
+          26,
+          1,
+          22,
+          10,
+          20,
+          4,
+          5,
+          19,
+          13,
+          15,
+          18,
+          24,
+          21,
+          11,
+          7,
+          12
+        ],
+        "model_sha256": "95ce0fb23b21a4cd2cea6b72913c1bebffdb031bcd061f1505109d5a08cbd7b0",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 527005259,
+        "solver_seconds": 1.9980554170033429,
+        "solver_wall_seconds": 0.095613,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            26,
+            28,
+            27,
+            13,
+            23,
+            22,
+            20,
+            17,
+            15,
+            9,
+            8,
+            7,
+            24,
+            25,
+            21,
+            12,
+            18,
+            16,
+            1,
+            14,
+            11,
+            2,
+            3,
+            6,
+            19,
+            10,
+            4,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.09787045797565952
+      }
+    },
+    {
+      "case": 5,
+      "independent_verification": {
+        "edge_differences": [
+          30,
+          32,
+          31,
+          28,
+          24,
+          18,
+          15,
+          11,
+          12,
+          3,
+          4,
+          5,
+          19,
+          9,
+          29,
+          8,
+          27,
+          25,
+          20,
+          14,
+          26,
+          22,
+          21,
+          16,
+          17,
+          1,
+          13,
+          2,
+          23,
+          10,
+          7,
+          6
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              29
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              30,
+              31
+            ],
+            [
+              31,
+              32
+            ]
+          ],
+          "n": 33
+        },
+        "kind": "midpoint_target",
+        "leg_length": 4,
+        "legs": 8,
+        "name": "equal_8_legs_4_root_distance_2",
+        "root": 2,
+        "root_distance": 2,
+        "solver_seed": 740623368
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 70198,
+        "complement_break": false,
+        "conflicts": 5080,
+        "deterministic_time": 1.0282584851643062,
+        "labels": [
+          2,
+          32,
+          0,
+          31,
+          3,
+          26,
+          8,
+          23,
+          12,
+          14,
+          17,
+          13,
+          18,
+          21,
+          30,
+          1,
+          9,
+          29,
+          4,
+          24,
+          10,
+          28,
+          6,
+          27,
+          11,
+          19,
+          20,
+          7,
+          5,
+          25,
+          15,
+          22,
+          16
+        ],
+        "model_sha256": "7057fa7bbb0df691e91279b83f3bd55e874ecf87b37d8e2e6244566e8dadc529",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 740623368,
+        "solver_seconds": 1.997857042006217,
+        "solver_wall_seconds": 0.46235400000000004,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            30,
+            32,
+            31,
+            28,
+            24,
+            18,
+            15,
+            11,
+            12,
+            3,
+            4,
+            5,
+            19,
+            9,
+            29,
+            8,
+            27,
+            25,
+            20,
+            14,
+            26,
+            22,
+            21,
+            16,
+            17,
+            1,
+            13,
+            2,
+            23,
+            10,
+            7,
+            6
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.46489579099579714
+      }
+    },
+    {
+      "case": 6,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          9,
+          6,
+          3,
+          11,
+          8,
+          5,
+          2,
+          12,
+          10,
+          7,
+          4
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          "n": 13
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 3,
+        "name": "equal_3_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 634112535
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 2759,
+        "complement_break": false,
+        "conflicts": 2,
+        "deterministic_time": 0.008430629007960551,
+        "labels": [
+          0,
+          1,
+          10,
+          4,
+          7,
+          11,
+          3,
+          8,
+          6,
+          12,
+          2,
+          9,
+          5
+        ],
+        "model_sha256": "5026abfe86dffba4535f5292b764b0051140ab18560dede0293e2f659675957d",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 634112535,
+        "solver_seconds": 1.9985904999775812,
+        "solver_wall_seconds": 0.013681,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            9,
+            6,
+            3,
+            11,
+            8,
+            5,
+            2,
+            12,
+            10,
+            7,
+            4
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.015419625007780269
+      }
+    },
+    {
+      "case": 7,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          12,
+          6,
+          2,
+          15,
+          11,
+          7,
+          3,
+          14,
+          8,
+          4,
+          5,
+          16,
+          13,
+          9,
+          10
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ]
+          ],
+          "n": 17
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 4,
+        "name": "equal_4_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 351017099
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 5279,
+        "complement_break": false,
+        "conflicts": 3,
+        "deterministic_time": 0.020219645117584843,
+        "labels": [
+          0,
+          1,
+          13,
+          7,
+          9,
+          15,
+          4,
+          11,
+          8,
+          14,
+          6,
+          10,
+          5,
+          16,
+          3,
+          12,
+          2
+        ],
+        "model_sha256": "2c0968ec8295268311757665be05adadf607c594ad2b2e39c3d78a123b7bede3",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 351017099,
+        "solver_seconds": 1.9987395409843884,
+        "solver_wall_seconds": 0.022802000000000003,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            12,
+            6,
+            2,
+            15,
+            11,
+            7,
+            3,
+            14,
+            8,
+            4,
+            5,
+            16,
+            13,
+            9,
+            10
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.024351209023734555
+      }
+    },
+    {
+      "case": 8,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          16,
+          11,
+          6,
+          18,
+          13,
+          8,
+          3,
+          20,
+          17,
+          12,
+          7,
+          19,
+          15,
+          10,
+          5,
+          2,
+          14,
+          9,
+          4
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "n": 21
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 5,
+        "name": "equal_5_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 1344512040
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 8613,
+        "complement_break": false,
+        "conflicts": 11,
+        "deterministic_time": 0.04005624407852647,
+        "labels": [
+          0,
+          1,
+          17,
+          6,
+          12,
+          18,
+          5,
+          13,
+          10,
+          20,
+          3,
+          15,
+          8,
+          19,
+          4,
+          14,
+          9,
+          2,
+          16,
+          7,
+          11
+        ],
+        "model_sha256": "4c647a816f523fd031bc652d089f556677a93451e13ebbb15d214a88bebb2cda",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1344512040,
+        "solver_seconds": 1.9985798329871614,
+        "solver_wall_seconds": 0.035881,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            16,
+            11,
+            6,
+            18,
+            13,
+            8,
+            3,
+            20,
+            17,
+            12,
+            7,
+            19,
+            15,
+            10,
+            5,
+            2,
+            14,
+            9,
+            4
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.03754245801246725
+      }
+    },
+    {
+      "case": 9,
+      "independent_verification": {
+        "edge_differences": [
+          17,
+          8,
+          13,
+          18,
+          16,
+          14,
+          3,
+          2,
+          19,
+          11,
+          1,
+          7,
+          21,
+          15,
+          12,
+          6,
+          20,
+          9,
+          4,
+          5,
+          24,
+          23,
+          22,
+          10
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "n": 25
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 6,
+        "name": "equal_6_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 1742387853
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 13519,
+        "complement_break": false,
+        "conflicts": 265,
+        "deterministic_time": 0.0796725196972502,
+        "labels": [
+          0,
+          17,
+          9,
+          22,
+          4,
+          16,
+          2,
+          5,
+          3,
+          19,
+          8,
+          7,
+          14,
+          21,
+          6,
+          18,
+          12,
+          20,
+          11,
+          15,
+          10,
+          24,
+          1,
+          23,
+          13
+        ],
+        "model_sha256": "232f4251fabb4b375c1da8f1252aa0b630900bf9debab9d9270c8507c34ae41a",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1742387853,
+        "solver_seconds": 1.9983644999738317,
+        "solver_wall_seconds": 0.063526,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            17,
+            8,
+            13,
+            18,
+            16,
+            14,
+            3,
+            2,
+            19,
+            11,
+            1,
+            7,
+            21,
+            15,
+            12,
+            6,
+            20,
+            9,
+            4,
+            5,
+            24,
+            23,
+            22,
+            10
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.06543912502820604
+      }
+    },
+    {
+      "case": 10,
+      "independent_verification": {
+        "edge_differences": [
+          25,
+          2,
+          15,
+          7,
+          28,
+          26,
+          20,
+          9,
+          24,
+          13,
+          5,
+          4,
+          27,
+          22,
+          14,
+          10,
+          1,
+          3,
+          16,
+          6,
+          21,
+          18,
+          23,
+          19,
+          17,
+          11,
+          12,
+          8
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ]
+          ],
+          "n": 29
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 7,
+        "name": "equal_7_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 1005991957
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 18882,
+        "complement_break": false,
+        "conflicts": 281,
+        "deterministic_time": 0.12401957238614582,
+        "labels": [
+          0,
+          25,
+          23,
+          8,
+          15,
+          28,
+          2,
+          22,
+          13,
+          24,
+          11,
+          16,
+          12,
+          27,
+          5,
+          19,
+          9,
+          1,
+          4,
+          20,
+          14,
+          21,
+          3,
+          26,
+          7,
+          17,
+          6,
+          18,
+          10
+        ],
+        "model_sha256": "eec8d3d154a9b51695fef346950569a6d33331076baccd8e3e1084148a22fc2a",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1005991957,
+        "solver_seconds": 1.9981044589949306,
+        "solver_wall_seconds": 0.088075,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            25,
+            2,
+            15,
+            7,
+            28,
+            26,
+            20,
+            9,
+            24,
+            13,
+            5,
+            4,
+            27,
+            22,
+            14,
+            10,
+            1,
+            3,
+            16,
+            6,
+            21,
+            18,
+            23,
+            19,
+            17,
+            11,
+            12,
+            8
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.09036533298785798
+      }
+    },
+    {
+      "case": 11,
+      "independent_verification": {
+        "edge_differences": [
+          27,
+          10,
+          13,
+          20,
+          23,
+          9,
+          5,
+          11,
+          7,
+          21,
+          26,
+          24,
+          22,
+          4,
+          2,
+          14,
+          16,
+          1,
+          6,
+          12,
+          29,
+          17,
+          18,
+          19,
+          32,
+          31,
+          30,
+          28,
+          25,
+          15,
+          3,
+          8
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              29
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              30,
+              31
+            ],
+            [
+              31,
+              32
+            ]
+          ],
+          "n": 33
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 8,
+        "name": "equal_8_legs_4_root_distance_0",
+        "root": 0,
+        "root_distance": 0,
+        "solver_seed": 1448851639
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 26445,
+        "complement_break": false,
+        "conflicts": 671,
+        "deterministic_time": 0.20572936913512152,
+        "labels": [
+          0,
+          27,
+          17,
+          4,
+          24,
+          23,
+          14,
+          19,
+          8,
+          7,
+          28,
+          2,
+          26,
+          22,
+          18,
+          20,
+          6,
+          16,
+          15,
+          21,
+          9,
+          29,
+          12,
+          30,
+          11,
+          32,
+          1,
+          31,
+          3,
+          25,
+          10,
+          13,
+          5
+        ],
+        "model_sha256": "a62352814ae10e8aece7cc9b6a1dfd2d8be16912d1e7cdcd0496fd9a002629ac",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1448851639,
+        "solver_seconds": 1.9977324579958804,
+        "solver_wall_seconds": 0.137262,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            27,
+            10,
+            13,
+            20,
+            23,
+            9,
+            5,
+            11,
+            7,
+            21,
+            26,
+            24,
+            22,
+            4,
+            2,
+            14,
+            16,
+            1,
+            6,
+            12,
+            29,
+            17,
+            18,
+            19,
+            32,
+            31,
+            30,
+            28,
+            25,
+            15,
+            3,
+            8
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.13992858299752697
+      }
+    },
+    {
+      "case": 12,
+      "independent_verification": {
+        "edge_differences": [
+          12,
+          11,
+          10,
+          3,
+          9,
+          7,
+          8,
+          5,
+          6,
+          2,
+          1,
+          4
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          "n": 13
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 3,
+        "name": "equal_3_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 1944631283
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 2725,
+        "complement_break": false,
+        "conflicts": 49,
+        "deterministic_time": 0.009748476265473188,
+        "labels": [
+          12,
+          0,
+          11,
+          1,
+          4,
+          3,
+          10,
+          2,
+          7,
+          6,
+          8,
+          9,
+          5
+        ],
+        "model_sha256": "d70acc2ed20fa2d932b452b9b403af73fe5a5773c5da704afc0412172bc01b5d",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1944631283,
+        "solver_seconds": 1.9989102919935249,
+        "solver_wall_seconds": 0.015047000000000001,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            12,
+            11,
+            10,
+            3,
+            9,
+            7,
+            8,
+            5,
+            6,
+            2,
+            1,
+            4
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.01639920799061656
+      }
+    },
+    {
+      "case": 13,
+      "independent_verification": {
+        "edge_differences": [
+          16,
+          15,
+          12,
+          10,
+          4,
+          6,
+          5,
+          7,
+          14,
+          8,
+          9,
+          13,
+          11,
+          3,
+          1,
+          2
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ]
+          ],
+          "n": 17
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 4,
+        "name": "equal_4_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 1107475476
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 5418,
+        "complement_break": false,
+        "conflicts": 80,
+        "deterministic_time": 0.023871984803539543,
+        "labels": [
+          16,
+          0,
+          15,
+          3,
+          13,
+          12,
+          6,
+          11,
+          4,
+          2,
+          10,
+          1,
+          14,
+          5,
+          8,
+          9,
+          7
+        ],
+        "model_sha256": "2073e7d72e3f19f2f2efdcea640cbdfef1dbc5d6e884280cb2ee8003daac2eaa",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1107475476,
+        "solver_seconds": 1.998777291009901,
+        "solver_wall_seconds": 0.028608,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            16,
+            15,
+            12,
+            10,
+            4,
+            6,
+            5,
+            7,
+            14,
+            8,
+            9,
+            13,
+            11,
+            3,
+            1,
+            2
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.030120084004011005
+      }
+    },
+    {
+      "case": 14,
+      "independent_verification": {
+        "edge_differences": [
+          20,
+          19,
+          11,
+          2,
+          10,
+          1,
+          3,
+          5,
+          18,
+          14,
+          13,
+          12,
+          6,
+          4,
+          17,
+          16,
+          15,
+          8,
+          9,
+          7
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "n": 21
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 5,
+        "name": "equal_5_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 1528904237
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 9166,
+        "complement_break": false,
+        "conflicts": 124,
+        "deterministic_time": 0.04848297683074361,
+        "labels": [
+          20,
+          0,
+          19,
+          8,
+          6,
+          10,
+          9,
+          12,
+          7,
+          2,
+          16,
+          3,
+          15,
+          14,
+          18,
+          1,
+          17,
+          5,
+          13,
+          4,
+          11
+        ],
+        "model_sha256": "492846e19a04c19a3283c8cbc381274a51121bca76a1c8a8e800fd4a2f88b2e1",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1528904237,
+        "solver_seconds": 1.9985312909993809,
+        "solver_wall_seconds": 0.045162,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            20,
+            19,
+            11,
+            2,
+            10,
+            1,
+            3,
+            5,
+            18,
+            14,
+            13,
+            12,
+            6,
+            4,
+            17,
+            16,
+            15,
+            8,
+            9,
+            7
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.04690783401019871
+      }
+    },
+    {
+      "case": 15,
+      "independent_verification": {
+        "edge_differences": [
+          21,
+          24,
+          23,
+          22,
+          2,
+          13,
+          1,
+          10,
+          18,
+          15,
+          8,
+          3,
+          19,
+          20,
+          11,
+          6,
+          17,
+          16,
+          12,
+          4,
+          14,
+          9,
+          7,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "n": 25
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 6,
+        "name": "equal_6_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 1405821623
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 13402,
+        "complement_break": false,
+        "conflicts": 88,
+        "deterministic_time": 0.08178594675621828,
+        "labels": [
+          21,
+          0,
+          24,
+          1,
+          23,
+          19,
+          6,
+          5,
+          15,
+          3,
+          18,
+          10,
+          13,
+          2,
+          22,
+          11,
+          17,
+          4,
+          20,
+          8,
+          12,
+          7,
+          16,
+          9,
+          14
+        ],
+        "model_sha256": "c229c4b9522210c83d08d1336387a07f4d13cb4c2487cc310bf9ee3ea9739b1b",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1405821623,
+        "solver_seconds": 1.9983403749938589,
+        "solver_wall_seconds": 0.066087,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            21,
+            24,
+            23,
+            22,
+            2,
+            13,
+            1,
+            10,
+            18,
+            15,
+            8,
+            3,
+            19,
+            20,
+            11,
+            6,
+            17,
+            16,
+            12,
+            4,
+            14,
+            9,
+            7,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.06807220799964853
+      }
+    },
+    {
+      "case": 16,
+      "independent_verification": {
+        "edge_differences": [
+          28,
+          27,
+          19,
+          9,
+          17,
+          12,
+          20,
+          2,
+          24,
+          15,
+          7,
+          25,
+          22,
+          16,
+          13,
+          11,
+          18,
+          6,
+          4,
+          3,
+          21,
+          14,
+          8,
+          5,
+          26,
+          23,
+          1,
+          10
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ]
+          ],
+          "n": 29
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 7,
+        "name": "equal_7_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 394570762
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 19857,
+        "complement_break": false,
+        "conflicts": 502,
+        "deterministic_time": 0.14873241774549456,
+        "labels": [
+          28,
+          0,
+          27,
+          8,
+          17,
+          11,
+          23,
+          3,
+          5,
+          4,
+          19,
+          26,
+          1,
+          6,
+          22,
+          9,
+          20,
+          10,
+          16,
+          12,
+          15,
+          7,
+          21,
+          13,
+          18,
+          2,
+          25,
+          24,
+          14
+        ],
+        "model_sha256": "c81c0a9189abe8b361cfacf5cc921377e284c8cb0b3d9f1bccecec744722c83f",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 394570762,
+        "solver_seconds": 1.9980777500022668,
+        "solver_wall_seconds": 0.108506,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            28,
+            27,
+            19,
+            9,
+            17,
+            12,
+            20,
+            2,
+            24,
+            15,
+            7,
+            25,
+            22,
+            16,
+            13,
+            11,
+            18,
+            6,
+            4,
+            3,
+            21,
+            14,
+            8,
+            5,
+            26,
+            23,
+            1,
+            10
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.11074604198802263
+      }
+    },
+    {
+      "case": 17,
+      "independent_verification": {
+        "edge_differences": [
+          32,
+          30,
+          18,
+          8,
+          23,
+          5,
+          22,
+          9,
+          21,
+          16,
+          12,
+          6,
+          26,
+          2,
+          17,
+          7,
+          1,
+          24,
+          15,
+          20,
+          27,
+          19,
+          11,
+          10,
+          29,
+          25,
+          14,
+          4,
+          31,
+          28,
+          13,
+          3
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              29
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              30,
+              31
+            ],
+            [
+              31,
+              32
+            ]
+          ],
+          "n": 33
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 8,
+        "name": "equal_8_legs_4_root_distance_1",
+        "root": 1,
+        "root_distance": 1,
+        "solver_seed": 891665734
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 25157,
+        "complement_break": false,
+        "conflicts": 129,
+        "deterministic_time": 0.19927674598100503,
+        "labels": [
+          32,
+          0,
+          30,
+          12,
+          20,
+          9,
+          4,
+          26,
+          17,
+          11,
+          27,
+          15,
+          21,
+          6,
+          8,
+          25,
+          18,
+          31,
+          7,
+          22,
+          2,
+          5,
+          24,
+          13,
+          23,
+          3,
+          28,
+          14,
+          10,
+          1,
+          29,
+          16,
+          19
+        ],
+        "model_sha256": "eafa39c535539d8b3fa492da8bfef23a00d7d5483c748783c148a364725639ca",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 891665734,
+        "solver_seconds": 1.997800292010652,
+        "solver_wall_seconds": 0.12665300000000002,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            32,
+            30,
+            18,
+            8,
+            23,
+            5,
+            22,
+            9,
+            21,
+            16,
+            12,
+            6,
+            26,
+            2,
+            17,
+            7,
+            1,
+            24,
+            15,
+            20,
+            27,
+            19,
+            11,
+            10,
+            29,
+            25,
+            14,
+            4,
+            31,
+            28,
+            13,
+            3
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.12920662498800084
+      }
+    },
+    {
+      "case": 18,
+      "independent_verification": {
+        "edge_differences": [
+          8,
+          11,
+          12,
+          10,
+          6,
+          4,
+          1,
+          2,
+          5,
+          7,
+          9,
+          3
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          "n": 13
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 3,
+        "name": "equal_3_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 1453439206
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 2216,
+        "complement_break": false,
+        "conflicts": 1,
+        "deterministic_time": 0.008976546148517159,
+        "labels": [
+          9,
+          1,
+          12,
+          0,
+          10,
+          3,
+          7,
+          8,
+          6,
+          4,
+          11,
+          2,
+          5
+        ],
+        "model_sha256": "a02cb8d809a429a3573ab9367a4e1f2d6a32c98c3014698569ab73c744d243c3",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1453439206,
+        "solver_seconds": 1.9989596670202445,
+        "solver_wall_seconds": 0.013403,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            8,
+            11,
+            12,
+            10,
+            6,
+            4,
+            1,
+            2,
+            5,
+            7,
+            9,
+            3
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.014655582985142246
+      }
+    },
+    {
+      "case": 19,
+      "independent_verification": {
+        "edge_differences": [
+          14,
+          15,
+          16,
+          12,
+          13,
+          1,
+          7,
+          2,
+          11,
+          3,
+          6,
+          4,
+          10,
+          9,
+          8,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ]
+          ],
+          "n": 17
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 4,
+        "name": "equal_4_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 110620948
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 4765,
+        "complement_break": false,
+        "conflicts": 83,
+        "deterministic_time": 0.025166769011218008,
+        "labels": [
+          15,
+          1,
+          16,
+          0,
+          12,
+          2,
+          3,
+          10,
+          8,
+          4,
+          7,
+          13,
+          9,
+          5,
+          14,
+          6,
+          11
+        ],
+        "model_sha256": "fd4db239cf552cc8a50829a1d518478c2f355adc8a839258ce1e1ce26a97d53b",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 110620948,
+        "solver_seconds": 1.998859415994957,
+        "solver_wall_seconds": 0.028097,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            14,
+            15,
+            16,
+            12,
+            13,
+            1,
+            7,
+            2,
+            11,
+            3,
+            6,
+            4,
+            10,
+            9,
+            8,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.029449917026795447
+      }
+    },
+    {
+      "case": 20,
+      "independent_verification": {
+        "edge_differences": [
+          16,
+          19,
+          20,
+          18,
+          14,
+          13,
+          10,
+          8,
+          12,
+          7,
+          3,
+          1,
+          9,
+          5,
+          6,
+          4,
+          2,
+          11,
+          15,
+          17
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "n": 21
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 5,
+        "name": "equal_5_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 2116247585
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 8023,
+        "complement_break": false,
+        "conflicts": 20,
+        "deterministic_time": 0.046151354745188805,
+        "labels": [
+          17,
+          1,
+          20,
+          0,
+          18,
+          3,
+          16,
+          6,
+          14,
+          5,
+          12,
+          9,
+          10,
+          8,
+          13,
+          7,
+          11,
+          15,
+          4,
+          19,
+          2
+        ],
+        "model_sha256": "73c5107eaefd69327b343bd2a4528245302f831c32399a260d7d98539060cde1",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 2116247585,
+        "solver_seconds": 1.998609292000765,
+        "solver_wall_seconds": 0.042780000000000006,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            16,
+            19,
+            20,
+            18,
+            14,
+            13,
+            10,
+            8,
+            12,
+            7,
+            3,
+            1,
+            9,
+            5,
+            6,
+            4,
+            2,
+            11,
+            15,
+            17
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.04440183300175704
+      }
+    },
+    {
+      "case": 21,
+      "independent_verification": {
+        "edge_differences": [
+          20,
+          23,
+          24,
+          22,
+          15,
+          3,
+          10,
+          9,
+          18,
+          17,
+          12,
+          6,
+          16,
+          11,
+          5,
+          7,
+          4,
+          13,
+          19,
+          21,
+          14,
+          8,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "n": 25
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 6,
+        "name": "equal_6_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 203828979
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 12355,
+        "complement_break": false,
+        "conflicts": 63,
+        "deterministic_time": 0.08271318427062803,
+        "labels": [
+          21,
+          1,
+          24,
+          0,
+          22,
+          6,
+          9,
+          19,
+          10,
+          3,
+          20,
+          8,
+          14,
+          5,
+          16,
+          11,
+          18,
+          17,
+          4,
+          23,
+          2,
+          7,
+          15,
+          13,
+          12
+        ],
+        "model_sha256": "2ad6bedf5b8385b8688c29d69da81138e570bff1b798f02d05f4c86d1beb797b",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 203828979,
+        "solver_seconds": 1.9983599169936497,
+        "solver_wall_seconds": 0.06614300000000001,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            20,
+            23,
+            24,
+            22,
+            15,
+            3,
+            10,
+            9,
+            18,
+            17,
+            12,
+            6,
+            16,
+            11,
+            5,
+            7,
+            4,
+            13,
+            19,
+            21,
+            14,
+            8,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.06804408298921771
+      }
+    },
+    {
+      "case": 22,
+      "independent_verification": {
+        "edge_differences": [
+          24,
+          27,
+          28,
+          26,
+          16,
+          10,
+          8,
+          7,
+          5,
+          15,
+          19,
+          9,
+          12,
+          3,
+          4,
+          2,
+          22,
+          14,
+          6,
+          17,
+          21,
+          23,
+          25,
+          20,
+          18,
+          1,
+          13,
+          11
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ]
+          ],
+          "n": 29
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 7,
+        "name": "equal_7_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 1799838617
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 17864,
+        "complement_break": false,
+        "conflicts": 111,
+        "deterministic_time": 0.13429417139852692,
+        "labels": [
+          25,
+          1,
+          28,
+          0,
+          26,
+          9,
+          19,
+          11,
+          18,
+          20,
+          5,
+          24,
+          15,
+          13,
+          16,
+          12,
+          14,
+          3,
+          17,
+          23,
+          6,
+          4,
+          27,
+          2,
+          22,
+          7,
+          8,
+          21,
+          10
+        ],
+        "model_sha256": "1e46f754aad78f03f8efeac8f6b00c7de0721a8ab78c105b3769c4246660dfdb",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1799838617,
+        "solver_seconds": 1.9980867919803131,
+        "solver_wall_seconds": 0.100454,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            24,
+            27,
+            28,
+            26,
+            16,
+            10,
+            8,
+            7,
+            5,
+            15,
+            19,
+            9,
+            12,
+            3,
+            4,
+            2,
+            22,
+            14,
+            6,
+            17,
+            21,
+            23,
+            25,
+            20,
+            18,
+            1,
+            13,
+            11
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.1027040000190027
+      }
+    },
+    {
+      "case": 23,
+      "independent_verification": {
+        "edge_differences": [
+          28,
+          31,
+          32,
+          30,
+          26,
+          25,
+          18,
+          9,
+          20,
+          17,
+          10,
+          8,
+          23,
+          21,
+          19,
+          14,
+          15,
+          2,
+          11,
+          6,
+          16,
+          12,
+          7,
+          3,
+          22,
+          13,
+          5,
+          4,
+          24,
+          1,
+          27,
+          29
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              29
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              30,
+              31
+            ],
+            [
+              31,
+              32
+            ]
+          ],
+          "n": 33
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 8,
+        "name": "equal_8_legs_4_root_distance_3",
+        "root": 3,
+        "root_distance": 3,
+        "solver_seed": 1259257035
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 23435,
+        "complement_break": false,
+        "conflicts": 32,
+        "deterministic_time": 0.19595863068052832,
+        "labels": [
+          29,
+          1,
+          32,
+          0,
+          30,
+          3,
+          28,
+          10,
+          19,
+          9,
+          26,
+          16,
+          24,
+          6,
+          27,
+          8,
+          22,
+          14,
+          12,
+          23,
+          17,
+          13,
+          25,
+          18,
+          21,
+          7,
+          20,
+          15,
+          11,
+          5,
+          4,
+          31,
+          2
+        ],
+        "model_sha256": "84722412df4b54ea499fc467a68140ef1183eaf3f5c6ad10acf69da91744d14d",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1259257035,
+        "solver_seconds": 1.99783499998739,
+        "solver_wall_seconds": 0.12748400000000001,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            28,
+            31,
+            32,
+            30,
+            26,
+            25,
+            18,
+            9,
+            20,
+            17,
+            10,
+            8,
+            23,
+            21,
+            19,
+            14,
+            15,
+            2,
+            11,
+            6,
+            16,
+            12,
+            7,
+            3,
+            22,
+            13,
+            5,
+            4,
+            24,
+            1,
+            27,
+            29
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.13001479100785218
+      }
+    },
+    {
+      "case": 24,
+      "independent_verification": {
+        "edge_differences": [
+          9,
+          10,
+          11,
+          12,
+          4,
+          1,
+          2,
+          3,
+          8,
+          7,
+          6,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ]
+          ],
+          "n": 13
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 3,
+        "name": "equal_3_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 1376529539
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 902,
+        "complement_break": false,
+        "conflicts": 4,
+        "deterministic_time": 0.002868074889456746,
+        "labels": [
+          2,
+          11,
+          1,
+          12,
+          0,
+          6,
+          7,
+          5,
+          8,
+          10,
+          3,
+          9,
+          4
+        ],
+        "model_sha256": "df1ada1a7cd9b5e1f30718dd8766be42856c08741cfb9fd7458431ae13ec16b2",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1376529539,
+        "solver_seconds": 1.9988910829997621,
+        "solver_wall_seconds": 0.006366,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            9,
+            10,
+            11,
+            12,
+            4,
+            1,
+            2,
+            3,
+            8,
+            7,
+            6,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.007694375002756715
+      }
+    },
+    {
+      "case": 25,
+      "independent_verification": {
+        "edge_differences": [
+          13,
+          14,
+          15,
+          16,
+          1,
+          9,
+          6,
+          3,
+          11,
+          8,
+          5,
+          2,
+          12,
+          10,
+          7,
+          4
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ]
+          ],
+          "n": 17
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 4,
+        "name": "equal_4_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 1334979596
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 2761,
+        "complement_break": false,
+        "conflicts": 2,
+        "deterministic_time": 0.008411028207960546,
+        "labels": [
+          2,
+          15,
+          1,
+          16,
+          0,
+          3,
+          12,
+          6,
+          9,
+          13,
+          5,
+          10,
+          8,
+          14,
+          4,
+          11,
+          7
+        ],
+        "model_sha256": "15638ce5ebe7ebb823ca5d5d9428564b8c366416814e9633f2db847779e68770",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1334979596,
+        "solver_seconds": 1.9988367500191089,
+        "solver_wall_seconds": 0.012283,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            13,
+            14,
+            15,
+            16,
+            1,
+            9,
+            6,
+            3,
+            11,
+            8,
+            5,
+            2,
+            12,
+            10,
+            7,
+            4
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.01365129099576734
+      }
+    },
+    {
+      "case": 26,
+      "independent_verification": {
+        "edge_differences": [
+          17,
+          18,
+          19,
+          20,
+          1,
+          12,
+          8,
+          5,
+          15,
+          11,
+          7,
+          4,
+          14,
+          6,
+          2,
+          3,
+          16,
+          13,
+          9,
+          10
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ]
+          ],
+          "n": 21
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 5,
+        "name": "equal_5_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 656904110
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 5283,
+        "complement_break": false,
+        "conflicts": 7,
+        "deterministic_time": 0.020282630517584863,
+        "labels": [
+          2,
+          19,
+          1,
+          20,
+          0,
+          3,
+          15,
+          7,
+          12,
+          17,
+          6,
+          13,
+          9,
+          16,
+          10,
+          8,
+          11,
+          18,
+          5,
+          14,
+          4
+        ],
+        "model_sha256": "3856285006d2c13cc31cfcd8da1479859021a63f42cd18c03bc1f07c5fa9dbe1",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 656904110,
+        "solver_seconds": 1.9985986670071725,
+        "solver_wall_seconds": 0.022765,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            17,
+            18,
+            19,
+            20,
+            1,
+            12,
+            8,
+            5,
+            15,
+            11,
+            7,
+            4,
+            14,
+            6,
+            2,
+            3,
+            16,
+            13,
+            9,
+            10
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.024395624990575016
+      }
+    },
+    {
+      "case": 27,
+      "independent_verification": {
+        "edge_differences": [
+          21,
+          22,
+          23,
+          24,
+          1,
+          16,
+          11,
+          6,
+          18,
+          13,
+          8,
+          3,
+          20,
+          17,
+          12,
+          7,
+          19,
+          15,
+          10,
+          5,
+          2,
+          14,
+          9,
+          4
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ]
+          ],
+          "n": 25
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 6,
+        "name": "equal_6_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 350629428
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 8612,
+        "complement_break": false,
+        "conflicts": 10,
+        "deterministic_time": 0.04003778727852649,
+        "labels": [
+          2,
+          23,
+          1,
+          24,
+          0,
+          3,
+          19,
+          8,
+          14,
+          20,
+          7,
+          15,
+          12,
+          22,
+          5,
+          17,
+          10,
+          21,
+          6,
+          16,
+          11,
+          4,
+          18,
+          9,
+          13
+        ],
+        "model_sha256": "9a28bbd1de64e3b3b62d90f9492f8dba0b6188c9be5e887d7fcebc609398b27c",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 350629428,
+        "solver_seconds": 1.9983256249979604,
+        "solver_wall_seconds": 0.036864,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            21,
+            22,
+            23,
+            24,
+            1,
+            16,
+            11,
+            6,
+            18,
+            13,
+            8,
+            3,
+            20,
+            17,
+            12,
+            7,
+            19,
+            15,
+            10,
+            5,
+            2,
+            14,
+            9,
+            4
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.038789667014498264
+      }
+    },
+    {
+      "case": 28,
+      "independent_verification": {
+        "edge_differences": [
+          25,
+          26,
+          27,
+          28,
+          18,
+          16,
+          20,
+          17,
+          10,
+          3,
+          9,
+          5,
+          21,
+          4,
+          2,
+          6,
+          12,
+          8,
+          1,
+          11,
+          19,
+          13,
+          14,
+          7,
+          24,
+          23,
+          22,
+          15
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ]
+          ],
+          "n": 29
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 7,
+        "name": "equal_7_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 181759561
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 13132,
+        "complement_break": false,
+        "conflicts": 130,
+        "deterministic_time": 0.07375976579725341,
+        "labels": [
+          2,
+          27,
+          1,
+          28,
+          0,
+          20,
+          4,
+          24,
+          7,
+          12,
+          9,
+          18,
+          13,
+          23,
+          19,
+          17,
+          11,
+          14,
+          6,
+          5,
+          16,
+          21,
+          8,
+          22,
+          15,
+          26,
+          3,
+          25,
+          10
+        ],
+        "model_sha256": "daf265d0527e8c8e75e9301bf09e0e43babf64e4ab8f386fdc1fb758ff50d008",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 181759561,
+        "solver_seconds": 1.9980746250075754,
+        "solver_wall_seconds": 0.058801000000000006,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            25,
+            26,
+            27,
+            28,
+            18,
+            16,
+            20,
+            17,
+            10,
+            3,
+            9,
+            5,
+            21,
+            4,
+            2,
+            6,
+            12,
+            8,
+            1,
+            11,
+            19,
+            13,
+            14,
+            7,
+            24,
+            23,
+            22,
+            15
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.061023290996672586
+      }
+    },
+    {
+      "case": 29,
+      "independent_verification": {
+        "edge_differences": [
+          29,
+          30,
+          31,
+          32,
+          18,
+          4,
+          7,
+          8,
+          28,
+          27,
+          22,
+          13,
+          26,
+          21,
+          6,
+          5,
+          3,
+          1,
+          23,
+          25,
+          20,
+          14,
+          9,
+          2,
+          24,
+          12,
+          10,
+          15,
+          19,
+          11,
+          17,
+          16
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              7
+            ],
+            [
+              7,
+              8
+            ],
+            [
+              0,
+              9
+            ],
+            [
+              9,
+              10
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              11,
+              12
+            ],
+            [
+              0,
+              13
+            ],
+            [
+              13,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              16
+            ],
+            [
+              0,
+              17
+            ],
+            [
+              17,
+              18
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              19,
+              20
+            ],
+            [
+              0,
+              21
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              23,
+              24
+            ],
+            [
+              0,
+              25
+            ],
+            [
+              25,
+              26
+            ],
+            [
+              26,
+              27
+            ],
+            [
+              27,
+              28
+            ],
+            [
+              0,
+              29
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              30,
+              31
+            ],
+            [
+              31,
+              32
+            ]
+          ],
+          "n": 33
+        },
+        "kind": "known_orbit_control",
+        "leg_length": 4,
+        "legs": 8,
+        "name": "equal_8_legs_4_root_distance_4",
+        "root": 4,
+        "root_distance": 4,
+        "solver_seed": 1460546129
+      },
+      "permutation_oracle": null,
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 18466,
+        "complement_break": false,
+        "conflicts": 342,
+        "deterministic_time": 0.1271356908861504,
+        "labels": [
+          2,
+          31,
+          1,
+          32,
+          0,
+          20,
+          16,
+          23,
+          15,
+          30,
+          3,
+          25,
+          12,
+          28,
+          7,
+          13,
+          18,
+          5,
+          6,
+          29,
+          4,
+          22,
+          8,
+          17,
+          19,
+          26,
+          14,
+          24,
+          9,
+          21,
+          10,
+          27,
+          11
+        ],
+        "model_sha256": "55bd23637ba3224fc8373525e72da527b4a787c81d159b84ce280434b3e484de",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1460546129,
+        "solver_seconds": 1.9978295420005452,
+        "solver_wall_seconds": 0.088511,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            29,
+            30,
+            31,
+            32,
+            18,
+            4,
+            7,
+            8,
+            28,
+            27,
+            22,
+            13,
+            26,
+            21,
+            6,
+            5,
+            3,
+            1,
+            23,
+            25,
+            20,
+            14,
+            9,
+            2,
+            24,
+            12,
+            10,
+            15,
+            19,
+            11,
+            17,
+            16
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.09102329198503867
+      }
+    },
+    {
+      "case": 30,
+      "independent_verification": {
+        "edge_differences": [
+          4,
+          5,
+          3,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_0",
+        "root": 0,
+        "solver_seed": 561048772
+      },
+      "permutation_oracle": {
+        "assignments_checked": 72,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          0,
+          3,
+          5,
+          4,
+          2,
+          1
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 41,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 0.00014055903340892245,
+        "labels": [
+          0,
+          4,
+          5,
+          3,
+          1,
+          2
+        ],
+        "model_sha256": "4f0e0a3f7d3dc2eef768db6ea127745a7599528f3dffd8d171739f4841332f26",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 561048772,
+        "solver_seconds": 1.9994258750230074,
+        "solver_wall_seconds": 0.000915,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            4,
+            5,
+            3,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0016449169779662043
+      }
+    },
+    {
+      "case": 31,
+      "independent_verification": {
+        "edge_differences": [
+          5,
+          3,
+          4,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_1",
+        "root": 1,
+        "solver_seed": 1565994121
+      },
+      "permutation_oracle": {
+        "assignments_checked": 98,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          5,
+          0,
+          1,
+          2,
+          4,
+          3
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 5.8272e-05,
+        "labels": [
+          5,
+          0,
+          2,
+          1,
+          3,
+          4
+        ],
+        "model_sha256": "ad063c34650b34b7cb022dd0c6511f4a7cc29407a0d313bf6b5891936b58bf07",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1565994121,
+        "solver_seconds": 1.999552416993538,
+        "solver_wall_seconds": 0.000591,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            5,
+            3,
+            4,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0011498329986352473
+      }
+    },
+    {
+      "case": 32,
+      "independent_verification": {
+        "edge_differences": [
+          3,
+          5,
+          4,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_2",
+        "root": 2,
+        "solver_seed": 1424583484
+      },
+      "permutation_oracle": {
+        "assignments_checked": 98,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          5,
+          1,
+          0,
+          2,
+          4,
+          3
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 5.8272e-05,
+        "labels": [
+          5,
+          2,
+          0,
+          1,
+          3,
+          4
+        ],
+        "model_sha256": "40c50067edc9cec91d3c7052bc6bfba0ec7fa60fc73c622af59c7aa9b30f0e5d",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1424583484,
+        "solver_seconds": 1.9995598749956116,
+        "solver_wall_seconds": 0.000581,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            3,
+            5,
+            4,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0011302500206511468
+      }
+    },
+    {
+      "case": 33,
+      "independent_verification": null,
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_3",
+        "root": 3,
+        "solver_seed": 1895251266
+      },
+      "permutation_oracle": {
+        "assignments_checked": 120,
+        "exhausted": true,
+        "feasible": false,
+        "labels": null
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 0.0002111029999999996,
+        "labels": null,
+        "model_sha256": "734430901b1604292941e66323765b1507a6d01018b01aaadd6a2cb43bb1a2e0",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "INFEASIBLE",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1895251266,
+        "solver_seconds": 1.9995735829870682,
+        "solver_wall_seconds": 0.0009040000000000001,
+        "status": "solver_infeasible",
+        "symmetry_level": 0,
+        "termination": "INFEASIBLE",
+        "timed_out": false,
+        "verification": null,
+        "wall_seconds": 0.0014084579888731241
+      }
+    },
+    {
+      "case": 34,
+      "independent_verification": {
+        "edge_differences": [
+          2,
+          1,
+          3,
+          4,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_4",
+        "root": 4,
+        "solver_seed": 357153102
+      },
+      "permutation_oracle": {
+        "assignments_checked": 1,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          1,
+          2,
+          3,
+          4,
+          0,
+          5
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 0.00019486299999999968,
+        "labels": [
+          1,
+          3,
+          2,
+          4,
+          0,
+          5
+        ],
+        "model_sha256": "c0f18ed629334a62c59f018f4e70c180fbe420a409e15080c61fe45daf08325c",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 4
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 357153102,
+        "solver_seconds": 1.9995666249888018,
+        "solver_wall_seconds": 0.0009000000000000001,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            2,
+            1,
+            3,
+            4,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0014412500022444874
+      }
+    },
+    {
+      "case": 35,
+      "independent_verification": {
+        "edge_differences": [
+          2,
+          1,
+          3,
+          4,
+          5
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "n": 6
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          1,
+          1,
+          3
+        ],
+        "name": "tiny_1-1-3_root_5",
+        "root": 5,
+        "solver_seed": 290395298
+      },
+      "permutation_oracle": {
+        "assignments_checked": 81,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          4,
+          2,
+          3,
+          1,
+          5,
+          0
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 6.6e-07,
+        "labels": [
+          4,
+          2,
+          3,
+          1,
+          5,
+          0
+        ],
+        "model_sha256": "7263838ee6de8f9dea07deac56e512a9b39983929acece337b9519515ea30b85",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 5
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 290395298,
+        "solver_seconds": 1.9995736670098267,
+        "solver_wall_seconds": 0.000209,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            2,
+            1,
+            3,
+            4,
+            5
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0007540419755969197
+      }
+    },
+    {
+      "case": 36,
+      "independent_verification": {
+        "edge_differences": [
+          3,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "n": 4
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          3
+        ],
+        "name": "tiny_3_root_0",
+        "root": 0,
+        "solver_seed": 1177343070
+      },
+      "permutation_oracle": {
+        "assignments_checked": 5,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          0,
+          3,
+          1,
+          2
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 6.999999999999999e-08,
+        "labels": [
+          0,
+          3,
+          1,
+          2
+        ],
+        "model_sha256": "4a04879568508aea9890d036737332fcacc48d1ce6ee5e5c195e8854372933c6",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1177343070,
+        "solver_seconds": 1.99968995800009,
+        "solver_wall_seconds": 0.000213,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            3,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0006925000052433461
+      }
+    },
+    {
+      "case": 37,
+      "independent_verification": {
+        "edge_differences": [
+          3,
+          2,
+          1
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "n": 4
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          3
+        ],
+        "name": "tiny_3_root_1",
+        "root": 1,
+        "solver_seed": 976906247
+      },
+      "permutation_oracle": {
+        "assignments_checked": 6,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          3,
+          0,
+          2,
+          1
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 3.429e-06,
+        "labels": [
+          3,
+          0,
+          2,
+          1
+        ],
+        "model_sha256": "b730b287e186ee33d169305793b99738f7dfd80902c65ea721409f6b8bdb4fe7",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 1
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 976906247,
+        "solver_seconds": 1.9996871250041295,
+        "solver_wall_seconds": 0.000273,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            3,
+            2,
+            1
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0006816250097472221
+      }
+    },
+    {
+      "case": 38,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          2,
+          3
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "n": 4
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          3
+        ],
+        "name": "tiny_3_root_2",
+        "root": 2,
+        "solver_seed": 376571046
+      },
+      "permutation_oracle": {
+        "assignments_checked": 1,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          1,
+          2,
+          0,
+          3
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 3.449e-06,
+        "labels": [
+          1,
+          2,
+          0,
+          3
+        ],
+        "model_sha256": "f4d52e68d4daf81f05c4c8edc14cabaf36dbf09055e15f317acf1d8691977195",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 2
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 376571046,
+        "solver_seconds": 1.9997047090146225,
+        "solver_wall_seconds": 0.000257,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            2,
+            3
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.000641416001599282
+      }
+    },
+    {
+      "case": 39,
+      "independent_verification": {
+        "edge_differences": [
+          1,
+          2,
+          3
+        ],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "n": 4
+        },
+        "kind": "permutation_control",
+        "leg_lengths": [
+          3
+        ],
+        "name": "tiny_3_root_3",
+        "root": 3,
+        "solver_seed": 540444558
+      },
+      "permutation_oracle": {
+        "assignments_checked": 3,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          2,
+          1,
+          3,
+          0
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 6.999999999999999e-08,
+        "labels": [
+          2,
+          1,
+          3,
+          0
+        ],
+        "model_sha256": "e0d9eed4840a442c225ef53b8800a6ca33f17d724365fdfbdc16534964a7b33f",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 3
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 540444558,
+        "solver_seconds": 1.999702166998759,
+        "solver_wall_seconds": 0.000156,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [
+            1,
+            2,
+            3
+          ],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.0005439579836092889
+      }
+    },
+    {
+      "case": 40,
+      "independent_verification": {
+        "edge_differences": [],
+        "errors": [],
+        "root_valid": true,
+        "tree_valid": true,
+        "valid": true,
+        "verifier": "stdlib-v1",
+        "vertex_labels_valid": true
+      },
+      "input": {
+        "input": {
+          "edges": [],
+          "n": 1
+        },
+        "kind": "permutation_control",
+        "name": "singleton_root",
+        "root": 0,
+        "solver_seed": 1855589754
+      },
+      "permutation_oracle": {
+        "assignments_checked": 1,
+        "exhausted": false,
+        "feasible": true,
+        "labels": [
+          0
+        ]
+      },
+      "result": {
+        "algorithm": "prescribed-zero-cpsat-v1",
+        "branches": 0,
+        "complement_break": false,
+        "conflicts": 0,
+        "deterministic_time": 0.0,
+        "labels": [
+          0
+        ],
+        "model_sha256": "54a91e51d668d173cb6df0ec6a01a7e21ffeed6d3a0d4c677466630b57e8fcd8",
+        "num_search_workers": 1,
+        "proof_certificate": null,
+        "proof_certificate_verified": false,
+        "raw_status": "OPTIMAL",
+        "restriction": {
+          "kind": "prescribed_zero",
+          "vertex": 0
+        },
+        "schema_version": 1,
+        "scope": "prescribed_zero",
+        "seconds": 2,
+        "seed": 1855589754,
+        "solver_seconds": 1.9999362920061685,
+        "solver_wall_seconds": 6.7e-05,
+        "status": "verified_graceful",
+        "symmetry_level": 0,
+        "termination": "OPTIMAL",
+        "timed_out": false,
+        "verification": {
+          "edge_differences": [],
+          "errors": [],
+          "root_valid": true,
+          "tree_valid": true,
+          "valid": true,
+          "verifier": "stdlib-v1-plus-prescribed-zero-v1",
+          "vertex_labels_valid": true
+        },
+        "wall_seconds": 0.00019120800425298512
+      }
+    }
+  ]
+}

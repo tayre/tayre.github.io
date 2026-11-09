@@ -259,12 +259,20 @@ are the distinct odd numbers `|4f(v)-(2s-1)|`. Together the labels and differenc
 exhaust the required ranges. This is a restatement of a known construction,
 not a new theorem.
 
-**Experiment:** detect the matching, solve the contree with the existing portfolio,
-reconstruct, independently verify, and record contraction depth and total cost.
-Include matching-rich sampled trees as well as known lobster controls. Recursive
-contraction may reduce the problem further. A failed or timed-out contree attempt
-does not justify rejecting the original tree: this route seeks a strongly graceful
-witness, a stronger condition than ordinary gracefulness.
+**Implemented experiment:** `matching_lift.py` detects the unique perfect matching
+by forced leaf peeling, contracts repeatedly, labels the final contree using a
+caterpillar construction or the existing portfolio, and independently verifies
+each lifted witness. A shared work/node/time allowance covers this route. Its
+35-case functional corpus produced 28 witnesses: all 27 perfect-matching inputs
+and the singleton. Seven controls lacked perfect matchings. All 24 generated
+matching-rich cases at 32, 64 and 128 vertices succeeded. These deliberately
+constructed inputs are not a representative random sample or a speed comparison.
+See the [inputs and witnesses](../examples/matching-lift.json).
+
+A failed or timed-out contree attempt does not justify rejecting the original
+tree: this route seeks a strongly graceful witness, a stronger condition than
+ordinary gracefulness. The nightly default remains unchanged pending a separate
+equal-budget benchmark on fresh inputs.
 
 There is also a useful refinement to our pendant-maximum-edge question. Perfect-
 matching lobsters and almost-perfect-matching lobsters are already graceful by
@@ -348,9 +356,22 @@ over sampled columns cannot exclude an omitted valid assignment. Report the fixe
 boundary, resources and branch shapes with every certificate. These remain
 partial-state certificates, never unrestricted tree counterexamples.
 
-A concise Lean theorem can prove the certificate implication; a family-specific
-lemma explaining recurring coefficients would be the more interesting mathematical
-output. Neither this certificate format nor that theorem is implemented yet.
+**Implemented experiment:** all 102 frozen inputs were tested over the prime fields
+of orders 2, 3, 5 and 7. Independent regeneration checked 68 certificates, all
+modulo 2, among the 77 impossible residuals. This includes 21 of the 30 failures
+with nonempty branch tables; six also have every target resource available in
+some local option. Nine impossible inputs have no certificate over these fields.
+Complete global permutation checks agreed on all inputs, including the 25 feasible
+controls. See the [certificates and example parity argument](leaf-tail.md#congruence-certificates).
+
+Lean now proves the general modular implication in
+[`ResidueCertificate.lean`](../formal/Graceful/ResidueCertificate.lean). It does not
+formalize the Python checker or prove that its branch enumeration is complete.
+The standalone checker establishes that finite premise by regenerating every
+injective branch assignment. Neither the certificate principle nor the Lean lemma
+is claimed novel. A family-specific explanation of recurring coefficients remains
+a more interesting mathematical target; integer-lattice and real-feasibility
+comparisons are still future work.
 
 ### 5. Measure the restriction imposed by connected prefixes
 
@@ -410,6 +431,16 @@ resolution was found in this scoped review. For lobsters, deficiency exactly two
 suggests a different construction experiment: contract matched pairs while keeping
 the two unmatched vertices as exceptional attachment interfaces.
 
+**Implemented spider experiment:** CP-SAT found independently verified prescribed-
+zero witnesses for all six midpoint targets and all 24 other root-orbit controls,
+with four edges per leg and 3–8 legs. Eleven tiny controls gave ten witnesses and
+one restricted solver negative, also checked by all 120 root-fixed permutations;
+no negative proof certificate is claimed for it. The model disables complement
+symmetry breaking because complementation does not preserve a specified zero.
+This finite table supplies examples for a prospective formula, not a formula or
+general theorem. [Exact witnesses](../examples/spider-roots.json) and a
+[coverage figure](../examples/spider-root-coverage.svg) are preserved.
+
 The Li preprint includes Lean files and explicitly assumes two Gamma-function
 identities for its main analytic result. Its combinatorial part is reported to use
 only standard Lean axioms. This review checked the paper and ancillary listing,
@@ -435,8 +466,11 @@ remain outside the formal proof.
 
 This review verified accessible primary texts and programs and checked source
 status through 8 November 2026. It is not an exhaustive priority search or an
-independent proof audit of every cited paper. There are no new performance
-measurements, new exhaustive bounds or claimed discoveries in this review.
+independent proof audit of every cited paper. The subsequent functional experiments
+above add reproducible finite evidence, not new exhaustive tree bounds, controlled
+performance measurements or claims of novelty. Their complete inputs, reports,
+models, witnesses, certificates and source snapshots are in the
+[parallel experiment archive](../examples/parallel-experiments.zip).
 
 ## References
 

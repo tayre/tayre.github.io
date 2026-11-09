@@ -5,3 +5,4 @@ import Graceful.SAT
 import Graceful.Search
 import Graceful.LeafTail
 import Graceful.RootedPairing
+import Graceful.ResidueCertificate

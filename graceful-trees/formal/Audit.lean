@@ -40,7 +40,12 @@ run_cmd do
     ``Graceful.LeafTail.pair_choices_exact,
     ``Graceful.LeafTail.quota_criterion,
     ``Graceful.LeafTail.extreme_pair_quota,
-    ``Graceful.RootedPairing.case56_no_completion]
+    ``Graceful.RootedPairing.case56_no_completion,
+    ``Graceful.ResidueCertificate.sumTo_congr,
+    ``Graceful.ResidueCertificate.sumTo_add,
+    ``Graceful.ResidueCertificate.dot_sum_columns,
+    ``Graceful.ResidueCertificate.sumTo_mod_zero,
+    ``Graceful.ResidueCertificate.modular_obstruction]
   for name in required do
     unless names.contains name do
       throwError "Required theorem missing from audit: {name}"

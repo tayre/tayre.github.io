@@ -182,8 +182,69 @@ identifies the reflection identity as established transfer arithmetic and connec
 short-branch completion to generalized Skolem pairings. Its next proposed targets
 are compatibility with fixed attachment labels and independently checked congruence
 certificates for complete signature tables. The rooted-branch classification below
-implements the first bounded experiment; congruence certificates remain proposed.
+and the congruence experiment implement both bounded investigations.
 Neither direction carries a claim of novelty.
+
+### Congruence certificates
+
+`residual_congruence.py` assigns a resource row to each individual branch, each
+unused label and each required difference. Every complete local signature is a
+column. It searches for weights that sum to zero on every column modulo a prime,
+but to a nonzero value on the target containing every resource once. A completion
+would have both weights simultaneously, which is impossible.
+
+The independent standard-library checker, `residual_congruence_verify.py`,
+regenerates every injective branch assignment from the declared input. It does
+not trust saved columns, the discovery module or a solver. Its scope is the fixed
+boundary labels, branch shapes and remaining resources; these certificates do
+not enter the campaign's whole-tree infeasibility counts.
+
+The frozen 102-case corpus produced:
+
+| Observation | Cases |
+| --- | ---: |
+| Exactly feasible; no certificate | 25 |
+| Exactly impossible fixed residuals | 77 |
+| Independently checked parity certificates | 68 |
+| Impossible, no certificate over the tested fields 2, 3, 5, 7 | 9 |
+| Nonempty branch tables, jointly impossible | 30 |
+| Such failures explained by a certificate | 21 |
+| Certificates with every target resource appearing in a local option | 6 |
+
+The last distinction matters: many certificates merely identify a missing local
+option or resource. Case 28 gives a small full-coverage example. Unused labels are
+`{1,4,5}`, differences are `{1,2,3}`, and the branches are `0–x–y` and `2–z`.
+Give weight one modulo two to the first branch, label 4 and difference 2, and zero
+to everything else. The first branch's only assignment is `(x,y)=(1,4)` with
+weight two. The leaf's assignments `z=1,4,5` have weights zero, two, zero.
+Every option therefore has even weight, but all required resources together have
+weight three. This excludes the stated residual problem only.
+
+Complete global permutation checks examined 60,678 assignments and agreed on all
+102 inputs. The nine impossible cases with no congruence certificate have exhausted
+oracle records: failure of the relaxation does not establish feasibility.
+The standalone checker regenerated 1,317 local assignments and checked 411 valid
+options across the 68 certificates. No frequency or speed claim follows from this
+small, deliberately structured corpus.
+
+Lean's [`modular_obstruction`](../formal/Graceful/ResidueCertificate.lean) proves the
+finite-sum arithmetic implication for arbitrary natural-number moduli. Discovery
+currently uses only four prime fields; this is not a full integer-lattice test.
+The Lean theorem assumes the column arithmetic, whereas the Python checker tests
+it by complete bounded enumeration. Python correctness and its correspondence to
+the formal model are outside the proof. The certificate method is established
+linear algebra; no novelty is claimed.
+
+```sh
+python scripts/experiment_residual_congruence.py --output results/residual-congruence
+python -S src/graceful_research/residual_congruence_verify.py results/residual-congruence/certificates
+```
+
+[Machine-readable results](../examples/residual-congruence.json),
+[Lean audit](../examples/residue-proof.json), and the
+[complete three-track archive](../examples/parallel-experiments.zip) preserve the
+evidence. After extraction, run the archived checker with
+`python3 -S residual-congruence-v1/residual_congruence_verify.py residual-congruence-v1/certificates`.
 
 ## Rooted two-vertex branch experiment
 

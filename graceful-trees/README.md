@@ -28,12 +28,19 @@ with established methods separated from unverified research proposals.
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
+Three [parallel follow-up experiments](docs/validation.md#parallel-follow-up-experiments--8-november-2026)
+now test a known perfect-matching construction, prescribed zero labels on symmetric
+spiders, and independently checkable parity obstructions for fixed residual
+problems. Their results and source snapshots are downloadable; they are separate
+from the nightly campaign and carry no claim of a new theorem or speedup.
+
 Selected mathematical safeguards now have [Lean proofs](formal/README.md), checked
 in CI with a pinned toolchain and an audit of their assumptions. These cover the
 complement symmetry reduction, difference-sum constraint, a restricted negative
 control, the local arithmetic of the caterpillar construction, completeness
 of the SAT clause schema, necessary bounds used in candidate search, and a fixed
-rooted-branch obstruction. They do not formalize the whole Python program or prove
+rooted-branch obstruction, plus the arithmetic implication of modular resource
+certificates. They do not formalize the whole Python program or prove
 the conjecture.
 
 Every run also produces an **offline visual progress report** (`report.html`),
@@ -246,6 +253,13 @@ The workflows live at the repository root:
   **two-minute** validation run using the nightly campaign and its checkpoint.
 - [graceful-ci.yml](../.github/workflows/graceful-ci.yml): tests on changes to this
   project and its workflows, including an installed-CLI experiment and audit.
+- [graceful-experiments.yml](../.github/workflows/graceful-experiments.yml): three
+  independent functional experiments on manual dispatch or changes to their code.
+  A matrix runs matching contraction, prescribed-root spiders and residual
+  congruence certificates concurrently, each with its own artifact and a ten-minute
+  job limit (at most 30 job-minutes across the matrix, including setup). It has
+  read-only repository permissions, no schedule, and does not update the campaign
+  ledger. Concurrent timings are not used to claim performance improvements.
 
 To activate the configured workflow, put these files and this project on the
 repository's **default branch**, enable GitHub Actions under **Settings → Actions**,
@@ -474,6 +488,22 @@ saves a versioned axiom-audit report. Research source snapshots include the proo
 `findings.py` identifies conservative review candidates; `scripts/notify_findings.py`
 validates the exported artifact and deduplicates GitHub notifications.
 The small scripts under `scripts/` adapt the same CLI to GitHub.
+
+Standalone experimental modules `matching_lift.py`, `rooted_spiders.py` and
+`residual_congruence.py` each have a corresponding `scripts/experiment_*.py` and
+independent checks. The congruence checker is a separate standard-library file
+that runs with `python -S`. Reproduce the three tracks into distinct directories:
+
+```sh
+python scripts/experiment_matching_lift.py --output results/matching-lift
+python scripts/experiment_spider_roots.py --output results/spider-roots
+python scripts/experiment_residual_congruence.py --output results/residual-congruence
+```
+
+These can run concurrently for functional validation. Keep timed algorithm
+comparisons isolated from other CPU-intensive jobs. The
+[saved archive](examples/parallel-experiments.zip) includes a report for each track;
+[the validation record](docs/validation.md) explains the observations and limits.
 
 `HypothesisProvider` is a typed interface for future optional LLM assistance. Such a
 provider consumes the analysis summary and proposes questions; it must never modify

@@ -1,5 +1,71 @@
 # Initial validation record
 
+## Parallel follow-up experiments — 8 November 2026
+
+Three independent tracks were implemented and exercised concurrently. The complete
+suite passed **894 Python tests**, including four real Lean rejection tests, and
+**26 dashboard tests**. Ruff lint and formatting checks passed. Cross-reviews found
+no correctness blockers in the constructive lift, scoped solver, certificate checker,
+formal implication or workflow. The nightly solver remains `portfolio-frontier-v3`.
+These runs establish functional results; concurrent wall times are not speed evidence.
+
+| Track | Finite result | Scope |
+| --- | --- | --- |
+| Perfect-matching contraction and lift | 28 verified labelings among 35 inputs; all 27 matching inputs and the singleton succeed | Known construction; seven controls lack perfect matchings |
+| Prescribed-zero symmetric spiders | 40 witnesses and one tiny restricted solver negative across 41 probes | Includes all 30 root orbits for length-four spiders with 3–8 legs |
+| Residual congruence certificates | 68 independently checked parity certificates among 77 impossible residuals; 25 feasible controls | Fixed boundaries and resources only |
+
+The matching corpus includes 24 deliberately matching-rich generated trees at
+orders 32, 64 and 128; every one received a verified witness. Every core and lifted
+witness was independently checked, including matched-pair sums. Tests compare the
+matching detector against NetworkX on all non-isomorphic trees through order 10
+and cover work, node and time cutoffs. No comparative speedup is established.
+
+The spider model disables complement symmetry breaking and fixes the selected
+vertex to zero as the experiment's restriction. All six midpoint targets and
+24 other root-orbit controls succeeded. Eleven tiny cases were also checked by
+definition-level enumeration (486 permutations examined). The single negative,
+with leg lengths `[1,1,3]` and prescribed vertex 3, exhausted all 120 root-fixed
+permutations. It remains a restricted solver negative with an independent exhaustive
+cross-check, without a checkable negative proof certificate. Finite successes do
+not prove the general symmetric-spider conjecture or supply a general formula.
+
+![Verified prescribed-zero coverage for six symmetric spiders; finite cases only](../examples/spider-root-coverage.svg)
+
+Among the 30 impossible residuals with nonempty branch tables, 21 have congruence
+certificates; six also have every label and difference available locally. Nine
+impossible residuals have no certificate for any tested prime (2, 3, 5, 7).
+The separate global oracle checked 60,678 assignments and agreed on all 102 cases.
+Running the archived checker under `python -S` accepted all 68 certificates after
+regenerating 1,317 local assignments and checking 411 valid options. The
+[concrete parity example and trust boundary](leaf-tail.md#congruence-certificates)
+explain what this proves and what remains outside the checker.
+
+Lean 4.24.0 checks the generic modular contradiction, bringing the library to
+**48 public named mathematical theorems**. Its transitive audit covers
+**195 declarations and 135 theorem declarations including generated helpers**.
+The new main theorem uses `propext` and `Quot.sound`. Lean does not check the 68
+individual JSON certificates or prove the Python enumeration correct; those are
+independently checked finite residual claims supported by a formal algebra lemma.
+See the [audit record](../examples/residue-proof.json).
+
+The [complete archive](../examples/parallel-experiments.zip) contains the three
+reports, frozen inputs, all witnesses/certificates, solver model files, dependency
+versions, source snapshots, per-run checksums and the Lean build/audit evidence.
+All **865 run-file checksums** and ZIP integrity passed. Its SHA-256 is
+`1f9c32f548f63252de62ebb2780dfa8187ee32c98634b96cf3f8da5d905811b3`.
+Machine-readable summaries are also directly available for
+[matching](../examples/matching-lift.json), [spiders](../examples/spider-roots.json)
+and [residual certificates](../examples/residual-congruence.json).
+
+The new [parallel workflow](../../.github/workflows/graceful-experiments.yml) runs
+the three bounded functional experiments in separate jobs and artifacts on relevant
+code pushes or manual dispatch. Each job has a ten-minute cap including setup;
+there is no additional schedule or shared campaign-ledger writer. A hard runner
+timeout can interrupt artifact upload despite `always()`, so the experiment limits
+leave ample room for finalization. Hosted outcomes are recorded in Actions history;
+this local record does not itself establish that a cloud run completed.
+
 ## Swap search and rooted branch classification — 8 November 2026
 
 The final suite passed **739 Python tests**, including all four real Lean
