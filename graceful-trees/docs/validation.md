@@ -1,5 +1,68 @@
 # Initial validation record
 
+## Deep optimization pass — 8 November 2026
+
+The complete suite passed **1,060 Python tests**, including the four real Lean
+rejection checks, and **26 dashboard tests**. Ruff lint/formatting passed. After
+adding the two manual workflow choices, all 19 cloud-contract tests passed again.
+
+The default is now **`bitset-portfolio-v6`**. It preserves the original first
+stage's fixed-work traversal while filtering impossible endpoints before the
+vertex loop; the original second stage remains in use. Tests cover every
+non-isomorphic tree through order 10, larger seeded inputs through 256 vertices,
+observer traces, identical clock cutoffs, malformed candidate rejection and exact
+fallback hashes. Legacy algorithm IDs retain their implementations and request
+replay behavior. The generation fingerprint, ledger history, nightly schedule,
+30-minute run budget and candidate allowance are unchanged.
+
+The separate sibling-orbit implementation passed an independent oracle over every
+reachable fixed-root partial state through six vertices, including failures. It
+remains experimental because its complete route lost one success near the time
+cutoff in one holdout repetition. Its evidence is retained alongside the adopted
+change; no timing or node result is interpreted as mathematical infeasibility.
+
+| Phase | Result |
+| --- | --- |
+| Fixed-work development, 48 shapes × 3 repetitions | Filter preserved all labels/nodes/roots/terminations and reduced median first-stage elapsed time by about 16% |
+| Complete-route development, 48 shapes × 3 repetitions | All three routes verified 47/48; about 3% lower median total time for the new routes |
+| Isomorphism-disjoint holdout, 64 shapes × 3 repetitions | Baseline and filter each verified 55/64 in every repetition; median total time 9.979s versus 9.854s (about 1.3% less) |
+| Sibling-orbit holdout variant | 54,55,55 successes; one paired loss, so not adopted |
+| Retry queue on an unchanged 241-tree solved ledger | 242→1 SQL statements, 490→0 JSON decodes, identical queue; no wall-time claim |
+
+Inputs, variants, rotating method order and adoption criteria were frozen before
+holdout outcomes. No tuning followed the holdout. No other project CPU-heavy job
+ran during the measurements. All **1,451 positive benchmark witnesses** were
+reverified and all **91 exact-fallback hashes** matched. See the
+[performance record and graph](performance.md#endpoint-filtering-and-sibling-orbits)
+for exact protocols, the regression and limitations. These are modest processing
+improvements on one machine, not a new verification bound or expected cloud speed.
+
+The installed-CLI smoke campaign verified **100 unrestricted trees**, with
+21 restricted witnesses and four independently checked scoped SAT refutations.
+Its audit accepted 121 positive certificates and all four refutations. A resumed
+nightly-configuration campaign verified **40 new unrestricted trees** and 40
+restricted probes. Its cumulative audit rechecked **577 labelings and 17 scoped
+negative certificates**, preserving the earlier history. Both runs had no unknowns,
+errors or unrestricted infeasibility. The new SQL preselection leaves all historical
+audit checks intact; mixed-history tests also preserve priority ties and eligibility.
+
+Lean 4.24.0 proves the endpoint arithmetic `|p-q|=d` iff `q=p+d` or `p=q+d`.
+The library now has **49 public named mathematical theorems**; the transitive audit
+checks **197 declarations and 137 theorem declarations including generated helpers**.
+The filter's bitset/state correspondence and the sibling automorphism argument
+remain outside Lean; their [proof boundary](techniques.md#endpoint-filtering-and-sibling-orbits)
+is explicit. The [audit record](../examples/deep-proof.json) passed.
+
+The [complete archive](../examples/deep-optimization.zip) contains profiling,
+fixed-work/development/holdout runs, requests/results/witnesses, source snapshots,
+the retry comparison and its unchanged source ledger, formal audit evidence, both
+campaigns and their audits. All **7,869 recorded file checksums** and ZIP integrity
+passed. SHA-256:
+`e7f649a83380d920aeeddf28684364793f558cb0efd1c11f78476f917d49adaf`.
+Direct machine-readable summaries are available for the
+[holdout](../examples/deep-benchmark.json) and
+[development/pipeline comparisons](../examples/deep-development.json).
+
 ## Parallel follow-up experiments — 8 November 2026
 
 Three independent tracks were implemented and exercised concurrently. The complete

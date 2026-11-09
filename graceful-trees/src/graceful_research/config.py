@@ -47,7 +47,7 @@ class Config:
     constructive_search: bool = True
     frontier_search: bool = True
     frontier_max_nodes: int = 40000
-    frontier_algorithm: str = "portfolio-frontier-v3"
+    frontier_algorithm: str = "bitset-portfolio-v6"
     swap_objective: str = "missing_sum"
     swap_proposal_policy: str = "uniform"
     backend: str = "cp-sat"
@@ -122,6 +122,8 @@ class Config:
             "leaf-portfolio-v4",
             "label-swap-v1",
             "swap-portfolio-v5",
+            "bitset-portfolio-v6",
+            "orbit-portfolio-v6",
         }:
             raise ValueError("unsupported frontier_algorithm")
         if not isinstance(self.swap_objective, str) or self.swap_objective not in {

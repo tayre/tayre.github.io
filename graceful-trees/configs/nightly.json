@@ -21,7 +21,7 @@
   "constructive_search": true,
   "frontier_search": true,
   "frontier_max_nodes": 40000,
-  "frontier_algorithm": "portfolio-frontier-v3",
+  "frontier_algorithm": "bitset-portfolio-v6",
   "probe_backend": "sat",
   "certify_infeasible": true
 }

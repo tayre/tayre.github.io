@@ -136,7 +136,23 @@ class Store:
 
     def retry_cases(self, config):
         candidates = []
-        for case in self.cases():
+        # Use the indexed ledger columns to avoid decoding solved history just
+        # to discard it. The audit still checks those columns against every JSON
+        # record. Preserve the old input order so Python's stable priority sort
+        # also preserves ties, and keep returning all eligible cases.
+        eligible = self.connection.execute(
+            """SELECT c.data FROM cases AS c
+               WHERE NOT EXISTS (
+                   SELECT 1 FROM attempts AS a
+                   WHERE a.tree_id=c.tree_id AND a.scope='graceful'
+                     AND a.status='verified_graceful')
+                 AND (SELECT count(*) FROM attempts AS a
+                      WHERE a.tree_id=c.tree_id AND a.scope='graceful') < ?
+               ORDER BY c.n,c.tree_id""",
+            (config.max_attempts_per_case,),
+        )
+        for row in eligible:
+            case = json.loads(row[0])
             records = self.attempts(tree_id=case["tree_id"], scope="graceful")
             if any(r["status"] == "verified_graceful" for r in records):
                 continue

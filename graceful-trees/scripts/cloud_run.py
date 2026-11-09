@@ -17,6 +17,8 @@ EXPERIMENTS = {
     "sat-certificates",
     "leaf-tail",
     "swap-search",
+    "bitset-search",
+    "orbit-search",
 }
 
 

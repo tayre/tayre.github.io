@@ -7,6 +7,11 @@ keep the original search first, then try a complementary method in the time left
 
 ## Prior work and selected ideas
 
+The [deep implementation pass](performance.md#endpoint-filtering-and-sibling-orbits)
+tests endpoint bitsets and sibling-subtree symmetry separately from the historical
+heuristics below. Both retain independent full-witness verification and an unchanged
+exact fallback. These are implementation techniques, not claims of new mathematics.
+
 | Direction | Prior work and decision |
 | --- | --- |
 | Descending differences, central roots and isomorphic subtrees | [Fang (2010), §2.1](https://arxiv.org/abs/1003.3045) already combines these ideas. Our original search uses descending differences; the second method tries central roots before high-degree roots. Root selection remains incomplete witness search. |
@@ -154,8 +159,9 @@ include all 48 inputs and 432 attempt records; the earlier comparison includes
 changes; source hashes identify the measured code. Full local archives are
 `results/techniques-benchmark-v1/` and `results/portfolio-benchmark-v1/`.
 
-The default `frontier_algorithm` is `portfolio-frontier-v3`, with
-`frontier_max_nodes=40000`. Set `descending-frontier-v1` and 20,000 nodes to reproduce
+This earlier pass deployed `portfolio-frontier-v3`; the current default is its
+endpoint-filtered successor `bitset-portfolio-v6`, with `frontier_max_nodes=40000`.
+Set `descending-frontier-v1` and 20,000 nodes to reproduce
 the original configuration, or select `memo-frontier-v2` for a direct comparison.
 Saved requests without an algorithm field keep v1. Nightly budgets, schedules,
 generation streams, identity keys and earlier history are unchanged. Restricted
@@ -245,3 +251,65 @@ also contains a Markdown report and SVG/PNG comparisons. These are benchmark
 archives, not campaign checkpoints. Measured elapsed time includes failed attempts;
 timeouts are censored outcomes, never evidence of nongracefulness. See the
 [performance record](performance.md) for the measured result and deployment decision.
+
+## Endpoint filtering and sibling orbits
+
+`frontier_fast.py` keeps the first search's roots, vertex ordering, label ordering
+and recursive visits. Let `U` be the unused-label bitset and `P` the bitset of
+labels on assigned parents with at least one frontier child. For next difference
+`d`, eligible parent labels are exactly `((U << d) | (U >> d)) & P`.
+The inverse label array locates each such parent; union its rooted child mask and
+intersect the actual frontier. Iterate the resulting vertices in the original
+order, still trying `parent+d` before `parent-d`. This removes only candidates
+that the original loop would reject before making a recursive call.
+
+The invariant on `P` is maintained locally: clear the old parent's label only when
+its last frontier child is assigned, and add the new vertex's label only when it
+exposes children. Labels are injective, so inverse lookup identifies one parent.
+Backtracking restores inverse entries. The two shifted sets are precisely the
+solutions of `|p-q|=d` for unused `q`. Lean proves this endpoint arithmetic in
+[`Search.lean`](../formal/Graceful/Search.lean); it does not formalize Python bitsets
+or the mutable-state invariant. Tests compare full fixed-work outcomes and observer
+traces against v1, including independent witness checks and identical clock cutoffs.
+
+`frontier_memo_fast.py` makes a separate change: precompute equal-shape sibling
+classes and try their first remaining representative at each visit. The actual
+frontier keeps every vertex. To justify the symmetry, take two frontier siblings
+whose rooted subtrees have equal exact types. Both subtrees are wholly unassigned
+because the assigned prefix is connected. A rooted isomorphism between them extends
+to a tree automorphism exchanging the subtrees and fixing every other vertex,
+including their common assigned parent. Transporting any completion along this
+automorphism preserves the used labels, edge differences, assigned prefix and
+connected descending extension order. It exchanges the selected sibling but leaves
+its candidate label unchanged. Thus the two choices admit completions bijectively.
+Trying one preserves existence within this restricted search, including negative
+partial outcomes; it does not justify a whole-tree infeasibility conclusion.
+
+This argument requires exact rooted shapes and the same parent. It does not merge
+merely similar subtrees, omit frontier vertices, or add a symmetry constraint to
+CP-SAT. An independent adjacency-based oracle checks all reachable fixed-root
+partial states through six vertices, including failures. This automorphism argument
+and the Python implementation are not formalized in Lean. Cutoff exceptions still
+bypass failed-state memo insertion. Skipping recursive calls changes the meaning
+of visited-node counts, which is why the complete routes are compared by equal time.
+
+The versioned portfolios are `bitset-portfolio-v6` (filtered first stage, original
+second stage) and `orbit-portfolio-v6` (filtered first stage, sibling-orbit second
+stage). Each retains the original shared 0.1-second maximum candidate allowance
+and at most 20,000 nodes per stage, 40,000 overall. Legacy algorithm identifiers
+keep their old implementations. Restrictions, SAT routing and the exact fallback
+remain unchanged.
+
+```sh
+python scripts/benchmark_deep.py --phase work --output results/deep-work --repeats 3
+python scripts/benchmark_deep.py --phase development --output results/deep-development --repeats 3
+python scripts/benchmark_deep.py --phase holdout --output results/deep-holdout --repeats 3
+```
+
+Run these sequentially without competing CPU-heavy tasks. The work and development
+phases reuse the earlier portfolio corpus; the holdout excludes all five earlier
+benchmark corpora and includes 64 unique shapes through order 128. Inputs and
+protocol are frozen before outcomes. Full source snapshots, seeds, witnesses,
+fallback hashes, regressions and censored outcomes are retained. The method is
+an implementation of exact set filtering and standard automorphism reasoning;
+no algorithmic novelty is claimed.

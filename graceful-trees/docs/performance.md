@@ -1,8 +1,93 @@
 # Performance measurements — 8 November 2026
 
+## Endpoint filtering and sibling orbits
+
+**The nightly default is now `bitset-portfolio-v6`.** It replaces the first stage's
+scan of all frontier vertices with an exact bitset filter for possible endpoints.
+Seeded roots, vertex ordering, label ordering and recursive visits are unchanged
+under fixed work limits. The second stage and exact fallback retain their original
+implementations. An independent sibling-orbit optimization remains opt-in because
+it lost one case in one holdout repetition.
+
+The complete-route holdout used **64 new unique non-caterpillar shapes**, excluding
+all five previous benchmark corpora: six per family at orders 35 and 75, plus four
+per family at order 128, for Prüfer, recursive, spider and lobster generators.
+Each route had the same one-second attempt allowance, at most 0.1 seconds of
+candidate search and 40,000 total candidate nodes (20,000 per stage). Method order
+rotated across three repetitions. No competing project CPU-heavy tasks ran during
+timing; imports were warmed and all fallback hashes matched the original model.
+
+| Complete route | Verified in every repetition | Median total seconds |
+| --- | ---: | ---: |
+| Original v3 + exact fallback | 55 / 64 | 9.979 |
+| Endpoint filter + original second stage + exact fallback | 55 / 64 | 9.854 |
+| Endpoint filter + sibling-orbit second stage + exact fallback | 54 / 64 | 9.885 |
+
+![Paired frontier optimization results](../examples/deep-comparison.svg)
+
+The deployed filter reduced total elapsed time by **about 1.3% on this workload**;
+there were no gained or lost cases in any paired repetition. This is a modest
+processing improvement, not increased mathematical coverage or a predicted nightly
+throughput gain. All 55 successes came from candidate search; the nine remaining
+trees exhausted exact fallback without a decision and dominate the aggregate time.
+
+The sibling variant verified 54, 55 and 55 cases in its repetitions. It lost case
+51, a 128-vertex Prüfer tree, in the first repetition. Its second stage reached the
+wall cutoff after 14,656 visits; the original second stage found a witness after
+15,430. Later sibling runs found a witness after 15,420 visits, but their bookkeeping
+still took longer on this case. No tuning followed this observation. The variant
+failed the predeclared rule requiring no paired losses and remains experimental.
+
+The separate fixed-work development ablation used the earlier 48-tree portfolio
+corpus, 20,000 visits per method and a 30-second guard that never fired:
+
+| Method | Verified cases | Visits per repetition | Median total seconds |
+| --- | ---: | ---: | ---: |
+| Original first stage | 43 / 48 | 223,662 | 0.268535 |
+| Filtered first stage | 43 / 48 | 223,662 | 0.224961 |
+| Original memo stage | 46 / 48 | 155,282 | 0.595967 |
+| Memo stage with sibling orbits | 46 / 48 | 146,183 | 0.555745 |
+
+Filtering took about **16% less elapsed time for the identical traversal**. Every
+fixed-work result agreed on labels, nodes, roots and termination. Sibling orbits
+reduced visits by about 6%, but visited nodes no longer represent identical work.
+The complete-route development comparison verified 47/48 for all routes, with
+median totals 1.348, 1.313 and 1.313 seconds respectively. Those development results
+did not justify deployment without the subsequent holdout. These percentages
+must not be combined with earlier optimization ratios or with the ledger result.
+
+Profiling attributed most first-stage cost to candidate scanning. In the memo
+stage, rebuilding capacity groups and canonical residual keys accounted for much
+of the instrumented runtime. The profile is diagnostic; instrumented elapsed times
+are not performance comparisons. No guessed asymptotic bottleneck was accepted:
+the pinned NetworkX already detects tree centers in linear time.
+
+The ledger change addresses accumulation across nights. On a saved ledger with
+241 solved trees and 249 unrestricted attempts, retry preparation previously issued
+**242 SQL statements and decoded 490 JSON documents (727,288 bytes)** to produce an
+empty queue. SQL preselection now uses **one statement and no JSON decoding** for
+that same queue. Mixed-history differential tests preserve every candidate and
+priority tie. This measures avoided work, not wall time; the independent audit
+still checks all historical records.
+
+Measured environment: macOS ARM64, CPython 3.12.14, NetworkX 3.5 and OR-Tools
+9.14.6206. Every witness is independently verified; no negative tree claim follows
+from any bounded search. The arithmetic filter has a small Lean lemma; the
+[correctness arguments and proof boundary](techniques.md#endpoint-filtering-and-sibling-orbits)
+also explain the mutable-state and automorphism assumptions. No novelty is claimed.
+
+[Holdout summary and inputs](../examples/deep-benchmark.json),
+[work/development summaries and pipeline counts](../examples/deep-development.json),
+and the [complete evidence archive](../examples/deep-optimization.zip) preserve the
+positive and negative results. Reproduction commands are in the
+[technique documentation](techniques.md#endpoint-filtering-and-sibling-orbits).
+The archive also contains successful installed-CLI and resumed campaigns, full
+audits, source snapshots, and the unchanged source ledger for the retry comparison.
+
 ## Label-swap search experiment
 
-**The nightly default remains `portfolio-frontier-v3`.** The new swap search is
+At the end of this earlier experiment, the default remained `portfolio-frontier-v3`.
+The swap search is
 available explicitly, but its portfolio lost a success on the independent holdout.
 All methods below use the same one-second complete attempt allowance and unchanged
 CP-SAT fallback. The candidate allowance remains at most 0.1 seconds.
@@ -62,7 +147,7 @@ The opt-in `leaf-portfolio-v4` passed correctness checks but lost one success on
 a new 48-shape corpus: **45/48 versus 46/48** for v3, with median total time
 **3.718 versus 2.486 seconds**. On 5,112 frozen residual visits, the exact rule
 also cost more than ordinary branching; most tails had only one or two leaves.
-The nightly default remains v3. Full protocols, source hashes, inputs and negative
+That pass kept v3 as the default. Full protocols, source hashes, inputs and negative
 measurements are retained in [leaf-tail.md](leaf-tail.md).
 
 ## Residual-state portfolio

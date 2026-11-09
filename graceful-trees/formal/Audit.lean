@@ -24,6 +24,7 @@ run_cmd do
     ``Graceful.caterpillar_high_transition,
     ``Graceful.SAT.witness_satisfies_clause, ``Graceful.SAT.unsat_excludes_graceful,
     ``Graceful.SAT.row_major_injective, ``Graceful.SAT.x_block_bound,
+    ``Graceful.remaining_edge_endpoints,
     ``Graceful.remaining_edge_window, ``Graceful.distinct_subset_length,
     ``Graceful.remaining_child_capacity, ``Graceful.boundary_fields_injective,
     ``Graceful.LeafTail.midpoint_iff, ``Graceful.LeafTail.midpoint_unique,

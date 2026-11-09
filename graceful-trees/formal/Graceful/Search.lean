@@ -7,6 +7,15 @@ formalize rooted-tree recognition, the memo table, or the Python implementation.
 -/
 namespace Graceful
 
+/-- The only possible endpoints at a prescribed absolute difference. The Python
+filter computes this relation on unused labels with two integer-bitset shifts;
+bitset representation and mutable frontier invariants are not formalized. -/
+theorem remaining_edge_endpoints (parent value difference : Nat) :
+    distance parent value = difference ↔
+      value = parent + difference ∨ parent = value + difference := by
+  simp only [distance]
+  omega
+
 theorem remaining_edge_window (parent value limit : Nat)
     (h : distance parent value ≤ limit) :
     parent - limit ≤ value ∧ value ≤ parent + limit := by

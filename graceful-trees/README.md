@@ -122,19 +122,24 @@ These settings may change on resume without resetting the campaign. Each attempt
 records its method, seed and work limits. Old saved requests without these options
 replay the original exact route.
 
-`frontier_algorithm` selects `portfolio-frontier-v3` by default: try the original
-`descending-frontier-v1` first, then `memo-frontier-v2` if time and nodes remain.
+`frontier_algorithm` selects `bitset-portfolio-v6` by default: try the endpoint-
+filtered version of `descending-frontier-v1`, then `memo-frontier-v2` if time and
+nodes remain. Filtering skips impossible endpoints while preserving the original
+recursive traversal under work limits. On 64 unseen shapes it retained all 55
+successes and reduced median complete-route time by about 1.3%; see the
+[measurements and limitations](docs/performance.md#endpoint-filtering-and-sibling-orbits).
 The second method remembers equivalent failed residual forests, rejects branches
 with too few eligible unused labels, and tries central roots first. Both individual
-methods remain selectable; old saved frontier requests without this field retain
-v1. The cache stores only fully explored failures within the heuristic's restricted search,
+methods and the original `portfolio-frontier-v3` remain selectable; old saved
+frontier requests without this field retain v1. The cache stores only fully
+explored failures within the heuristic's restricted search,
 never a cutoff or a proof about the whole tree. See the
 [technique review, correctness arguments and benchmarks](docs/techniques.md).
 
 `leaf-portfolio-v4` is an opt-in experiment that finishes residual leaves attached
 to at most two assigned parents using an exact count-and-parity rule. It passed
 independent exhaustive checks and has conditional Lean proofs, but regressed on
-the fresh-tree benchmark, so the nightly default remains v3. Run
+the fresh-tree benchmark, so it remains experimental. Run
 `graceful-research run --config configs/leaf-tail.json --output results/leaf-tail`
 or select `leaf-tail` in the manual GitHub workflow. See the
 [completion argument, proof boundary and retained negative measurements](docs/leaf-tail.md).
@@ -160,6 +165,15 @@ Select `swap-search` in the manual GitHub research workflow to run the same
 experiment in the cloud. The [swap-search methods and benchmark protocol](docs/techniques.md#label-swapping-and-a-complementary-portfolio)
 explain limits, replay and independent verification. See the
 [measured comparison and deployment decision](docs/performance.md).
+
+The endpoint filter has a reproducible small campaign in `configs/bitset-search.json`.
+`orbit-portfolio-v6` additionally skips interchangeable sibling-subtree choices.
+Although mathematically justified, its bookkeeping lost a case near the time limit
+in one holdout repetition; it remains opt-in via `configs/orbit-search.json`.
+Both `bitset-search` and `orbit-search` are available in the manual GitHub workflow.
+Neither optimization changes the exact model or interprets a search cutoff as a
+negative result. A separate database optimization preselects eligible retry cases
+before decoding their full records; all cumulative audits still run.
 
 The separate mathematical experiment
 `python scripts/experiment_rooted_pairings.py --output results/rooted-pairings`
@@ -477,7 +491,10 @@ configs → TreeStream → exact deduplication → SQLite inputs/cursors
 `config.py` validates experiments; `trees.py` generates and identifies trees;
 `constructive.py` implements known-family witnesses; `frontier.py` retains the v1
 candidate search, `frontier_memo.py` adds residual-state reuse, and
-`frontier_portfolio.py` shares the allowance between them; `solver.py` owns the exact
+`frontier_portfolio.py` retains the v3 portfolio. `frontier_fast.py` filters impossible
+endpoints, and `frontier_accelerated.py` shares the allowance between the filtered
+first stage and the original second stage by default. Its optional sibling-orbit
+stage lives in `frontier_memo_fast.py`. `solver.py` owns the exact
 model and fallback; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.

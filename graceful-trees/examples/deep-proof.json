@@ -1,0 +1,536 @@
+{
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "axiom_dependencies": {
+    "Graceful.LeafTail.candidate_difference_shape": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.candidate_difference_shape._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.extreme_pair_quota._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.lower_candidate_neighbor_unique": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.lower_candidate_neighbor_unique._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_iff": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_iff._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_unique": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.midpoint_unique._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pairContribution.eq_1": [],
+    "Graceful.LeafTail.pairContribution.eq_2": [],
+    "Graceful.LeafTail.pair_choices_exact": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_choices_exact._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_choices_exact._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_append": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_append._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds._proof_1_4": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_bounds._proof_1_5": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_false": [
+      "propext"
+    ],
+    "Graceful.LeafTail.pair_contribution_true": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.pair_contribution_true._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_1": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.quota_criterion._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_differences": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_differences._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_pair_resources": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.reflected_pair_resources._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.swapped_differences_reflect": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.swapped_differences_reflect._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.two_distances_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.LeafTail.two_distances_injective._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.dot.eq_1": [],
+    "Graceful.ResidueCertificate.dot_sum_columns": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.modular_obstruction": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo.eq_1": [],
+    "Graceful.ResidueCertificate.sumTo.eq_2": [],
+    "Graceful.ResidueCertificate.sumTo_add": [
+      "propext"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_congr._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.ResidueCertificate.sumTo_mod_zero._proof_1_5": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.RootedPairing.case56_no_completion": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.Admissible._proof_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.Satisfied.eq_1": [],
+    "Graceful.SAT.Var.x.inj": [],
+    "Graceful.SAT.Var.x.injEq": [
+      "propext"
+    ],
+    "Graceful.SAT.Var.x.sizeOf_spec": [],
+    "Graceful.SAT.Var.y.inj": [],
+    "Graceful.SAT.Var.y.injEq": [
+      "propext"
+    ],
+    "Graceful.SAT.Var.y.sizeOf_spec": [],
+    "Graceful.SAT.differences_nodup": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.distinct_edge_differences": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.row_major_injective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.unsat_excludes_graceful": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.witness.eq_1": [],
+    "Graceful.SAT.witness.eq_2": [],
+    "Graceful.SAT.witness_satisfies_clause": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_2": [
+      "propext"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_3": [
+      "propext"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.witness_satisfies_clause._simp_1_5": [
+      "propext"
+    ],
+    "Graceful.SAT.x_block_bound": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.SAT.x_block_bound._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.boundary_fields_injective": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.boundary_fields_injective._proof_1_1": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_step": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_step._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_transition": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_high_transition._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_step": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_step._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_transition": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.caterpillar_low_transition._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement.eq_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_bijective": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_differences": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.complement_graceful": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.differences.eq_1": [],
+    "Graceful.distance.eq_1": [],
+    "Graceful.distinct_subset_length": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.distinct_subset_length._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.extreme_endpoints": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.extreme_endpoints._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip._proof_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip._proof_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip.eq_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_distance": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_distance._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_involution": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.flip_involution._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.graceful_difference_sum": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.graceful_difference_sum._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.oriented_witness": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.oriented_witness._proof_1_3": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4Edges._proof_1": [
+      "propext"
+    ],
+    "Graceful.path4Edges.eq_1": [
+      "propext"
+    ],
+    "Graceful.path4_graceful": [
+      "propext",
+      "Quot.sound",
+      "Classical.choice"
+    ],
+    "Graceful.path4_middle_not_graceful": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4_middle_repeats": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.path4_middle_repeats._proof_1_2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_child_capacity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_child_capacity._simp_1_1": [
+      "propext"
+    ],
+    "Graceful.remaining_edge_endpoints": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_endpoints._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_window": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.remaining_edge_window._proof_1_2": [
+      "Classical.choice",
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.requiredDifferences.eq_1": [],
+    "Graceful.requiredDifferences_succ": [
+      "propext"
+    ],
+    "Graceful.twice_required_sum": [
+      "propext",
+      "Quot.sound"
+    ],
+    "Graceful.twice_required_sum._proof_1_1": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.LeafTail.0.Graceful.LeafTail.pairContribution.match_1.eq_1": [],
+    "_private.Graceful.LeafTail.0.Graceful.LeafTail.pairContribution.match_1.eq_2": [],
+    "_private.Graceful.ResidueCertificate.0.Graceful.ResidueCertificate.sumTo.match_1.eq_1": [],
+    "_private.Graceful.ResidueCertificate.0.Graceful.ResidueCertificate.sumTo.match_1.eq_2": [],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.nine_root._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.six_internal_impossible._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._proof_1_4": [
+      "propext",
+      "Quot.sound"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._simp_1_1": [
+      "propext"
+    ],
+    "_private.Graceful.RootedPairing.0.Graceful.RootedPairing.zero_root._simp_1_2": [
+      "propext"
+    ],
+    "_private.Graceful.SAT.0.Graceful.SAT.witness.match_1.eq_1": [],
+    "_private.Graceful.SAT.0.Graceful.SAT.witness.match_1.eq_2": []
+  },
+  "declarations_checked": 197,
+  "finished_at": "2026-11-09T04:02:01.684212+00:00",
+  "lean_version": "Lean (version 4.24.0, arm64-apple-darwin23.6.0, commit 797c613eb9b6d4ec95db23e3e00af9ac6657f24b, Release)",
+  "passed": true,
+  "schema_version": 1,
+  "scope": "Model lemmas, construction arithmetic, search capacity bounds, conditional residual leaf allocation, one fixed rooted-branch obstruction, and the algebraic implication of modular resource certificates; not the conjecture or Python code.",
+  "source_sha256": {
+    "Audit.lean": "cdd4eeecdd39c648974e69fd878f755b28997e958aee4107cee9807e129a244c",
+    "Graceful.lean": "e2819a465ddd62941a43c1879ac101b9332e85daaadec758ceaf7897e2414aff",
+    "Graceful/Basic.lean": "dcc4d6be9723e0e5e58ca7a91dab0b432fde2ebc8bbea3984d52ef66f1e3d1f7",
+    "Graceful/Complement.lean": "d861614c5cb00a6ceb945648f1889c0cc92282b6ccfa5413a2240cc7b4465e95",
+    "Graceful/Constraints.lean": "5579a8b4cc64527462f51d5e4010fab7b59724fc699408eda3231f68ffd79e0f",
+    "Graceful/Construction.lean": "32bf5b648eb693399919c759d919c07135d73664b70c41003ded5a00020c7df0",
+    "Graceful/LeafTail.lean": "fc8605922095166b9c4744310e02e82cef6ebbead927ad35f3507ff19ee8e2b2",
+    "Graceful/ResidueCertificate.lean": "04811e84f21b91e948993548ec1c26af6495d6f5fc75f3e2502f8fd178564f72",
+    "Graceful/RootedPairing.lean": "65c7868bb9f1691b6557119e0ae83af81dba5ea0ec8f6d056a6030d1dacb0271",
+    "Graceful/SAT.lean": "c6d501b36bbf0d0ab45a8aece0efd9480c8d2acb26709a5577aa10243dbd6f53",
+    "Graceful/Search.lean": "e21667d1ebd86c7678039a7f758d3ae862c7058a2c9438361ac5acf7a96f02aa",
+    "README.md": "4a3101555d1b2e7c1edc5a3b7aa0f2a2bb993e03d64932ff58ff29351d2ca6fb",
+    "lake-manifest.json": "c870b8b0c1d1cac07e83d270ec2618194a8e5c117abcb0de207fc3d5e9c12a40",
+    "lakefile.toml": "bb27f2fad3c04eadaa3fc7c2f1335c7876e7ee9e14dde992517e18dcd8a9da7d",
+    "lean-toolchain": "42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434"
+  },
+  "started_at": "2026-11-09T04:01:53.062441+00:00",
+  "theorems_checked_including_generated": 137,
+  "toolchain": "leanprover/lean4:v4.24.0"
+}

@@ -81,8 +81,10 @@ arithmetic, not the whole graph statement. Novelty of this corollary is unassert
 
 ## Measurements and deployment decision
 
-**The nightly default remains `portfolio-frontier-v3`.** The new method is
+This experiment kept `portfolio-frontier-v3` as the default. The method remains
 available as `leaf-portfolio-v4`, but did not improve the measured workloads.
+The subsequent [endpoint-filtering pass](performance.md#endpoint-filtering-and-sibling-orbits)
+deployed `bitset-portfolio-v6` without enabling the leaf rule.
 
 First, the two original candidate methods traced the existing 48-tree development
 corpus under fixed 20,000-node caps. Across 96 traces, 49,429 eligible visits were

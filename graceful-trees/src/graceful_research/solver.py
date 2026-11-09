@@ -90,6 +90,8 @@ def solve(request):
             from .swap_search import search
         elif algorithm == "swap-portfolio-v5":
             from .swap_portfolio import search
+        elif algorithm in {"bitset-portfolio-v6", "orbit-portfolio-v6"}:
+            from .frontier_accelerated import search
         else:
             raise ValueError("unsupported frontier_algorithm")
 
@@ -101,6 +103,8 @@ def solve(request):
             "leaf-portfolio-v4": 40000,
             "label-swap-v1": 40000,
             "swap-portfolio-v5": 80000,
+            "bitset-portfolio-v6": 40000,
+            "orbit-portfolio-v6": 40000,
         }[algorithm]
         frontier = search(
             **data,
@@ -108,6 +112,7 @@ def solve(request):
             max_nodes=request.get("frontier_max_nodes", default_nodes),
             seconds=min(0.1, request["solver_seconds"] * 0.1),
             **({"leaf_tail": True} if algorithm == "leaf-portfolio-v4" else {}),
+            **({"sibling_orbits": True} if algorithm == "orbit-portfolio-v6" else {}),
             **(
                 {
                     "objective": request.get("swap_objective", "missing_sum"),
