@@ -375,6 +375,13 @@ automatic token and the standard library. Set the repository Actions variable
 uses the repository owner. The existing research schedule and budget are unchanged.
 To disable these alerts, remove or disable the workflow's `notify` job.
 
+A separate daily Codex review at **noon America/Toronto** examines results, checks
+promising claims against primary literature, and attempts one bounded proof or
+experiment. See the [deeper-investigation protocol](docs/automated-investigation.md)
+for evidence standards, review records and current questions. This desktop review
+requires the computer on and Codex running; the GitHub numerical campaign and its
+deterministic alerts continue independently in the cloud.
+
 ## How budgets, progress and priorities work
 
 The parent process owns a monotonic deadline. Each exact backend gets an individual time limit,
