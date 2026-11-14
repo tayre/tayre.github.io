@@ -34,7 +34,8 @@ leg, for any number of legs. Together with Rofa's known remaining positions,
 this gives zero at any chosen vertex. Lean checks the new formula's exact label
 and difference permutations for every positive leg count. The literature search
 found no matching result, but novelty remains unconfirmed; this does not settle
-the general conjecture.
+the general conjecture. The [research finding note](docs/findings.md) records its
+precise scope, verification limits and next review step.
 
 Three [parallel follow-up experiments](docs/validation.md#parallel-follow-up-experiments--8-november-2026)
 now test a known perfect-matching construction, prescribed zero labels on symmetric
