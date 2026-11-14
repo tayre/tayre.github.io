@@ -24,6 +24,12 @@ positions, every vertex can receive zero in some labeling: 0-rotatability.
 “Five legs,” “five vertices per path,” ordinary gracefulness, and zero only at
 the hub are different statements. The comparison below keeps these distinctions.
 
+![Before and after the established construction: merge the zero hub of a five-edge leg with the zero midpoint of a ten-edge path, then relabel. The three-leg spider has hub 4, zero at depth two and 15 at depth three on one leg.](../examples/five-spider-prior-art-diagram.svg)
+
+**Three-leg example.** The two zero vertices become a single hub; no connecting
+edge is added. Relabeling gives the hub 4 and puts 0 beside 15 at the two inner
+positions. Every leg still has five edges. [Open the diagram at full size](../examples/five-spider-prior-art-diagram.svg).
+
 ## The established construction
 
 [Wu and Lu (2012)](https://combinatorialpress.com/article/ars/Volume%20106/volume-106-paper-20.pdf),

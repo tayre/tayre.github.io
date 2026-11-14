@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650" role="img" aria-labelledby="title description">
+  <title id="title">The older construction: join a path to make a three-leg spider</title>
+  <desc id="description">Before: a five-edge leg has hub zero and a ten-edge path has zero at its middle. Merge those two zero vertices into one hub and apply the established relabeling. The resulting hub is four and every leg has five edges. On the lower right leg, zero is two steps from the hub and fifteen is three steps from the hub. All vertex labels zero through fifteen and edge differences one through fifteen occur exactly once. This is an example of a consequence of prior work, not a new theorem.</desc>
+  <rect width="900" height="650" fill="white" />
+  <text x="40" y="35" class="title" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="25">The older construction, in one example</text>
+  <text x="40" y="63" class="note" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="16">A path contributes two new five-edge legs.</text>
+  <text x="40" y="102" class="heading" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="19">Existing five-edge leg</text>
+  <text x="350" y="102" class="heading" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="19">Ten-edge path</text>
+  <g data-graph="before-tree">
+    <line class="edge old" data-from="0" data-to="1" x1="55" y1="140" x2="95" y2="140" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="1" data-to="2" x1="95" y1="140" x2="135" y2="140" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="2" data-to="3" x1="135" y1="140" x2="175" y2="140" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="3" data-to="4" x1="175" y1="140" x2="215" y2="140" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="4" data-to="5" x1="215" y1="140" x2="255" y2="140" stroke="#8c959c" stroke-width="2" />
+    <g class="node emphasis" data-vertex="0" transform="translate(55 140)">
+      <circle r="17" fill="#18665b" stroke="#18665b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="white" font-size="17" text-anchor="middle" y="5.5">0</text>
+    </g>
+    <g class="node " data-vertex="1" transform="translate(95 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">5</text>
+    </g>
+    <g class="node " data-vertex="2" transform="translate(135 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">1</text>
+    </g>
+    <g class="node " data-vertex="3" transform="translate(175 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">4</text>
+    </g>
+    <g class="node " data-vertex="4" transform="translate(215 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">2</text>
+    </g>
+    <g class="node " data-vertex="5" transform="translate(255 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">3</text>
+    </g>
+  </g>
+  <g data-graph="before-path">
+    <line class="edge " data-from="0" data-to="1" x1="350" y1="140" x2="400" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="1" data-to="2" x1="400" y1="140" x2="450" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="2" data-to="3" x1="450" y1="140" x2="500" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="3" data-to="4" x1="500" y1="140" x2="550" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="4" data-to="5" x1="550" y1="140" x2="600" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="5" data-to="6" x1="600" y1="140" x2="650" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="6" data-to="7" x1="650" y1="140" x2="700" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="7" data-to="8" x1="700" y1="140" x2="750" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="8" data-to="9" x1="750" y1="140" x2="800" y2="140" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="9" data-to="10" x1="800" y1="140" x2="850" y2="140" stroke="#43505b" stroke-width="2" />
+    <g class="node " data-vertex="0" transform="translate(350 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">9</text>
+    </g>
+    <g class="node " data-vertex="1" transform="translate(400 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">2</text>
+    </g>
+    <g class="node " data-vertex="2" transform="translate(450 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">7</text>
+    </g>
+    <g class="node " data-vertex="3" transform="translate(500 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">1</text>
+    </g>
+    <g class="node " data-vertex="4" transform="translate(550 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">10</text>
+    </g>
+    <g class="node emphasis" data-vertex="5" transform="translate(600 140)">
+      <circle r="17" fill="#18665b" stroke="#18665b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="white" font-size="17" text-anchor="middle" y="5.5">0</text>
+    </g>
+    <g class="node " data-vertex="6" transform="translate(650 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">8</text>
+    </g>
+    <g class="node " data-vertex="7" transform="translate(700 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">4</text>
+    </g>
+    <g class="node " data-vertex="8" transform="translate(750 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">5</text>
+    </g>
+    <g class="node " data-vertex="9" transform="translate(800 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">3</text>
+    </g>
+    <g class="node " data-vertex="10" transform="translate(850 140)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">6</text>
+    </g>
+  </g>
+  <text x="300" y="146" font-size="28" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#263238">+</text>
+  <text x="55" y="180" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">hub</text>
+  <text x="600" y="180" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">middle</text>
+  <text x="450" y="220" class="heading" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="19">Merge the two zero vertices into one hub, then relabel.</text>
+  <path d="M450 237 V264 M443 257 L450 265 L457 257" fill="none" stroke="#43505b" stroke-width="1.8" />
+  <text x="40" y="289" class="heading" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="19">Result: a three-leg spider</text>
+  <g data-graph="after">
+    <line class="edge old" data-from="0" data-to="1" x1="450" y1="410" x2="378" y2="410" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="1" data-to="2" x1="378" y1="410" x2="306" y2="410" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="2" data-to="3" x1="306" y1="410" x2="234" y2="410" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="3" data-to="4" x1="234" y1="410" x2="162" y2="410" stroke="#8c959c" stroke-width="2" />
+    <line class="edge old" data-from="4" data-to="5" x1="162" y1="410" x2="90" y2="410" stroke="#8c959c" stroke-width="2" />
+    <line class="edge " data-from="0" data-to="6" x1="450" y1="410" x2="522" y2="385" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="6" data-to="7" x1="522" y1="385" x2="594" y2="360" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="7" data-to="8" x1="594" y1="360" x2="666" y2="335" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="8" data-to="9" x1="666" y1="335" x2="738" y2="310" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="9" data-to="10" x1="738" y1="310" x2="810" y2="285" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="0" data-to="11" x1="450" y1="410" x2="522" y2="435" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="11" data-to="12" x1="522" y1="435" x2="594" y2="460" stroke="#43505b" stroke-width="2" />
+    <line class="edge maximum" data-from="12" data-to="13" x1="594" y1="460" x2="666" y2="485" stroke="#18665b" stroke-width="4" />
+    <line class="edge " data-from="13" data-to="14" x1="666" y1="485" x2="738" y2="510" stroke="#43505b" stroke-width="2" />
+    <line class="edge " data-from="14" data-to="15" x1="738" y1="510" x2="810" y2="535" stroke="#43505b" stroke-width="2" />
+    <g class="node " data-vertex="0" transform="translate(450 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">4</text>
+    </g>
+    <g class="node " data-vertex="1" transform="translate(378 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">9</text>
+    </g>
+    <g class="node " data-vertex="2" transform="translate(306 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">5</text>
+    </g>
+    <g class="node " data-vertex="3" transform="translate(234 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">8</text>
+    </g>
+    <g class="node " data-vertex="4" transform="translate(162 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">6</text>
+    </g>
+    <g class="node " data-vertex="5" transform="translate(90 410)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">7</text>
+    </g>
+    <g class="node " data-vertex="6" transform="translate(522 385)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">10</text>
+    </g>
+    <g class="node " data-vertex="7" transform="translate(594 360)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">3</text>
+    </g>
+    <g class="node " data-vertex="8" transform="translate(666 335)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">13</text>
+    </g>
+    <g class="node " data-vertex="9" transform="translate(738 310)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">2</text>
+    </g>
+    <g class="node " data-vertex="10" transform="translate(810 285)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">11</text>
+    </g>
+    <g class="node " data-vertex="11" transform="translate(522 435)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">12</text>
+    </g>
+    <g class="node emphasis" data-vertex="12" transform="translate(594 460)">
+      <circle r="17" fill="#18665b" stroke="#18665b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="white" font-size="17" text-anchor="middle" y="5.5">0</text>
+    </g>
+    <g class="node emphasis" data-vertex="13" transform="translate(666 485)">
+      <circle r="17" fill="#18665b" stroke="#18665b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="white" font-size="17" text-anchor="middle" y="5.5">15</text>
+    </g>
+    <g class="node " data-vertex="14" transform="translate(738 510)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">1</text>
+    </g>
+    <g class="node " data-vertex="15" transform="translate(810 535)">
+      <circle r="17" fill="white" stroke="#43505b" stroke-width="1.6" />
+      <text font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="17" text-anchor="middle" y="5.5">14</text>
+    </g>
+  </g>
+  <text x="450" y="449" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">hub</text>
+  <text x="230" y="452" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">Existing leg: labels shifted by 4</text>
+  <line x1="594" y1="480" x2="594" y2="550" class="guide" stroke="#18665b" stroke-width="1" stroke-dasharray="3 4" />
+  <line x1="666" y1="505" x2="666" y2="550" class="guide" stroke="#18665b" stroke-width="1" stroke-dasharray="3 4" />
+  <text x="594" y="570" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">2 steps</text>
+  <text x="666" y="570" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">3 steps</text>
+  <text x="450" y="602" class="heading" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#263238" font-size="19">Zero sits two steps from the hub, beside the largest label.</text>
+  <text x="450" y="632" class="small" text-anchor="middle" font-family="Georgia, Times New Roman, serif" fill="#59636b" font-size="14">Established construction · vertex labels 0–15 · edge differences 1–15</text>
+</svg>

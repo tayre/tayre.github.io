@@ -104,7 +104,14 @@
       <p>Take any number of equal legs, each five edges long, meeting at one hub. Every vertex can receive zero in some graceful labeling. An explicit formula supplies the two interior positions; <a href="https://arxiv.org/pdf/2312.16235">Rofa’s Corollary 2</a> supplies the remaining positions. This property is called <em>0-rotatability</em>.</p>
       <p>Lean checks our formula’s exact vertex labels and edge differences for every positive number of legs. Independent finite checks also verify the implementation through 10,000 legs. The full conclusion additionally uses the graph argument and Rofa’s result. A <a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/docs/spider-priority-review.md">deeper literature review</a> derives the same result from established constructions. We do not claim a new theorem.</p>
       <details>
-        <summary>View a three-leg example</summary>
+        <summary>How the older construction works</summary>
+        <figure class="research-figure">
+          <a href="examples/five-spider-prior-art-diagram.svg" aria-label="Open the prior-work construction diagram at full size"><img src="examples/five-spider-prior-art-diagram.svg" width="900" height="650" style="width:100%;height:auto" loading="lazy" alt="Merge the zero hub of a five-edge leg with the zero midpoint of a ten-edge path, then relabel. The resulting three-leg spider has hub 4, zero two steps from the hub, and 15 three steps from the hub."></a>
+          <figcaption>The two zero vertices become one hub; no connecting edge is added. The established relabeling places 0 beside 15 at the inner positions. This example illustrates the <a href="https://github.com/tayre/tayre.github.io/blob/master/graceful-trees/docs/spider-priority-review.md">prior-work derivation</a>. <a href="examples/five-spider-prior-art-diagram.svg">Open the diagram at full size.</a></figcaption>
+        </figure>
+      </details>
+      <details>
+        <summary>View our original formula’s three-leg example</summary>
         <figure class="research-figure">
           <a href="examples/five-spider-witness.svg" aria-label="Open the three-leg diagram at full size"><img src="examples/five-spider-witness.svg" width="900" height="750" style="width:100%;height:auto" loading="lazy" alt="Three five-edge legs share a hub labeled 1. The distinguished leg is labeled 14, 0, 15, 3, 12 outward. All vertex labels 0 through 15 and edge differences 1 through 15 occur once."></a>
           <figcaption><a href="examples/five-spider-witness.svg">Open the diagram at full size.</a> The formula places 0 and 15 at adjacent interior vertices. Complementing every label, replacing <i>x</i> by 15 − <i>x</i>, moves zero to the other endpoint and preserves every edge difference. This construction is separate from the nightly campaign totals.</figcaption>
