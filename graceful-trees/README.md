@@ -69,7 +69,7 @@ live display of the cloud campaign.
 Cloud execution is active in [GitHub Actions](https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml).
 The [first hosted research run](https://github.com/tayre/tayre.github.io/actions/runs/42497916313)
 completed successfully, including independent auditing and checkpoint/report uploads.
-Nightly runs use a 30-minute budget; configuration pushes run a two-minute check.
+Nightly runs use a 60-minute budget; configuration pushes run a two-minute check.
 
 **Usage review:** Technical activation does not establish GitHub approval of an
 ongoing mathematical discovery campaign. Before increasing hosted research runs,
@@ -108,7 +108,7 @@ Available configurations:
 | --- | --- |
 | `smoke.json` | One-minute mixed-family trial; small trees and sampled orders 12 and 20 |
 | `exhaustive-small.json` | All 95 non-isomorphic trees of orders 1–9, plus bounded edge probes |
-| `nightly.json` | 30-minute budget; oldest unresolved cases first, exact edge-placement probes through order 12, and new samples at orders 20, 35, 50 and 75 |
+| `nightly.json` | 60-minute budget; oldest unresolved cases first, exact edge-placement probes through order 12, and new samples at orders 20, 35, 50 and 75 |
 | `edge-profiles.json` | Small exhaustive inputs with more compute reserved for prescribed maximum-difference edge experiments |
 | `sat-certificates.json` | Pure SAT validation through order 7, with scoped, independently checked UNSAT proofs for negative edge controls |
 | `leaf-tail.json` | Opt-in exact two-parent leaf completion experiment |
@@ -317,8 +317,9 @@ Successful push-triggered checkpoints are eligible for the
 next nightly run, so initial progress is retained. Research runs for the same
 branch are serialized. Dispatch
 values are validated as data, not interpolated into shell commands. Workflow inputs
-allow 1–30 compute minutes; the enclosing job limit is 45 minutes to allow setup,
-tests, finalization and artifact uploads. The 30-minute research budget includes
+allow 1–60 compute minutes; the enclosing job limit is 75 minutes to allow setup,
+tests, finalization and artifact uploads. Scheduled runs use the budget in
+`configs/nightly.json`; manual dispatch defaults to 60 minutes. The research budget includes
 generation, worker startup, solver work and a finalization reserve, not package
 installation or the separate validation suite.
 
@@ -391,7 +392,7 @@ terminates the worker and writes the report. A hard OS kill can prevent finaliza
 but already committed SQLite transactions remain; workflow artifacts are still
 attempted where GitHub permits them.
 
-The nightly configuration keeps the **1,800-second budget** and reserves 60 seconds
+The nightly configuration uses a **3,600-second budget** and reserves 120 seconds
 for finalization. Of the remaining search window, up to 60% is available for
 unresolved retries and 25% is reserved for restricted edge-placement experiments;
 at least 15% remains for new trees. Unused retry time is available to new trees.
@@ -407,9 +408,9 @@ Seeds are derived from the continuing attempt number and retained in each reques
 Other configurations default to the original `bounded` retry policy, preserving
 its lifetime ceiling and ordering. Restricted probes retain their own lifetime cap.
 
-The per-run limits are now 20,000 unrestricted cases (including retries) and
-200,000 generation attempts. Exact SAT probes examine maximum-difference edge
-placements through order 12, with up to 2,000 probes and 15 seconds each, always
+The per-run limits are now 40,000 unrestricted cases (including retries) and
+400,000 generation attempts. Exact SAT probes examine maximum-difference edge
+placements through order 12, with up to 4,000 probes and 15 seconds each, always
 clipped to the remaining global time. This extends the earlier order-10 atlas;
 it is a restricted experiment, not a larger exhaustive gracefulness bound.
 `probe_seconds=null` preserves the older behavior of using `attempt_seconds`.
@@ -422,8 +423,9 @@ Generation settings and fingerprints
 are unchanged, so the existing cloud checkpoint continues. The run can still finish
 early when its case/generation limits or finite sources are exhausted; it never
 waits idly just to fill the budget. Setup, independent audit and artifact upload
-are separate workflow overhead. The nightly frequency and 30-minute allowance
-have not increased; the existing [Actions usage review](docs/github-actions-usage.md)
+are separate workflow overhead. The daily schedule remains 06:23 UTC; the research
+allowance increased from 30 to 60 minutes on 14 November 2026 at the owner's request.
+The existing [Actions usage review](docs/github-actions-usage.md)
 still applies and does not establish GitHub approval of discovery workloads.
 
 Generators are interleaved round-robin. Enumeration uses NetworkX's free-tree

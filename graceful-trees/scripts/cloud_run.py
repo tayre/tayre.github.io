@@ -9,6 +9,8 @@ from pathlib import Path
 
 from graceful_research.config import Config
 
+MAX_CLOUD_MINUTES = 60
+
 EXPERIMENTS = {
     "nightly",
     "smoke",
@@ -22,13 +24,19 @@ EXPERIMENTS = {
 }
 
 
-def dispatch_config(experiment, minutes):
+def dispatch_config(experiment, minutes=None):
     if experiment not in EXPERIMENTS:
         raise ValueError("unknown workflow experiment")
+    config = Path("configs") / f"{experiment}.json"
+    # Scheduled events have no dispatch input: honor the versioned configuration.
+    if minutes is None or minutes == "":
+        minutes = Config.read(Path(__file__).resolve().parents[1] / config).budget_seconds / 60
     minutes = float(minutes)
-    if not math.isfinite(minutes) or not 1 <= minutes <= 30:
-        raise ValueError("cloud runs allow 1..30 minutes; use the CLI for longer budgets")
-    return Path("configs") / f"{experiment}.json", minutes * 60
+    if not math.isfinite(minutes) or not 1 <= minutes <= MAX_CLOUD_MINUTES:
+        raise ValueError(
+            f"cloud runs allow 1..{MAX_CLOUD_MINUTES} minutes; use the CLI for longer budgets"
+        )
+    return config, minutes * 60
 
 
 def main():
@@ -36,7 +44,7 @@ def main():
     parser.add_argument("--prepare", action="store_true")
     args = parser.parse_args()
     config, seconds = dispatch_config(
-        os.environ.get("EXPERIMENT") or "nightly", os.environ.get("MINUTES") or "30"
+        os.environ.get("EXPERIMENT") or "nightly", os.environ.get("MINUTES")
     )
     parsed = Config.read(config)
     if args.prepare:

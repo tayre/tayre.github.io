@@ -144,7 +144,8 @@ def test_download_redirect_does_not_forward_github_token():
     [
         ("nightly", "nan"),
         ("nightly", "0"),
-        ("nightly", "31"),
+        ("nightly", "61"),
+        ("nightly", "inf"),
         ("../../etc/passwd", "1"),
         ("$(echo unsafe)", "1"),
     ],
@@ -152,6 +153,31 @@ def test_download_redirect_does_not_forward_github_token():
 def test_cloud_inputs_validated(experiment, minutes):
     with pytest.raises(ValueError):
         cloud.dispatch_config(experiment, minutes)
+
+
+@pytest.mark.parametrize("minutes", [None, "", "60"])
+def test_cloud_nightly_uses_full_configured_budget(minutes):
+    config, seconds = cloud.dispatch_config("nightly", minutes)
+    assert seconds == Config.read(PROJECT / config).budget_seconds == 3600
+
+
+@pytest.mark.parametrize("minutes", [None, "", "2"])
+def test_cloud_launch_budget_reaches_cli(monkeypatch, tmp_path, minutes):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("EXPERIMENT", "nightly")
+    if minutes is None:
+        monkeypatch.delenv("MINUTES", raising=False)
+    else:
+        monkeypatch.setenv("MINUTES", minutes)
+    monkeypatch.setattr(sys, "argv", ["cloud_run.py"])
+    monkeypatch.setattr(Config, "read", lambda *_: Config(budget_seconds=3600))
+    commands = []
+    monkeypatch.setattr(cloud.subprocess, "call", lambda command: commands.append(command) or 0)
+    assert cloud.main() == 0
+    command = commands[0]
+    assert float(command[command.index("--budget-seconds") + 1]) == (
+        120 if minutes == "2" else 3600
+    )
 
 
 def test_example_configs_and_workflow_contracts():
@@ -169,7 +195,11 @@ def test_example_configs_and_workflow_contracts():
         ".github/workflows/graceful-research.yml",
         "graceful-trees/configs/nightly.json",
     ]
-    assert workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"] == "30"
+    default_minutes = workflow["on"]["workflow_dispatch"]["inputs"]["budget_minutes"]["default"]
+    assert (
+        float(default_minutes) * 60 == Config.read(PROJECT / "configs/nightly.json").budget_seconds
+    )
+    assert cloud.dispatch_config("nightly", str(cloud.MAX_CLOUD_MINUTES))[1] == 3600
     assert (
         set(workflow["on"]["workflow_dispatch"]["inputs"]["experiment"]["options"])
         == cloud.EXPERIMENTS
@@ -192,7 +222,7 @@ def test_example_configs_and_workflow_contracts():
     assert notify["steps"][-1]["continue-on-error"] == "true"
     assert notify["steps"][-1]["run"] == "python3 scripts/notify_findings.py"
     job = workflow["jobs"]["research"]
-    assert int(job["timeout-minutes"]) > 30
+    assert int(job["timeout-minutes"]) >= cloud.MAX_CLOUD_MINUTES + 15
     assert job["runs-on"] == "ubuntu-24.04"
     assert (
         job["env"]["MINUTES"]

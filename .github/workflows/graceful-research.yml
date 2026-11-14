@@ -16,9 +16,9 @@ on:
         options: [nightly, smoke, exhaustive-small, edge-profiles, sat-certificates, leaf-tail, swap-search, bitset-search, orbit-search]
         default: nightly
       budget_minutes:
-        description: Compute budget in minutes (1 through 30)
+        description: Compute budget in minutes (1 through 60)
         type: number
-        default: 30
+        default: 60
 
 permissions:
   contents: read
@@ -31,7 +31,7 @@ concurrency:
 jobs:
   research:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 75
     outputs:
       campaign: ${{ steps.parameters.outputs.campaign }}
       artifact_id: ${{ steps.results.outputs.artifact-id }}

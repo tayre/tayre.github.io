@@ -1,5 +1,35 @@
 # Initial validation record
 
+## One-hour nightly budget — 14 November 2026
+
+The owner's requested increase changes the nightly allowance from 1,800 to
+**3,600 seconds**, including a **120-second finalization reserve**. Manual cloud
+dispatch accepts 1–60 minutes and defaults to 60; the research job allows 75 minutes
+for setup, tests, research, audit and uploads. Scheduled invocations now read the
+versioned configuration rather than silently overriding it with 30 minutes.
+Configuration pushes still run a two-minute check, and the daily schedule remains
+06:23 UTC. This technical validation does not establish acceptable-use approval;
+the [usage review](github-actions-usage.md) records that distinction.
+
+Case/generation limits increase to 40,000/400,000 and the restricted-probe ceiling
+to 4,000. Retry duration, solver settings and phase proportions remain unchanged.
+The generation fingerprint was compared with the previous configuration and is
+identical, preserving compatibility with the cumulative checkpoint.
+
+**68 focused Python tests** and **26 dashboard tests** passed, along with Ruff lint,
+format and whitespace checks. Tests cover scheduled empty/missing inputs reaching
+the CLI with the full configured budget, explicit two-minute overrides, rejection
+above the cloud limit, and workflow headroom above the maximum allowed dispatch.
+Existing deadline, cancellation, checkpoint and independent-audit tests passed.
+
+A local end-to-end run of the updated nightly configuration used an explicit
+**30-second validation override**, not a full one-hour experiment. It stopped for
+`compute_budget` after **28.211 seconds**, recording 765 unrestricted trees
+(761 verified, four unknown, zero infeasible) and 320 restricted attempts.
+Independent audit passed for **1,059 positive certificates and 21 restricted
+infeasibility proofs**. No restricted result is an unrestricted counterexample.
+Local evidence is retained under `results/hour-budget-validation-20261114/`.
+
 ## Spider priority correction — 14 November 2026
 
 The [deeper literature review](spider-priority-review.md) found a direct

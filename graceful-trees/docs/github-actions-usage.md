@@ -4,6 +4,12 @@ Reviewed on 8 November 2026 against GitHub's published terms. This review record
 an engineering decision; it is not confirmation from GitHub that a particular
 workload is permitted.
 
+On 14 November 2026, the owner requested a larger nightly budget. The configured
+daily run now permits 60 research minutes, with a 75-minute research-job limit
+including setup, tests, independent audit and uploads. The schedule remains once
+daily; the scenarios below describe the earlier frequency review. This change
+does not establish GitHub approval of the workload.
+
 ## Purpose comes before frequency
 
 The [Actions terms](https://docs.github.com/en/site-policy/github-terms/github-terms-for-additional-products-and-features#actions)
@@ -61,8 +67,8 @@ is received, retain its scope and any conditions before changing the workflow.
 GitHub's [billing documentation](https://docs.github.com/en/billing/concepts/product-billing/github-actions)
 states that standard hosted runners in public repositories are free, while artifact
 and cache storage have their own allowances. Free compute is not unrestricted
-compute. Four 7.5-minute searches would retain the current 30-minute daily search
-budget, but incur four sets of setup and artifact overhead. Four 30-minute searches
+compute. Four 7.5-minute searches would retain the 30-minute daily search
+budget considered in the original review, but incur four sets of setup and artifact overhead. Four 30-minute searches
 would instead allow 120 search minutes daily, plus that overhead.
 
 The [schedule documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
