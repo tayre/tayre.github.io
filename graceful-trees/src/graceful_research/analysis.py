@@ -235,6 +235,7 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "attempt_id",
         "tree_id",
         "scope",
+        "research_phase",
         "edge_key",
         "family",
         "n",
@@ -297,6 +298,24 @@ def write_reports(output, manifest, records, profiles, provider=None):
         "| Vertices | Trees |",
         "| --- | ---: |",
     ]
+    if manifest.get("phase_summary"):
+        phase_lines = [
+            "## Research budget use",
+            "",
+            f"Eligible unresolved/pending trees at start: {manifest.get('retry_queue_size', 0)}.",
+            "Phase wall times include generation and dispatch; setup and final reporting are separate.",
+            "Unused retry time flows to new trees; enabled budget filling also reuses unspent probe time.",
+            "",
+            "| Phase | Attempts | Wall seconds |",
+            "| --- | ---: | ---: |",
+        ]
+        for name, values in manifest["phase_summary"].items():
+            phase_lines.append(
+                f"| {name.replace('_', ' ')} | {values['attempts']} | {values['elapsed_seconds']:.3f} |"
+            )
+        phase_lines.append("")
+        position = lines.index("## Tree sizes (unrestricted searches)")
+        lines[position:position] = phase_lines
     lines += [f"| {n} | {count} |" for n, count in summary["size_distribution"].items()]
     lines += [
         "",

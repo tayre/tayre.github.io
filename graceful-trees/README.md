@@ -105,7 +105,7 @@ Available configurations:
 | --- | --- |
 | `smoke.json` | One-minute mixed-family trial; small trees and sampled orders 12 and 20 |
 | `exhaustive-small.json` | All 95 non-isomorphic trees of orders 1–9, plus bounded edge probes |
-| `nightly.json` | 30-minute budget; exhaustive streams through order 12 interleaved with sampled orders 20, 35, 50 and 75 |
+| `nightly.json` | 30-minute budget; oldest unresolved cases first, exact edge-placement probes through order 12, and new samples at orders 20, 35, 50 and 75 |
 | `edge-profiles.json` | Small exhaustive inputs with more compute reserved for prescribed maximum-difference edge experiments |
 | `sat-certificates.json` | Pure SAT validation through order 7, with scoped, independently checked UNSAT proofs for negative edge controls |
 | `leaf-tail.json` | Opt-in exact two-parent leaf completion experiment |
@@ -381,13 +381,40 @@ terminates the worker and writes the report. A hard OS kill can prevent finaliza
 but already committed SQLite transactions remain; workflow artifacts are still
 attempted where GitHub permits them.
 
-The scheduler reserves configurable shares for retries and restricted probes, while
-guaranteeing a share for new cases. Cases with no completed attempt or with reported
-infeasibility have highest retry priority; unknowns follow, favoring fewer previous
-attempts and longer observed searches. Total attempts per case are capped to prevent
-one unresolved tree consuming every night. The ledger retains cases past that cap
-for manual replay. The run can finish early when its case limit, generation limit,
-or finite sources are exhausted; it does not spend idle time just to fill a budget.
+The nightly configuration keeps the **1,800-second budget** and reserves 60 seconds
+for finalization. Of the remaining search window, up to 60% is available for
+unresolved retries and 25% is reserved for restricted edge-placement experiments;
+at least 15% remains for new trees. Unused retry time is available to new trees.
+If the probe queue or probe-attempt cap finishes early, `fill_unused_budget` allows
+new-tree exploration to resume against the same original deadline and counters.
+
+Nightly retries use `retry_policy="oldest_unresolved"`: pending cases and reported
+infeasibility come first, followed by unresolved cases with the oldest last attempt.
+This policy reopens cases that reached the former four-attempt lifetime ceiling.
+The initial queue is frozen, with at most one retry per tree per run, at most 64
+retries total, and up to 90 seconds per retry. Verified trees are excluded.
+Seeds are derived from the continuing attempt number and retained in each request.
+Other configurations default to the original `bounded` retry policy, preserving
+its lifetime ceiling and ordering. Restricted probes retain their own lifetime cap.
+
+The per-run limits are now 20,000 unrestricted cases (including retries) and
+200,000 generation attempts. Exact SAT probes examine maximum-difference edge
+placements through order 12, with up to 2,000 probes and 15 seconds each, always
+clipped to the remaining global time. This extends the earlier order-10 atlas;
+it is a restricted experiment, not a larger exhaustive gracefulness bound.
+`probe_seconds=null` preserves the older behavior of using `attempt_seconds`.
+
+The Markdown report and manifest record elapsed time and attempts for each phase;
+attempt JSON/CSV records identify the phase. The audited public JSON feed also
+exports these phase totals, the initial retry-queue size and the active budget
+settings, so later progress reviews can check where the time went.
+Generation settings and fingerprints
+are unchanged, so the existing cloud checkpoint continues. The run can still finish
+early when its case/generation limits or finite sources are exhausted; it never
+waits idly just to fill the budget. Setup, independent audit and artifact upload
+are separate workflow overhead. The nightly frequency and 30-minute allowance
+have not increased; the existing [Actions usage review](docs/github-actions-usage.md)
+still applies and does not establish GitHub approval of discovery workloads.
 
 Generators are interleaved round-robin. Enumeration uses NetworkX's free-tree
 generator with a special singleton case. Larger sources include uniform labeled

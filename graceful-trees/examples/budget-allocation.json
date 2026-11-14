@@ -1,0 +1,131 @@
+{
+  "audit": {
+    "certificates_checked": 2404,
+    "cumulative_labelings_checked": 2981,
+    "errors": [],
+    "infeasibility_proofs_checked": 26,
+    "valid": true
+  },
+  "checksums_verified": 12468,
+  "config": {
+    "attempt_seconds": 5,
+    "backend": "cp-sat",
+    "budget_seconds": 240.0,
+    "campaign": "nightly-v1",
+    "certify_infeasible": true,
+    "complement_break": true,
+    "constructive_search": true,
+    "exhaustive_sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "families": [
+      "path",
+      "star",
+      "binary_heap",
+      "prufer",
+      "recursive",
+      "spider",
+      "caterpillar",
+      "lobster",
+      "broom",
+      "double_star"
+    ],
+    "fill_unused_budget": true,
+    "finalize_reserve_seconds": 24.0,
+    "frontier_algorithm": "bitset-portfolio-v6",
+    "frontier_max_nodes": 40000,
+    "frontier_search": true,
+    "max_attempts_per_case": 4,
+    "max_cases": 20000,
+    "max_generated": 200000,
+    "max_retries": 64,
+    "probe_backend": "sat",
+    "probe_budget_fraction": 0.25,
+    "probe_max_attempts": 2000,
+    "probe_max_n": 12,
+    "probe_seconds": 15,
+    "redundant_sum": true,
+    "retry_budget_fraction": 0.6,
+    "retry_policy": "oldest_unresolved",
+    "retry_seconds": 90,
+    "sample_sizes": [
+      20,
+      35,
+      50,
+      75
+    ],
+    "schema_version": 1,
+    "seed": 20261108,
+    "swap_objective": "missing_sum",
+    "swap_proposal_policy": "uniform"
+  },
+  "elapsed_seconds": 219.40423729200847,
+  "finished_at": "2026-11-14T03:56:30.629232+00:00",
+  "historical_attempts_preserved": 609,
+  "performance_claim": false,
+  "phase_summary": {
+    "edge_probes": {
+      "attempts": 258,
+      "elapsed_seconds": 53.90433074999601
+    },
+    "new_trees": {
+      "attempts": 2180,
+      "elapsed_seconds": 161.77391987497685
+    },
+    "retries": {
+      "attempts": 0,
+      "elapsed_seconds": 0.0007742500165477395
+    }
+  },
+  "retry_queue_size": 0,
+  "run_id": "2026-11-14T035254.637510_0000-bd09c275",
+  "scope": "Local operational validation resumed from an older checkpoint, not the current cloud backlog.",
+  "started_at": "2026-11-14T03:52:54.637631+00:00",
+  "stop_reason": "compute_budget",
+  "summary": {
+    "attempts": 2438,
+    "certificate_verified_infeasible": 0,
+    "errors": 0,
+    "outliers": [],
+    "restricted_attempts": 258,
+    "restricted_solver_infeasible": 10,
+    "search_methods": {
+      "caterpillar-construction": 814,
+      "cp-sat": 28,
+      "frontier-search": 1336,
+      "sat-drup": 258,
+      "unrecorded": 2
+    },
+    "size_distribution": {
+      "10": 85,
+      "11": 214,
+      "12": 295,
+      "20": 344,
+      "35": 380,
+      "50": 406,
+      "75": 428,
+      "8": 2,
+      "9": 26
+    },
+    "solver_infeasible": 0,
+    "timeout_attempts": 24,
+    "trees_investigated": 2186,
+    "unknown": 24,
+    "unknown_attempts": 24,
+    "unrestricted_attempts": 2180,
+    "unrestricted_trees": 2180,
+    "verified_certificates": 2404,
+    "verified_graceful": 2156
+  }
+}

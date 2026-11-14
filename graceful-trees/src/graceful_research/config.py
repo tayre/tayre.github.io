@@ -31,8 +31,11 @@ class Config:
     finalize_reserve_seconds: float = 10
     attempt_seconds: float = 5
     retry_seconds: float = 30
+    retry_policy: str = "bounded"
+    probe_seconds: float | None = None
     retry_budget_fraction: float = 0.2
     probe_budget_fraction: float = 0.1
+    fill_unused_budget: bool = False
     max_cases: int = 1000
     max_generated: int = 10000
     max_retries: int = 12
@@ -84,6 +87,17 @@ class Config:
                 or not low <= value <= high
             ):
                 raise ValueError(f"{name} must be finite and in [{low}, {high}]")
+        if self.probe_seconds is not None and (
+            type(self.probe_seconds) not in (int, float)
+            or not math.isfinite(self.probe_seconds)
+            or self.probe_seconds <= 0
+        ):
+            raise ValueError("probe_seconds must be a positive finite number or None")
+        if not isinstance(self.retry_policy, str) or self.retry_policy not in {
+            "bounded",
+            "oldest_unresolved",
+        }:
+            raise ValueError("retry_policy must be bounded or oldest_unresolved")
         if self.finalize_reserve_seconds >= self.budget_seconds:
             raise ValueError("finalize_reserve_seconds must be smaller than budget_seconds")
         if self.retry_budget_fraction + self.probe_budget_fraction >= 0.9:
@@ -110,6 +124,7 @@ class Config:
             "constructive_search",
             "frontier_search",
             "certify_infeasible",
+            "fill_unused_budget",
         ):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"{name} must be boolean")

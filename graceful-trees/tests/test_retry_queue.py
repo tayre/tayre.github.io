@@ -112,7 +112,8 @@ def test_pending_suspected_and_tied_cases_retain_original_priority(store):
     assert len(actual) > config.max_retries  # The caller owns this separate limit.
 
 
-def test_solved_history_needs_one_select_and_no_json_decoding(store, monkeypatch):
+@pytest.mark.parametrize("policy", ("bounded", "oldest_unresolved"))
+def test_solved_history_needs_one_select_and_no_json_decoding(store, monkeypatch, policy):
     for index in range(40):
         name = f"solved-{index}"
         add_case(store, name, index + 1)
@@ -128,7 +129,7 @@ def test_solved_history_needs_one_select_and_no_json_decoding(store, monkeypatch
 
     monkeypatch.setattr(storage.json, "loads", decode)
     store.connection.set_trace_callback(queries.append)
-    assert store.retry_cases(Config()) == []
+    assert store.retry_cases(Config(retry_policy=policy)) == []
     store.connection.set_trace_callback(None)
     assert len(queries) == 1
     assert decoded == []
@@ -144,3 +145,77 @@ def test_exhausted_unknown_history_is_not_decoded(store, monkeypatch):
 
     monkeypatch.setattr(storage.json, "loads", forbidden_decode)
     assert store.retry_cases(Config(max_attempts_per_case=4)) == []
+
+
+def test_oldest_policy_reopens_capped_unknowns_and_rotates_after_a_retry(store):
+    add_case(store, "older-capped", 75)
+    add_case(store, "newer-once", 5)
+    for _ in range(4):
+        add_attempt(store, "older-capped", "unknown", seconds=30)
+    add_attempt(store, "newer-once", "unknown", seconds=1)
+    bounded = Config(max_attempts_per_case=4)
+    oldest = Config(retry_policy="oldest_unresolved", max_attempts_per_case=4, max_retries=1)
+    assert [case["tree_id"] for case in store.retry_cases(bounded)] == ["newer-once"]
+    assert [case["tree_id"] for case in store.retry_cases(oldest)] == [
+        "older-capped",
+        "newer-once",
+    ]
+    # Scheduling is read-only and the caller, not this queue, applies max_retries.
+    before = store.attempts()
+    assert len(store.retry_cases(oldest)) > oldest.max_retries
+    assert store.attempts() == before
+    add_attempt(store, "older-capped", "unknown", seconds=90)
+    assert [case["tree_id"] for case in store.retry_cases(oldest)] == [
+        "newer-once",
+        "older-capped",
+    ]
+    assert len(store.attempts(tree_id="older-capped", scope="graceful")) == 5
+
+
+def test_oldest_policy_excludes_historical_positives_and_ignores_other_scopes(store):
+    for name in ("older-unknown", "newer-unknown", "solved-earlier"):
+        add_case(store, name, 10)
+    add_attempt(store, "older-unknown", "unknown")
+    add_attempt(store, "newer-unknown", "unknown")
+    # A later scoped witness neither solves nor changes the age of the base case.
+    add_attempt(store, "older-unknown", "verified_graceful", scope="extreme_edge")
+    add_attempt(store, "solved-earlier", "verified_graceful")
+    for _ in range(5):
+        add_attempt(store, "solved-earlier", "unknown")
+    config = Config(retry_policy="oldest_unresolved", max_attempts_per_case=1)
+    assert [case["tree_id"] for case in store.retry_cases(config)] == [
+        "older-unknown",
+        "newer-unknown",
+    ]
+    add_attempt(store, "older-unknown", "verified_graceful")
+    assert [case["tree_id"] for case in store.retry_cases(config)] == ["newer-unknown"]
+
+
+def test_oldest_policy_prioritizes_pending_and_suspected_before_ordinary_unknowns(store):
+    for name, n in (
+        ("unknown-old", 75),
+        ("restricted-negative", 4),
+        ("suspected", 20),
+        ("pending-z", 1),
+        ("pending-a", 100),
+        ("restricted-only", 2),
+        ("unknown-new", 3),
+    ):
+        add_case(store, name, n)
+    add_attempt(store, "unknown-old", "unknown")
+    add_attempt(store, "restricted-negative", "unknown")
+    add_attempt(store, "restricted-negative", "solver_infeasible", scope="extreme_edge")
+    add_attempt(store, "suspected", "solver_infeasible")
+    add_attempt(store, "suspected", "unknown")
+    add_attempt(store, "restricted-only", "verified_graceful", scope="extreme_edge")
+    add_attempt(store, "unknown-new", "unknown")
+    config = Config(retry_policy="oldest_unresolved", max_attempts_per_case=1)
+    assert [case["tree_id"] for case in store.retry_cases(config)] == [
+        "pending-a",
+        "pending-z",
+        "restricted-only",
+        "suspected",
+        "unknown-old",
+        "restricted-negative",
+        "unknown-new",
+    ]

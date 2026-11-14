@@ -128,8 +128,39 @@ def snapshot(evidence, artifact_id):
         },
         "config": {
             k: config[k]
-            for k in ("seed", "budget_seconds", "exhaustive_sizes", "sample_sizes", "families")
+            for k in (
+                "seed",
+                "budget_seconds",
+                "exhaustive_sizes",
+                "sample_sizes",
+                "families",
+                "max_cases",
+                "max_generated",
+                "retry_policy",
+                "retry_seconds",
+                "retry_budget_fraction",
+                "probe_budget_fraction",
+                "probe_seconds",
+                "probe_max_n",
+                "probe_max_attempts",
+                "fill_unused_budget",
+            )
+            if k in config
         },
+        **(
+            {
+                "phase_summary": {
+                    name: {
+                        key: manifest["phase_summary"][name][key]
+                        for key in ("attempts", "elapsed_seconds")
+                    }
+                    for name in ("retries", "new_trees", "edge_probes")
+                },
+                "retry_queue_size": manifest["retry_queue_size"],
+            }
+            if "phase_summary" in manifest
+            else {}
+        ),
         "versions": {k: manifest["provenance"]["dependencies"][k] for k in ("networkx", "ortools")},
         "audit": {
             "passed": audit["valid"],

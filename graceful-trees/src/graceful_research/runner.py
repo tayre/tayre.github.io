@@ -69,6 +69,10 @@ def run(config, output, resume=None, cancelled=lambda: False):
         "duplicates": 0,
         "proof_certificates_supported": True,
         "proof_evidence_schema_version": 1,
+        "phase_summary": {
+            name: {"attempts": 0, "elapsed_seconds": 0.0}
+            for name in ("retries", "new_trees", "edge_probes")
+        },
     }
     write_json(output / "config.json", config.as_dict())
     write_json(output / "manifest.json", manifest)
@@ -81,7 +85,17 @@ def run(config, output, resume=None, cancelled=lambda: False):
     def available(deadline):
         return time.monotonic() + 0.01 < deadline and not cancelled()
 
-    def attempt(case, deadline, seconds, restriction=None, orbit=None):
+    @contextmanager
+    def phase(name):
+        phase_started = time.monotonic()
+        try:
+            yield
+        finally:
+            manifest["phase_summary"][name]["elapsed_seconds"] += max(
+                0.0, time.monotonic() - phase_started
+            )
+
+    def attempt(case, deadline, seconds, restriction=None, orbit=None, *, phase_name="new_trees"):
         scope = "extreme_edge" if restriction else "graceful"
         edge_key = "-".join(map(str, restriction["edge"])) if restriction else ""
         previous = store.attempts(tree_id=case["tree_id"], scope=scope, edge_key=edge_key)
@@ -159,9 +173,11 @@ def run(config, output, resume=None, cancelled=lambda: False):
             "attempt_number": len(previous) + 1,
             "recorded_at": utc_now(),
             "files": f"attempts/{index:06d}",
+            "research_phase": phase_name,
         }
         store.add_attempt(record)
         records.append(record)
+        manifest["phase_summary"][phase_name]["attempts"] += 1
         write_json(directory / "result.json", record)
         if record.get("proof_certificate_verified"):
             write_json(
@@ -191,20 +207,10 @@ def run(config, output, resume=None, cancelled=lambda: False):
                 flush=True,
             )
 
-    try:
-        window = max(0, compute_deadline - time.monotonic())
-        retry_deadline = min(
-            compute_deadline, time.monotonic() + window * config.retry_budget_fraction
-        )
-        for case in store.retry_cases(config)[: config.max_retries]:
-            if not available(retry_deadline) or base_cases >= config.max_cases:
-                break
-            attempt(case, retry_deadline, config.retry_seconds)
-            base_cases += 1
-        new_deadline = compute_deadline - window * config.probe_budget_fraction
-        stream = TreeStream(config, store)
+    def explore_new(stream, deadline):
+        nonlocal base_cases
         manifest["stop_reason"] = "compute_budget"
-        while available(new_deadline):
+        while available(deadline):
             if base_cases >= config.max_cases:
                 manifest["stop_reason"] = "case_limit"
                 break
@@ -220,45 +226,82 @@ def run(config, output, resume=None, cancelled=lambda: False):
             if not inserted:
                 manifest["duplicates"] += 1
                 continue
-            if not available(new_deadline):
+            if not available(deadline):
                 break  # Persisted pending input is retried on the next run.
-            attempt(case, new_deadline, config.attempt_seconds)
+            attempt(case, deadline, config.attempt_seconds)
             base_cases += 1
-        probe_count = 0
-        if config.probe_budget_fraction > 0 and config.probe_max_attempts > 0:
-            for case in store.cases(max_n=config.probe_max_n):
-                if not available(compute_deadline) or probe_count >= config.probe_max_attempts:
+
+    try:
+        window = max(0, compute_deadline - time.monotonic())
+        retry_deadline = min(
+            compute_deadline, time.monotonic() + window * config.retry_budget_fraction
+        )
+        # Freeze the queue: each previously unresolved tree gets at most one
+        # retry this run, even when the lifetime retry ceiling is disabled.
+        with phase("retries"):
+            retry_queue = store.retry_cases(config)
+            manifest["retry_queue_size"] = len(retry_queue)
+            for case in retry_queue[: config.max_retries]:
+                if not available(retry_deadline) or base_cases >= config.max_cases:
                     break
-                main_records = store.attempts(tree_id=case["tree_id"], scope="graceful")
-                if not any(r["status"] == "verified_graceful" for r in main_records):
-                    continue
-                for orbit in edge_orbits(to_graph(case)):
+                attempt(case, retry_deadline, config.retry_seconds, phase_name="retries")
+                base_cases += 1
+        new_deadline = compute_deadline - window * config.probe_budget_fraction
+        stream = TreeStream(config, store)
+        with phase("new_trees"):
+            explore_new(stream, new_deadline)
+        probe_count = 0
+        with phase("edge_probes"):
+            if config.probe_budget_fraction > 0 and config.probe_max_attempts > 0:
+                for case in store.cases(max_n=config.probe_max_n):
                     if not available(compute_deadline) or probe_count >= config.probe_max_attempts:
                         break
-                    key = "-".join(map(str, orbit["representative"]))
-                    prior = store.attempts(
-                        tree_id=case["tree_id"], scope="extreme_edge", edge_key=key
-                    )
-                    if any(r["status"] == "verified_graceful" for r in prior):
+                    main_records = store.attempts(tree_id=case["tree_id"], scope="graceful")
+                    if not any(r["status"] == "verified_graceful" for r in main_records):
                         continue
-                    if any(r.get("proof_certificate_verified") for r in prior):
-                        continue
-                    if any(r["status"] == "solver_infeasible" for r in prior) and not (
-                        config.certify_infeasible
-                        or config.probe_backend == "sat"
-                        or config.backend == "sat"
-                    ):
-                        continue
-                    if len(prior) >= config.max_attempts_per_case:
-                        continue
-                    attempt(
-                        case,
-                        compute_deadline,
-                        config.attempt_seconds,
-                        {"kind": "extreme_edge", "edge": orbit["representative"]},
-                        orbit,
-                    )
-                    probe_count += 1
+                    for orbit in edge_orbits(to_graph(case)):
+                        if (
+                            not available(compute_deadline)
+                            or probe_count >= config.probe_max_attempts
+                        ):
+                            break
+                        key = "-".join(map(str, orbit["representative"]))
+                        prior = store.attempts(
+                            tree_id=case["tree_id"], scope="extreme_edge", edge_key=key
+                        )
+                        if any(r["status"] == "verified_graceful" for r in prior):
+                            continue
+                        if any(r.get("proof_certificate_verified") for r in prior):
+                            continue
+                        if any(r["status"] == "solver_infeasible" for r in prior) and not (
+                            config.certify_infeasible
+                            or config.probe_backend == "sat"
+                            or config.backend == "sat"
+                        ):
+                            continue
+                        if len(prior) >= config.max_attempts_per_case:
+                            continue
+                        attempt(
+                            case,
+                            compute_deadline,
+                            config.attempt_seconds
+                            if config.probe_seconds is None
+                            else config.probe_seconds,
+                            {"kind": "extreme_edge", "edge": orbit["representative"]},
+                            orbit,
+                            phase_name="edge_probes",
+                        )
+                        probe_count += 1
+        # A reserved probe window need not be wasted once its eligible inputs
+        # or attempt cap are exhausted. Reuse the same generator and counters,
+        # never the retry queue, and retain the original absolute deadline.
+        if (
+            config.fill_unused_budget
+            and manifest["stop_reason"] == "compute_budget"
+            and available(compute_deadline)
+        ):
+            with phase("new_trees"):
+                explore_new(stream, compute_deadline)
         if cancelled():
             manifest["stop_reason"] = "cancelled"
         elif time.monotonic() >= compute_deadline:

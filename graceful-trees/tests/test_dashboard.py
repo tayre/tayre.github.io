@@ -68,6 +68,16 @@ def test_actual_run_exports_only_audited_statistics(audited):
     assert feed["proof_evidence_schema_version"] == 1
     assert feed["proof_counts"]["total_attempts"] == feed["audit"]["infeasibility_proofs_checked"]
     assert feed["workflow"]["artifact_url"].endswith("/runs/123/artifacts/456")
+    assert (
+        sum(row["attempts"] for row in feed["phase_summary"].values())
+        == feed["current_run"]["attempts"]
+    )
+    assert feed["retry_queue_size"] == 0
+    assert feed["config"]["retry_policy"] == "bounded"
+    assert feed["config"]["max_cases"] == 5
+    assert all(
+        set(row) == {"attempts", "elapsed_seconds"} for row in feed["phase_summary"].values()
+    )
     for secret_field in ("directory", "git_status", "processor", "GITHUB_TOKEN", "request"):
         assert secret_field not in json.dumps(feed)
     assert (

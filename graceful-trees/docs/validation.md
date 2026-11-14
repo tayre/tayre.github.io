@@ -1,5 +1,76 @@
 # Initial validation record
 
+## Nightly budget allocation — 13 November 2026
+
+The nightly ceiling increased from 1,000 to **20,000 unrestricted attempts**,
+including retries, with 200,000 generation attempts as a separate safeguard.
+The 1,800-second allowance and daily schedule are unchanged. The configuration
+reserves 60 seconds for finalization, allows up to 60% of the search window for
+older unresolved inputs, reserves 25% for exact edge-placement experiments,
+and leaves at least 15% for new trees. Unused retry time flows into new-tree
+exploration; unused probe time can now be used by the same generation stream
+against the original deadline and counters.
+
+The opt-in `oldest_unresolved` retry policy reopens cases excluded by the former
+four-attempt lifetime ceiling. It excludes historical positive witnesses, orders
+unresolved cases by oldest last attempt after pending/suspected cases, and freezes
+the queue for at most one retry per tree per run. Nightly limits are 64 retries
+and 90 seconds per retry. Other configurations retain the original bounded policy.
+Restricted probes retain their separate lifetime ceiling. Their eligible orders
+extend from 10 to 12, with up to 2,000 attempts and 15 seconds per attempt, clipped
+to the remaining global time. These are edge-placement questions, not a new
+exhaustive gracefulness bound.
+
+**1,257 Python tests passed**, with four real Lean rejection tests skipped because
+the local toolchain was absent; the dedicated GitHub proof job exercises those
+checks. **26 dashboard tests** passed. Ruff lint/format and dependency checks passed.
+Tests cover reopening capped unknowns, oldest-first rotation, preserved historical
+positives, continuing seeds, scope separation, checkpoint fingerprints/history,
+independent phase-count validation, cancellation, hard case/generation limits and
+reusing the unspent probe window without extending the deadline. Independent
+virtual-clock executions also checked refill after restricted probes and early
+termination. The new phase totals and initial retry-queue size are audited before
+publication; elapsed times remain measurements, not mathematical certificates.
+
+A real installed-CLI run resumed the older local `deep-resume-v1` checkpoint with
+a shortened **240-second allowance**. The existing CLI scaled the finalization
+reserve to 24 seconds. It stopped for `compute_budget`, recording **219.404 seconds**
+including report construction, rather than stopping at the former case ceiling.
+This was functional validation, not a comparative performance benchmark.
+
+| Phase | Attempts | Result |
+| --- | ---: | --- |
+| New unrestricted trees | 2,180 | 2,156 verified, 24 unknown, no infeasible result |
+| Restricted edge placements | 258 | 248 verified; 10 solver-infeasible, of which nine have independently checked proofs |
+| Retries | 0 | This older local checkpoint contained no unresolved trees |
+
+The current run's independently checked certificates numbered **2,404 positive
+labelings and nine restricted refutations**. The full audit rechecked **2,981
+cumulative labelings and 26 cumulative scoped refutations**, with no errors.
+All **609 historical attempts** were byte-for-byte unchanged in the resumed ledger.
+The probes reached order 10 during this shortened run; order 12 is the expanded
+eligibility limit, not a claim of complete restricted coverage. The cloud's current
+11-case backlog is separate from this local checkpoint and is reopened by the
+next cloud execution; its outcomes must be read from that execution's audit.
+
+The [summary](../examples/budget-allocation.json) and
+[complete archive](../examples/budget-allocation.zip) preserve requests, models,
+labels, certificates, phase records, reports, source snapshots and the baseline
+checkpoint. All **12,468 file checksums** and ZIP integrity passed. SHA-256:
+`30d439eab68a0f34dd37397daa8336569fb5685ad590eb9f64f53bdf6fde6f83`.
+After extracting, reproduce with the pinned environment:
+
+```sh
+graceful-research run --config budget-allocation-v1/config.json \
+  --resume baseline/research.sqlite --output reproduced-run
+graceful-research audit reproduced-run
+```
+
+Solver time limits can produce different search outcomes on another machine;
+the saved inputs and certificates remain independently checkable. The new budget
+settings do not change the generation fingerprint or existing campaign identity.
+Push-triggered validation still uses two minutes; scheduled runs use 30 minutes.
+
 ## Five-edge spider construction — 9 November 2026
 
 The new [explicit formula and general proof](spider_formula_five.md) place zero

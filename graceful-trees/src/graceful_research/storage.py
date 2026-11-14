@@ -136,37 +136,55 @@ class Store:
 
     def retry_cases(self, config):
         candidates = []
+        oldest_unresolved = config.retry_policy == "oldest_unresolved"
         # Use the indexed ledger columns to avoid decoding solved history just
         # to discard it. The audit still checks those columns against every JSON
         # record. Preserve the old input order so Python's stable priority sort
-        # also preserves ties, and keep returning all eligible cases.
+        # also preserves ties, and keep returning all eligible cases. The opt-in
+        # oldest policy reopens graceful attempts past the lifetime cap; scoped
+        # probe limits are separate and remain the runner's responsibility.
+        cap_filter = (
+            ""
+            if oldest_unresolved
+            else """
+                 AND (SELECT count(*) FROM attempts AS a
+                      WHERE a.tree_id=c.tree_id AND a.scope='graceful') < ?"""
+        )
         eligible = self.connection.execute(
             """SELECT c.data FROM cases AS c
                WHERE NOT EXISTS (
                    SELECT 1 FROM attempts AS a
                    WHERE a.tree_id=c.tree_id AND a.scope='graceful'
-                     AND a.status='verified_graceful')
-                 AND (SELECT count(*) FROM attempts AS a
-                      WHERE a.tree_id=c.tree_id AND a.scope='graceful') < ?
-               ORDER BY c.n,c.tree_id""",
-            (config.max_attempts_per_case,),
+                     AND a.status='verified_graceful')"""
+            + cap_filter
+            + " ORDER BY c.n,c.tree_id",
+            () if oldest_unresolved else (config.max_attempts_per_case,),
         )
         for row in eligible:
             case = json.loads(row[0])
             records = self.attempts(tree_id=case["tree_id"], scope="graceful")
             if any(r["status"] == "verified_graceful" for r in records):
                 continue
-            if len(records) >= config.max_attempts_per_case:
+            if not oldest_unresolved and len(records) >= config.max_attempts_per_case:
                 continue
             if not records:
                 priority = (0, 0, case["tree_id"])
             else:
                 suspected = any(r["status"] == "solver_infeasible" for r in records)
-                priority = (
-                    0 if suspected else 1,
-                    len(records),
-                    -records[-1].get("wall_seconds", 0),
-                )
+                if oldest_unresolved:
+                    # A new attempt moves a still-unresolved case behind older
+                    # cases in its priority class, independently of total tries.
+                    priority = (
+                        1 if suspected else 2,
+                        records[-1]["attempt_id"],
+                        case["tree_id"],
+                    )
+                else:
+                    priority = (
+                        0 if suspected else 1,
+                        len(records),
+                        -records[-1].get("wall_seconds", 0),
+                    )
             candidates.append((priority, case))
         return [case for _, case in sorted(candidates, key=lambda item: item[0])]
 

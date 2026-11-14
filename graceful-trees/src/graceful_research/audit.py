@@ -1,6 +1,7 @@
 """Recheck exported witnesses, ledger consistency, inputs, and file integrity."""
 
 import json
+import math
 import sqlite3
 from pathlib import Path
 
@@ -11,6 +12,47 @@ from .progress import REPORT_FILES, build_progress
 from .proof_verify import verify_record
 from .trees import canonical_code, to_graph, tree_id
 from .verify import verify_certificate, verify_labeling, verify_tree
+
+
+def check_phases(manifest, records):
+    """Check reported phase counts and scope; elapsed times remain observations."""
+    if "phase_summary" not in manifest:
+        return []  # Historical campaigns predate phase reporting.
+    phases = manifest["phase_summary"]
+    expected = {"retries", "new_trees", "edge_probes"}
+    if not isinstance(phases, dict) or set(phases) != expected:
+        return ["invalid research phase summary"]
+    errors = []
+    queue_size = manifest.get("retry_queue_size")
+    retry_count = sum(record.get("research_phase") == "retries" for record in records)
+    if type(queue_size) is not int or queue_size < retry_count:
+        errors.append("invalid initial retry queue size")
+    elapsed = 0.0
+    for name, stats in phases.items():
+        if not isinstance(stats, dict):
+            errors.append(f"invalid research phase statistics: {name}")
+            continue
+        count, seconds = stats.get("attempts"), stats.get("elapsed_seconds")
+        if (
+            type(count) is not int
+            or count < 0
+            or count != sum(record.get("research_phase") == name for record in records)
+        ):
+            errors.append(f"research phase attempt count mismatch: {name}")
+        if type(seconds) not in (int, float) or not math.isfinite(seconds) or seconds < 0:
+            errors.append(f"invalid research phase elapsed time: {name}")
+        else:
+            elapsed += seconds
+    for record in records:
+        name = record.get("research_phase")
+        if name not in expected or (name == "edge_probes") != (
+            record.get("scope") == "extreme_edge"
+        ):
+            errors.append("research phase and attempt scope disagree")
+    total = manifest.get("elapsed_seconds")
+    if type(total) not in (int, float) or not math.isfinite(total) or elapsed > total + 1e-6:
+        errors.append("research phase times exceed run elapsed time")
+    return errors
 
 
 def audit_ledger(database):
@@ -130,6 +172,7 @@ def audit_run(output):
         ]
         if len(records) != manifest["run_attempts"]:
             errors.append("attempt count does not match manifest")
+        errors.extend(check_phases(manifest, records))
         certificates = {}
         for path in sorted((output / "certificates").glob("*.json")):
             certificate = json.loads(path.read_text())
