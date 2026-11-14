@@ -28,14 +28,16 @@ with established methods separated from unverified research proposals.
 The [initial validation record](docs/validation.md) includes actual experiment
 counts and downloadable, reproducible run archives.
 
-**Current mathematical result:** an [explicit construction](docs/spider_formula_five.md)
+**Checked construction:** an [explicit formula](docs/spider_formula_five.md)
 puts zero at either interior position on a symmetric spider with five edges per
 leg, for any number of legs. Together with Rofa's known remaining positions,
-this gives zero at any chosen vertex. Lean checks the new formula's exact label
-and difference permutations for every positive leg count. The literature search
-found no matching result, but novelty remains unconfirmed; this does not settle
-the general conjecture. The [research finding note](docs/findings.md) records its
-precise scope, verification limits and next review step.
+this gives zero at any chosen vertex. Lean checks the formula's exact label
+and difference permutations for every positive leg count. The
+[deeper literature review of 14 November 2026](docs/spider-priority-review.md)
+derives the same interior-zero and maximum-edge property from established
+constructions. We therefore classify the result as a consequence of prior work,
+not a new theorem. The [research finding note](docs/findings.md) records the
+correction and the verification limits; this does not settle the general conjecture.
 
 Three [parallel follow-up experiments](docs/validation.md#parallel-follow-up-experiments--8-november-2026)
 now test a known perfect-matching construction, prescribed zero labels on symmetric

@@ -35,6 +35,10 @@ and four subsequent edges of every leg. Combining the interior-position result
 with Rofa's published result for the other four positions is a separate written
 argument; the complete 0-rotatability theorem is not claimed as formalized here.
 Neither proof validity nor the axiom audit establishes novelty.
+The [14 November priority review](../docs/spider-priority-review.md) derives the
+five-edge interior-extreme property from established constructions. The existing
+Lean file checks our displayed formulas; it does not formalize that alternative
+amalgamation derivation or establish a new theorem's priority.
 
 Spine recognition, traversal coverage, the complete caterpillar theorem,
 tree diameter, graph isomorphism, the CP-SAT encoding and the Python verifier are

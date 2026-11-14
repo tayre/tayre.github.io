@@ -1,12 +1,17 @@
 # Zero at any vertex of a five-edge symmetric spider
 
-**Result, 9 November 2026:** every symmetric spider with five edges on each
+**Priority correction, 14 November 2026:** the interior-extreme property below
+also follows from established α-amalgamation constructions. The
+[deeper literature review](spider-priority-review.md) gives the exact implication
+and primary sources. We retain the formula and its proof, but do not claim a new theorem.
+
+**Result checked on 9 November 2026:** every symmetric spider with five edges on each
 leg is **0-rotatable**: each vertex can receive zero in some graceful labeling.
 The explicit construction below supplies the two interior positions missing
 from Rofa's stated first-two/last-two-level result. The remaining positions
 follow from that published result. This is a proved family statement, not a
-solution of the Graceful Tree Conjecture. A scoped literature review found no
-matching prior construction; **novelty and priority remain unconfirmed**.
+solution of the Graceful Tree Conjecture. The initial review missed the
+amalgamation implication; the correction above supersedes that novelty assessment.
 
 Let `S(k,5)` have hub `h` and legs
 `h—v[i,1]—v[i,2]—v[i,3]—v[i,4]—v[i,5]`, for `1 <= i <= k`.
@@ -127,7 +132,7 @@ and its daughter-degree sequence is `(k,1,1,1,1)`.
 supplies graceful labelings with zero at any vertex in the first two and last
 two levels: depths `0,1,4,5`. The construction above and its complement supply
 depths `2,3`. Permuting the equal legs covers every vertex at either depth.
-All vertices are therefore covered. The new formulas themselves also work for
+All vertices are therefore covered. The displayed formulas themselves also work for
 the degenerate path cases `k=1,2`; full 0-rotatability of paths is Rosa's known
 result, reproduced as [Superdock's Theorem 2.3](https://arxiv.org/pdf/1403.1564).
 
@@ -137,7 +142,7 @@ zero vertices simultaneously.
 
 ## Literature boundary
 
-The review checked the full statements of the following closely related work.
+The initial review checked the full statements of the following closely related work.
 Absence from this list is not a proof of absence from the literature.
 
 - [Rofa, 2023](https://arxiv.org/abs/2312.16235) gives the four outer level classes
@@ -160,10 +165,15 @@ Absence from this list is not a proof of absence from the literature.
   places zero at depth four; the construction here does not require each leg to
   be individually self-matched. No direct implication was found.
 
-The theorem and proof should receive specialist review before any publication
-or claim of first discovery. The next construction targets are primitive
-length-seven positions, after applying known subdivision consequences; failure
-of a particular formula search would not establish a negative result.
+**The decisive additional source is graceful-plus-α amalgamation**, stated in
+[Wu–Lu (2012), Theorem 3.1 with the p.242 extension](https://combinatorialpress.com/article/ars/Volume%20106/volume-106-paper-20.pdf)
+and displayed in [Bell–Cummins (2019), pp.353–354](https://ajc.maths.uq.edu.au/pdf/75/ajc_v75_p343.pdf).
+Applying it to a fixed ten-edge α-labeled path and a hub-zero `S(k-2,5)`
+gives zero at depth two and `5k` at adjacent depth three. See the
+[complete derivation](spider-priority-review.md). Thus avoiding the uniform-
+subdivision route did not establish a gap in prior results. Further targets,
+including length seven, must also be checked against this amalgamation method.
+The exact priority of our different hub-one formula remains unestablished.
 
 ## Formal check and reproducibility
 
@@ -198,3 +208,5 @@ These checks validate implementation instances; the universal claim rests on
 the proof above. Download the [summary](../examples/five-spider-construction.json)
 and [complete evidence archive](../examples/five-spider-evidence.zip), including
 inputs, labels, source snapshots, compiler logs and checksums.
+These historical archives preserve their original novelty metadata; the
+14 November priority review supersedes that assessment without altering the evidence.

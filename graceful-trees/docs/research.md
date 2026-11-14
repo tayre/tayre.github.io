@@ -1,6 +1,8 @@
 # Research basis and initial strategy
 
-Literature review: 8–9 November 2026. This is a scoped review, not a novelty certification.
+Literature review: 8–9 November 2026, with a
+[five-edge spider priority correction on 14 November](spider-priority-review.md).
+This is a scoped review, not a novelty certification.
 The [deep review and experiment priorities](#deep-review-and-experiment-priorities)
 below compare the implemented searches with primary papers, author programs and
 recent preprints. The follow-up [rooted-branch experiment](leaf-tail.md#rooted-two-vertex-branch-experiment)
@@ -449,9 +451,11 @@ Complementation supplies zero at depth three. Rofa's Corollary 2 covers depths
 [formula, proof, literature comparison and evidence](spider_formula_five.md)
 are preserved. Lean verifies its exact vertex and edge-weight permutations for
 all positive `k`; the full corollary also uses the written graph argument and
-Rofa's result. No matching construction was found in this scoped review;
-priority remains unconfirmed. Primitive length-seven interior positions are
-the next targets, not asserted to be open in the full literature.
+Rofa's result. **Correction, 14 November:** the same interior-extreme property
+follows from classical graceful-plus-α amalgamation using a fixed ten-edge path.
+The [deeper review and explicit derivation](spider-priority-review.md) replace the
+earlier inconclusive novelty assessment. We do not claim a new theorem. Further
+interior-position targets must be checked against amalgamation as well as subdivision.
 
 **Implemented spider experiment:** CP-SAT found independently verified prescribed-
 zero witnesses for all six midpoint targets and all 24 other root-orbit controls,

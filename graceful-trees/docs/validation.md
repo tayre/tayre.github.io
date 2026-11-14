@@ -1,5 +1,28 @@
 # Initial validation record
 
+## Spider priority correction — 14 November 2026
+
+The [deeper literature review](spider-priority-review.md) found a direct
+prior-work implication for the five-edge interior-extreme property. The
+mathematical statement and original Lean formula proof remain valid; the claim
+is now classified as a consequence of established constructions, not a new theorem.
+The README, public page, finding note and future experiment reports reflect this
+correction. Historical evidence archives and their checksums remain unchanged.
+
+The independent, standard-library-only [checker](../scripts/check_spider_prior_art.py)
+verified **103 leg counts**, including 1–100, 256, 1,000 and 10,000, with a
+largest tree of **50,001 vertices**. It checked treehood, exact vertex and edge
+label sets, the interior extrema and complemented witnesses, and rejected an
+intentionally corrupted witness. Its [results](../examples/five-spider-prior-art.json)
+include the checker's SHA-256 hash. The universal conclusion rests on the written
+amalgamation argument; the finite checks and existing Lean file do not formalize it.
+
+All **110 spider tests** and **26 dashboard tests** passed. A small end-to-end
+construction run verified 13 witnesses and confirmed that the corrected report
+includes its snapshotted priority review. Lint, formatting, changed-file whitespace
+and 29 local documentation links passed. Three AI-assisted reviewers checked the
+derivation; this is not an external specialist review or exhaustive priority search.
+
 ## Nightly budget allocation — 13 November 2026
 
 The nightly ceiling increased from 1,000 to **20,000 unrestricted attempts**,
@@ -79,8 +102,11 @@ every positive leg count. Combined with Rofa's known other four position classes
 this proves 0-rotatability of this family. An independent mathematical review
 checked the vertex partitions, every edge-to-progression index, the empty middle
 range at two legs, the one-leg case, complementation and the cited corollary.
-No matching prior construction was found in the scoped review; novelty remains
-unconfirmed. Ordinary gracefulness of this family was already known.
+The initial scoped review found no matching construction. **Correction, 14 November:**
+the [deeper priority review](spider-priority-review.md) derives the same property
+from established amalgamation, so this is not presented as a new theorem.
+The proof and the validation below remain valid. Historical archives preserve
+the original inconclusive assessment; the linked review supersedes it.
 
 The complete suite passed **1,217 Python tests**, including all four real Lean
 rejection checks, and **26 dashboard tests**. After formatting the new sources,

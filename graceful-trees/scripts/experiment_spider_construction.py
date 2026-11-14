@@ -307,7 +307,8 @@ def experiment(output, *, leg_counts=DEFAULT_LEG_COUNTS):
         "general_proof_source": "source/docs/spider_formula_five.md",
         "formal_source": "source/formal/Graceful/FiveSpider.lean",
         "formal_coverage": "See the snapshotted formal source and audit; this finite experiment does not establish a universal theorem.",
-        "research_novelty": "unresolved; checked constructions and source review are separate from the mathematical proof",
+        "research_novelty": "the interior-extreme theorem follows from established amalgamation; no new theorem claimed; exact-formula priority unestablished",
+        "priority_review_source": "source/docs/spider-priority-review.md",
         "source_files_snapshotted": len(metadata["provenance"]["source_hashes"]),
         "records": records,
     }
@@ -335,7 +336,7 @@ def experiment(output, *, leg_counts=DEFAULT_LEG_COUNTS):
         "",
         "The [general algebraic proof](source/docs/spider_formula_five.md) establishes the explicit length-five construction for every positive integer leg count. It partitions all vertex labels by residue modulo five and all edge weights into multiples of five and the absolute values of two arithmetic progressions. Complementation moves zero from distance two to distance three while preserving every edge difference.",
         "",
-        "This experiment checks the implementation on a finite corpus; its successful cases are not the proof of the universal statement. The four-edge midpoint construction is a specialization of known subdivision results. Research novelty of the five-edge formula remains unresolved by these checks. The [formal source](source/formal/Graceful/FiveSpider.lean) and its audit must be read for the exact scope of machine-checked claims.",
+        "This experiment checks the implementation on a finite corpus; its successful cases are not the proof of the universal statement. The four-edge midpoint construction follows from known subdivision results. The [priority review](source/docs/spider-priority-review.md) derives the five-edge interior-extreme theorem from established amalgamation; no new theorem is claimed. Exact-formula priority remains unestablished. The [formal source](source/formal/Graceful/FiveSpider.lean) and its audit state the scope of machine-checked claims.",
         "",
         "## Reproducibility",
         "",
