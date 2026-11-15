@@ -60,3 +60,20 @@ Evidence: [priority review and prior-work derivation](spider-priority-review.md)
 [validation record](validation.md#five-edge-spider-construction--9-november-2026),
 [formal audit](../examples/five-spider-proof.json), and
 [reproducible evidence archive](../examples/five-spider-evidence.zip).
+
+## Seven-edge symmetric spiders — recorded 15 November 2026
+
+**Status:** consequence of established constructions; no novelty claim. For every
+positive `k`, every vertex of the equal-seven-edge-leg spider `S(k,7)` can receive
+zero in a graceful labeling. More precisely, for each even depth `0,2,4,6` on a
+chosen leg, a labeling puts zero there and the maximum `7k` at the next depth.
+Complementation supplies the odd depths.
+
+Two explicit α-labeled fourteen-edge path seeds, combined with the established
+ordinary-graceful-plus-α amalgamation, supply the interior pairs. Known hub-zero
+labelings and a seven-edge endpoint seed supply the outer pairs. The
+[complete derivation and reproduction instructions](seven-spider-amalgamation.md)
+include the one- and two-leg cases, interval and difference proofs, and precise
+primary-source references. This is a construction consequence removed from the
+project's proposed new-result targets, not a new discovery or an improved
+exhaustive-search bound. The note does not claim Lean verification.

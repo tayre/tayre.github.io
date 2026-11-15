@@ -128,13 +128,13 @@ paper authors. Incomplete proofs remain explicitly incomplete.
 - Explain a minimal real-search partial state whose branches each admit local
   assignments but cannot jointly use every required label and difference. Check
   whether a known parity or exact-cover obstruction already explains it.
-- As a separate construction study, build an α-path seed atlas using the known
-  ten-edge seed as a control before
-  trying fourteen-edge paths for seven-edge spider legs. Require midpoint zero
-  and state the desired interior positions precisely. A successful seed gives a
-  specialization of established amalgamation. A checked infeasibility result can
-  exclude the specified seed model, not spider gracefulness; a timeout or failure
-  to find a seed leaves it unresolved.
+- The [fourteen-edge seed question](seven-spider-amalgamation.md) was resolved on
+  15 November: two checked seeds give all interior zero positions for seven-edge
+  symmetric spiders by established amalgamation. Do not repeat it or treat it as
+  a new theorem. Before extending the atlas, identify a precise placement question
+  that the existing constructions do not already settle. A checked infeasibility
+  result excludes only its specified seed model, not spider gracefulness; a timeout
+  leaves even that seed question unresolved.
 
 Solver difficulty is an algorithmic observation, not evidence of nongracefulness.
 

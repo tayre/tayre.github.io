@@ -1,5 +1,18 @@
 # Initial validation record
 
+## Seven-edge spider seed review — 15 November 2026
+
+The [seven-edge amalgamation note](seven-spider-amalgamation.md) resolves the
+planned fourteen-edge path-seed question as a consequence of established methods,
+without a novelty claim. Its standard-library checker passed **824 labelings**
+through 70,001 vertices, including complements and selected leg permutations.
+The **161 relevant Python tests** passed; four Lean-dependent checks were skipped
+because the local toolchain was absent. No formal verification of this note is
+claimed. Ruff lint/format, independent small-graph witness checks and a second
+review of the universal range argument passed. Seeds, finite results and the
+checker source hash are in [the saved evidence](../examples/seven-spider-amalgamation.json).
+The mathematical conclusion comes from the written proof, not the finite checks.
+
 ## Rotating focused studies — 14 November 2026
 
 The existing one-hour nightly run now reserves up to half its search window for
