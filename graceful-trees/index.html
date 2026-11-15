@@ -8,8 +8,8 @@
   <title>Graceful trees — computational experiments</title>
   <link rel="canonical" href="https://tayre.github.io/graceful-trees/">
   <link rel="icon" href="site/icon.svg?v=2" type="image/svg+xml">
-  <link rel="stylesheet" href="site/style.css?v=2">
-  <script type="module" src="site/app.js?v=3"></script>
+  <link rel="stylesheet" href="site/style.css?v=3">
+  <script type="module" src="site/app.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#progress">Skip to results</a>
@@ -87,6 +87,13 @@
           <p class="note">Unresolved or solver-infeasible cases come first, followed by cases requiring more search work. Runtime depends on the model, seed, budget, and machine; it is not evidence against gracefulness.</p>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Difficult case results"><table><thead><tr><th scope="col">Tree / attempt</th><th scope="col">Source</th><th scope="col">Vertices</th><th scope="col">Outcome</th><th scope="col">Wall time</th><th scope="col">Branches</th></tr></thead><tbody id="difficult-rows"></tbody></table></div>
         </details>
+
+        <section id="focused-studies" class="research-notes" aria-labelledby="focused-title" hidden>
+          <h3 id="focused-title">Focused nightly studies</h3>
+          <p class="note">Latest recorded results for each study, which may come from different runs. These finite experiments do not extend exhaustive coverage or establish mathematical novelty.</p>
+          <table class="focused-table" aria-label="Latest focused study outcomes"><thead><tr><th scope="col">Study</th><th scope="col">Latest recorded outcome</th></tr></thead><tbody id="focused-rows"></tbody></table>
+          <p class="note">Detailed inputs, witnesses and certificates are in the <a href="https://github.com/tayre/tayre.github.io/actions/workflows/graceful-research.yml">workflow evidence archives</a>; summaries are retained in the public JSON.</p>
+        </section>
 
         <section class="research-notes" aria-labelledby="findings-title">
           <h3 id="findings-title">Observations</h3>

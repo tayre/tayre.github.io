@@ -1,4 +1,4 @@
-import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName } from './data.mjs?v=3';
+import { FEED_URL, EXAMPLE_LABELS, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, familyName, focusedStudyRows } from './data.mjs?v=4';
 
 const $ = id => document.getElementById(id);
 const number = n => new Intl.NumberFormat('en').format(n);
@@ -124,6 +124,23 @@ function renderTables() {
   if (document.querySelector('.history-details').open) renderHistory();
 }
 
+function renderFocusedStudies() {
+  const rows = focusedStudyRows(feed);
+  $('focused-studies').hidden = rows.length === 0;
+  $('focused-rows').replaceChildren();
+  for (const row of rows) {
+    const tr = element('tr');
+    const heading = element('th', '', row.title); heading.scope = 'row';
+    const run = element('span', 'study-run', `Run ${row.run} · ${utc(row.started_at)} UTC`);
+    run.title = row.run_id; heading.append(run);
+    const outcome = element('td');
+    outcome.append(element('p', '', row.outcome));
+    if (row.timing) outcome.append(element('p', 'note', row.timing));
+    outcome.append(element('p', 'note', row.scope));
+    tr.append(heading, outcome); $('focused-rows').append(tr);
+  }
+}
+
 function renderHistory() {
   if (!feed || $('history-rows').children.length) return;
   const fragment = document.createDocumentFragment();
@@ -152,7 +169,7 @@ function render(data, cached = false) {
   const state = cached ? { state: 'cached', label: 'Saved snapshot' } : freshness(data.finished_at);
   $('freshness').dataset.state = state.state; write('freshness', state.label);
   write('data-message', `${cached ? 'Could not refresh; showing saved data. ' : ''}Updated ${utc(data.finished_at)} UTC. Cumulative results for ${data.campaign}.${state.state === 'stale' ? ' Check the workflow records for delays or a paused schedule.' : ''}`);
-  renderChart(); renderCoverage(); renderFindings(); renderTables();
+  renderChart(); renderCoverage(); renderFindings(); renderTables(); renderFocusedStudies();
 }
 
 async function refresh() {

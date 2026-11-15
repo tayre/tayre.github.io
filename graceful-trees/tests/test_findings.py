@@ -42,6 +42,47 @@ def test_routine_timeouts_and_restricted_infeasibility_are_not_alerts(evidence):
     assert build_findings(database, manifest)["findings"] == []
 
 
+@pytest.mark.parametrize(
+    "status,stratum,expected",
+    [
+        ("supported", "target_deficiency_ge2", False),
+        ("incomplete", "target_deficiency_ge2", False),
+        ("uncertified", "target_deficiency_ge2", False),
+        ("certified_restricted_counterexample", "control_caterpillar", False),
+        ("certified_restricted_counterexample", "target_deficiency_ge2", True),
+    ],
+)
+def test_focused_alert_requires_complete_restricted_target_profile(
+    evidence, status, stratum, expected
+):
+    # Findings consume profiles; the separate mandatory audit rederives profiles
+    # and independently rechecks every certificate before notification is enabled.
+    database, manifest = evidence
+    database.execute("CREATE TABLE focused_records(record_id INTEGER,study TEXT,data TEXT)")
+    record = {
+        "run_id": "1",
+        "data": {
+            "case": {"tree_id": "fixture", "n": 12, "family": "lobster"},
+            "profile": {
+                "status": status,
+                "focus_stratum": stratum,
+                "ordinary_witness_attempt_ids": [1],
+                "orbits": [{"evidence_attempt_ids": [2, 3]}],
+            },
+        },
+    }
+    for identity in (1, 2):
+        database.execute(
+            "INSERT INTO focused_records VALUES (?,'pendant',?)", (identity, json.dumps(record))
+        )
+    findings = build_findings(database, manifest)["findings"]
+    assert len(findings) == int(expected)
+    if expected:
+        assert findings[0]["kind"] == "restricted_property_counterexample"
+        assert findings[0]["attempt_ids"] == [1, 2, 3]
+        assert "only the stated restricted property" in findings[0]["significance"]
+
+
 def test_unrestricted_infeasibility_is_a_review_candidate_not_a_proof(evidence):
     database, manifest = evidence
     add(database, 1, "solver_infeasible")

@@ -31,6 +31,10 @@ class Store:
                 status TEXT NOT NULL, data TEXT NOT NULL);
             CREATE INDEX IF NOT EXISTS attempt_tree ON attempts(tree_id, scope, edge_key);
             CREATE INDEX IF NOT EXISTS attempt_run ON attempts(run_id);
+            CREATE TABLE IF NOT EXISTS focused_records(
+                record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT NOT NULL REFERENCES runs(run_id),
+                study TEXT NOT NULL, data TEXT NOT NULL);
         """)
         existing = self.meta("generation_fingerprint")
         if self.meta("schema_version", 1) != 1:

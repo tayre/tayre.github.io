@@ -112,6 +112,14 @@ details[open] > summary { margin-bottom: 12px; }
 .latest-details dt { color: var(--muted); }
 .latest-details dd { margin: 0; font-variant-numeric: tabular-nums; }
 .research-notes { margin-top: 27px; }
+.focused-table { margin: 14px 0; font-size: 13px; table-layout: fixed; }
+.focused-table th:first-child { width: 25%; }
+.focused-table th, .focused-table td { vertical-align: top; overflow-wrap: anywhere; }
+.focused-table tbody th { border-bottom: 1px solid #e5e5e5; }
+.focused-table p { margin: 0 0 8px; }
+.focused-table p:last-child { margin-bottom: 0; }
+.focused-table .note, .study-run { font-size: 12px; }
+.study-run { display: block; margin-top: 7px; color: var(--muted); font-weight: normal; }
 .finding { margin: 17px 0; }
 .finding h4 { font-size: 16px; margin: 5px 0; }
 .finding p, .finding-empty p, #suggestions p { font-size: 15px; }
@@ -139,6 +147,7 @@ footer p { margin: 6px 0; }
   .section-heading { display: block; } .data-status { margin-top: 10px; }
   .summary-table { font-size: 13px; } .summary-table td { font-size: 20px; }
   .summary-table th, .summary-table td { padding-right: 8px; }
+  .focused-table th:first-child { width: 38%; }
   .figure-heading { flex-wrap: wrap; gap: 8px; }
   .range-controls { font-size: 11px; }
   .legend { gap: 7px 14px; font-size: 11px; }

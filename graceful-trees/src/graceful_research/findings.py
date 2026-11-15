@@ -114,7 +114,38 @@ def build_findings(database, manifest):
                 next_step="Review enumeration counts and witnesses, then choose the next bounded experiment.",
             )
         best = max(best, through)
+    if database.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='focused_records'"
+    ).fetchone():
+        for (raw,) in database.execute(
+            "SELECT data FROM focused_records WHERE study='pendant' ORDER BY record_id"
+        ):
+            record = json.loads(raw)
+            data = record["data"]
+            result = data["profile"]
+            if (
+                result["status"] != "certified_restricted_counterexample"
+                or result["focus_stratum"] != "target_deficiency_ge2"
+            ):
+                continue
+            case = data["case"]
+            add(
+                "restricted_property_counterexample",
+                case["tree_id"],
+                first_run_id=record["run_id"],
+                tree_id=case["tree_id"],
+                n=case["n"],
+                family=case["family"],
+                attempt_ids=sorted(
+                    {i for orbit in result["orbits"] for i in orbit["evidence_attempt_ids"]}
+                    | set(result["ordinary_witness_attempt_ids"])
+                ),
+                title="Checked failure of the pendant-maximum-edge property",
+                significance="This tree has a verified graceful labeling, but every pendant-edge placement is excluded by checked scoped certificates. This refutes only the stated restricted property; priority is unestablished.",
+                next_step="Independently recheck the ordinary witness, all pendant-edge orbits and scoped proofs, then investigate the structural explanation and prior literature.",
+            )
     priority = {
+        "restricted_property_counterexample": 0,
         "certificate_verified_infeasibility": 0,
         "unrestricted_infeasibility": 0,
         "difficult_case_resolved": 1,
@@ -125,5 +156,5 @@ def build_findings(database, manifest):
         "campaign": campaign,
         "run_id": manifest["run_id"],
         "findings": sorted(findings.values(), key=lambda f: (priority[f["kind"]], f["key"])),
-        "policy": "Cumulative review candidates; ordinary timeouts, restricted infeasibility, and stock hypotheses do not trigger alerts.",
+        "policy": "Cumulative review candidates; ordinary timeouts, individual restricted infeasibility results, and stock hypotheses do not trigger alerts. A fully checked restricted-property counterexample warrants review.",
     }

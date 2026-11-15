@@ -36,6 +36,10 @@ class Config:
     retry_budget_fraction: float = 0.2
     probe_budget_fraction: float = 0.1
     fill_unused_budget: bool = False
+    focused_study: str = "none"
+    focused_budget_fraction: float = 0
+    focused_max_cases: int = 200
+    focused_attempt_seconds: float = 5
     max_cases: int = 1000
     max_generated: int = 10000
     max_retries: int = 12
@@ -68,6 +72,7 @@ class Config:
             ("probe_max_n", 0, 32),
             ("probe_max_attempts", 0, 10000),
             ("frontier_max_nodes", 0, 1000000),
+            ("focused_max_cases", 1, 1000),
         ):
             value = getattr(self, name)
             if type(value) is not int or not low <= value <= high:
@@ -79,6 +84,8 @@ class Config:
             ("retry_seconds", 0.001, 86400),
             ("retry_budget_fraction", 0, 0.8),
             ("probe_budget_fraction", 0, 0.8),
+            ("focused_budget_fraction", 0, 0.8),
+            ("focused_attempt_seconds", 0.01, 300),
         ):
             value = getattr(self, name)
             if (
@@ -100,7 +107,20 @@ class Config:
             raise ValueError("retry_policy must be bounded or oldest_unresolved")
         if self.finalize_reserve_seconds >= self.budget_seconds:
             raise ValueError("finalize_reserve_seconds must be smaller than budget_seconds")
-        if self.retry_budget_fraction + self.probe_budget_fraction >= 0.9:
+        if not isinstance(self.focused_study, str) or self.focused_study not in {
+            "none",
+            "rotate",
+            "pendant",
+            "matching",
+            "residual",
+        }:
+            raise ValueError("unsupported focused study")
+        if (self.focused_study == "none") != (self.focused_budget_fraction == 0):
+            raise ValueError("focused study and positive budget fraction must be enabled together")
+        if (
+            self.retry_budget_fraction + self.probe_budget_fraction + self.focused_budget_fraction
+            >= 0.9
+        ):
             raise ValueError("reserve at least 10% of the compute window for new cases")
         if not isinstance(self.campaign, str) or not re.fullmatch(
             r"[a-zA-Z0-9_-]{1,64}", self.campaign

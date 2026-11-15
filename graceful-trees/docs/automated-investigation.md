@@ -20,6 +20,7 @@ experiments must also use explicit solver and process time limits.
 ## Review procedure
 
 1. Read the repository instructions, [findings](findings.md),
+   [focused nightly studies](focused-nightly.md),
    [spider priority review](spider-priority-review.md), and the previous review
    record. The current priority review supersedes historical novelty metadata:
    five-edge symmetric-spider 0-rotatability and the interior-extreme property
@@ -31,9 +32,17 @@ experiments must also use explicit solver and process time limits.
    review. Validate the feed with `site/data.mjs`'s `validateFeed`. If the raw feed
    appears stale, use GitHub's contents API on the `graceful-progress` branch.
    A failed run may not publish a feed, so inspect workflow status separately.
+   Inspect the phase timings, selected focused study, saved cursors and rotation
+   status. `focused_studies` reports the latest summary for each track; its entries
+   may come from different runs and are not cumulative counts. A two-minute push
+   check can save evidence without advancing the rotation. Do not count matching
+   replicates or residual snapshots as new trees or exhaustive coverage.
 3. Inspect full evidence when accessible. A feed's audit claim and presentation
    checks are not a new independent audit of the artifacts. Record unavailable
    inputs explicitly. Integrity failures and contradictory evidence take priority.
+   For a focused claim, inspect `focused/records/`, the saved requests and the
+   cumulative ledger. The small publication bundle supplies audited metadata for
+   transport; it cannot substitute for the full results artifact or a fresh audit.
 4. Choose one question with explicit quantifiers, graph family and restrictions.
    Search primary literature and read the applicable statements, checking older
    construction implications as well as recent papers. Record theorem/page/version
@@ -50,11 +59,44 @@ experiments must also use explicit solver and process time limits.
    unfinished question from the record rather than repeat completed searches.
    Separate observations, hypotheses, proved statements and priority assessments.
 
+## Focused-study checks
+
+- **Pendant maximum edges:** verify the ordinary graceful witness, recompute the
+  target stratum and every pendant-edge orbit, and independently check the scoped
+  proof for each excluded orbit. A negative profile is complete only when every
+  such orbit is excluded. `certified_restricted_counterexample` refutes the stated
+  placement property on that input; the ordinary witness confirms the tree itself
+  is graceful. Keep known-class controls separate and check priority before any
+  novelty claim. An isolated rejected edge or an unchecked solver answer does
+  not settle this property.
+- **Matching benchmark:** compare the saved input, seed, allowance and variant
+  options within each pair. Account for three replicate pairs per input,
+  alternating order, incomplete pairs and unknown trials. Compare verified-success
+  counts by stratum before looking at times. Matching construction costs count
+  against its own total allowance. Solved-pair timing summaries omit censored cases;
+  they cannot establish a population speedup. Confirm promising gains on held-out
+  inputs before proposing a default change.
+- **Observed residuals:** rerun `focused_residual.verify_record` on each snapshot
+  relevant to a claim. It reconstructs the partial problem from the original tree,
+  enumerates the remaining assignments independently, and checks local tables and
+  certificates. Each negative conclusion fixes the entire saved partial labeling.
+  Prefer explaining a jointly impossible combination of individually feasible
+  branches over merely counting empty local tables. Saved unknown snapshots and
+  parent-terminated investigations make no negative claim. First-encounter sampling
+  is not representative sampling, and these are fresh traces, not the older
+  synthetic 102-state study relabeled as new evidence.
+
+The nightly studies use known constructions and standard exact-enumeration and
+certificate methods. A newly encountered example, a successful implementation,
+and a new mathematical result are different claims. Report only what the saved
+evidence and literature support.
+
 ## Records and findings
 
 Keep working state under ignored `results/deep-review/`: the last examined run
 and artifact identity, snapshot hash, audit level actually checked, question,
-sources already read, evidence paths, results and next step. Retain copies of
+sources already read, evidence paths, focused record IDs and cursors, results and
+next step. Retain copies of
 examined public snapshots. Do not mark unavailable artifacts as inspected. This
 local state is a convenience; it can be reconstructed from the chat and published
 notes if lost.
@@ -74,19 +116,27 @@ push. The review does not authorize increasing cloud budgets, changing nightly
 solver defaults, using paid services, obtaining new credentials, or contacting
 paper authors. Incomplete proofs remain explicitly incomplete.
 
-## Initial questions
+## Current questions
 
-- Build an α-path seed atlas, using the known ten-edge seed as a control before
+- Complete the pendant-maximum-edge question for non-caterpillar lobsters of
+  matching deficiency at least two. A negative answer requires an ordinary
+  witness and independently checked exclusions of every pendant-edge orbit.
+  Seek a structural explanation before extrapolating from samples.
+- Test whether matching-first search improves verified successes on the same
+  frozen inputs, seeds and total budgets. Examine naturally sampled trees and
+  constructed controls separately, retaining unsuccessful and slower results.
+- Explain a minimal real-search partial state whose branches each admit local
+  assignments but cannot jointly use every required label and difference. Check
+  whether a known parity or exact-cover obstruction already explains it.
+- As a separate construction study, build an α-path seed atlas using the known
+  ten-edge seed as a control before
   trying fourteen-edge paths for seven-edge spider legs. Require midpoint zero
   and state the desired interior positions precisely. A successful seed gives a
   specialization of established amalgamation. A checked infeasibility result can
   exclude the specified seed model, not spider gracefulness; a timeout or failure
   to find a seed leaves it unresolved.
-- Examine the existing pendant-maximum-edge question for non-caterpillar lobsters.
-  A negative answer for one tree requires checking every relevant pendant-edge
-  orbit, with appropriate independent certificates.
-- Benchmark unresolved trees on frozen inputs, matched seeds and equal budgets.
-  Solver difficulty is an algorithmic observation, not evidence of nongracefulness.
+
+Solver difficulty is an algorithmic observation, not evidence of nongracefulness.
 
 ## Setup check, 14 November 2026
 

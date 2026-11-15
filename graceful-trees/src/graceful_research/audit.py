@@ -20,6 +20,8 @@ def check_phases(manifest, records):
         return []  # Historical campaigns predate phase reporting.
     phases = manifest["phase_summary"]
     expected = {"retries", "new_trees", "edge_probes"}
+    if manifest.get("config", {}).get("focused_study", "none") != "none":
+        expected.add("focused_study")
     if not isinstance(phases, dict) or set(phases) != expected:
         return ["invalid research phase summary"]
     errors = []
@@ -45,8 +47,9 @@ def check_phases(manifest, records):
             elapsed += seconds
     for record in records:
         name = record.get("research_phase")
-        if name not in expected or (name == "edge_probes") != (
-            record.get("scope") == "extreme_edge"
+        if name not in expected or (
+            name != "focused_study"
+            and (name == "edge_probes") != (record.get("scope") == "extreme_edge")
         ):
             errors.append("research phase and attempt scope disagree")
     total = manifest.get("elapsed_seconds")
@@ -151,6 +154,12 @@ def audit_run(output):
             required.add("findings.json")
         if manifest.get("proof_evidence_schema_version") == 1:
             required.update(("verify.py", "proof_verify.py"))
+        if manifest.get("focused_study"):
+            required.add("focused/summary.json")
+            required.update(
+                f"focused/records/{identity:08d}.json"
+                for identity in manifest["focused_study"]["record_ids"]
+            )
         if not required <= checksums.keys():
             errors.append("required files absent from checksum manifest")
         for relative, expected in checksums.items():
@@ -253,6 +262,9 @@ def audit_run(output):
                 errors.append("JSONL attempts differ from cumulative ledger")
             ledger_checked, proofs_checked, ledger_errors = audit_ledger(database)
             errors.extend(ledger_errors)
+            from .focused import audit_focused
+
+            errors.extend(audit_focused(database, output, manifest))
             if manifest.get("findings_schema_version") == 1:
                 findings = json.loads((output / "findings.json").read_text())
                 if findings != build_findings(database, manifest):

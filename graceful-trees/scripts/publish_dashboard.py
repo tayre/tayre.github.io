@@ -9,6 +9,7 @@ import base64
 import hashlib
 import io
 import json
+import math
 import os
 import re
 import urllib.error
@@ -21,6 +22,8 @@ from restore_checkpoint import SafeRedirect, get
 
 BRANCH = "graceful-progress"
 MAX_FEED_BYTES = 4 * 1024 * 1024
+MAX_METADATA_BYTES = 32 * 1024 * 1024
+MAX_CHECKSUM_BYTES = 64 * 1024 * 1024
 EVIDENCE = ("manifest.json", "progress.json", "analysis.json", "findings.json")
 
 
@@ -51,13 +54,18 @@ def read_evidence(data, environ):
             path = f"current/{name}"
             if archive.namelist().count(path) != 1:
                 raise ValueError(f"missing or duplicated evidence: {name}")
-            if archive.getinfo(path).file_size > 8 * 1024 * 1024:
+            limit = MAX_CHECKSUM_BYTES if name == "checksums.json" else MAX_METADATA_BYTES
+            if archive.getinfo(path).file_size > limit:
                 raise ValueError(f"oversized evidence: {name}")
             contents[name] = archive.read(path)
     parsed = {name: json.loads(raw) for name, raw in contents.items()}
     for name in EVIDENCE:
         if hashlib.sha256(contents[name]).hexdigest() != parsed["checksums.json"].get(name):
             raise ValueError(f"evidence checksum mismatch: {name}")
+    if "audit.json" in parsed["checksums.json"] and (
+        hashlib.sha256(contents["audit.json"]).hexdigest() != parsed["checksums.json"]["audit.json"]
+    ):
+        raise ValueError("evidence checksum mismatch: audit.json")
     manifest = parsed["manifest.json"]
     github = manifest["provenance"]["github"]
     for key in (
@@ -82,6 +90,139 @@ def read_evidence(data, environ):
         ):
             raise ValueError(f"evidence identity mismatch: {name}")
     return parsed
+
+
+def _counts(document, fields):
+    if not isinstance(document, dict):
+        raise ValueError("focused summary counts must be an object")
+    result = {}
+    for key in fields:
+        if key in document:
+            value = document[key]
+            if type(value) is not int or value < 0:
+                raise ValueError(f"invalid focused count: {key}")
+            result[key] = value
+    return result
+
+
+def _matching_comparison(document, *, include_strata=True):
+    result = _counts(
+        document,
+        (
+            "records",
+            "complete_pairs",
+            "incomplete_pairs",
+            "both_verified",
+            "matching_only",
+            "baseline_only",
+            "neither_verified",
+        ),
+    )
+    if "status_counts" in document:
+        statuses = document["status_counts"]
+        if not isinstance(statuses, dict):
+            raise ValueError("focused status counts must be an object")
+        result["status_counts"] = {
+            variant: _counts(statuses[variant], ("verified_graceful", "unknown"))
+            for variant in ("baseline", "matching_first")
+            if variant in statuses
+        }
+    if "fully_solved_times" in document:
+        times = document["fully_solved_times"]
+        retained = _counts(times, ("pairs",))
+        for variant in ("baseline", "matching_first"):
+            if variant not in times:
+                continue
+            if not isinstance(times[variant], dict):
+                raise ValueError("focused timing summary must be an object")
+            values = {}
+            for key in ("total_seconds", "median_seconds"):
+                if key not in times[variant]:
+                    continue
+                value = times[variant][key]
+                if not (value is None and key == "median_seconds") and (
+                    type(value) not in (int, float) or not math.isfinite(value) or value < 0
+                ):
+                    raise ValueError("invalid focused timing summary")
+                values[key] = value
+            retained[variant] = values
+        result["fully_solved_times"] = retained
+    if include_strata and "by_stratum" in document:
+        strata = document["by_stratum"]
+        if not isinstance(strata, dict):
+            raise ValueError("focused strata must be an object")
+        result["by_stratum"] = {
+            name: _matching_comparison(strata[name], include_strata=False)
+            for name in (
+                "natural_prufer",
+                "natural_recursive",
+                "natural_lobster",
+                "matching_rich",
+                "no_matching_control",
+            )
+            if name in strata
+        }
+    return result
+
+
+def focused_studies(document):
+    """Retain only typed counts/times from the three independently audited studies."""
+    if not isinstance(document, dict):
+        raise ValueError("focused studies must be an object")
+    result = {}
+    for study in ("pendant", "matching", "residual"):
+        if study not in document:
+            continue
+        entry = document[study]
+        if not isinstance(entry, dict) or not isinstance(entry.get("summary"), dict):
+            raise ValueError("focused study requires an object summary")
+        run_id = entry.get("run_id")
+        if not isinstance(run_id, str) or not re.fullmatch(r"[A-Za-z0-9_.:+-]{1,128}", run_id):
+            raise ValueError("invalid focused study run identity")
+        source = entry["summary"]
+        if study == "pendant":
+            summary = _counts(source, ("trees_reviewed", "targets"))
+            if "outcomes" in source:
+                summary["outcomes"] = _counts(
+                    source["outcomes"],
+                    (
+                        "supported",
+                        "certified_restricted_counterexample",
+                        "ordinary_witness_required",
+                        "uncertified",
+                        "incomplete",
+                        "outside_scope",
+                        "integrity_error",
+                    ),
+                )
+        elif study == "matching":
+            summary = _counts(source, ("pairs_started", "pairs_completed"))
+            if "comparison" in source:
+                summary["comparison"] = _matching_comparison(source["comparison"])
+        else:
+            summary = _counts(
+                source,
+                (
+                    "trace_inputs",
+                    "unknown_trace_inputs",
+                    "unclassified_snapshots",
+                    "residuals",
+                    "completable",
+                    "impossible_partial",
+                    "locally_feasible_but_incompatible",
+                    "congruence_certificates",
+                    "relaxation_certificates",
+                    "whole_tree_infeasibility_claims",
+                ),
+            )
+            if summary.get("whole_tree_infeasibility_claims", 0) != 0:
+                raise ValueError("residual studies cannot claim whole-tree infeasibility")
+            if "novelty_claimed" in source:
+                if source["novelty_claimed"] is not False:
+                    raise ValueError("focused residual summary cannot claim novelty")
+                summary["novelty_claimed"] = False
+        result[study] = {"run_id": run_id, "summary": summary}
+    return result
 
 
 def snapshot(evidence, artifact_id):
@@ -192,6 +333,11 @@ def snapshot(evidence, artifact_id):
             for k in ("proof_evidence_schema_version", "proof_counts")
             if k in progress
         },
+        **(
+            {"focused_studies": focused_studies(progress["focused_studies"])}
+            if "focused_studies" in progress
+            else {}
+        ),
         "findings": evidence["findings.json"]["findings"],
         "suggestions": analysis["suggestions"],
         "difficult": difficult,
@@ -292,8 +438,9 @@ def main():
     try:
         repository, token = os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_TOKEN"]
         artifact_id = int(os.environ["RESULTS_ARTIFACT_ID"])
+        publication_id = int(os.environ.get("PUBLICATION_ARTIFACT_ID") or artifact_id)
         data = get(
-            f"https://api.github.com/repos/{repository}/actions/artifacts/{artifact_id}/zip",
+            f"https://api.github.com/repos/{repository}/actions/artifacts/{publication_id}/zip",
             token,
             binary=True,
         )

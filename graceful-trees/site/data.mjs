@@ -8,6 +8,60 @@ export const complement = labels => labels.map(label => labels.length - 1 - labe
 function requireThat(condition, message) { if (!condition) throw new Error(message); }
 const integer = value => Number.isSafeInteger(value) && value >= 0;
 const date = value => typeof value === 'string' && Number.isFinite(Date.parse(value));
+const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const seconds = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+const STUDIES = ['pendant', 'matching', 'residual'];
+const MATCHING_STRATA = ['natural_prufer', 'natural_recursive', 'natural_lobster', 'matching_rich', 'no_matching_control'];
+const PAIR_COUNTS = ['records', 'complete_pairs', 'incomplete_pairs', 'both_verified', 'matching_only', 'baseline_only', 'neither_verified'];
+const PLACEMENT_OUTCOMES = ['supported', 'certified_restricted_counterexample', 'ordinary_witness_required', 'uncertified', 'incomplete', 'outside_scope', 'integrity_error'];
+
+function matchingCounts(row, includeStrata = true) {
+  requireThat(object(row) && PAIR_COUNTS.every(key => integer(row[key])), 'Invalid focused matching counts');
+  requireThat(row.records === row.complete_pairs + row.incomplete_pairs && row.complete_pairs === row.both_verified + row.matching_only + row.baseline_only + row.neither_verified, 'Focused matching pairs disagree');
+  requireThat(object(row.status_counts), 'Missing focused matching statuses');
+  for (const variant of ['baseline', 'matching_first']) {
+    const status = row.status_counts[variant];
+    requireThat(object(status) && Object.entries(status).every(([key, value]) => ['verified_graceful', 'unknown'].includes(key) && integer(value)), 'Invalid focused matching status');
+    const positive = row.both_verified + row[variant === 'baseline' ? 'baseline_only' : 'matching_only'];
+    const unresolved = row.complete_pairs - positive;
+    requireThat((status.verified_graceful ?? 0) >= positive && (status.verified_graceful ?? 0) <= positive + row.incomplete_pairs && (status.unknown ?? 0) >= unresolved && (status.unknown ?? 0) <= unresolved + row.incomplete_pairs && Object.values(status).reduce((sum, count) => sum + count, 0) <= row.records, 'Focused matching statuses disagree with paired outcomes');
+  }
+  const times = row.fully_solved_times;
+  requireThat(object(times) && integer(times.pairs) && times.pairs <= row.both_verified, 'Invalid focused timing sample');
+  for (const variant of ['baseline', 'matching_first']) {
+    const timing = times[variant];
+    requireThat(object(timing) && seconds(timing.total_seconds) && (times.pairs === 0 ? timing.total_seconds === 0 && timing.median_seconds === null : seconds(timing.median_seconds) && timing.median_seconds <= timing.total_seconds), 'Invalid focused matching time');
+  }
+  if (includeStrata) {
+    requireThat(object(row.by_stratum) && Object.keys(row.by_stratum).every(key => MATCHING_STRATA.includes(key)), 'Invalid focused matching strata');
+    Object.values(row.by_stratum).forEach(stratum => matchingCounts(stratum, false));
+    for (const key of PAIR_COUNTS) requireThat(Object.values(row.by_stratum).reduce((sum, stratum) => sum + stratum[key], 0) === row[key], 'Focused strata and paired totals disagree');
+  }
+}
+
+function validateFocusedStudies(studies, runIds) {
+  requireThat(object(studies) && Object.keys(studies).every(key => STUDIES.includes(key)), 'Invalid focused studies');
+  for (const [study, entry] of Object.entries(studies)) {
+    requireThat(object(entry) && typeof entry.run_id === 'string' && runIds.has(entry.run_id) && object(entry.summary), 'Invalid focused study run or summary');
+    const row = entry.summary;
+    if (study === 'pendant') {
+      requireThat(integer(row.trees_reviewed) && integer(row.targets) && row.targets <= row.trees_reviewed && object(row.outcomes), 'Invalid focused placement counts');
+      requireThat(Object.entries(row.outcomes).every(([key, value]) => PLACEMENT_OUTCOMES.includes(key) && integer(value)) && Object.values(row.outcomes).reduce((sum, value) => sum + value, 0) === row.trees_reviewed, 'Focused placement outcomes disagree');
+    } else if (study === 'matching') {
+      requireThat(integer(row.pairs_started) && integer(row.pairs_completed) && row.pairs_completed <= row.pairs_started, 'Invalid focused matching sample');
+      matchingCounts(row.comparison);
+      requireThat(row.comparison.complete_pairs === row.pairs_completed && row.comparison.records <= row.pairs_started, 'Focused comparison and sample disagree');
+    } else {
+      const keys = ['trace_inputs', 'unknown_trace_inputs', 'unclassified_snapshots', 'residuals', 'completable', 'impossible_partial', 'locally_feasible_but_incompatible', 'congruence_certificates', 'relaxation_certificates', 'whole_tree_infeasibility_claims'];
+      requireThat(integer(row.residuals) && keys.every(key => !(key in row) || integer(row[key])), 'Invalid focused residual counts');
+      requireThat((row.unknown_trace_inputs ?? 0) <= (row.trace_inputs ?? 0), 'Focused residual trace counts disagree');
+      if ('completable' in row || 'impossible_partial' in row) requireThat(integer(row.completable) && integer(row.impossible_partial) && row.completable + row.impossible_partial === row.residuals, 'Focused residual classifications disagree');
+      if ('locally_feasible_but_incompatible' in row) requireThat(row.locally_feasible_but_incompatible <= row.impossible_partial, 'Focused residual incompatibilities exceed failures');
+      if ('congruence_certificates' in row) requireThat(row.congruence_certificates <= row.impossible_partial, 'Focused residual congruences exceed failures');
+      requireThat((row.whole_tree_infeasibility_claims ?? 0) === 0 && (!('novelty_claimed' in row) || row.novelty_claimed === false), 'Unsupported focused residual claim');
+    }
+  }
+}
 
 function counts(row) {
   requireThat(row && integer(row.trees) && OUTCOMES.every(key => integer(row[key])), 'Missing or invalid tree counts');
@@ -64,7 +118,28 @@ export function validateFeed(data) {
   requireThat(Number.isFinite(data.elapsed_seconds) && data.elapsed_seconds >= 0 && Number.isFinite(data.config?.budget_seconds) && data.config.budget_seconds > 0, 'Invalid research budget');
   requireThat(integer(data.config.seed) && typeof data.stop_reason === 'string', 'Invalid run configuration');
   requireThat(typeof data.versions?.networkx === 'string' && typeof data.versions?.ortools === 'string', 'Missing software versions');
+  if ('focused_studies' in data) validateFocusedStudies(data.focused_studies, ids);
   return data;
+}
+
+export function focusedStudyRows(data) {
+  const count = value => new Intl.NumberFormat('en').format(value);
+  return STUDIES.filter(study => data.focused_studies?.[study]).map(study => {
+    const entry = data.focused_studies[study], row = entry.summary;
+    const run = data.history.find(item => item.run_id === entry.run_id);
+    const result = { study, run_id: entry.run_id, run: run.run, started_at: run.started_at };
+    if (study === 'pendant') {
+      const outcome = row.outcomes;
+      const unfinished = (outcome.incomplete ?? 0) + (outcome.uncertified ?? 0) + (outcome.ordinary_witness_required ?? 0);
+      return { ...result, title: 'Pendant-edge placement', outcome: `${count(row.trees_reviewed)} cases reviewed (${count(row.targets)} target cases). Verified largest-difference pendant placements: ${count(outcome.supported ?? 0)}; cases with all pendant placements excluded by checked proofs: ${count(outcome.certified_restricted_counterexample ?? 0)}; unresolved cases: ${count(unfinished)}.${outcome.outside_scope ? ` Outside the selected scope: ${count(outcome.outside_scope)}.` : ''}${outcome.integrity_error ? ` Requiring operational review: ${count(outcome.integrity_error)}.` : ''}`, scope: 'Targets are non-caterpillar lobsters with matching deficiency at least two. Exclusions concern pendant-edge placement, not gracefulness of the tree.' };
+    }
+    if (study === 'matching') {
+      const paired = row.comparison, times = paired.fully_solved_times;
+      return { ...result, title: 'Matching-contraction comparison', outcome: `${count(row.pairs_completed)} of ${count(row.pairs_started)} paired trials complete: both routes verified ${count(paired.both_verified)}; matching-first only ${count(paired.matching_only)}; baseline only ${count(paired.baseline_only)}; neither within budget ${count(paired.neither_verified)}.`, timing: times.pairs ? `Median elapsed time among pairs where both succeeded (n = ${count(times.pairs)}): baseline ${times.baseline.median_seconds.toFixed(2)} s; matching-first ${times.matching_first.median_seconds.toFixed(2)} s.` : '', scope: 'Same inputs, seeds and allowances. Unsuccessful trials remain unresolved; these measurements do not establish a general speed advantage.' };
+    }
+    const classified = 'completable' in row ? ` ${count(row.completable)} can be completed; ${count(row.impossible_partial)} cannot be completed with their saved labels.` : '';
+    return { ...result, title: 'Residual obstructions', outcome: `${count(row.residuals)} partial labelings checked from ${count(row.trace_inputs ?? 0)} search traces.${classified}${'locally_feasible_but_incompatible' in row ? ` In ${count(row.locally_feasible_but_incompatible)} failures, every branch has a local option but their resources are incompatible.` : ''} Unclassified snapshots: ${count(row.unclassified_snapshots ?? 0)}; unfinished traces: ${count(row.unknown_trace_inputs ?? 0)}.`, scope: 'Each failure fixes a partial labeling; it does not exclude a graceful labeling of the whole tree.' };
+  });
 }
 
 export function freshness(finished, now = Date.now()) {

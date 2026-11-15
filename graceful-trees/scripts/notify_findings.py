@@ -16,6 +16,8 @@ from pathlib import Path
 from restore_checkpoint import SafeRedirect, get
 
 MARKER = "graceful-research-notices:v1:"
+MAX_METADATA_BYTES = 32 * 1024 * 1024
+MAX_CHECKSUM_BYTES = 64 * 1024 * 1024
 
 
 def post(url, token, payload):
@@ -43,13 +45,18 @@ def read_evidence(data, workflow_run):
             path = f"current/{name}"
             if archive.namelist().count(path) != 1:
                 raise ValueError(f"missing or duplicated evidence file: {name}")
-            if archive.getinfo(path).file_size > 8 * 1024 * 1024:
+            limit = MAX_CHECKSUM_BYTES if name == "checksums.json" else MAX_METADATA_BYTES
+            if archive.getinfo(path).file_size > limit:
                 raise ValueError(f"oversized evidence file: {name}")
             contents[name] = archive.read(path)
     parsed = {name: json.loads(raw) for name, raw in contents.items()}
     for name in ("manifest.json", "findings.json"):
         if hashlib.sha256(contents[name]).hexdigest() != parsed["checksums.json"].get(name):
             raise ValueError(f"evidence checksum mismatch: {name}")
+    if "audit.json" in parsed["checksums.json"] and (
+        hashlib.sha256(contents["audit.json"]).hexdigest() != parsed["checksums.json"]["audit.json"]
+    ):
+        raise ValueError("evidence checksum mismatch: audit.json")
     manifest, findings = parsed["manifest.json"], parsed["findings.json"]
     saved_run = manifest.get("provenance", {}).get("github", {}).get("GITHUB_RUN_ID")
     if str(saved_run) != str(workflow_run):
@@ -197,8 +204,9 @@ def review(environ, fetch=get, create=post):
     elif environ.get("RESEARCH_OUTCOME") in {"cancelled", "skipped"}:
         return {"new_findings": 0, "issues_created": [], "reason": "research cancelled or skipped"}
     elif artifact_id and environ.get("AUDIT_OUTCOME") == "success":
+        publication_id = environ.get("PUBLICATION_ARTIFACT_ID") or artifact_id
         data = fetch(
-            f"https://api.github.com/repos/{repository}/actions/artifacts/{int(artifact_id)}/zip",
+            f"https://api.github.com/repos/{repository}/actions/artifacts/{int(publication_id)}/zip",
             token,
             binary=True,
         )

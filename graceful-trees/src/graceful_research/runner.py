@@ -75,6 +75,8 @@ def run(config, output, resume=None, cancelled=lambda: False):
         },
     }
     write_json(output / "config.json", config.as_dict())
+    if config.focused_study != "none":
+        manifest["phase_summary"]["focused_study"] = {"attempts": 0, "elapsed_seconds": 0.0}
     write_json(output / "manifest.json", manifest)
     store.save_run(run_id, manifest)
     supervisor = Supervisor(cancelled=cancelled)
@@ -206,6 +208,7 @@ def run(config, output, resume=None, cancelled=lambda: False):
                 f"{len(records)} attempts saved; {max(0, compute_deadline - time.monotonic()):.1f}s compute remaining",
                 flush=True,
             )
+        return record
 
     def explore_new(stream, deadline):
         nonlocal base_cases
@@ -246,6 +249,27 @@ def run(config, output, resume=None, cancelled=lambda: False):
                     break
                 attempt(case, retry_deadline, config.retry_seconds, phase_name="retries")
                 base_cases += 1
+        if config.focused_study != "none":
+            from .focused import run_study
+
+            def focused_attempt(case, deadline, seconds, restriction=None, orbit=None):
+                nonlocal base_cases
+                if restriction is None and base_cases >= config.max_cases:
+                    return None
+                result = attempt(
+                    case, deadline, seconds, restriction, orbit, phase_name="focused_study"
+                )
+                if restriction is None:
+                    base_cases += 1
+                return result
+
+            focused_deadline = min(
+                compute_deadline, time.monotonic() + window * config.focused_budget_fraction
+            )
+            with phase("focused_study"):
+                manifest["focused_study"] = run_study(
+                    config, store, output, run_id, focused_deadline, focused_attempt, cancelled
+                )
         new_deadline = compute_deadline - window * config.probe_budget_fraction
         stream = TreeStream(config, store)
         with phase("new_trees"):

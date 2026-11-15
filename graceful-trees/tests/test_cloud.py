@@ -229,9 +229,21 @@ def test_example_configs_and_workflow_contracts():
         == "${{ github.event_name == 'push' && '2' || inputs.budget_minutes }}"
     )
     upload_steps = [s for s in job["steps"] if "upload-artifact@" in s.get("uses", "")]
-    assert len(upload_steps) == 2
+    assert len(upload_steps) == 3
     assert any(s.get("if") == "always()" for s in upload_steps)
     assert any(s.get("id") == "results" for s in upload_steps)
+    bundle = next(s for s in job["steps"] if s.get("id") == "publication_bundle")
+    assert "steps.audit.outcome == 'success'" in bundle["if"]
+    publication = next(s for s in upload_steps if s.get("id") == "publication")
+    assert "steps.publication_bundle.outcome == 'success'" in publication["if"]
+    assert publication["with"]["path"] == "graceful-trees/results/publication/"
+    for name in ("dashboard", "notify"):
+        consumer = workflow["jobs"][name]["steps"][-1]
+        assert (
+            consumer["env"]["PUBLICATION_ARTIFACT_ID"]
+            == "${{ needs.research.outputs.publication_artifact_id }}"
+        )
+        assert consumer["env"]["RESULTS_ARTIFACT_ID"] == "${{ needs.research.outputs.artifact_id }}"
     assert job["steps"][-1]["run"] == "python scripts/publish_summary.py"
     assert (
         job["steps"][-1]["env"]["RESULTS_ARTIFACT_URL"]

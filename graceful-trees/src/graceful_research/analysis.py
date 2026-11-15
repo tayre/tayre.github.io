@@ -393,5 +393,9 @@ def write_reports(output, manifest, records, profiles, provider=None):
     ]
     if manifest.get("error"):
         lines += ["## Run error", "", "```text", manifest["error"], "```", ""]
+    if manifest.get("focused_study"):
+        from .focused import report_lines
+
+        lines += report_lines(manifest["focused_study"])
     (output / "report.md").write_text("\n".join(lines))
     return summary

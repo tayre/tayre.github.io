@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { EXAMPLE_LABELS, EXAMPLE_EDGES, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV } from '../data.mjs';
-import { fixture } from './fixtures.mjs';
+import { EXAMPLE_LABELS, EXAMPLE_EDGES, complement, validateFeed, freshness, chartGeometry, coverageThrough, historyCSV, focusedStudyRows } from '../data.mjs';
+import { fixture, focusedFixture } from './fixtures.mjs';
 
 test('the illustrated tree and its complement are both graceful', () => {
   for (const labels of [EXAMPLE_LABELS, complement(EXAMPLE_LABELS)]) {
@@ -107,4 +107,65 @@ test('CSV exports exact unresolved counts and neutralizes spreadsheet formulas',
   assert.ok(csv.includes('unknown,solver_infeasible'));
   assert.ok(csv.includes('"\'=UNTRUSTED()"'));
   assert.equal(csv.trim().split('\r\n').length, 4);
+});
+
+test('older feeds and an empty study map retain compatibility without invented outcomes', () => {
+  const old = validateFeed(fixture());
+  assert.deepEqual(focusedStudyRows(old), []);
+  old.focused_studies = {};
+  assert.deepEqual(focusedStudyRows(validateFeed(old)), []);
+});
+
+test('latest study rows retain separate runs and narrowly scoped negative outcomes', () => {
+  const data = validateFeed(focusedFixture());
+  const [placement, matching, residual] = focusedStudyRows(data);
+  assert.deepEqual([placement.run, matching.run, residual.run], [1, 2, 3]);
+  assert.match(placement.outcome, /Verified largest-difference pendant placements: 2/);
+  assert.match(placement.outcome, /cases with all pendant placements excluded by checked proofs: 1/);
+  assert.match(placement.scope, /not gracefulness of the tree/);
+  assert.match(matching.outcome, /3 of 4 paired trials complete/);
+  assert.match(matching.outcome, /matching-first only 1; baseline only 0; neither within budget 1/);
+  assert.match(matching.timing, /pairs where both succeeded \(n = 1\)/);
+  assert.match(matching.timing, /baseline 2.00 s; matching-first 0.50 s/);
+  assert.match(matching.scope, /do not establish a general speed advantage/);
+  assert.match(residual.outcome, /1 can be completed; 3 cannot be completed with their saved labels/);
+  assert.match(residual.outcome, /Unclassified snapshots: 2; unfinished traces: 1/);
+  assert.match(residual.scope, /does not exclude a graceful labeling of the whole tree/);
+  assert.equal(data.cumulative.solver_infeasible, 0);
+  assert.equal(data.certificate_verified_infeasible, 0);
+});
+
+test('a study can finish without classified residuals or successful timing pairs', () => {
+  const data = focusedFixture();
+  data.focused_studies = {
+    residual: { run_id: data.run_id, summary: { residuals: 0, completable: 0, impossible_partial: 0, whole_tree_infeasibility_claims: 0, novelty_claimed: false } },
+  };
+  const [row] = focusedStudyRows(validateFeed(data));
+  assert.match(row.outcome, /0 partial labelings checked from 0 search traces/);
+  const empty = { records: 0, complete_pairs: 0, incomplete_pairs: 0, both_verified: 0, matching_only: 0, baseline_only: 0, neither_verified: 0, status_counts: { baseline: {}, matching_first: {} }, fully_solved_times: { pairs: 0, baseline: { total_seconds: 0, median_seconds: null }, matching_first: { total_seconds: 0, median_seconds: null } }, by_stratum: {} };
+  data.focused_studies = { matching: { run_id: data.run_id, summary: { pairs_started: 1, pairs_completed: 0, comparison: empty } } };
+  assert.equal(focusedStudyRows(validateFeed(data))[0].timing, '');
+});
+
+for (const [name, mutate] of [
+  ['null optional map', data => data.focused_studies = null],
+  ['unknown study', data => data.focused_studies.unsupported = {}],
+  ['unrecorded study run', data => data.focused_studies.pendant.run_id = 'another-campaign-run'],
+  ['HTML in study identity', data => data.focused_studies.pendant.run_id = '<img src=x>'],
+  ['placement totals disagree', data => data.focused_studies.pendant.summary.outcomes.supported++],
+  ['placement targets exceed cases', data => data.focused_studies.pendant.summary.targets = 5],
+  ['placement status invents tree infeasibility', data => data.focused_studies.pendant.summary.outcomes.nongraceful = 0],
+  ['matching pairs disagree', data => data.focused_studies.matching.summary.comparison.matching_only++],
+  ['matching strata disagree', data => data.focused_studies.matching.summary.comparison.by_stratum = {}],
+  ['matching statuses disagree', data => data.focused_studies.matching.summary.comparison.status_counts.baseline.unknown = 0],
+  ['matching time is not finite', data => data.focused_studies.matching.summary.comparison.fully_solved_times.baseline.median_seconds = Infinity],
+  ['censored observations enter successful timing sample', data => data.focused_studies.matching.summary.comparison.fully_solved_times.pairs = 2],
+  ['residual classification totals disagree', data => data.focused_studies.residual.summary.completable++],
+  ['residual count is fractional', data => data.focused_studies.residual.summary.unclassified_snapshots = 0.5],
+  ['unfinished traces exceed attempted traces', data => data.focused_studies.residual.summary.unknown_trace_inputs = 4],
+  ['local incompatibilities exceed impossible partials', data => data.focused_studies.residual.summary.locally_feasible_but_incompatible = 4],
+  ['residual claims whole-tree infeasibility', data => data.focused_studies.residual.summary.whole_tree_infeasibility_claims = 1],
+  ['residual claims novelty', data => data.focused_studies.residual.summary.novelty_claimed = true],
+]) test(`focused evidence rejects ${name}`, () => {
+  const data = focusedFixture(); mutate(data); assert.throws(() => validateFeed(data));
 });

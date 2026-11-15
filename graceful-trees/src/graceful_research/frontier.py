@@ -17,7 +17,17 @@ ALGORITHM = "descending-frontier-v1"
 MAX_N = 256
 
 
-def search(n, edges, *, seed, max_nodes=20000, seconds=0.1, leaf_tail=False, leaf_observer=None):
+def search(
+    n,
+    edges,
+    *,
+    seed,
+    max_nodes=20000,
+    seconds=0.1,
+    leaf_tail=False,
+    leaf_observer=None,
+    residual_observer=None,
+):
     errors = verify_tree(n, edges)
     if errors:
         raise ValueError(f"invalid tree input: {errors}")
@@ -76,6 +86,19 @@ def search(n, edges, *, seed, max_nodes=20000, seconds=0.1, leaf_tail=False, lea
         nodes += 1
         if difference == 0:
             return labels.copy()
+        if residual_observer is not None and difference <= 8:
+            # Observation only: do not consume a returned value or prune search.
+            # Copy the assignment so a callback cannot mutate the search state.
+            residual_observer(
+                {
+                    "labels": labels.copy(),
+                    "difference": difference,
+                    "seed": seed,
+                    "root": root,
+                    "node": nodes,
+                    "algorithm": ALGORITHM,
+                }
+            )
         # Every remaining vertex is on the boundary iff all remaining vertices
         # are leaves. Labels count the unassigned vertices exactly.
         if (leaf_tail or leaf_observer is not None) and frontier.bit_count() == difference:

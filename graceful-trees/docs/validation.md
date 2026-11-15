@@ -1,5 +1,51 @@
 # Initial validation record
 
+## Rotating focused studies — 14 November 2026
+
+The existing one-hour nightly run now reserves up to half its search window for
+one [focused study](focused-nightly.md), rotating among pendant-edge placement,
+paired solver comparisons and partial assignments observed in real searches.
+Checkpoints preserve separate study cursors; short configuration-push checks do
+not advance the daily rotation. Ordinary tree counts exclude benchmark trials
+and residual classifications. The total allowance and daily schedule are unchanged.
+
+Three installed-CLI validation runs used 30-second allowances and resumed the same
+checkpoint in sequence. Each stopped at the deliberately small 50-case ceiling,
+not the time limit. They are functional checks, not performance measurements.
+
+| Study | Saved focused evidence | Observation |
+| --- | --- | --- |
+| Pendant placement | Three target lobsters | All three have a verified graceful labeling whose maximum difference lies on a pendant edge |
+| Matching comparison | Three paired repetitions of one input | Both variants returned verified witnesses in all pairs; this small control does not establish a speed improvement |
+| Search residuals | Three trace inputs, 12 partial states | All 12 could be completed; no incompatibility certificate was needed |
+
+The three runs together verified 150 ordinary trees. The final cumulative audit
+rechecked 171 ordinary/restricted positive certificates and four restricted
+infeasibility proofs, plus all focused records, with no errors. No unrestricted
+infeasibility, counterexample or novel mathematical result was found. Tests also
+exercise unknown outcomes, interrupted pairs, corrupted witnesses and seeds,
+proof scope, resumable rotation, and backward-compatible publication.
+
+The [machine-readable summary](../examples/focused-nightly-validation.json) and
+[complete evidence archive](../examples/focused-nightly-validation.zip) preserve
+each run's inputs, source snapshots, solver versions, labels and checkpoints.
+All **1,550 file hashes** and ZIP integrity were checked. Archive SHA-256:
+`cad2ba20c4303df78225a5c1ea52047720d00fc87166ac9adbec64bef7ea18a8`.
+
+Audited publication metadata was packaged successfully into a 169,475-byte bundle.
+Workflow consumers can download this subset while public links still point to the
+complete evidence artifact. Packaging failure does not invalidate a saved audited
+checkpoint. The new public study table remains hidden for historical feeds that
+predate these experiments.
+
+The full Python suite passed **1,415 tests**, with four real Lean checks skipped
+because the local toolchain was absent. A final evidence-preservation change
+passed all **14 coordinator tests**, including the new anomalous-response check.
+All **47 dashboard tests**, dependency checks, Ruff lint/format and whitespace
+checks passed. Browser checks at 1,280, 390 and 320 pixels found no script errors
+or horizontal overflow and confirmed that historical feeds hide the study table.
+The separate GitHub formal job remains responsible for Lean validation.
+
 ## One-hour nightly budget — 14 November 2026
 
 The owner's requested increase changes the nightly allowance from 1,800 to

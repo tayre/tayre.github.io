@@ -28,3 +28,19 @@ export function fixture(runs = 3) {
     suggestions: [{ kind: 'experiment', statement: 'Repeat unresolved inputs with logged seeds.', status: 'Algorithm benchmark; not a mathematical conjecture.', test: 'Match size, model, and CPU, and report censored attempts.' }],
   };
 }
+
+export function focusedFixture() {
+  const data = fixture();
+  const paired = {
+    records: 3, complete_pairs: 3, incomplete_pairs: 0,
+    both_verified: 1, matching_only: 1, baseline_only: 0, neither_verified: 1,
+    status_counts: { baseline: { verified_graceful: 1, unknown: 2 }, matching_first: { verified_graceful: 2, unknown: 1 } },
+    fully_solved_times: { pairs: 1, baseline: { total_seconds: 2, median_seconds: 2 }, matching_first: { total_seconds: 0.5, median_seconds: 0.5 } },
+  };
+  data.focused_studies = {
+    pendant: { run_id: data.history[0].run_id, summary: { trees_reviewed: 4, targets: 3, outcomes: { supported: 2, certified_restricted_counterexample: 1, incomplete: 1 } } },
+    matching: { run_id: data.history[1].run_id, summary: { pairs_started: 4, pairs_completed: 3, comparison: { ...structuredClone(paired), by_stratum: { matching_rich: structuredClone(paired) } } } },
+    residual: { run_id: data.history[2].run_id, summary: { trace_inputs: 3, unknown_trace_inputs: 1, unclassified_snapshots: 2, residuals: 4, completable: 1, impossible_partial: 3, locally_feasible_but_incompatible: 2, congruence_certificates: 2, relaxation_certificates: 4, whole_tree_infeasibility_claims: 0, novelty_claimed: false } },
+  };
+  return data;
+}

@@ -184,4 +184,12 @@ def build_progress(database, manifest):
             "restricted_attempts": proofs["restricted"],
             "total_attempts": sum(proofs.values()),
         }
+    studies = {}
+    for run_id, raw in runs:
+        info = manifest if run_id == manifest["run_id"] else json.loads(raw)
+        focus = info.get("focused_study")
+        if focus:
+            studies[focus["study"]] = {"run_id": run_id, "summary": focus["summary"]}
+    if studies:
+        result["focused_studies"] = studies
     return result

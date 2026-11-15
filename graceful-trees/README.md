@@ -45,6 +45,12 @@ spiders, and independently checkable parity obstructions for fixed residual
 problems. Their results and source snapshots are downloadable; they are separate
 from the nightly campaign and carry no claim of a new theorem or speedup.
 
+The nightly campaign now devotes half of its search window to a
+[rotating focused investigation](docs/focused-nightly.md): pendant maximum-edge
+placements on lobsters, paired matching-construction benchmarks, or residual
+states observed during real search. Its evidence and counts remain separate from
+exhaustive tree coverage. The schedule and 60-minute research budget are unchanged.
+
 Selected mathematical safeguards now have [Lean proofs](formal/README.md), checked
 in CI with a pinned toolchain and an audit of their assumptions. These cover the
 complement symmetry reduction, difference-sum constraint, a restricted negative
@@ -108,7 +114,7 @@ Available configurations:
 | --- | --- |
 | `smoke.json` | One-minute mixed-family trial; small trees and sampled orders 12 and 20 |
 | `exhaustive-small.json` | All 95 non-isomorphic trees of orders 1–9, plus bounded edge probes |
-| `nightly.json` | 60-minute budget; oldest unresolved cases first, exact edge-placement probes through order 12, and new samples at orders 20, 35, 50 and 75 |
+| `nightly.json` | 60-minute budget; unresolved retries, a rotating focused study, exact edge-placement probes through order 12, and new samples at orders 20, 35, 50 and 75 |
 | `edge-profiles.json` | Small exhaustive inputs with more compute reserved for prescribed maximum-difference edge experiments |
 | `sat-certificates.json` | Pure SAT validation through order 7, with scoped, independently checked UNSAT proofs for negative edge controls |
 | `leaf-tail.json` | Opt-in exact two-parent leaf completion experiment |
@@ -118,7 +124,11 @@ Available configurations:
 budget also reduces the finalization reserve to at most 10% of the budget.
 Generation settings, the NetworkX version and the master seed must match a restored checkpoint. Change
 the campaign and start fresh when changing the generator's input space. Solver
-budgets, retry quotas and probe settings may change on resume.
+budgets, retry quotas, probe settings and focused-study settings may change on resume.
+Set `focused_study` to `pendant`, `matching` or `residual` to select one study, or
+`rotate` to continue the saved rotation. Disabling it requires both
+`focused_study="none"` and `focused_budget_fraction=0`. See the
+[configuration and reproduction examples](docs/focused-nightly.md#configure-and-reproduce).
 
 `constructive_search` (default `true`) labels caterpillars directly using a known
 construction. For other unrestricted CP-SAT attempts, `frontier_search` (default
@@ -306,6 +316,10 @@ branch, performs the experiment, audits the evidence, and uploads:
 - `graceful-checkpoint-CAMPAIGN`: ledger and checksum metadata, uploaded only after
   successful execution and audit. The next run restores it automatically.
 
+Dashboard and notification readers can use a smaller publication bundle containing
+audited metadata and its checksums. Their download links continue to point to the
+complete results artifact; the small bundle does not contain the full proof evidence.
+
 The automatic short-lived `GITHUB_TOKEN` reads previous artifacts;
 no secret setup or personal access token is needed. Permissions are `contents: read`
 and `actions: read` for the research job. A separate notification job also has
@@ -359,10 +373,13 @@ The initial deterministic rules report:
 - A new completed exhaustive validation milestone through at least order 10,
   requiring contiguous exhausted orders with matching enumeration and witness
   counts. These are implementation milestones, not new literature bounds.
+- A target lobster with an ordinary graceful witness and checked exclusions of
+  every pendant-edge orbit. This refutes only the specified pendant-maximum-edge
+  property; its novelty remains unestablished and requires literature review.
 - Failed evidence audits or failed research runs, clearly labeled operational
   problems rather than mathematical findings.
 
-Ordinary timeouts, restricted-edge infeasibility, and repeated stock hypotheses
+Ordinary timeouts, isolated restricted-edge infeasibility, and repeated stock hypotheses
 do not trigger alerts. Previously reported items are suppressed using markers in
 bot-created issues, including closed issues. Keep those issues and their markers
 for reliable deduplication. Up to 100 new items are grouped per issue. Findings
@@ -393,11 +410,22 @@ but already committed SQLite transactions remain; workflow artifacts are still
 attempted where GitHub permits them.
 
 The nightly configuration uses a **3,600-second budget** and reserves 120 seconds
-for finalization. Of the remaining search window, up to 60% is available for
-unresolved retries and 25% is reserved for restricted edge-placement experiments;
-at least 15% remains for new trees. Unused retry time is available to new trees.
+for finalization. Of the remaining search window, up to **25%** is available for
+unresolved retries, **50%** for one focused investigation, and **5%** for ordinary
+restricted edge-placement experiments; at least **20%** remains for new trees.
+Unused retry and focused-study time is available to new trees.
 If the probe queue or probe-attempt cap finishes early, `fill_unused_budget` allows
 new-tree exploration to resume against the same original deadline and counters.
+
+Focused studies rotate **pendant → matching → residual** using checkpointed
+cursors. Each study has a 200-record cap and a five-second per-trial allowance;
+pendant restricted probes retain the separate 15-second probe allowance. Matching
+uses three paired replicates per input, equal total allowances and alternating
+execution order. Residual studies preserve at most four eligible real-search
+states per input and independently enumerate their completions. Rotation advances
+only after a saved record in a run with at least a 600-second configured budget,
+so two-minute push checks do not consume a rotation turn. Read the
+[study questions, evidence requirements and limitations](docs/focused-nightly.md).
 
 Nightly retries use `retry_policy="oldest_unresolved"`: pending cases and reported
 infeasibility come first, followed by unresolved cases with the oldest last attempt.
@@ -418,7 +446,10 @@ it is a restricted experiment, not a larger exhaustive gracefulness bound.
 The Markdown report and manifest record elapsed time and attempts for each phase;
 attempt JSON/CSV records identify the phase. The audited public JSON feed also
 exports these phase totals, the initial retry-queue size and the active budget
-settings, so later progress reviews can check where the time went.
+settings, so later progress reviews can check where the time went. Focused matching
+and residual records have separate counts; they are not ordinary solver attempts
+or additions to exhaustive tree coverage. `focused_studies` contains the latest
+summary and run ID for each track, not cumulative totals across study nights.
 Generation settings and fingerprints
 are unchanged, so the existing cloud checkpoint continues. The run can still finish
 early when its case/generation limits or finite sources are exhausted; it never
@@ -486,6 +517,7 @@ Useful files in every run:
 | `attempts/NNNNNN/` | Request, result, CP model, explicit solver parameters, and response protobuf text when available |
 | `certificates/` | Independently checkable positive labelings from this run |
 | `unsat-certificates/` | Checked scoped SAT refutations; CNF, DRUP and parameters also remain in the attempt directory |
+| `focused/summary.json`, `focused/records/`, `focused/work/` | Enabled study's current-run question, cursors, inputs, paired trials or partial-state evidence; cumulative records remain in SQLite |
 | `research.sqlite` | Cumulative cases, generation cursors, run provenance, attempts, witnesses and UNSAT proof text across resumed runs |
 | `source/`, `verify.py`, `proof_verify.py` | Actual source snapshot and standalone positive/negative verifiers |
 | `checksums.json`, `checkpoint.json` | Transport-integrity hashes, not mathematical proof certificates |
@@ -546,6 +578,9 @@ stage lives in `frontier_memo_fast.py`. `solver.py` owns the exact
 model and fallback; `worker.py` enforces process deadlines; `verify.py`
 checks witnesses independently; `storage.py` owns transactional persistence;
 `runner.py` schedules work; `analysis.py` reports; `audit.py` checks exported evidence.
+`focused.py` coordinates the rotating studies and cumulative evidence audit;
+`focused_pendant.py`, `focused_matching.py` and `focused_residual.py` keep their
+questions, verification and counts separate from ordinary coverage.
 `progress.py` derives visual data from the ledger; `visuals.py` renders the offline
 report and Matplotlib figures.
 `formal/` contains Lean model lemmas; `scripts/check_proofs.py` rebuilds them and

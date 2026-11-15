@@ -1,0 +1,275 @@
+{
+  "archive": {
+    "bytes": 6312495,
+    "checked_file_hashes": 1550,
+    "path": "focused-nightly-validation.zip",
+    "sha256": "cad2ba20c4303df78225a5c1ea52047720d00fc87166ac9adbec64bef7ea18a8"
+  },
+  "purpose": "Short end-to-end validation, not a comparative benchmark or new mathematical result",
+  "schema_version": 1,
+  "studies": [
+    {
+      "audit": {
+        "certificates_checked": 58,
+        "cumulative_labelings_checked": 58,
+        "errors": [],
+        "infeasibility_proofs_checked": 1,
+        "valid": true
+      },
+      "elapsed_seconds": 1.6888734590029344,
+      "focused": {
+        "cursor_after": 4,
+        "cursor_before": 0,
+        "novelty_claimed": false,
+        "question": "Can a non-caterpillar lobster with matching deficiency at least two put its maximum difference on a leaf edge?",
+        "record_ids": [
+          1,
+          2,
+          3
+        ],
+        "rotation_advanced": false,
+        "rotation_index": 0,
+        "schema_version": 1,
+        "scope": "focused_experiments_not_exhaustive_tree_coverage",
+        "stop_reason": "batch_limit",
+        "study": "pendant",
+        "summary": {
+          "outcomes": {
+            "supported": 3
+          },
+          "targets": 3,
+          "trees_reviewed": 3
+        }
+      },
+      "run_id": "2026-11-15T015050.001911_0000-22b086d1",
+      "stop_reason": "case_limit",
+      "study": "pendant",
+      "summary": {
+        "attempts": 59,
+        "certificate_verified_infeasible": 0,
+        "errors": 0,
+        "outliers": [],
+        "restricted_attempts": 9,
+        "restricted_solver_infeasible": 1,
+        "search_methods": {
+          "caterpillar-construction": 33,
+          "frontier-search": 17,
+          "sat-drup": 9
+        },
+        "size_distribution": {
+          "1": 1,
+          "12": 14,
+          "14": 1,
+          "16": 1,
+          "18": 1,
+          "2": 1,
+          "20": 13,
+          "3": 1,
+          "4": 2,
+          "5": 3,
+          "6": 6,
+          "7": 6
+        },
+        "solver_infeasible": 0,
+        "timeout_attempts": 0,
+        "trees_investigated": 50,
+        "unknown": 0,
+        "unknown_attempts": 0,
+        "unrestricted_attempts": 50,
+        "unrestricted_trees": 50,
+        "verified_certificates": 58,
+        "verified_graceful": 50
+      }
+    },
+    {
+      "audit": {
+        "certificates_checked": 56,
+        "cumulative_labelings_checked": 114,
+        "errors": [],
+        "infeasibility_proofs_checked": 3,
+        "valid": true
+      },
+      "elapsed_seconds": 1.6748628749628551,
+      "focused": {
+        "cursor_after": 3,
+        "cursor_before": 0,
+        "novelty_claimed": false,
+        "question": "Does matching contraction improve verified successes under the same total per-input allowance?",
+        "record_ids": [
+          4,
+          5,
+          6
+        ],
+        "rotation_advanced": false,
+        "rotation_index": 0,
+        "schema_version": 1,
+        "scope": "focused_experiments_not_exhaustive_tree_coverage",
+        "stop_reason": "batch_limit",
+        "study": "matching",
+        "summary": {
+          "comparison": {
+            "baseline_only": 0,
+            "both_verified": 3,
+            "by_stratum": {
+              "natural_prufer": {
+                "baseline_only": 0,
+                "both_verified": 3,
+                "complete_pairs": 3,
+                "fully_solved_times": {
+                  "baseline": {
+                    "median_seconds": 0.0007624579593539238,
+                    "total_seconds": 0.0028598749195225537
+                  },
+                  "matching_first": {
+                    "median_seconds": 0.0007965409895405173,
+                    "total_seconds": 0.0024908320046961308
+                  },
+                  "pairs": 3,
+                  "scope": "only pairs with two verified witnesses and two recorded elapsed times"
+                },
+                "incomplete_pairs": 0,
+                "matching_only": 0,
+                "neither_verified": 0,
+                "records": 3,
+                "status_counts": {
+                  "baseline": {
+                    "verified_graceful": 3
+                  },
+                  "matching_first": {
+                    "verified_graceful": 3
+                  }
+                }
+              }
+            },
+            "complete_pairs": 3,
+            "fully_solved_times": {
+              "baseline": {
+                "median_seconds": 0.0007624579593539238,
+                "total_seconds": 0.0028598749195225537
+              },
+              "matching_first": {
+                "median_seconds": 0.0007965409895405173,
+                "total_seconds": 0.0024908320046961308
+              },
+              "pairs": 3,
+              "scope": "only pairs with two verified witnesses and two recorded elapsed times"
+            },
+            "incomplete_pairs": 0,
+            "matching_only": 0,
+            "neither_verified": 0,
+            "records": 3,
+            "scope": "finite paired measurements; unknown results are censored",
+            "status_counts": {
+              "baseline": {
+                "verified_graceful": 3
+              },
+              "matching_first": {
+                "verified_graceful": 3
+              }
+            }
+          },
+          "pairs_completed": 3,
+          "pairs_started": 3
+        }
+      },
+      "run_id": "2026-11-15T015118.097358_0000-53e231e6",
+      "stop_reason": "case_limit",
+      "study": "matching",
+      "summary": {
+        "attempts": 58,
+        "certificate_verified_infeasible": 0,
+        "errors": 0,
+        "outliers": [],
+        "restricted_attempts": 8,
+        "restricted_solver_infeasible": 2,
+        "search_methods": {
+          "caterpillar-construction": 21,
+          "frontier-search": 29,
+          "sat-drup": 8
+        },
+        "size_distribution": {
+          "12": 20,
+          "20": 25,
+          "7": 5
+        },
+        "solver_infeasible": 0,
+        "timeout_attempts": 0,
+        "trees_investigated": 54,
+        "unknown": 0,
+        "unknown_attempts": 0,
+        "unrestricted_attempts": 50,
+        "unrestricted_trees": 50,
+        "verified_certificates": 56,
+        "verified_graceful": 50
+      }
+    },
+    {
+      "audit": {
+        "certificates_checked": 57,
+        "cumulative_labelings_checked": 171,
+        "errors": [],
+        "infeasibility_proofs_checked": 4,
+        "valid": true
+      },
+      "elapsed_seconds": 1.8281412089709193,
+      "focused": {
+        "cursor_after": 3,
+        "cursor_before": 0,
+        "novelty_claimed": false,
+        "question": "Which small partial assignments observed in real search fail despite individually feasible branches?",
+        "record_ids": [
+          7,
+          8,
+          9
+        ],
+        "rotation_advanced": false,
+        "rotation_index": 0,
+        "schema_version": 1,
+        "scope": "focused_experiments_not_exhaustive_tree_coverage",
+        "stop_reason": "batch_limit",
+        "study": "residual",
+        "summary": {
+          "completable": 12,
+          "congruence_certificates": 0,
+          "impossible_partial": 0,
+          "locally_feasible_but_incompatible": 0,
+          "novelty_claimed": false,
+          "relaxation_certificates": 0,
+          "residuals": 12,
+          "trace_inputs": 3,
+          "unclassified_snapshots": 0,
+          "whole_tree_infeasibility_claims": 0
+        }
+      },
+      "run_id": "2026-11-15T015142.343933_0000-d00b6401",
+      "stop_reason": "case_limit",
+      "study": "residual",
+      "summary": {
+        "attempts": 58,
+        "certificate_verified_infeasible": 0,
+        "errors": 0,
+        "outliers": [],
+        "restricted_attempts": 8,
+        "restricted_solver_infeasible": 1,
+        "search_methods": {
+          "caterpillar-construction": 24,
+          "frontier-search": 26,
+          "sat-drup": 8
+        },
+        "size_distribution": {
+          "12": 22,
+          "20": 28
+        },
+        "solver_infeasible": 0,
+        "timeout_attempts": 0,
+        "trees_investigated": 54,
+        "unknown": 0,
+        "unknown_attempts": 0,
+        "unrestricted_attempts": 50,
+        "unrestricted_trees": 50,
+        "verified_certificates": 57,
+        "verified_graceful": 50
+      }
+    }
+  ]
+}
