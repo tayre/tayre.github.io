@@ -285,6 +285,10 @@ def snapshot(evidence, artifact_id):
                 "probe_max_n",
                 "probe_max_attempts",
                 "fill_unused_budget",
+                "focused_study",
+                "focused_budget_fraction",
+                "focused_max_cases",
+                "focused_attempt_seconds",
             )
             if k in config
         },
@@ -296,6 +300,7 @@ def snapshot(evidence, artifact_id):
                         for key in ("attempts", "elapsed_seconds")
                     }
                     for name in ("retries", "new_trees", "edge_probes")
+                    + (("focused_study",) if "focused_study" in manifest["phase_summary"] else ())
                 },
                 "retry_queue_size": manifest["retry_queue_size"],
             }

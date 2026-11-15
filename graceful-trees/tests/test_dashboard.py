@@ -86,6 +86,23 @@ def test_actual_run_exports_only_audited_statistics(audited):
     )
 
 
+def test_focused_phase_and_allowances_remain_visible_in_public_statistics(audited):
+    raw, env = audited
+    evidence = dashboard.read_evidence(archive(raw), env)
+    manifest = evidence["manifest.json"]
+    expected = {
+        "focused_study": "rotate",
+        "focused_budget_fraction": 0.5,
+        "focused_max_cases": 200,
+        "focused_attempt_seconds": 5,
+    }
+    manifest["config"].update(expected)
+    manifest["phase_summary"]["focused_study"] = {"attempts": 0, "elapsed_seconds": 0.25}
+    feed = dashboard.snapshot(evidence, 456)
+    assert feed["phase_summary"]["focused_study"] == {"attempts": 0, "elapsed_seconds": 0.25}
+    assert {key: feed["config"][key] for key in expected} == expected
+
+
 @pytest.mark.parametrize("name", dashboard.EVIDENCE)
 def test_tampered_statistics_never_publish(audited, name):
     raw, env = audited
