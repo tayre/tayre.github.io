@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "edition": "v001",
+  "fps": {"numerator": 25, "denominator": 1},
+  "frame_range_convention": "start inclusive, end exclusive",
+  "shots": [],
+  "transitions": [],
+  "audio_stems": [],
+  "subtitle_path": null,
+  "total_frames": 0,
+  "shot_fields": [
+    "id", "programme_start_frame", "duration_frames", "master_path",
+    "master_sha256", "source_in_frame", "source_out_frame",
+    "overlay_manifest", "claim_ids", "asset_ids"
+  ],
+  "notes": "Empty planning template, not an implemented compositor schema. Choose one authoritative timeline implementation and document its validation. Update fps to match the brief. Account for transition overlaps once."
+}

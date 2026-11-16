@@ -1,0 +1,4 @@
+interface:
+  display_name: "Historical Documentary"
+  short_description: "Research, map, narrate and edit historical films"
+  default_prompt: "Use $historic-documentary to plan and produce a source-backed historical film with Blender maps and archival material."

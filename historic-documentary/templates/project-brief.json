@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "draft",
+  "title": "",
+  "subject": "",
+  "period": "",
+  "geographic_scope": "",
+  "audience": "",
+  "central_question": "",
+  "target_duration_seconds": 360,
+  "maximum_duration_seconds": 600,
+  "authoritative_timeline": "edit/timeline.json",
+  "checkpoint": {
+    "additional_editable_paths": [],
+    "notes": "Project-relative files or directories to copy regardless of extension, for example a native editor project or bundle. Save the editor project before checkpointing. Do not select credentials or the checkpoints directory."
+  },
+  "delivery": {
+    "destination": "private review",
+    "specification_url": null,
+    "specification_checked_at": null,
+    "width": 1920,
+    "height": 1080,
+    "fps": {"numerator": 25, "denominator": 1},
+    "scan": "progressive",
+    "colour_plan": "Decide and record before production rendering",
+    "audio_sample_rate": 48000,
+    "loudness_target": null,
+    "true_peak_limit": null,
+    "release_rights_status": "not assessed"
+  },
+  "creative": {
+    "map_view": "restrained oblique or isometric",
+    "camera": "slow, purposeful movement",
+    "focus": "selective, with essential labels readable",
+    "palette": "muted terrain, clear differentiated movement colours",
+    "typefaces": [],
+    "voice": "audition required; natural pacing",
+    "music": "understated, licensed, with a resolved ending",
+    "reference_notes": ""
+  },
+  "limits": {
+    "spend_cap": 0,
+    "currency": null,
+    "recurring_services_authorized": false,
+    "protected_free_gib": 25,
+    "initial_blender_workers": 1,
+    "initial_cpu_threads_per_worker": 2,
+    "initial_frame_batch_size": 50,
+    "maximum_job_minutes_without_reassessment": 15,
+    "minimum_account_usage_remaining_percent": 20,
+    "account_usage_buffer_percent": 5
+  },
+  "approvals_and_decisions": [],
+  "notes": "Starting defaults only. Confirm the format, resources and budget for this project before production. No media or paid service is authorized by this template."
+}
