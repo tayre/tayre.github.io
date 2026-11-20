@@ -337,6 +337,16 @@ tests, finalization and artifact uploads. Scheduled runs use the budget in
 generation, worker startup, solver work and a finalization reserve, not package
 installation or the separate validation suite.
 
+Checkpoint restoration streams downloads and SQLite extraction in 1 MiB chunks,
+with limits of 1 GiB compressed and 4 GiB uncompressed. It verifies the saved
+SHA-256, campaign identity and SQLite integrity before publishing the restored
+file. It also checks space for the restored database, the next run's database
+copy and a 256 MiB reserve. These checks do not guarantee space for later growth.
+Failures stop the run without resetting progress and save sanitized diagnostics
+in `results/restore-status.json`, included in the failure artifact. A campaign
+that reaches the larger limits needs a storage migration; these are bounded
+restoration limits, not unlimited retention.
+
 Standard hosted runners are [free for public repositories](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
 Private repositories consume included allowances; artifact storage is subject to
 the account's limits. This project does not enable paid spending. Both research

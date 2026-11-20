@@ -1,5 +1,34 @@
 # Initial validation record
 
+## Checkpoint restoration repair — 20 November 2026
+
+The [18 November run](https://github.com/tayre/tayre.github.io/actions/runs/44339709000/job/134925995184)
+stopped before research because its saved database exceeded the original 1 GiB
+restore limit. The exact error was read through the owner's existing authenticated
+GitHub browser session. The following scheduled run also failed at restoration;
+its complete log was not inspected. The latest published evidence therefore
+remained the successful 17 November run.
+
+Restoration now streams the archive and database, checks their bounded sizes and
+available disk space, and retains checksum, campaign and SQLite integrity checks.
+It accepts databases up to 4 GiB and archives up to 1 GiB without loading them
+whole into memory. Failed restoration preserves sanitized diagnostic metadata.
+No compute budget, schedule or solver default changed.
+
+The 48 cloud tests cover chunked I/O, limits, interrupted downloads, cleanup,
+invalid evidence, destination races and diagnostic redaction. A separate synthetic
+SQLite checkpoint of **1,076,211,712 bytes**, exceeding the old limit, restored with
+its SHA-256 unchanged and all 1,025 fixture rows intact. That local process peaked
+at **59,326,464 bytes RSS** on macOS and finished in 6.29 seconds under a 120-second
+parent limit; these are fixture measurements, not a production speedup estimate.
+See the [validation metadata](../examples/checkpoint-restore-validation.json).
+
+Downloading the actual cloud checkpoint through the browser was interrupted, so
+this is not an independent audit of its contents or a claim that a repaired cloud
+run has completed. Existing cloud results remain attributed to their published
+audit until independently rechecked. Larger storage limits still require future
+archiving or migration as the cumulative ledger grows.
+
 ## Seven-edge spider seed review — 15 November 2026
 
 The [seven-edge amalgamation note](seven-spider-amalgamation.md) resolves the

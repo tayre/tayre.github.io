@@ -2,10 +2,14 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
+import sqlite3
 import sys
+import urllib.error
 import urllib.request
 import zipfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -417,3 +421,275 @@ def test_expired_checkpoint_does_not_silently_restart(tmp_path):
 
     with pytest.raises(RuntimeError, match="expired"):
         restore.restore("owner/repo", "master", "old", 2, "token", tmp_path / "state.sqlite", fetch)
+
+
+def test_file_backed_restore_streams_database_and_cleans_temporaries(tmp_path, monkeypatch):
+    data = archive_bytes(tmp_path)
+    source = tmp_path / "artifact.zip"
+    source.write_bytes(data)
+    destination = tmp_path / "new directory" / "restored.sqlite"
+    original_read = zipfile.ZipFile.read
+    reads = []
+    original_member_read = zipfile.ZipExtFile.read
+    monkeypatch.setattr(restore, "CHUNK_BYTES", 4096)
+
+    def read(self, name, *args, **kwargs):
+        assert name != "research.sqlite", "database must never be read in one allocation"
+        return original_read(self, name, *args, **kwargs)
+
+    def member_read(self, size=-1):
+        if self.name == "research.sqlite":
+            reads.append(size)
+            assert size == 4096
+        return original_member_read(self, size)
+
+    monkeypatch.setattr(zipfile.ZipFile, "read", read)
+    monkeypatch.setattr(zipfile.ZipExtFile, "read", member_read)
+    metadata = restore.unpack_checkpoint(source, destination, "test")
+    assert metadata["run_id"] == "old-run"
+    assert len(reads) > 2
+    assert destination.read_bytes() == (tmp_path / "original.sqlite").read_bytes()
+    assert list(destination.parent.iterdir()) == [destination]
+    assert restore.MAX_DATABASE_BYTES == 4 * 1024**3
+    assert restore.MAX_ARCHIVE_BYTES == 1024**3
+    assert restore.MAX_MEMORY_DOWNLOAD_BYTES == 256 * 1024**2
+
+
+def rebuilt_archive(data, *, manifest_changes=None, database=None, duplicate=False):
+    with zipfile.ZipFile(io.BytesIO(data)) as original:
+        raw = original.read("research.sqlite") if database is None else database
+        metadata = json.loads(original.read("checkpoint.json"))
+    metadata.update(manifest_changes or {})
+    stream = io.BytesIO()
+    with zipfile.ZipFile(stream, "w") as archive:
+        archive.writestr("research.sqlite", raw)
+        archive.writestr("checkpoint.json", json.dumps(metadata))
+        if duplicate:
+            archive.writestr("research.sqlite", raw)
+    return stream.getvalue()
+
+
+@pytest.mark.parametrize("failure", ["hash", "sqlite", "ledger_campaign", "duplicate", "size"])
+def test_invalid_checkpoint_never_leaves_a_partial_destination(tmp_path, monkeypatch, failure):
+    data = archive_bytes(tmp_path)
+    if failure == "hash":
+        data = rebuilt_archive(data, manifest_changes={"sha256": "0" * 64})
+    elif failure == "sqlite":
+        database = b"not a SQLite database" * 100
+        data = rebuilt_archive(
+            data,
+            database=database,
+            manifest_changes={"sha256": hashlib.sha256(database).hexdigest()},
+        )
+    elif failure == "ledger_campaign":
+        data = rebuilt_archive(data, manifest_changes={"campaign": "different"})
+    elif failure == "duplicate":
+        with pytest.warns(UserWarning, match="Duplicate"):
+            data = rebuilt_archive(data, duplicate=True)
+    else:
+        monkeypatch.setattr(restore, "MAX_DATABASE_BYTES", 10)
+    destination = tmp_path / "output" / "restored.sqlite"
+    with pytest.raises((ValueError, sqlite3.DatabaseError)):
+        restore.unpack_checkpoint(
+            data, destination, "different" if failure == "ledger_campaign" else "test"
+        )
+    assert not destination.exists()
+    assert not list(tmp_path.rglob(".checkpoint-restore-*"))
+
+
+@pytest.mark.parametrize("database_copies_available", [0, 1])
+def test_insufficient_space_is_measured_before_database_extraction(
+    tmp_path, monkeypatch, database_copies_available
+):
+    data = archive_bytes(tmp_path)
+    size = (tmp_path / "original.sqlite").stat().st_size
+    monkeypatch.setattr(
+        restore.shutil,
+        "disk_usage",
+        lambda _: SimpleNamespace(
+            free=restore.DISK_RESERVE_BYTES + database_copies_available * size
+        ),
+    )
+    with pytest.raises(restore.RestoreError) as failure:
+        restore.unpack_checkpoint(data, tmp_path / "restored.sqlite", "test")
+    assert failure.value.code == "insufficient_disk_space"
+    assert failure.value.details["needed_bytes"] == 2 * size
+    assert not list(tmp_path.glob(".checkpoint-restore-*"))
+
+
+@pytest.mark.parametrize("existing", ["file", "broken_symlink", "race"])
+def test_restore_never_overwrites_existing_or_concurrently_created_destinations(
+    tmp_path, monkeypatch, existing
+):
+    data = archive_bytes(tmp_path)
+    destination = tmp_path / "restored.sqlite"
+    preserved = b"existing checkpoint must survive"
+    if existing == "file":
+        destination.write_bytes(preserved)
+    elif existing == "broken_symlink":
+        destination.symlink_to(tmp_path / "missing-target")
+    else:
+        original_link = os.link
+
+        def concurrent(source, target):
+            Path(target).write_bytes(preserved)
+            original_link(source, target)
+
+        monkeypatch.setattr(restore.os, "link", concurrent)
+    with pytest.raises((ValueError, FileExistsError)):
+        restore.unpack_checkpoint(data, destination, "test")
+    if existing == "broken_symlink":
+        assert destination.is_symlink()
+    else:
+        assert destination.read_bytes() == preserved
+    assert not list(tmp_path.glob(".checkpoint-restore-*"))
+
+
+class DownloadResponse:
+    def __init__(self, data, headers=None, fail_after=None):
+        self.data = io.BytesIO(data)
+        self.headers = headers or {}
+        self.fail_after = fail_after
+        self.reads = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.data.close()
+
+    def read(self, size):
+        assert 0 < size <= restore.CHUNK_BYTES
+        self.reads.append(size)
+        if self.fail_after is not None and len(self.reads) > self.fail_after:
+            raise OSError("network interruption with sensitive-url?token=secret")
+        return self.data.read(size)
+
+
+def install_response(monkeypatch, response):
+    monkeypatch.setattr(
+        restore.urllib.request,
+        "build_opener",
+        lambda *_: SimpleNamespace(open=lambda *args, **kwargs: response),
+    )
+
+
+def test_archive_download_is_chunked_and_supports_missing_content_length(tmp_path, monkeypatch):
+    monkeypatch.setattr(restore, "CHUNK_BYTES", 4096)
+    raw = b"archive fixture" * 3000
+    response = DownloadResponse(raw)
+    install_response(monkeypatch, response)
+    destination = tmp_path / "archive.zip"
+    assert restore.download_archive(
+        "https://api.github.com/artifact", "secret", destination
+    ) == len(raw)
+    assert len(response.reads) > 2
+    assert destination.read_bytes() == raw
+
+
+@pytest.mark.parametrize(
+    "failure", ["declared_limit", "actual_limit", "truncated", "interrupted", "deadline"]
+)
+def test_failed_download_removes_only_its_own_partial_file(tmp_path, monkeypatch, failure):
+    raw = b"x" * 100
+    monkeypatch.setattr(restore, "CHUNK_BYTES", 16)
+    headers = {}
+    if failure == "declared_limit":
+        headers["Content-Length"] = str(restore.MAX_ARCHIVE_BYTES + 1)
+    elif failure == "actual_limit":
+        monkeypatch.setattr(restore, "MAX_ARCHIVE_BYTES", 40)
+    elif failure == "truncated":
+        headers["Content-Length"] = "110"
+    elif failure == "deadline":
+        ticks = iter([0.0, restore.DOWNLOAD_SECONDS + 1.0])
+        monkeypatch.setattr(restore, "time", SimpleNamespace(monotonic=lambda: next(ticks)))
+    response = DownloadResponse(raw, headers, fail_after=1 if failure == "interrupted" else None)
+    install_response(monkeypatch, response)
+    destination = tmp_path / "archive.zip"
+    with pytest.raises((ValueError, OSError)):
+        restore.download_archive("https://api.github.com/artifact", "secret", destination)
+    assert not destination.exists()
+    if failure == "declared_limit":
+        assert response.reads == []
+
+
+def test_download_cannot_delete_an_existing_file(tmp_path, monkeypatch):
+    install_response(monkeypatch, DownloadResponse(b"new"))
+    destination = tmp_path / "archive.zip"
+    destination.write_bytes(b"keep")
+    with pytest.raises(FileExistsError):
+        restore.download_archive("https://api.github.com/artifact", "secret", destination)
+    assert destination.read_bytes() == b"keep"
+
+
+def test_default_restore_downloads_to_disk_and_records_source_diagnostics(tmp_path, monkeypatch):
+    raw = archive_bytes(tmp_path)
+    calls = []
+
+    def fetch(url, token, **kwargs):
+        assert not kwargs.get("binary"), "default restore must not request an in-memory ZIP"
+        if "/workflows/" in url:
+            return {
+                "workflow_runs": [
+                    {"id": 1, "head_branch": "master", "conclusion": "success", "event": "schedule"}
+                ]
+            }
+        return {"artifacts": [{"name": "graceful-checkpoint-test", "expired": False, "id": 7}]}
+
+    def download(url, token, destination):
+        calls.append(destination)
+        destination.write_bytes(raw)
+
+    monkeypatch.setattr(restore, "get", fetch)
+    monkeypatch.setattr(restore, "download_archive", download)
+    diagnostics = {}
+    result = restore.restore(
+        "owner/repo",
+        "master",
+        "test",
+        2,
+        "secret",
+        tmp_path / "restored.sqlite",
+        diagnostics=diagnostics,
+    )
+    assert result["restored"] and len(calls) == 1
+    assert not calls[0].exists() and not calls[0].parent.exists()
+    assert diagnostics["workflow_run"] == 1 and diagnostics["artifact_id"] == 7
+    assert diagnostics["database_bytes"] == (tmp_path / "original.sqlite").stat().st_size
+
+
+@pytest.mark.parametrize("failure", ["size", "http", "unknown"])
+def test_cli_writes_machine_readable_failure_without_exception_secrets(
+    tmp_path, monkeypatch, capsys, failure
+):
+    for key in ("GITHUB_REPOSITORY", "GITHUB_REF_NAME", "GITHUB_RUN_ID", "GITHUB_TOKEN"):
+        monkeypatch.setenv(key, "do-not-expose-this-value")
+
+    def fail(*args, diagnostics, **kwargs):
+        diagnostics.update(stage="unpack", artifact_id=7, database_bytes=5 * 1024**3)
+        if failure == "size":
+            raise restore.RestoreError(
+                "database_size_limit",
+                "checkpoint database exceeds configured restore bound",
+                database_bytes=5 * 1024**3,
+                limit_bytes=restore.MAX_DATABASE_BYTES,
+            )
+        if failure == "http":
+            raise urllib.error.HTTPError(
+                "https://private.invalid?token=secret", 401, "do-not-expose-this-value", {}, None
+            )
+        raise RuntimeError("do-not-expose-this-value token=secret")
+
+    monkeypatch.setattr(restore, "restore", fail)
+    destination = tmp_path / "results" / "previous.sqlite"
+    assert restore.main(["--campaign", "test", "--destination", str(destination)]) == 1
+    raw = (destination.parent / "restore-status.json").read_text()
+    saved = json.loads(raw)
+    assert saved["status"] == "failed" and saved["restored"] is False
+    assert saved["artifact_id"] == 7
+    assert saved["limits"]["database_bytes"] == 4 * 1024**3
+    if failure == "http":
+        assert saved["http_status"] == 401
+    for output in (raw, capsys.readouterr().out):
+        assert "secret" not in output and "do-not-expose-this-value" not in output
+        assert "private.invalid" not in output
