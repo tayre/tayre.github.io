@@ -23,11 +23,22 @@ at **59,326,464 bytes RSS** on macOS and finished in 6.29 seconds under a 120-se
 parent limit; these are fixture measurements, not a production speedup estimate.
 See the [validation metadata](../examples/checkpoint-restore-validation.json).
 
-Downloading the actual cloud checkpoint through the browser was interrupted, so
-this is not an independent audit of its contents or a claim that a repaired cloud
-run has completed. Existing cloud results remain attributed to their published
-audit until independently rechecked. Larger storage limits still require future
-archiving or migration as the cumulative ledger grows.
+The [20 November scheduled run](https://github.com/tayre/tayre.github.io/actions/runs/44764764483)
+subsequently completed on repair commit `21cf9bb`. GitHub reports successful
+checkpoint restoration, research, independent audit, checkpoint upload and public
+publication. Its validated feed reports 181,684 cumulative trees, with 180,714
+verified graceful, 970 unknown, and no unrestricted infeasibility or errors.
+The cumulative tree count increased by 39,936 from the previous published run.
+This confirms operational recovery; it is not a new mathematical finding.
+The [recovery metadata](../examples/checkpoint-recovery-2026-11-20.json) records the
+run identity, observed step outcomes, feed hash and audit scope.
+
+The earlier browser checkpoint download was interrupted, and the new full-results
+artifact endpoint returned HTTP 401 without authentication. This review therefore
+did not independently audit either cloud artifact's contents. Cloud mathematical
+results remain attributed to their published audit until independently rechecked.
+Larger storage limits still require future archiving or migration as the cumulative
+ledger grows.
 
 ## Seven-edge spider seed review — 15 November 2026
 

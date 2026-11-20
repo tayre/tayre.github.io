@@ -50,6 +50,15 @@ deficiency at most one are retained as separately tagged controls. Controls and
 targets must be compared separately; neither generator samples uniformly from
 unlabeled trees.
 
+Matching deficiency at least two does **not** exclude every known construction.
+For example, [Barrientos (2019), Theorem 4.2, pp.8–9](https://dergipark.org.tr/en/download/article-file/675268)
+joins the centers of identical diameter-four caterpillars in a path. The paragraph
+following the theorem states that its labeling assigns zero to a leaf. The edge
+of maximum difference must therefore be incident to that leaf. This family
+includes examples with deficiency at least two. The current `target` tag records
+the structural filter, not absence from the literature; recognize applicable
+construction families separately when interpreting individual successes.
+
 A checked graceful witness with a pendant maximum edge supports the property for
 that input. A negative profile requires **an ordinary graceful witness and checked
 SAT refutations for every pendant-edge orbit**. Orbits are recomputed from the

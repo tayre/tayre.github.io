@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-11-20T22:27:29.289536+00:00",
+  "scope": "Public workflow status and validated published metadata; no independently downloaded or audited full results artifact.",
+  "workflow_url": "https://github.com/tayre/tayre.github.io/actions/runs/44764764483",
+  "workflow_run_id": 44764764483,
+  "source_commit": "21cf9bbf6cb6c6ecb6be6a15d995df9120b31c48",
+  "campaign_run_id": "2026-11-20T153731.507230_0000-5c0a5710",
+  "feed_url": "https://raw.githubusercontent.com/tayre/tayre.github.io/graceful-progress/campaigns/nightly-v1.json",
+  "feed_sha256": "3ea7bb162a3321e6b2ad7c3f07beadec584d4ff1909d4c3802a57a42eb8b8af9",
+  "feed_validation": "site/data.mjs validateFeed passed",
+  "jobs": [
+    {
+      "name": "research",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Restore cumulative checkpoint",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run bounded research",
+          "conclusion": "success"
+        },
+        {
+          "name": "Independently audit results",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preserve cumulative checkpoint",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Publish public progress",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Publish audited statistics to the data branch",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Review notable findings",
+      "conclusion": "success",
+      "steps": []
+    }
+  ],
+  "published_audit": {
+    "certificates_checked": 39772,
+    "cumulative_labelings_checked": 187489,
+    "infeasibility_proofs_checked": 48,
+    "passed": true
+  },
+  "current_run": {
+    "attempts": 40081,
+    "errors": 0,
+    "restricted_attempts": 81,
+    "restricted_solver_infeasible": 65,
+    "solver_infeasible": 0,
+    "timeout_attempts": 233,
+    "trees": 40000,
+    "unknown": 241,
+    "unrestricted_attempts": 40000,
+    "verified_graceful": 39759
+  },
+  "cumulative": {
+    "attempts": 189245,
+    "catalogued_trees": 181684,
+    "errors": 0,
+    "restricted_attempts": 7100,
+    "restricted_solver_infeasible": 312,
+    "runs": 24,
+    "solver_infeasible": 0,
+    "timeout_attempts": 1400,
+    "trees": 181684,
+    "unknown": 970,
+    "unrestricted_attempts": 182145,
+    "verified_graceful": 180714
+  },
+  "previous_successful_workflow_run_id": 44122917641,
+  "cumulative_change": {
+    "trees": 39936,
+    "verified_graceful": 39759,
+    "unknown": 177,
+    "errors": 0,
+    "solver_infeasible": 0
+  },
+  "elapsed_research_seconds": 2633.577494969,
+  "stop_reason": "case_limit",
+  "artifact_access": {
+    "http_status": 401,
+    "endpoint": "https://api.github.com/repos/tayre/tayre.github.io/actions/artifacts/14649150164/zip",
+    "full_artifact_independently_audited": false
+  },
+  "interpretation": "The repaired workflow resumed research and published a new cumulative result. This is operational recovery evidence, not a new mathematical result or independent verification of the cloud artifact contents."
+}
