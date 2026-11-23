@@ -122,6 +122,10 @@ paper authors. Incomplete proofs remain explicitly incomplete.
   matching deficiency at least two. A negative answer requires an ordinary
   witness and independently checked exclusions of every pendant-edge orbit.
   Seek a structural explanation before extrapolating from samples.
+  The [uniform two/three-branch diameter-five family](diameter-five-pendant-constructions.md)
+  is covered by delta construction and star amalgamation; its high matching
+  deficiency does not make it a new-result target. Check identical-copy
+  constructions as well as transfer-table hypotheses for further candidates.
 - Test whether matching-first search improves verified successes on the same
   frozen inputs, seeds and total budgets. Examine naturally sampled trees and
   constructed controls separately, retaining unsuccessful and slower results.

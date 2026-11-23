@@ -77,3 +77,21 @@ include the one- and two-leg cases, interval and difference proofs, and precise
 primary-source references. This is a construction consequence removed from the
 project's proposed new-result targets, not a new discovery or an improved
 exhaustive-search bound. The note does not claim Lean verification.
+
+## Diameter-five pendant control family — recorded 23 November 2026
+
+**Status:** consequence of established constructions; no novelty claim. Join
+two centers, give them two and three star branches respectively, and put `b`
+leaves on every branch support. For every `b >= 1`, this tree has a graceful
+labeling with a pendant maximum. For `b >= 2` its matching deficiency is
+`5b-5`, so it belongs to the focused study's target while already being covered
+by known methods.
+
+The [proof, primary references and reproduction instructions](diameter-five-pendant-constructions.md)
+combine the established delta construction with star amalgamation. This closes
+a proposed construction gap for that uniform family; the broader pendant
+question remains unresolved. The saved 17-vertex example and 408 finite witness
+checks validate the implementation. They do not raise the exhaustive bound.
+The [separate audit](../examples/diameter-five-pendant-independent-audit.json)
+checks the saved example's structure, labeling and matching certificate without
+importing the constructor or the project verifier.
