@@ -1,0 +1,246 @@
+{
+  "budgets": {
+    "first_child_hard_seconds": 15,
+    "followup_child_hard_seconds": 30,
+    "followup_outer_hard_seconds": 45
+  },
+  "claim_id": "diameter-five-fixed-core-23-45-star-extension-v1",
+  "classification": "verified fixed seed with established star-amalgamation consequence",
+  "dependency_lock_sha256": "8a08affbf5e23cf1f7d45880664308d8e9d097a9ff774d9e78b24b153daf8fb0",
+  "evidence_hashes": {
+    "independent-verification.json": "fd5debd085065dd591ce6d193de5034f8ffffdb2bc59fefc352c7bd41848032f",
+    "independent-witness-audit.json": "7c7103a8e709f9941c580e6a36c059d6d4e3ae7172c304366943a701cd22117b",
+    "input.json": "8eb6b65c617e6b74165254b3138d089c180422db8932935ca75187d969a1ad5b",
+    "solver/model.pbtxt": "7332eb5e465a38cbdf323e81991e9d09adf53b4f626b50490d132ddbace030dc",
+    "solver/parameters.pbtxt": "16e62656ec56a26dfa6e5afd06ff3816ea090a4037f08808c88cb2a9a0b940d2",
+    "solver/response.pbtxt": "bfd4d5653a48719e68b45e4dfcf9729af4bd2bfb220e09eeb470eee07c82457d",
+    "worker-result.json": "b83511db9ee98fb2f46bdb68ed7346547f44e9567ec8eb76a857d4e733daeace"
+  },
+  "extension": {
+    "attachment_vertex": 1,
+    "edge_difference_partition": [
+      "1..19",
+      "20",
+      "21..20+t"
+    ],
+    "new_leaf_labels": "0..t-1",
+    "new_support_label": "20+t",
+    "novelty_claimed": false,
+    "old_labels": "g(v)+t",
+    "parameter": "integer t>=1",
+    "tree_order": "21+t"
+  },
+  "formal_verification_claimed": false,
+  "input": {
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        9,
+        10
+      ],
+      [
+        9,
+        11
+      ],
+      [
+        9,
+        12
+      ],
+      [
+        9,
+        13
+      ],
+      [
+        1,
+        14
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        14,
+        16
+      ],
+      [
+        14,
+        17
+      ],
+      [
+        14,
+        18
+      ],
+      [
+        14,
+        19
+      ]
+    ],
+    "n": 20
+  },
+  "labels": [
+    17,
+    0,
+    8,
+    11,
+    15,
+    18,
+    10,
+    12,
+    5,
+    19,
+    4,
+    9,
+    3,
+    1,
+    2,
+    6,
+    14,
+    16,
+    13,
+    7
+  ],
+  "literature": [
+    "https://combinatorialpress.com/article/ars/Volume%20106/volume-106-paper-20.pdf",
+    "https://ajc.maths.uq.edu.au/pdf/75/ajc_v75_p343.pdf"
+  ],
+  "novelty_claimed": false,
+  "previous_attempt": {
+    "negative_claim": false,
+    "reason": "15-second parent deadline before returned artifacts",
+    "retained": true,
+    "status": "unknown"
+  },
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "root": 1,
+  "schema_version": 1,
+  "solver": {
+    "algorithm": "prescribed-zero-cpsat-v1",
+    "complement_break": false,
+    "model_sha256": "7332eb5e465a38cbdf323e81991e9d09adf53b4f626b50490d132ddbace030dc",
+    "num_search_workers": 1,
+    "raw_status": "OPTIMAL",
+    "seconds": 5.0,
+    "seed": 20261124,
+    "solver_wall_seconds": 0.070541,
+    "symmetry_level": 0
+  },
+  "source_commit": "770cfab8bb4f7f5a730beec4dc452218be63b162",
+  "verification": {
+    "branch_leaf_counts": {
+      "0": [
+        2,
+        3
+      ],
+      "1": [
+        4,
+        5
+      ]
+    },
+    "centers": [
+      0,
+      1
+    ],
+    "diameter": 5,
+    "edge_differences": [
+      17,
+      9,
+      3,
+      7,
+      1,
+      8,
+      6,
+      13,
+      19,
+      15,
+      10,
+      16,
+      18,
+      2,
+      4,
+      12,
+      14,
+      11,
+      5
+    ],
+    "errors": [],
+    "extension_conclusion": "The established star-attachment formula yields T_t for every integer t>=1.",
+    "input_sha256": "8eb6b65c617e6b74165254b3138d089c180422db8932935ca75187d969a1ad5b",
+    "labels": [
+      17,
+      0,
+      8,
+      11,
+      15,
+      18,
+      10,
+      12,
+      5,
+      19,
+      4,
+      9,
+      3,
+      1,
+      2,
+      6,
+      14,
+      16,
+      13,
+      7
+    ],
+    "novelty_claimed": false,
+    "result_path": "worker-result.json",
+    "result_sha256": "b83511db9ee98fb2f46bdb68ed7346547f44e9567ec8eb76a857d4e733daeace",
+    "root_zero_verified": true,
+    "scope": "one_fixed_core_prescribed_zero",
+    "solver_artifacts_present": {
+      "model.pbtxt": true,
+      "parameters.pbtxt": true,
+      "response.pbtxt": true,
+      "result.json": true
+    },
+    "solver_seed": 20261124,
+    "status": "verified_graceful",
+    "tree_valid": true,
+    "valid": true
+  },
+  "versions": {
+    "networkx": "3.5",
+    "ortools": "9.14.6206",
+    "python-sat": "1.8.dev24"
+  }
+}

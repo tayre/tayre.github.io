@@ -126,6 +126,11 @@ paper authors. Incomplete proofs remain explicitly incomplete.
   is covered by delta construction and star amalgamation; its high matching
   deficiency does not make it a new-result target. Check identical-copy
   constructions as well as transfer-table hypotheses for further candidates.
+  The [nonuniform fixed-core follow-up](fixed-core-pendant-control.md) is also
+  resolved. Before proposing another parameterized family, remove any variable
+  star branch: if this leaves one fixed rooted core, a single positive seed and
+  the existing attachment theorem suffice. Keep such controls separate from
+  genuinely varying-core research questions.
 - Test whether matching-first search improves verified successes on the same
   frozen inputs, seeds and total budgets. Examine naturally sampled trees and
   constructed controls separately, retaining unsuccessful and slower results.

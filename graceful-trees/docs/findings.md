@@ -95,3 +95,8 @@ checks validate the implementation. They do not raise the exhaustive bound.
 The [separate audit](../examples/diameter-five-pendant-independent-audit.json)
 checks the saved example's structure, labeling and matching certificate without
 importing the constructor or the project verifier.
+
+The [24 November fixed-core follow-up](fixed-core-pendant-control.md) records
+a nonuniform 20-vertex seed and its standard star extensions. It is another
+known-construction control, with no novelty claim; the original timed-out
+attempt remains unknown and is retained alongside the verified follow-up.
