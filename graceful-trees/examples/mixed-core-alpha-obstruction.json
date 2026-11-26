@@ -1,0 +1,377 @@
+{
+  "alpha_threshold": 23,
+  "certificate": {
+    "filename": "mixed-core-alpha-certificate.json.gz",
+    "sha256": "2f8499b22c26053163830d3444d567dad06d25cde36b9a914acc0372c8aba6fb",
+    "type": "custom finite-domain local-obstruction certificate; not DRAT or Lean"
+  },
+  "claim_id": "g1-l5-prescribed-d-zero-alpha-exclusion-v1",
+  "conclusion_scope": "This exact numbered graph is graceful with d=0, but has no whole-tree alpha labeling with d=0.",
+  "input": {
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        9,
+        10
+      ],
+      [
+        9,
+        11
+      ],
+      [
+        9,
+        12
+      ],
+      [
+        9,
+        13
+      ],
+      [
+        9,
+        14
+      ],
+      [
+        9,
+        15
+      ],
+      [
+        9,
+        16
+      ],
+      [
+        9,
+        17
+      ],
+      [
+        9,
+        18
+      ],
+      [
+        9,
+        19
+      ],
+      [
+        1,
+        20
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        20,
+        22
+      ],
+      [
+        20,
+        23
+      ],
+      [
+        20,
+        24
+      ],
+      [
+        20,
+        25
+      ],
+      [
+        20,
+        26
+      ],
+      [
+        20,
+        27
+      ],
+      [
+        20,
+        28
+      ],
+      [
+        20,
+        29
+      ],
+      [
+        20,
+        30
+      ],
+      [
+        20,
+        31
+      ]
+    ],
+    "n": 32
+  },
+  "novelty_claimed": false,
+  "ordinary_labels": [
+    31,
+    0,
+    1,
+    30,
+    27,
+    4,
+    29,
+    8,
+    24,
+    2,
+    9,
+    21,
+    7,
+    20,
+    10,
+    3,
+    23,
+    26,
+    5,
+    25,
+    28,
+    14,
+    19,
+    16,
+    22,
+    15,
+    13,
+    17,
+    11,
+    18,
+    6,
+    12
+  ],
+  "provenance": {
+    "alpha_attempt_manifest": {
+      "anchors": [],
+      "child_hard_seconds": 8,
+      "complement_break": false,
+      "frozen_source_revision": "1753d436193b1f7023b5e34b8efdf6afcc33903f",
+      "input_sha256": "2c74d29634d215f8d0d6fc4350ef0f899acd2acdd4c59eaf97ebdb7a96028254",
+      "maximum_neighbor_restriction": null,
+      "novelty_claimed": false,
+      "orchestration_hashes": {
+        "controller.py": "4a4aada678d19e7c57682138904625157eb89ed026664e8bad7d7a61bb194948",
+        "launch.py": "3eb59f18e4aa3bf92711b7f1a5efd435c00fd41265aa87566ba0840acb7587ae"
+      },
+      "ordinary_rooted_infeasibility_claim": false,
+      "outer_process_group_hard_seconds": 30,
+      "preflight_hard_seconds": 5,
+      "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+      "question": "Single G(1,5) diagnostic with d=0 and whole-tree alpha restriction.",
+      "scope": "prescribed_zero_alpha",
+      "seed": 20261126,
+      "solver_seconds_including_preparation": 3,
+      "solver_workers": 1,
+      "source_hashes": {
+        "controller.py": "d60c31060f3fafd66beb57b5f74b31e24523588e1879083beb85f407596010ab",
+        "launch.py": "1c26e98b3751e412fbc45f1a0e1aa923f9045ba792975cf3e1c78d118d3aea8c",
+        "requirements.lock": "8a08affbf5e23cf1f7d45880664308d8e9d097a9ff774d9e78b24b153daf8fb0",
+        "src/graceful_research/__init__.py": "ec67998353c5d50e733d9fdf8febbf16737ab3d99b29ae648647f7c78c4389df",
+        "src/graceful_research/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+        "src/graceful_research/analysis.py": "b6af26ed554cd0737af9b40871ee354899fc23cdb9d6563f41685cb8f95eac1d",
+        "src/graceful_research/audit.py": "d2834aed042d8f24d20cc34c186e7824f67f612abc099fe1dfc69c2a2c4d44d8",
+        "src/graceful_research/cli.py": "f567f358d2e074864e0864cff590d412cb22eabb9c8a23ecbde22159ed7cbc46",
+        "src/graceful_research/config.py": "a2e1ea4127eca351ca5f603c5151f5df8c22e3b065ce9a7d7ae80cab4a82a5b5",
+        "src/graceful_research/constructive.py": "ff7d01a5104e7bdd0e0d574a60964de61497ec45fe07f76d936050d06c64a475",
+        "src/graceful_research/findings.py": "93ac387e7543f4b453d9e06e6789ff9e311a68182817b282000ae69c5ff31cba",
+        "src/graceful_research/focused.py": "192c9b6e37f1dae4154e135c3bab1997117ec25e17cca9f04868d39b4dc4b730",
+        "src/graceful_research/focused_matching.py": "fe538be6e63c7e7c2689ef445a30b6c8ebbd8550d6b6bc8921fed4e25425ad0c",
+        "src/graceful_research/focused_pendant.py": "2da46c97f6891d9f848344aa736b5e5cf4c129a593a23ac60a8458064fb2a99c",
+        "src/graceful_research/focused_residual.py": "5e3de6148ec156fc0ecf7956ea5377325c870be4a374878dbe442767f1cc32f9",
+        "src/graceful_research/frontier.py": "5544a16b43440293fde9176eca83e4442e2e86595ee03454c9aa1e0c58c6fac6",
+        "src/graceful_research/frontier_accelerated.py": "20011d57c2d9c7692b4f85515d1f7eeb6e7ab24f543fd3cb86c5ff52ef8f3631",
+        "src/graceful_research/frontier_fast.py": "d4b1683da2873dc485a8c329d3a6da22e6f9e6460bd75e0177c7b2d1f4c25c0a",
+        "src/graceful_research/frontier_memo.py": "d26af07f62b04472db849b7d5e37b0e2aed87d136b563eb86cc8a00dd22229cd",
+        "src/graceful_research/frontier_memo_fast.py": "26aac5c3dbccbb0df99c15af64a2331a03de1fad748036645fddcb4a32a9c9f2",
+        "src/graceful_research/frontier_portfolio.py": "9ae028a24cf5d6e3e662c35bb2e32af491fc10be11415d15aaafa4e25bd8567c",
+        "src/graceful_research/io.py": "b415f03f4f264e3d835716826030cc03aa61a5a94364ae0479e028ff53e0e489",
+        "src/graceful_research/leaf_frontier.py": "3a10d3e5cd142cc025ec2ba0cdff5daf427ffd5ca2df5502b1d846ecd681c7c0",
+        "src/graceful_research/leaf_tail.py": "c7820034e6f9ecb270fa191d007ed5529e64051cc1200b22fbb554f724917295",
+        "src/graceful_research/matching_lift.py": "370f1fcac3978833d0f24a8060e8f645e445aafc6fa7d5af83b7497aaa11535d",
+        "src/graceful_research/progress.py": "0b7273bc3e1bc8a87ff146ebe14ee6941a2c9222e5bc10650c9929c313e878ef",
+        "src/graceful_research/proof_verify.py": "37f6811dafc7b32c04ce661eb91e73f384ddd402eb223eea8701cd7a65a338d0",
+        "src/graceful_research/residual_congruence.py": "f456c0c344911691d34e5f1a4b8503a78a468d2b9f03e56e6232da6daa14d75b",
+        "src/graceful_research/residual_congruence_verify.py": "066a3fae027f98084971ff32398797b3aa9e891b0ed17e0059bb37ab829ac619",
+        "src/graceful_research/residual_relaxations.py": "3a4dd8171b04645c3c375153105da1ac17534f6643a2c1ecc5938ec87bbcd79f",
+        "src/graceful_research/residual_relaxations_verify.py": "143fbfa72a3a9878be2a8fb9f89d073d8060b6c088aa90e390dc84ea17abc07f",
+        "src/graceful_research/residual_signatures.py": "4b1b26e79776d306ae313f031c885a38a26e39c2ec9a9c27defedcd9dbe23b5d",
+        "src/graceful_research/rooted_pairings.py": "e037d79320053ad106d81dbd96d778d03e7104079824d81ee4480a1a9eb3460c",
+        "src/graceful_research/rooted_spiders.py": "e026eed579b5ed1cd7c9489f8786a5e274a92a3db9509571497b1711fba99196",
+        "src/graceful_research/runner.py": "7e00bf68151405273e283e14d75ed381fe17a19f2eee6fa083cc079aeb5619f3",
+        "src/graceful_research/sat_encoding.py": "1f44a2d3cc84357990213d23ba6789c081ea4a92ea9795251c0cd3872f0b3f9b",
+        "src/graceful_research/sat_solver.py": "2bcfc0538ca182bed87ba75a3cbcc3d329d5bc32e643576f12db2e36dd3e85cc",
+        "src/graceful_research/solver.py": "4017e54b0827009fba3121c96f1245f561dd924658c61659f55709d86df3ad6e",
+        "src/graceful_research/spider_construction.py": "5fab13ebb801682f6e099d771333e18fd55892c4a590a33f9d09f87a44b343a5",
+        "src/graceful_research/storage.py": "acb0fb6292f78810656c193f8498a84062361e6b21860365a11d84dbbb1cffb3",
+        "src/graceful_research/swap_portfolio.py": "098791626cba5f34797adec8bd0d2ca1cfd0d8098d4a281c2b34b8d1ce34299f",
+        "src/graceful_research/swap_search.py": "483c28ab2bc4b79468699368d68d3323e6c7d57c95b35519d319e60a354dde08",
+        "src/graceful_research/trees.py": "e40fe33dd2eb1a95d84a6501cf411543e383a57fd501817c2434d86ccc1520d8",
+        "src/graceful_research/verify.py": "557dbce92cbba825a994b15716cf7f14d63eb9bf1fdd7498c2ae0013f51603df",
+        "src/graceful_research/visuals.py": "af88f0cce7658058ccee52e09c4288617de5f83657b12e438893be0fec518f4b",
+        "src/graceful_research/worker.py": "43d19486190ab30a0f33d80dc69522bb0273916792c6892b887c3f011f190295",
+        "worker.py": "a60890de724a80106698fc0dd268ec7f88cc906519fdd55d7e6d17a14b654146"
+      },
+      "symmetry_level": 0,
+      "unchanged_alpha_worker_sha256": "89c90938b2709dbad8882b2ff4c8cea24a487e01a5220e2b6e8a97e6bbbc3198",
+      "versions": {
+        "networkx": "3.5",
+        "ortools": "9.14.6206",
+        "python-sat": "1.8.dev24"
+      }
+    },
+    "certificate_manifest": {
+      "certificate_type": "custom finite-domain local rejections; not DRAT or Lean",
+      "hard_parent_global_seconds": 30,
+      "hard_per_stage_seconds": 15,
+      "input_sha256": "2c74d29634d215f8d0d6fc4350ef0f899acd2acdd4c59eaf97ebdb7a96028254",
+      "python": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+      "scope": "Only frozen G(1,5), d=1 zero, alpha; no other inputs or solver calls.",
+      "source_hashes": {
+        "check.py": "a6ce87b07f334f044cbb590065c6ba0b6ea80964fce56f1d98160ef0af16c6d8",
+        "generate.py": "afeb448e71896e1914d2c4429114af664fdd4286e336d3e94b8290d58b19ff24",
+        "launch.py": "843556b7232572b269ee3d2743ab3e80a5b6549a9c30b83695c1f8f9cdc02c44"
+      }
+    },
+    "generation": {
+      "certificate_sha256": "2f8499b22c26053163830d3444d567dad06d25cde36b9a914acc0372c8aba6fb",
+      "compressed_bytes": 52328,
+      "elapsed_seconds": 0.1827935,
+      "hard_signal_seconds": 15,
+      "python": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+      "raw_bytes": 556610,
+      "rejection_counts": {
+        "hall": 1,
+        "isolated_difference": 223,
+        "isolated_label": 6660,
+        "repeat": 7976
+      },
+      "rows": 14860,
+      "source_sha256": "afeb448e71896e1914d2c4429114af664fdd4286e336d3e94b8290d58b19ff24",
+      "uncompressed_sha256": "4f27e0de8007fe5791b13c72c6f4ba06ea15554f5cd2dd177f37428e2f6e5290"
+    },
+    "input_sha256": "2c74d29634d215f8d0d6fc4350ef0f899acd2acdd4c59eaf97ebdb7a96028254",
+    "ordinary_witness_manifest": {
+      "environment_reference": "../g1-l5-alpha/manifest.json",
+      "hard_process_seconds": 8,
+      "model_seconds": 3,
+      "purpose": "Seek ordinary prescribed-center witness on same graph, without alpha restriction. Not a retry of the alpha model.",
+      "python": "/private/tmp/graceful-review-20261124-venv/bin/python",
+      "request_sha256": "f93adcbf603ee4635df087ac073c42d60305081116a9cd8d1e813ed7972da360",
+      "source_commit": "1753d436193b1f7023b5e34b8efdf6afcc33903f",
+      "source_hashes": {
+        "source/src/graceful_research/__init__.py": "ec67998353c5d50e733d9fdf8febbf16737ab3d99b29ae648647f7c78c4389df",
+        "source/src/graceful_research/__main__.py": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+        "source/src/graceful_research/analysis.py": "b6af26ed554cd0737af9b40871ee354899fc23cdb9d6563f41685cb8f95eac1d",
+        "source/src/graceful_research/audit.py": "d2834aed042d8f24d20cc34c186e7824f67f612abc099fe1dfc69c2a2c4d44d8",
+        "source/src/graceful_research/cli.py": "f567f358d2e074864e0864cff590d412cb22eabb9c8a23ecbde22159ed7cbc46",
+        "source/src/graceful_research/config.py": "a2e1ea4127eca351ca5f603c5151f5df8c22e3b065ce9a7d7ae80cab4a82a5b5",
+        "source/src/graceful_research/constructive.py": "ff7d01a5104e7bdd0e0d574a60964de61497ec45fe07f76d936050d06c64a475",
+        "source/src/graceful_research/findings.py": "93ac387e7543f4b453d9e06e6789ff9e311a68182817b282000ae69c5ff31cba",
+        "source/src/graceful_research/focused.py": "192c9b6e37f1dae4154e135c3bab1997117ec25e17cca9f04868d39b4dc4b730",
+        "source/src/graceful_research/focused_matching.py": "fe538be6e63c7e7c2689ef445a30b6c8ebbd8550d6b6bc8921fed4e25425ad0c",
+        "source/src/graceful_research/focused_pendant.py": "2da46c97f6891d9f848344aa736b5e5cf4c129a593a23ac60a8458064fb2a99c",
+        "source/src/graceful_research/focused_residual.py": "5e3de6148ec156fc0ecf7956ea5377325c870be4a374878dbe442767f1cc32f9",
+        "source/src/graceful_research/frontier.py": "5544a16b43440293fde9176eca83e4442e2e86595ee03454c9aa1e0c58c6fac6",
+        "source/src/graceful_research/frontier_accelerated.py": "20011d57c2d9c7692b4f85515d1f7eeb6e7ab24f543fd3cb86c5ff52ef8f3631",
+        "source/src/graceful_research/frontier_fast.py": "d4b1683da2873dc485a8c329d3a6da22e6f9e6460bd75e0177c7b2d1f4c25c0a",
+        "source/src/graceful_research/frontier_memo.py": "d26af07f62b04472db849b7d5e37b0e2aed87d136b563eb86cc8a00dd22229cd",
+        "source/src/graceful_research/frontier_memo_fast.py": "26aac5c3dbccbb0df99c15af64a2331a03de1fad748036645fddcb4a32a9c9f2",
+        "source/src/graceful_research/frontier_portfolio.py": "9ae028a24cf5d6e3e662c35bb2e32af491fc10be11415d15aaafa4e25bd8567c",
+        "source/src/graceful_research/io.py": "b415f03f4f264e3d835716826030cc03aa61a5a94364ae0479e028ff53e0e489",
+        "source/src/graceful_research/leaf_frontier.py": "3a10d3e5cd142cc025ec2ba0cdff5daf427ffd5ca2df5502b1d846ecd681c7c0",
+        "source/src/graceful_research/leaf_tail.py": "c7820034e6f9ecb270fa191d007ed5529e64051cc1200b22fbb554f724917295",
+        "source/src/graceful_research/matching_lift.py": "370f1fcac3978833d0f24a8060e8f645e445aafc6fa7d5af83b7497aaa11535d",
+        "source/src/graceful_research/progress.py": "0b7273bc3e1bc8a87ff146ebe14ee6941a2c9222e5bc10650c9929c313e878ef",
+        "source/src/graceful_research/proof_verify.py": "37f6811dafc7b32c04ce661eb91e73f384ddd402eb223eea8701cd7a65a338d0",
+        "source/src/graceful_research/residual_congruence.py": "f456c0c344911691d34e5f1a4b8503a78a468d2b9f03e56e6232da6daa14d75b",
+        "source/src/graceful_research/residual_congruence_verify.py": "066a3fae027f98084971ff32398797b3aa9e891b0ed17e0059bb37ab829ac619",
+        "source/src/graceful_research/residual_relaxations.py": "3a4dd8171b04645c3c375153105da1ac17534f6643a2c1ecc5938ec87bbcd79f",
+        "source/src/graceful_research/residual_relaxations_verify.py": "143fbfa72a3a9878be2a8fb9f89d073d8060b6c088aa90e390dc84ea17abc07f",
+        "source/src/graceful_research/residual_signatures.py": "4b1b26e79776d306ae313f031c885a38a26e39c2ec9a9c27defedcd9dbe23b5d",
+        "source/src/graceful_research/rooted_pairings.py": "e037d79320053ad106d81dbd96d778d03e7104079824d81ee4480a1a9eb3460c",
+        "source/src/graceful_research/rooted_spiders.py": "e026eed579b5ed1cd7c9489f8786a5e274a92a3db9509571497b1711fba99196",
+        "source/src/graceful_research/runner.py": "7e00bf68151405273e283e14d75ed381fe17a19f2eee6fa083cc079aeb5619f3",
+        "source/src/graceful_research/sat_encoding.py": "1f44a2d3cc84357990213d23ba6789c081ea4a92ea9795251c0cd3872f0b3f9b",
+        "source/src/graceful_research/sat_solver.py": "2bcfc0538ca182bed87ba75a3cbcc3d329d5bc32e643576f12db2e36dd3e85cc",
+        "source/src/graceful_research/solver.py": "4017e54b0827009fba3121c96f1245f561dd924658c61659f55709d86df3ad6e",
+        "source/src/graceful_research/spider_construction.py": "5fab13ebb801682f6e099d771333e18fd55892c4a590a33f9d09f87a44b343a5",
+        "source/src/graceful_research/storage.py": "acb0fb6292f78810656c193f8498a84062361e6b21860365a11d84dbbb1cffb3",
+        "source/src/graceful_research/swap_portfolio.py": "098791626cba5f34797adec8bd0d2ca1cfd0d8098d4a281c2b34b8d1ce34299f",
+        "source/src/graceful_research/swap_search.py": "483c28ab2bc4b79468699368d68d3323e6c7d57c95b35519d319e60a354dde08",
+        "source/src/graceful_research/trees.py": "e40fe33dd2eb1a95d84a6501cf411543e383a57fd501817c2434d86ccc1520d8",
+        "source/src/graceful_research/verify.py": "557dbce92cbba825a994b15716cf7f14d63eb9bf1fdd7498c2ae0013f51603df",
+        "source/src/graceful_research/visuals.py": "af88f0cce7658058ccee52e09c4288617de5f83657b12e438893be0fec518f4b",
+        "source/src/graceful_research/worker.py": "43d19486190ab30a0f33d80dc69522bb0273916792c6892b887c3f011f190295"
+      },
+      "worker_sha256": "d4ea777f1b22ccbb06d315af6dfbf26373ef400dd620a179c6b2346b57ff4589"
+    },
+    "ordinary_witness_model_sha256": "6272dec3a42b79a759bcca0444719debb319779f89a45b4daa4caf211f61a8da",
+    "ordinary_witness_result_sha256": "2fa08c28a0d49800a307180d4c9dd5fb7e5b9f611ee615437a428c2ca4f0994a",
+    "ordinary_witness_seed": 20261126,
+    "origin": "2026-11-26 ignored deep-review G(1,5) single-case investigation",
+    "original_cp_alpha_outcome": "UNKNOWN; preserved unchanged",
+    "originating_checker_api_sha256": "d5d273cb2cb9763edbaf63a426fd9d14a93871ac302c70e3409c21521ed7ce84",
+    "published_checker": "scripts/check_mixed_core_alpha.py",
+    "published_checker_sha256": "b25aaeaea9e22bbaf274e4e5dec62e72637fe1ecee86c2e5ac3df3d31dc447de",
+    "source_commit": "1753d436193b1f7023b5e34b8efdf6afcc33903f",
+    "verification": {
+      "all_pattern_keys_covered_exactly_once": true,
+      "certificate_sha256": "2f8499b22c26053163830d3444d567dad06d25cde36b9a914acc0372c8aba6fb",
+      "certificate_uncompressed_sha256": "4f27e0de8007fe5791b13c72c6f4ba06ea15554f5cd2dd177f37428e2f6e5290",
+      "checker_sha256": "a6ce87b07f334f044cbb590065c6ba0b6ea80964fce56f1d98160ef0af16c6d8",
+      "claim": "The frozen G(1,5) has no whole-tree alpha labeling with d=1 labeled zero.",
+      "custom_finite_certificate_verified": true,
+      "elapsed_seconds": 0.177214791,
+      "external_solver_certificate_verified": false,
+      "hard_signal_seconds": 15,
+      "input_sha256": "2c74d29634d215f8d0d6fc4350ef0f899acd2acdd4c59eaf97ebdb7a96028254",
+      "lean_proof_checked": false,
+      "matching_or_solver_called": false,
+      "novelty_claimed": false,
+      "ordinary_rooted_infeasibility_claim": false,
+      "pattern_count": 14860,
+      "python": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+      "rejection_counts": {
+        "hall": 1,
+        "isolated_difference": 223,
+        "isolated_label": 6660,
+        "repeat": 7976
+      },
+      "scope": "fixed_graph_prescribed_zero_alpha_only",
+      "status": "verified_custom_finite_domain_certificate"
+    }
+  },
+  "root": 1,
+  "schema_version": 1
+}

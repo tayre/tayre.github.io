@@ -1,5 +1,24 @@
 # Mathematical findings
 
+## Prescribed-center alpha obstruction — recorded 26 November 2026
+
+**Status:** independently checked finite result; priority unestablished, no
+novelty claim. A 32-vertex diameter-five tree with branch leaf counts
+`(2,3;10,11)` has a graceful labeling with a specified center zero, but no
+**alpha** labeling with that same zero position. Alpha requires the two
+bipartition classes to occupy separate label intervals.
+
+The [exact claim, diagram and proof](mixed-core-alpha-obstruction.md) explain
+the 14,860 finite cases and their local obstructions. A 52 KB certificate is
+independently checked by a standalone Python verifier; an ordinary positive
+witness is checked separately. This is a custom finite-domain certificate,
+not a Lean proof. The original CP-SAT timeout remains unknown in its archive.
+
+This disproves one proposed alpha construction for the mixed-branch family.
+It does not refute the ordinary center-zero property, the pendant-maximum
+question, or the Graceful Tree Conjecture. The literature comparison distinguishes
+known joint-center placement obstructions, and records unresolved priority gaps.
+
 ## Five-edge symmetric spiders — recorded 14 November 2026
 
 **Status, corrected 14 November 2026:** consequence of established constructions;

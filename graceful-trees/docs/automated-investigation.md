@@ -131,6 +131,13 @@ paper authors. Incomplete proofs remain explicitly incomplete.
   star branch: if this leaves one fixed rooted core, a single positive seed and
   the existing attachment theorem suffice. Keep such controls separate from
   genuinely varying-core research questions.
+  The [32-vertex mixed-core alpha obstruction](mixed-core-alpha-obstruction.md)
+  rules out an alpha labeling with the specified center zero for branch leaf
+  counts `(2,3;10,11)`, despite a checked ordinary labeling with that zero.
+  Do not propose a universal alpha-only construction for this family or rerun
+  this completed finite certificate as a new finding. Ordinary center-zero
+  constructions and conditional alpha extensions from later seeds remain
+  separate questions; neither is settled by the obstruction.
 - Test whether matching-first search improves verified successes on the same
   frozen inputs, seeds and total budgets. Examine naturally sampled trees and
   constructed controls separately, retaining unsuccessful and slower results.
