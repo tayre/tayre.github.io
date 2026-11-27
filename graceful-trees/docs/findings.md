@@ -1,5 +1,29 @@
 # Mathematical findings
 
+## Infinite prescribed-center alpha obstruction — recorded 27 November 2026
+
+**Status:** written elementary proof, independently reviewed within this project;
+priority unestablished, no novelty claim. Join centers `c,d`, give `c` two supports
+with 2 and 3 leaves, and give `d` two supports with `2l` and `2l+1` leaves.
+For **every integer `l >= 5`**, this tree has no alpha labeling with `d=0`.
+The family has 32, 36, 40, … vertices. A checked 28-vertex example (`l=4`)
+does have this placement, so the cutoff cannot be lowered to four.
+
+The [complete proof and reproduction instructions](mixed-core-alpha-tail.md)
+extend yesterday's single-tree exclusion to an infinite family. An induction
+on small edge differences and a degree-sum identity reduce the argument to
+ten short symbolic cases. A separate checker verifies those cases' 100 leaf
+partitions and the positive boundary witness; it does not formalize the whole
+infinite proof. There is no Lean verification or external peer review of this
+result, and older primary-source access gaps still prevent a priority assessment.
+
+In plain language: one especially orderly way of labeling these trees always
+fails at the chosen center once the branches are large enough. This closes that
+construction route. It does **not** exclude ordinary graceful labelings, disprove
+the Graceful Tree Conjecture, or increase the exhaustive-search bound. Ordinary
+gracefulness of diameter-five trees is established; ordinary `d=0` remains a
+separate question beyond the saved positive instances.
+
 ## Prescribed-center alpha obstruction — recorded 26 November 2026
 
 **Status:** independently checked finite result; priority unestablished, no

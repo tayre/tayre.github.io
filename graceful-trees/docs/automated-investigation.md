@@ -135,9 +135,16 @@ paper authors. Incomplete proofs remain explicitly incomplete.
   rules out an alpha labeling with the specified center zero for branch leaf
   counts `(2,3;10,11)`, despite a checked ordinary labeling with that zero.
   Do not propose a universal alpha-only construction for this family or rerun
-  this completed finite certificate as a new finding. Ordinary center-zero
-  constructions and conditional alpha extensions from later seeds remain
-  separate questions; neither is settled by the obstruction.
+  this completed finite certificate as a new finding.
+  The [27 November infinite-family proof](mixed-core-alpha-tail.md) now excludes
+  this alpha placement for **every `l>=5`**, not just the finite example.
+  Do not repeat the tail classification or hunt for later alpha seeds with
+  seven consecutive leaves: no such seed can satisfy this prescribed zero.
+  Ordinary center-zero constructions remain a separate question. A useful next
+  target is whether every `G(1,l)`, `l>=5`, admits an **ordinary**, non-alpha
+  graceful labeling with `d=0`; first check root placement in existing
+  diameter-five constructions and the inaccessible older sources. The new
+  exclusion is a written proof, not Lean verified or claimed novel.
 - Test whether matching-first search improves verified successes on the same
   frozen inputs, seeds and total budgets. Examine naturally sampled trees and
   constructed controls separately, retaining unsuccessful and slower results.

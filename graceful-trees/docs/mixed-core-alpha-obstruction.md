@@ -3,6 +3,10 @@
 Recorded 26 November 2026. **Status: independently checked finite result;
 priority unestablished, no novelty claim.**
 
+**27 November follow-up:** the [infinite-family proof](mixed-core-alpha-tail.md)
+now excludes this prescribed alpha placement for every `G(1,l)` with `l>=5`.
+The finite certificate below remains independent evidence for `l=5`.
+
 The tree below can be gracefully labeled with its specified center `d` equal to
 zero. However, it cannot do so with the additional **alpha** requirement: every
 label in one bipartition class must be smaller than every label in the other.
@@ -121,7 +125,9 @@ checked here.
 Lemma 5.1, pp.167–168, supplies a conditional continuation route: a suitable
 alpha seed with seven consecutive leaf labels at each large support would
 extend to larger parameters while preserving `d=0`. This result provides no
-such seed at `l=5`, and does not rule out one at a later parameter.
+such seed at `l=5`. This finite result alone did not rule out later parameters;
+the [27 November proof](mixed-core-alpha-tail.md) now excludes every later seed
+with this same alpha and zero-position requirement.
 
 These comparisons do **not** establish priority. In particular, the full text
 of Mishra–Panigrahi (2007) was unavailable, and this was a bounded literature
